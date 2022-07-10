@@ -1,0 +1,38 @@
+{
+	"compilerOptions": {
+		"baseUrl": ".",
+		"target": "es5",
+		"lib": ["dom", "dom.iterable", "esnext"],
+		"allowJs": true,
+		"skipLibCheck": true,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"noUnusedLocals": false,
+
+		"strict": true,
+		"forceConsistentCasingInFileNames": true,
+		"noFallthroughCasesInSwitch": true,
+		"module": "esnext",
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
+		"isolatedModules": false,
+		"noEmit": true,
+		"noImplicitAny": false,
+		"jsx": "preserve",
+		"paths": {
+			"src/*": ["./src/*"]
+		},
+		"types": [
+			"@emotion/react/types/css-prop",
+			"jest",
+			"@types/testing-library__jest-dom"
+		],
+		"plugins": [
+			{
+				"name": "typescript-styled-plugin"
+			}
+		]
+	},
+	"include": ["src"],
+	"exclude": ["node_modules", ".cache", "public/*"]
+}

@@ -1,0 +1,153 @@
+@import "https://fonts.googleapis.com/css2?family=Open+Sans:wght@800&family=Roboto:wght@100;300&display=swap";
+
+@-webkit-keyframes "swing" {
+    0% {
+        --swing-x: -100;
+        --swing-y: -100;
+    }
+
+    50% {
+        --swing-y: 0;
+    }
+
+    100% {
+        --swing-y: -100;
+        --swing-x: 100;
+    }
+}
+
+@keyframes "swing" {
+    0% {
+        --swing-x: -100;
+        --swing-y: -100;
+    }
+
+    50% {
+        --swing-y: 0;
+    }
+
+    100% {
+        --swing-y: -100;
+        --swing-x: 100;
+    }
+}
+
+:root {
+    --color: #fafafa;
+    --button: #b3b3b3;
+    --button-color: #0a0a0a;
+    --shadow: #000;
+    --bg: #737373;
+    --header: #7a7a7a;
+    --lit-header: #e6e6e6;
+    --speed: 2s;
+}
+
+* {
+    box-sizing: border-box;
+    transform-style: preserve-3d;
+}
+
+@property {
+    --swing-x {
+        initial-value: 0;
+        inherits: false;
+        syntax: "<integer>";
+    }
+
+    --swing-y {
+        initial-value: 0;
+        inherits: false;
+        syntax: "<integer>";
+    }
+}
+
+.notfound-container {
+    font-family: "Roboto", sans-serif;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+    color: var(--color);
+    background: var(--bg);
+    perspective: 1200px;
+
+    h1 {
+        font-family: "Open Sans", sans-serif;
+        font-size: clamp(5rem, 40vmin, 20rem);
+        margin: 0;
+        margin-bottom: 1rem;
+        transform: translate3d(0, 0, 0vmin);
+        -webkit-animation: swing var(--speed) infinite alternate ease-in-out;
+        animation: swing var(--speed) infinite alternate ease-in-out;
+        letter-spacing: 1rem;
+        color: transparent;
+        background: radial-gradient(var(--lit-header), var(--header) 45%) var(--x) 100%/200% 200%;
+        -webkit-background-clip: text;
+        --x: calc(50% + (var(--swing-x) * .5) * 1%);
+    }
+}
+
+.info {
+    >a {
+        font-size: .875rem;
+        padding: 1rem 4rem;
+        text-decoration: none;
+        letter-spacing: .05rem;
+        text-transform: uppercase;
+        color: var(--button-color);
+        border-radius: 4rem;
+        background: var(--button);
+    }
+
+    >p {
+        font-weight: 100;
+        margin-bottom: 3rem;
+    }
+
+    >h1 {
+        &:after {
+            position: absolute;
+            top: 0;
+            left: 0;
+            content: "404";
+            transform: scale(1.05) translate3d(0, 12%, -10vmin) translate(calc((var(--swing-x, 0) * .05) * 1%), calc((var(--swing-y) * .05) * 1%));
+            -webkit-animation: swing var(--speed) infinite alternate ease-in-out;
+            animation: swing var(--speed) infinite alternate ease-in-out;
+            color: var(--shadow);
+            filter: blur(1.5vmin);
+        }
+    }
+
+    line-height: 1.5;
+    max-width: clamp(16rem, 90vmin, 25rem);
+    text-align: center;
+}
+
+.cloak {
+    width: 100%;
+    height: 100%;
+    transform: rotate(calc(var(--swing-x) * -.25deg));
+    transform-origin: 50% 30%;
+    animation: swing var(--speed) infinite alternate-reverse ease-in-out;
+    background: radial-gradient(40% 40% at 50% 42%, transparent, #000 35%);
+}
+
+.cloak__wrapper {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+}
+
+.cloak__container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 250vmax;
+    height: 250vmax;
+    transform: translate(-50%, -50%);
+}

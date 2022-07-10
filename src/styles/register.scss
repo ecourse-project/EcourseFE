@@ -1,0 +1,28 @@
+.form {
+    width: 100%;
+    margin: 0, auto;
+    .signup-form {
+        overflow: hidden;
+
+        width: 100%;
+        margin-bottom: 20px;
+
+        .form-control {
+            margin-bottom: 15px;
+        }
+    }
+}
+
+.loginhere {
+    font-weight: 500;
+
+    display: inline;
+
+    color: #555;
+
+    .loginhere-link {
+        font-weight: 700;
+
+        color: #222;
+    }
+}

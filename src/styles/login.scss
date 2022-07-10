@@ -1,0 +1,54 @@
+#components-form-demo-control-hooks .ant-btn {
+    margin-right: 8px;
+}
+
+form {
+    width: 500px;
+    margin: 0 auto;
+}
+
+label,
+input {
+    display: block;
+
+    width: 100%;
+}
+
+input,
+button {
+    font-family: inherit;
+    font-size: inherit;
+
+    display: block;
+
+    margin-top: 1rem;
+    margin-bottom: 1.1rem;
+    padding: .8rem;
+
+    border: 1px solid lightgrey;
+    outline: none;
+}
+
+.error-container {
+    width: 100%;
+    padding: 1rem;
+
+    border: 1px dashed lightgray;
+}
+
+ul {
+    list-style-position: inside;
+
+    color: lightcoral;
+}
+
+button {
+    font-weight: bold;
+
+    text-transform: uppercase;
+
+    color: white;
+    border: none;
+    border-radius: 3px;
+    background-color: darkslateblue;
+}
