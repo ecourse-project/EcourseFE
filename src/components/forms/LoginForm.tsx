@@ -22,7 +22,10 @@ const LoginForm: React.FC = () => {
 	const navigate = useNavigate();
 	const validationSchema = React.useRef(
 		Yup.object().shape({
-			username: Yup.string().trim().required(validation.name.required),
+			email: Yup.string()
+				.required(validation.email.required)
+				.email(validation.email.invalid)
+				.matches(/^[\w.-]+@([\w-]+\.)+[\w-]{1,4}$/, validation.email.invalid),
 			password: Yup.string().required(validation.password.required),
 		})
 	);
@@ -34,28 +37,27 @@ const LoginForm: React.FC = () => {
 	);
 	const formik = useFormik<LoginFormData>({
 		initialValues: {
-			username: '',
+			email: '',
 			password: '',
 		},
 		validationSchema: validationSchema.current,
 		validateOnChange: true,
 		validateOnBlur: true,
-		onSubmit: async (values: { username: any; password: any }) => {
-			const { username, password } = values;
+		onSubmit: async (values: { email: any; password: any }) => {
+			const { email, password } = values;
 			// POST request using fetch with async/await
+			console.log('value:   ', values);
 			const requestOptions = {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ username: username, password: password }),
+				body: JSON.stringify({ email: email, password: password }),
 			};
 			const response = await fetch(
 				'http://127.0.0.1:8000/api/users-auth/token/',
 				requestOptions
 			);
 			console.log(response);
-			// if (response.ok) {
-			// 	navigate('/register');
-			// }
+
 			const data = await response.json();
 			console.log('data', data.access);
 			const requestOptions2 = {
@@ -185,16 +187,16 @@ const LoginForm: React.FC = () => {
 				<AppInput
 					className="field email-field"
 					label=""
-					name="username"
+					name="email"
 					disabled={isLoading}
-					placeholder="Username"
+					placeholder="Email"
 					handleChange={formik.handleChange}
 					handleBlur={formik.handleBlur}
-					value={formik.values.username}
-					hasError={hasError('username')}
+					value={formik.values.email}
+					hasError={hasError('email')}
 				/>
-				{hasError('username') ? (
-					<ErrorMessage>{formik.errors.username}</ErrorMessage>
+				{hasError('email') ? (
+					<ErrorMessage>{formik.errors.email}</ErrorMessage>
 				) : null}
 			</div>
 			<div className="form-item">

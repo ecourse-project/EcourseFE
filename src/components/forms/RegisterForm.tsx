@@ -70,11 +70,11 @@ const RegisterForm: React.FC = () => {
 					return false;
 				}),
 
-			// phone: Yup.string()
-			// 	.required(validation.phone.required)
-			// 	.matches(regex.phoneNumber, {
-			// 		message: validation.phone.invalid,
-			// 	}),
+			phone: Yup.string()
+				// .required(validation.phone.required)
+				.matches(regex.phoneNumber, {
+					message: validation.phone.invalid,
+				}),
 			website_url: Yup.string().notRequired(),
 			// .when('user_type', {
 			// 	is: (user_type: string) => user_type !== UserType.MANAGER,
@@ -113,13 +113,6 @@ const RegisterForm: React.FC = () => {
 		})
 	);
 
-	useEffect(() => {
-		const x = async () => {
-			const res = await checkExisted('CuongNHT');
-			console.log(res);
-		};
-		x();
-	}, []);
 	const [isLoading, setIsLoading] = React.useState<boolean>(false);
 	const [isTickAgree, setIsTickAgree] = React.useState<boolean>(false);
 	const [generalError, setGeneralError] = React.useState<string>('');
@@ -133,14 +126,21 @@ const RegisterForm: React.FC = () => {
 			password1: '',
 			password2: '',
 			website_url: '',
-			phone: '113',
+			phone: '',
 		},
 		validationSchema: validationSchema.current,
 		validateOnChange: true,
 		validateOnBlur: true,
 		onSubmit: async (values) => {
-			const { username, first_name, last_name, email, password1, password2 } =
-				values;
+			const {
+				username,
+				first_name,
+				last_name,
+				email,
+				password1,
+				password2,
+				phone,
+			} = values;
 			setIsLoading(true);
 			const requestOptions = {
 				method: 'POST',
@@ -153,7 +153,7 @@ const RegisterForm: React.FC = () => {
 					first_name: first_name,
 					last_name: last_name,
 					avatar: 'D:/hinh/Thailand/IMG_0244.jpg',
-					phone: '113',
+					phone: phone,
 				}),
 			};
 			const response = await fetch(
@@ -350,27 +350,27 @@ const RegisterForm: React.FC = () => {
 					</ErrorMessage>
 				) : null}
 			</div>
-			{/* <div className="form-item">
+			<div className="form-item">
 				<AppInput
 					className="field dre-field"
 					label="Phone Number"
-					requiredMark
 					name="phone"
 					disabled={isLoading}
-					placeholder="(XXX) XXX-XXXX"
+					// placeholder="(XXX) XXX-XXXX"
 					type="string"
 					value={formik.values.phone}
-					handleChange={(e) => {
-						const formattedPhone = formatPhoneNumber(e.target.value);
-						formik.setFieldValue('phone', formattedPhone, false);
-					}}
+					// handleChange={(e) => {
+					// 	const formattedPhone = formatPhoneNumber(e.target.value);
+					// 	formik.setFieldValue('phone', formattedPhone, false);
+					// }}
+					handleChange={formik.handleChange}
 					handleBlur={formik.handleBlur}
 					hasError={hasError('phone')}
 				/>
 				{hasError('phone') ? (
 					<ErrorMessage className="error">{formik.errors.phone}</ErrorMessage>
 				) : null}
-			</div> */}
+			</div>
 
 			<div className="form-item">
 				<AppInput
