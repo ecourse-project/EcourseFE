@@ -29,6 +29,7 @@ export interface InitForm {
 	first_name: string;
 	last_name: string;
 	website_url?: string;
+	phone?: string;
 }
 
 const RegisterForm: React.FC = () => {
@@ -132,6 +133,7 @@ const RegisterForm: React.FC = () => {
 			password1: '',
 			password2: '',
 			website_url: '',
+			phone: '113',
 		},
 		validationSchema: validationSchema.current,
 		validateOnChange: true,
