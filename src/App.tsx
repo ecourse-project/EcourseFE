@@ -30,14 +30,6 @@ function App() {
 		// 		return response;
 		// 	})
 		// 	.then((data) => console.log('data', data));
-		const x = async () => {
-			await fetch('http://localhost:8000/courses/')
-				.then((response) => response)
-				.then((data) => console.log('data', data.url));
-			//abcdef test
-			// console.log('res 127', await res.json());
-		};
-		x();
 		// .then((response) => console.log(response))
 		// .then((data) => console.log('data', data))
 		// .catch((err) => console.log('error', err));
