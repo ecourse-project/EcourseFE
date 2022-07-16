@@ -53,11 +53,25 @@ const LoginForm: React.FC = () => {
 				requestOptions
 			);
 			console.log(response);
-			if (response.ok) {
-				navigate('/register');
-			}
+			// if (response.ok) {
+			// 	navigate('/register');
+			// }
 			const data = await response.json();
 			console.log('data', data.access);
+			const requestOptions2 = {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${data.access}`,
+				},
+			};
+			const response2 = await fetch(
+				'http://127.0.0.1:8000/api/users/me/',
+				requestOptions2
+			);
+			console.log(response2);
+			const data2 = await response2.json();
+			console.log('data', data2);
 			//luuw token lai
 		},
 		// setIsLoading(true);
