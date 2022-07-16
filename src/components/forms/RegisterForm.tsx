@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import { Checkbox } from 'antd';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox/Checkbox';
 import { useFormik } from 'formik';
-import React from 'react';
+import React, { useEffect } from 'react';
 import AppButton from 'src/components/button';
 import ErrorMessage from 'src/components/error-message';
 import AppInput from 'src/components/input';
@@ -36,6 +37,21 @@ const RegisterForm: React.FC = () => {
 	const [errorUploadImg, setErrorUploadImg] = React.useState<boolean>(false);
 	const validationSchema = React.useRef(
 		Yup.object().shape({
+			username: Yup.string()
+				.required(validation.username.required)
+				.test(
+					'existingUsername',
+					validation.username.format,
+					async (value: any) => {
+						try {
+							const userExist = await checkExisted(value);
+							return !userExist;
+						} catch (error) {
+							return false;
+						}
+					}
+				),
+
 			first_name: Yup.string()
 				.required(validation.firstName.required)
 				.test('alphabet', validation.firstName.format, (value: any) => {
@@ -70,15 +86,15 @@ const RegisterForm: React.FC = () => {
 			email: Yup.string()
 				.required(validation.email.required)
 				.email(validation.email.invalid)
-				.matches(/^[\w.-]+@([\w-]+\.)+[\w-]{1,4}$/, validation.email.invalid),
-			// .test('existingEmail', validation.email.format, async (value: any) => {
-			// 	try {
-			// 		const emailExist = await UserService.existsEmail(value);
-			// 		return !emailExist;
-			// 	} catch (error) {
-			// 		return false;
-			// 	}
-			// }),
+				.matches(/^[\w.-]+@([\w-]+\.)+[\w-]{1,4}$/, validation.email.invalid)
+				.test('existingEmail', validation.email.format, async (value: any) => {
+					try {
+						const emailExist = await checkExisted('', value);
+						return !emailExist;
+					} catch (error) {
+						return false;
+					}
+				}),
 			password1: Yup.string()
 				.required(validation.password.required)
 				.matches(regex.password, {
@@ -96,6 +112,13 @@ const RegisterForm: React.FC = () => {
 		})
 	);
 
+	useEffect(() => {
+		const x = async () => {
+			const res = await checkExisted('CuongNHT');
+			console.log(res);
+		};
+		x();
+	}, []);
 	const [isLoading, setIsLoading] = React.useState<boolean>(false);
 	const [isTickAgree, setIsTickAgree] = React.useState<boolean>(false);
 	const [generalError, setGeneralError] = React.useState<string>('');
@@ -164,7 +187,19 @@ const RegisterForm: React.FC = () => {
 			// }
 		},
 	});
-
+	const checkExisted = async (username = '', email = '') => {
+		const requestOptions = {
+			method: 'GET',
+			headers: { 'Content-Type': 'application/json' },
+			// body: JSON.stringify({ username: username, password: password }),
+		};
+		const response = await fetch(
+			`http://127.0.0.1:8000/api/users/exists/?username=${username}&email=${email}`,
+			requestOptions
+		);
+		const res = await response.json();
+		return res.exists;
+	};
 	const hasError = (key: string) => {
 		return (
 			Object.keys(formik.errors).length > 0 &&

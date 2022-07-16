@@ -15,30 +15,11 @@ import Notfound from './pages/Notfound';
 import PrivateRoute from './utils/PrivateRoute';
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
+import Gallery from 'src/pages/Gallery';
+import Slideshow from 'src/pages/Slideshow';
+import Slide from './pages/SlideShowImage';
+
 function App() {
-	useEffect(() => {
-		// const x = async function fc() {
-		// 	const y = await fetch("http://127.0.0.1/localhost:8000/courses/")
-		// 	console.log("y la: ", y)
-		// }
-		// x()
-		// fetch('http://127.0.0.1:8000/courses', {
-		// 	mode: 'no-cors',
-		// })
-		// 	.then((response) => {
-		// 		console.log('respomnse ', response);
-		// 		return response;
-		// 	})
-		// 	.then((data) => console.log('data', data));
-		// .then((response) => console.log(response))
-		// .then((data) => console.log('data', data))
-		// .catch((err) => console.log('error', err));
-		// const x = async () => {
-		// 	const y = await pokeApi.getData();
-		// 	console.log('data la ', await y);
-		// };
-		// x();
-	}, []);
 	return (
 		<div className="App">
 			<div>
@@ -46,6 +27,8 @@ function App() {
 			</div>
 			<Routes>
 				<Route path="/" element={<Home />} />
+				{/* <Route path="/home" element={<Gallery />} />
+				<Route path="/slideshow" element={<Slideshow />} /> */}
 				<Route path="carts" element={<About />} />
 				<Route path="login" element={<Login />} />
 				<Route path="control" element={<Control />} />

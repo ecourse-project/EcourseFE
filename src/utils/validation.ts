@@ -5,6 +5,11 @@ const validation = {
 		format: 'Email is already associated with an existing account.',
 		exist: 'Email does not exist/Email has not been registered.',
 	},
+	username: {
+		required: 'Username is missing.',
+		format: 'Username is already associated with an existing account.',
+		exist: 'Username does not exist/Email has not been registered.',
+	},
 	password: {
 		required: 'Password is missing.',
 		invalidPwdRegex:
