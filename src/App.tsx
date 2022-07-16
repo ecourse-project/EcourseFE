@@ -17,6 +17,7 @@ import PrivateRoute from './utils/PrivateRoute';
 import { css } from '@emotion/react';
 import Gallery from 'src/pages/Gallery';
 import Slideshow from 'src/pages/Slideshow';
+import Slide from './pages/SlideShowImage';
 
 function App() {
 	return (
@@ -26,8 +27,8 @@ function App() {
 			</div>
 			<Routes>
 				<Route path="/" element={<Home />} />
-				<Route path="/home" element={<Gallery />} />
-				<Route path="home/slideshow" element={<Slideshow />} />
+				{/* <Route path="/home" element={<Gallery />} />
+				<Route path="/slideshow" element={<Slideshow />} /> */}
 				<Route path="carts" element={<About />} />
 				<Route path="login" element={<Login />} />
 				<Route path="control" element={<Control />} />

@@ -6,7 +6,11 @@ import React from 'react';
 import queries from 'src/styles/breakpoints';
 import Slide from 'src/components/organisms/Slide';
 import SlideFooter from 'src/components/molecules/SlideFooter';
-import { isPlaying, paginate, currentSlideIndex } from 'src/store/slidesSlice';
+import {
+	getIsPlaying,
+	paginate,
+	currentSlideIndex,
+} from 'src/store/slidesSlice';
 import { pageAnimation } from 'src/utils/animations';
 
 const Wrapper = styled(motion.main)`
@@ -26,14 +30,17 @@ const Wrapper = styled(motion.main)`
 	}
 `;
 
-const INTERVAL = 6000;
+const INTERVAL = 3000;
 
 const Slideshow = (): JSX.Element => {
 	const id = useRef<number | undefined>();
 	const dispatch = useDispatch();
-	const isSlideshowPlaying = useSelector(isPlaying);
+	const isSlideshowPlaying = useSelector(getIsPlaying);
 	const currentIndex = useSelector(currentSlideIndex);
 
+	useEffect(() => {
+		console.log(currentIndex, isSlideshowPlaying);
+	}, []);
 	const clearInterval = () => window.clearInterval(id.current);
 
 	const startInterval = useCallback(() => {

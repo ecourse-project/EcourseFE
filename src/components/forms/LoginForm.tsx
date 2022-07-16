@@ -23,7 +23,6 @@ const LoginForm: React.FC = () => {
 	const validationSchema = React.useRef(
 		Yup.object().shape({
 			username: Yup.string().trim().required(validation.name.required),
-
 			password: Yup.string().required(validation.password.required),
 		})
 	);

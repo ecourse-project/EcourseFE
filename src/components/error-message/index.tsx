@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/display-name */
+/** @jsxImportSource @emotion/react */
 import { css, useTheme } from '@emotion/react';
 import React from 'react';
 import isEqual from 'react-fast-compare';

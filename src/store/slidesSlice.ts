@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from 'src/store';
-import data from 'data/data.json';
+import data from 'src/data/data.json';
 import { Painting } from 'src/models/painting';
 
 type SlidesSlice = {
@@ -59,7 +59,7 @@ export const currentSlide = (state: RootState): Painting =>
 export const slidesDirection = (state: RootState): number =>
 	state.slideshow.direction;
 
-export const isPlaying = (state: RootState): boolean =>
+export const getIsPlaying = (state: RootState): boolean =>
 	state.slideshow.isPlaying;
 
 export const { paginate, setCurrentSlide, toggleIsPlaying, resetSlider } =

@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import React from 'react';
 import queries from 'src/styles/breakpoints';
-import data from 'data/data.json';
+import data from 'src/data/data.json';
 import GalleryCard from 'src/components/molecules/GalleryCard';
 import { pageAnimation, galleryAnimation } from 'src/utils/animations';
 import { resetSlider } from 'src/store/slidesSlice';

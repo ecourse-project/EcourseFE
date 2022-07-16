@@ -1,5 +1,5 @@
 import { GlobalStyles } from 'src/styles/GlobalStyles';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import React from 'react';
 import Gallery from 'src/pages/Gallery';
@@ -14,10 +14,11 @@ function Slide(): JSX.Element {
 			<Header />
 			<LightBox />
 			{/* <AnimatePresence exitBeforeEnter> */}
+			<Routes>
+				<Route path="/home" element={<Gallery />} />
 
-			<Route path="/home" element={Gallery} />
-			<Route path="home/slideshow" element={Slideshow} />
-
+				<Route path="/slideshow" element={<Slideshow />} />
+			</Routes>
 			{/* </AnimatePresence> */}
 		</div>
 	);
