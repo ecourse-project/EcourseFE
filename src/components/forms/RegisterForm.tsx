@@ -153,6 +153,7 @@ const RegisterForm: React.FC = () => {
 					first_name: first_name,
 					last_name: last_name,
 					avatar: 'D:/hinh/Thailand/IMG_0244.jpg',
+					phone: '113',
 				}),
 			};
 			const response = await fetch(
