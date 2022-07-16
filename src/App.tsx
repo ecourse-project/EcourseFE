@@ -1,20 +1,20 @@
 import axios from 'axios';
 import React, { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import pokeApi from './apis/pokeApi';
 import './App.css';
 import About from './layouts/About';
 import Admin from './layouts/Admin';
 import Control from './layouts/Control';
-import DetailPokemon from './layouts/DetailPokemon';
-import Login from './layouts/Login';
+// import Login from 'src/pages/login';
+import Login from 'src/section/Login';
 import Navigation from './layouts/Navigation';
-import Pokemon from './layouts/Pokemon';
-import Register from './layouts/Register';
+import Register from 'src/section/Register';
+// import Register from 'src/pages/register';
 import Home from './pages/Home';
 import Notfound from './pages/Notfound';
 import PrivateRoute from './utils/PrivateRoute';
-
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
 function App() {
 	useEffect(() => {
 		// const x = async function fc() {
@@ -52,18 +52,15 @@ function App() {
 			<div>
 				<Navigation />
 			</div>
-			<p>Hello</p>
-			{/* <Routes>
+			<Routes>
 				<Route path="/" element={<Home />} />
-				<Route path="collection" element={<Pokemon />} />
-				<Route path="collection/:name" element={<DetailPokemon />} />
 				<Route path="carts" element={<About />} />
 				<Route path="login" element={<Login />} />
 				<Route path="control" element={<Control />} />
 				<Route path="register" element={<Register />} />
 				<Route path="admin" element={<PrivateRoute outlet={<Admin />} />} />
 				<Route path="*" element={<Notfound />} />
-			</Routes> */}
+			</Routes>
 		</div>
 	);
 }

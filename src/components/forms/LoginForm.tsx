@@ -1,10 +1,11 @@
+/** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import { Checkbox } from 'antd';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox/Checkbox';
 import { useFormik } from 'formik';
 // import { Link, navigate } from 'gatsby';
-import React, { useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import AppButton from 'src/components/button';
 import ErrorMessage from 'src/components/error-message';
 import AppInput from 'src/components/input';
@@ -18,13 +19,11 @@ import validation from 'src/utils/validation';
 import * as Yup from 'yup';
 
 const LoginForm: React.FC = () => {
+	const navigate = useNavigate();
 	const validationSchema = React.useRef(
 		Yup.object().shape({
-			email: Yup.string()
-				.trim()
-				.email(validation.email.invalid)
-				.required(validation.email.required)
-				.matches(/^[\w.-]+@([\w-]+\.)+[\w-]{1,4}$/, validation.email.invalid),
+			username: Yup.string().trim().required(validation.name.required),
+
 			password: Yup.string().required(validation.password.required),
 		})
 	);
@@ -36,32 +35,51 @@ const LoginForm: React.FC = () => {
 	);
 	const formik = useFormik<LoginFormData>({
 		initialValues: {
-			email: '',
+			username: '',
 			password: '',
 		},
 		validationSchema: validationSchema.current,
 		validateOnChange: true,
 		validateOnBlur: true,
-		onSubmit: async (values: { email: any; password: any }) => {
-			const { email, password } = values;
-			setIsLoading(true);
-			// try {
-			// 	await AuthService.signIn({
-			// 		username: email,
-			// 		password,
-			// 	});
-			// 	const user = await UserService.getMyProfile();
-
-			// 	handleUrlNavigation(user);
-			// } catch (error) {
-			// 	setLoginError((error as Error).message);
-			// } finally {
-			// 	setIsLoading(false);
-			// 	formik.setSubmitting(false);
-			// }
+		onSubmit: async (values: { username: any; password: any }) => {
+			const { username, password } = values;
+			// POST request using fetch with async/await
+			const requestOptions = {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ username: username, password: password }),
+			};
+			const response = await fetch(
+				'http://127.0.0.1:8000/api/users-auth/token/',
+				requestOptions
+			);
+			console.log(response);
+			if (response.ok) {
+				navigate('/register');
+			}
+			const data = await response.json();
+			console.log('data', data.access);
+			//luuw token lai
 		},
-	});
+		// setIsLoading(true);
+		// try {
+		// 	await AuthService.signIn({
+		// 		username: email,
+		// 		password,
+		// 	});
+		// 	const user = await UserService.getMyProfile();
 
+		// 	handleUrlNavigation(user);
+		// } catch (error) {
+		// 	setLoginError((error as Error).message);
+		// } finally {
+		// 	setIsLoading(false);
+		// 	formik.setSubmitting(false);
+		// }
+	});
+	// useEffect(() => {
+	// 	console.log('login');
+	// }, []);
 	// const handleUrlNavigation = (user: {
 	// 	user_type: any;
 	// 	on_boarding_complete: any;
@@ -154,16 +172,16 @@ const LoginForm: React.FC = () => {
 				<AppInput
 					className="field email-field"
 					label=""
-					name="email"
+					name="username"
 					disabled={isLoading}
-					placeholder="Email"
+					placeholder="Username"
 					handleChange={formik.handleChange}
 					handleBlur={formik.handleBlur}
-					value={formik.values.email}
-					hasError={hasError('email')}
+					value={formik.values.username}
+					hasError={hasError('username')}
 				/>
-				{hasError('email') ? (
-					<ErrorMessage>{formik.errors.email}</ErrorMessage>
+				{hasError('username') ? (
+					<ErrorMessage>{formik.errors.username}</ErrorMessage>
 				) : null}
 			</div>
 			<div className="form-item">

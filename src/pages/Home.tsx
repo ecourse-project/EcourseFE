@@ -1,6 +1,7 @@
 import React from 'react';
 import { Carousel } from 'antd';
 import '../styles/home.scss';
+import Img from 'src/assets/bugicon.png';
 
 const contentStyle: React.CSSProperties = {
 	height: '160px',
@@ -15,6 +16,7 @@ const Home: React.FC = () => {
 		<Carousel effect="fade" className="bg-success bg-gradient">
 			<div>
 				<h3 style={contentStyle}>Hoa hoc co ban</h3>
+				<img src={Img} alt="imgae" />
 			</div>
 			<div>
 				<h3 style={contentStyle}>Hoa hoc nang cao</h3>

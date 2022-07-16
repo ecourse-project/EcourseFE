@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import { Checkbox } from 'antd';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox/Checkbox';
@@ -13,12 +14,12 @@ import validation from 'src/utils/validation';
 import * as Yup from 'yup';
 // import UserService from 'src/services/user';
 import { useSelector } from 'react-redux';
-import { RootState } from 'src/reducers/model';
+// import { RootState } from 'src/reducers/model';
 // import { navigate } from 'gatsby';
-import { getFileUrl } from 'src/utils/upload';
 import { formatPhoneNumber } from 'src/utils/format';
 import { UserType } from 'src/utils/enum';
 import RoutePaths from 'src/utils/routes';
+import { useNavigate } from 'react-router-dom';
 export interface InitForm {
 	username?: string;
 	email: string;
@@ -26,21 +27,15 @@ export interface InitForm {
 	password2: string;
 	first_name: string;
 	last_name: string;
-	bio?: string;
-	avatar?: string;
-	phone: string;
-	dre?: string;
-	user_type: string;
-	market?: string;
 	website_url?: string;
 }
 
 const RegisterForm: React.FC = () => {
+	const navigate = useNavigate();
 	// const avatarFile = React.useRef<File | null>(null);
 	const [errorUploadImg, setErrorUploadImg] = React.useState<boolean>(false);
 	const validationSchema = React.useRef(
 		Yup.object().shape({
-			user_type: Yup.string().required(validation.role.required),
 			first_name: Yup.string()
 				.required(validation.firstName.required)
 				.test('alphabet', validation.firstName.format, (value: any) => {
@@ -57,41 +52,21 @@ const RegisterForm: React.FC = () => {
 					}
 					return false;
 				}),
-			dre: Yup.string()
-				.notRequired()
-				.when('user_type', {
-					is: (user_type: string) => user_type !== UserType.MANAGER,
-					then: Yup.string().required(validation.dre.required),
-					// .test('existingDRE', validation.dre.format, async (value: any) => {
-					// 	try {
-					// 		const dreExist = await UserService.existsDRE(value);
-					// 		return !dreExist;
-					// 	} catch (error) {
-					// 		return false;
-					// 	}
-					// }),
-				}),
-			market: Yup.string()
-				.notRequired()
-				.when('user_type', {
-					is: (user_type: string) => user_type !== UserType.MANAGER,
-					then: Yup.string().required(validation.market.required),
-				}),
-			phone: Yup.string()
-				.required(validation.phone.required)
-				.matches(regex.phoneNumber, {
-					message: validation.phone.invalid,
-				}),
-			website_url: Yup.string()
-				.notRequired()
-				.when('user_type', {
-					is: (user_type: string) => user_type !== UserType.MANAGER,
-					then: Yup.string()
-						.required(validation.website.required)
-						.matches(validation.website.regWeb, {
-							message: validation.website.url,
-						}),
-				}),
+
+			// phone: Yup.string()
+			// 	.required(validation.phone.required)
+			// 	.matches(regex.phoneNumber, {
+			// 		message: validation.phone.invalid,
+			// 	}),
+			website_url: Yup.string().notRequired(),
+			// .when('user_type', {
+			// 	is: (user_type: string) => user_type !== UserType.MANAGER,
+			// 	then: Yup.string()
+			// 		.required(validation.website.required)
+			// 		.matches(validation.website.regWeb, {
+			// 			message: validation.website.url,
+			// 		}),
+			// }),
 			email: Yup.string()
 				.required(validation.email.required)
 				.email(validation.email.invalid)
@@ -124,26 +99,47 @@ const RegisterForm: React.FC = () => {
 	const [isLoading, setIsLoading] = React.useState<boolean>(false);
 	const [isTickAgree, setIsTickAgree] = React.useState<boolean>(false);
 	const [generalError, setGeneralError] = React.useState<string>('');
-	const userAsset = useSelector((state: RootState) => state.user.userAssets);
+	// const userAsset = useSelector((state: RootState) => state.user.userAssets);
 	const formik = useFormik<InitForm>({
 		initialValues: {
+			username: '',
 			first_name: '',
 			last_name: '',
 			email: '',
 			password1: '',
 			password2: '',
-			user_type: '',
-			dre: '',
-			market: '',
-			phone: '',
 			website_url: '',
-			avatar: '',
 		},
 		validationSchema: validationSchema.current,
 		validateOnChange: true,
 		validateOnBlur: true,
 		onSubmit: async (values) => {
+			const { username, first_name, last_name, email, password1, password2 } =
+				values;
 			setIsLoading(true);
+			const requestOptions = {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					username: username,
+					password: password1,
+					password2: password2,
+					email: email,
+					first_name: first_name,
+					last_name: last_name,
+					avatar: 'D:/hinh/Thailand/IMG_0244.jpg',
+				}),
+			};
+			const response = await fetch(
+				'http://127.0.0.1:8000/api/users-auth/registration/',
+				requestOptions
+			);
+			console.log(response);
+			if (response.ok) {
+				navigate('/login');
+			}
+			const data = await response.json();
+			console.log('data', data);
 			// try {
 			// 	if (values?.user_type === UserType.MANAGER) {
 			// 		delete values.dre;
@@ -178,15 +174,6 @@ const RegisterForm: React.FC = () => {
 	};
 	const onChange = (e: CheckboxChangeEvent) => {
 		setIsTickAgree(e.target.checked);
-	};
-	const getImageFile = async (file: File) => {
-		const avatar = await getFileUrl(file);
-		if (typeof avatar !== 'undefined') {
-			setErrorUploadImg(false);
-			formik.setFieldValue('avatar', avatar);
-		} else {
-			setErrorUploadImg(true);
-		}
 	};
 
 	return (
@@ -268,22 +255,21 @@ const RegisterForm: React.FC = () => {
 				)}
 			</div>
 			<div className="form-item">
-				<AppSelect
-					className="field role-field"
+				<AppInput
 					requiredMark
-					label="I am a..."
-					placeholder="Select a role..."
-					name="user_type"
-					type="number"
-					itemSelect={userAsset?.user_type}
-					handleChange={(value) => formik.setFieldValue('user_type', value)}
+					className="field firstName-field"
+					label="Username"
+					name="username"
+					type="string"
+					placeholder="User Name"
+					value={formik.values.username}
+					handleChange={formik.handleChange}
 					handleBlur={formik.handleBlur}
-					value={formik.values.user_type}
-					hasError={hasError('user_type')}
+					hasError={hasError('username')}
 				/>
-				{hasError('user_type') ? (
+				{hasError('username') ? (
 					<ErrorMessage className="error">
-						{formik.errors.user_type}
+						{formik.errors.username}
 					</ErrorMessage>
 				) : null}
 			</div>
@@ -326,50 +312,7 @@ const RegisterForm: React.FC = () => {
 					</ErrorMessage>
 				) : null}
 			</div>
-			{formik.values?.user_type !== UserType.MANAGER && (
-				<div className="form-item">
-					<AppInput
-						className="field dre-field"
-						label="DRE Number"
-						requiredMark
-						name="dre"
-						type="string"
-						disabled={isLoading}
-						placeholder="DRE Number"
-						handleChange={formik.handleChange}
-						handleBlur={formik.handleBlur}
-						value={formik.values.dre}
-						hasError={hasError('dre')}
-					/>
-					{hasError('dre') ? (
-						<ErrorMessage className="error">{formik.errors.dre}</ErrorMessage>
-					) : null}
-				</div>
-			)}
-			{formik.values?.user_type !== UserType.MANAGER && (
-				<div className="form-item">
-					<AppSelect
-						className="field role-field"
-						requiredMark
-						label="Market"
-						name="market"
-						type="string"
-						placeholder="Select a market..."
-						itemSelect={userAsset?.market}
-						handleChange={(value) => formik.setFieldValue('market', value)}
-						handleBlur={formik.handleBlur}
-						value={formik.values.market}
-						hasError={hasError('market')}
-					/>
-					{hasError('market') ? (
-						<ErrorMessage className="error">
-							{formik.errors.market}
-						</ErrorMessage>
-					) : null}
-				</div>
-			)}
-
-			<div className="form-item">
+			{/* <div className="form-item">
 				<AppInput
 					className="field dre-field"
 					label="Phone Number"
@@ -389,29 +332,8 @@ const RegisterForm: React.FC = () => {
 				{hasError('phone') ? (
 					<ErrorMessage className="error">{formik.errors.phone}</ErrorMessage>
 				) : null}
-			</div>
-			{formik.values?.user_type !== UserType.MANAGER && (
-				<div className="form-item">
-					<AppInput
-						className="field dre-field"
-						label="Website URL"
-						requiredMark
-						name="website_url"
-						type="string"
-						disabled={isLoading}
-						placeholder="Website URL"
-						handleChange={formik.handleChange}
-						handleBlur={formik.handleBlur}
-						value={formik.values.website_url}
-						hasError={hasError('website_url')}
-					/>
-					{hasError('website_url') ? (
-						<ErrorMessage className="error">
-							{formik.errors.website_url}
-						</ErrorMessage>
-					) : null}
-				</div>
-			)}
+			</div> */}
+
 			<div className="form-item">
 				<AppInput
 					requiredMark
@@ -472,7 +394,6 @@ const RegisterForm: React.FC = () => {
 					</ErrorMessage>
 				) : null}
 			</div>
-
 			<div className="form-item">
 				<Checkbox onChange={onChange}>I agree to all statements in</Checkbox>
 				<span
@@ -500,17 +421,18 @@ const RegisterForm: React.FC = () => {
 					htmlType="submit"
 					disabled={!isTickAgree || formik.isSubmitting}
 					onClick={() => {
-						setTimeout(() => {
-							const errElement = document.querySelector('.error');
-							if (errElement) {
-								setTimeout(() => {
-									errElement.scrollIntoView({
-										behavior: 'smooth',
-										block: 'center',
-									});
-								}, 500);
-							}
-						}, 2000);
+						console.log('click');
+						// setTimeout(() => {
+						// 	const errElement = document.querySelector('.error');
+						// 	if (errElement) {
+						// 		setTimeout(() => {
+						// 			errElement.scrollIntoView({
+						// 				behavior: 'smooth',
+						// 				block: 'center',
+						// 			});
+						// 		}, 500);
+						// 	}
+						// }, 2000);
 					}}
 				>
 					Create Account

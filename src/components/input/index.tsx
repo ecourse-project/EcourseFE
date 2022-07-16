@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Input } from 'antd';
 import styled from '@emotion/styled';
 import { InputProps } from 'antd/lib/input';
+/** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import theme from 'src/styles/theme';
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons/lib/icons';
@@ -189,7 +190,7 @@ const baseStyle = (
 };
 
 const CustomInput = styled(Input)`
-	height: 20px;
+	height: 45px;
 `;
 
 export interface AppInputProps extends InputProps {
@@ -227,7 +228,7 @@ const AppInput: React.FC<AppInputProps> = (props) => {
 		...rest
 	} = props;
 
-	const inputRef = React.useRef<Input | null>(null);
+	// const inputRef = React.useRef(null);
 	const [isFocusing, setIsFocusing] = useState(!!value);
 	const [isEmpty, setIsEmpty] = useState(!value);
 	const [typeLocal, setTypeLocal] = useState(type);
@@ -251,18 +252,17 @@ const AppInput: React.FC<AppInputProps> = (props) => {
 		}
 	};
 
-	const onInputRefFocus = () => {
-		inputRef.current?.focus();
-	};
+	// const onInputRefFocus = () => {
+	// 	inputRef.current?.focus();
+	// };
 
 	return (
 		<div
 			className={className}
 			css={[baseStyle(isForceFocus || isFocusing, isEmpty, hasError)]}
 		>
-			<label className="s-label" onClick={onInputRefFocus}>{`${label}${
-				requiredMark ? `*` : ''
-			}`}</label>
+			{/* onClick={onInputRefFocus} */}
+			<label className="s-label">{`${label}${requiredMark ? `*` : ''}`}</label>
 			<CustomInput
 				{...rest}
 				type={typeLocal}
@@ -271,7 +271,7 @@ const AppInput: React.FC<AppInputProps> = (props) => {
 				onBlur={onBlur}
 				onFocus={onFocus}
 				onChange={onChange}
-				ref={inputRef}
+				// ref={inputRef}
 				onInput={onInput}
 			/>
 			{showEye && (

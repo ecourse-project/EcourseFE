@@ -1,6 +1,7 @@
 // import React from 'react';
 // import AppInput from 'src/components/input';
-// import { css } from '@emotion/react';
+// /** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
 // import AppSelect from 'src/components/select';
 // import AppButton from 'src/components/button';
 // import validation from 'src/utils/validation';
