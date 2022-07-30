@@ -21,6 +21,8 @@ import { formatPhoneNumber } from 'src/utils/format';
 import { UserType } from 'src/utils/enum';
 import RoutePaths from 'src/utils/routes';
 import { useNavigate } from 'react-router-dom';
+import { accountApi } from 'src/apis/pokeApi';
+import UserService from 'src/services/user';
 export interface InitForm {
 	username?: string;
 	email: string;
@@ -70,11 +72,11 @@ const RegisterForm: React.FC = () => {
 					return false;
 				}),
 
-			phone: Yup.string()
-				// .required(validation.phone.required)
-				.matches(regex.phoneNumber, {
-					message: validation.phone.invalid,
-				}),
+			// phone: Yup.string()
+			// 	// .required(validation.phone.required)
+			// 	.matches(regex.phoneNumber, {
+			// 		message: validation.phone.invalid,
+			// 	}),
 			website_url: Yup.string().notRequired(),
 			// .when('user_type', {
 			// 	is: (user_type: string) => user_type !== UserType.MANAGER,
@@ -119,29 +121,20 @@ const RegisterForm: React.FC = () => {
 	// const userAsset = useSelector((state: RootState) => state.user.userAssets);
 	const formik = useFormik<InitForm>({
 		initialValues: {
-			username: '',
-			first_name: '',
-			last_name: '',
-			email: '',
-			password1: '',
-			password2: '',
-			website_url: '',
-			phone: '',
+			username: 'test',
+			first_name: 'Cuong',
+			last_name: 'Nguyen',
+			email: 'test@gmail.com',
+			password1: 'tuancuong123',
+			password2: 'tuancuong123',
 		},
 		validationSchema: validationSchema.current,
 		validateOnChange: true,
 		validateOnBlur: true,
 		onSubmit: async (values) => {
-			const {
-				username,
-				first_name,
-				last_name,
-				email,
-				password1,
-				password2,
-				phone,
-			} = values;
-			setIsLoading(true);
+			const { username, first_name, last_name, email, password1, password2 } =
+				values;
+			// setIsLoading(true);
 			const requestOptions = {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
@@ -153,19 +146,25 @@ const RegisterForm: React.FC = () => {
 					first_name: first_name,
 					last_name: last_name,
 					avatar: 'D:/hinh/Thailand/IMG_0244.jpg',
-					phone: phone,
 				}),
 			};
 			const response = await fetch(
 				'http://127.0.0.1:8000/api/users-auth/registration/',
 				requestOptions
 			);
-			console.log(response);
-			if (response.ok) {
-				navigate('/login');
-			}
-			const data = await response.json();
-			console.log('data', data);
+			console.log('response: ', response);
+			// const data = JSON.stringify({
+			// 	username: username,
+			// 	password: password1,
+			// 	password2: password2,
+			// 	email: email,
+			// 	first_name: first_name,
+			// 	last_name: last_name,
+			// 	avatar: 'D:/hinh/Thailand/IMG_0244.jpg',
+			// });
+			// const response = accountApi.register(data);
+			// console.log('165', response);
+
 			// try {
 			// 	if (values?.user_type === UserType.MANAGER) {
 			// 		delete values.dre;
@@ -191,18 +190,10 @@ const RegisterForm: React.FC = () => {
 		},
 	});
 	const checkExisted = async (username = '', email = '') => {
-		const requestOptions = {
-			method: 'GET',
-			headers: { 'Content-Type': 'application/json' },
-			// body: JSON.stringify({ username: username, password: password }),
-		};
-		const response = await fetch(
-			`http://127.0.0.1:8000/api/users/exists/?username=${username}&email=${email}`,
-			requestOptions
-		);
-		const res = await response.json();
-		return res.exists;
+		const res = await UserService.existsEmail(username, email);
+		return res;
 	};
+
 	const hasError = (key: string) => {
 		return (
 			Object.keys(formik.errors).length > 0 &&
@@ -348,27 +339,6 @@ const RegisterForm: React.FC = () => {
 					<ErrorMessage className="error">
 						{formik.errors.last_name}
 					</ErrorMessage>
-				) : null}
-			</div>
-			<div className="form-item">
-				<AppInput
-					className="field dre-field"
-					label="Phone Number"
-					name="phone"
-					disabled={isLoading}
-					// placeholder="(XXX) XXX-XXXX"
-					type="string"
-					value={formik.values.phone}
-					// handleChange={(e) => {
-					// 	const formattedPhone = formatPhoneNumber(e.target.value);
-					// 	formik.setFieldValue('phone', formattedPhone, false);
-					// }}
-					handleChange={formik.handleChange}
-					handleBlur={formik.handleBlur}
-					hasError={hasError('phone')}
-				/>
-				{hasError('phone') ? (
-					<ErrorMessage className="error">{formik.errors.phone}</ErrorMessage>
 				) : null}
 			</div>
 

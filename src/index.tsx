@@ -7,7 +7,6 @@ import App from './App';
 import { store } from './apps/store';
 import './index.css';
 import 'antd/dist/antd.css';
-import { AuthProvider } from './features/login/loginContext';
 import { ThemeProvider } from '@emotion/react';
 import appTheme from 'src/styles/theme';
 
@@ -18,11 +17,9 @@ root.render(
 	<React.StrictMode>
 		<BrowserRouter>
 			<Provider store={store}>
-				<AuthProvider>
-					<ThemeProvider theme={appTheme}>
-						<App />
-					</ThemeProvider>
-				</AuthProvider>
+				<ThemeProvider theme={appTheme}>
+					<App />
+				</ThemeProvider>
 			</Provider>
 		</BrowserRouter>
 	</React.StrictMode>

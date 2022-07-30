@@ -3,7 +3,7 @@ import Loadable from 'react-loadable';
 import { LoadingPage } from 'src/components/loading/loadingBase';
 
 const LoginLoadable = Loadable({
-	loader: () => import('src/section/Login'),
+	loader: () => import('src/sections/Login'),
 	loading: () => <LoadingPage isLoading={true} />,
 });
 const LoginPage: React.FC = () => {

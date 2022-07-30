@@ -6,9 +6,9 @@ import About from './layouts/About';
 import Admin from './layouts/Admin';
 import Control from './layouts/Control';
 // import Login from 'src/pages/login';
-import Login from 'src/section/Login';
+import Login from 'src/sections/Login';
 import Navigation from './layouts/Navigation';
-import Register from 'src/section/Register';
+import Register from 'src/sections/Register';
 // import Register from 'src/pages/register';
 import Home from './pages/Home';
 import Notfound from './pages/Notfound';
@@ -18,6 +18,8 @@ import { css } from '@emotion/react';
 import Gallery from 'src/pages/Gallery';
 import Slideshow from 'src/pages/Slideshow';
 import Slide from './pages/SlideShowImage';
+import ResetPassword from './components/forgot-password/ResetPassword';
+import CreateNewPassword from './components/forgot-password/CreateNewPassword';
 
 function App() {
 	return (
@@ -33,7 +35,9 @@ function App() {
 				<Route path="login" element={<Login />} />
 				<Route path="control" element={<Control />} />
 				<Route path="register" element={<Register />} />
+				<Route path="forgot-password" element={<ResetPassword />} />
 				<Route path="admin" element={<PrivateRoute outlet={<Admin />} />} />
+
 				<Route path="*" element={<Notfound />} />
 			</Routes>
 		</div>

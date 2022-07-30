@@ -7,6 +7,17 @@ import {
 } from '../types/pokemonInterface';
 import axiosClient from './axiosClient';
 
+export const accountApi = {
+	register(data): Promise<any> {
+		const url = '/users-auth/registration/';
+		return axiosClient.post(url, data);
+	},
+	getData(data) {
+		const url = '/users/me/';
+		return axiosClient.get(url, data);
+	},
+};
+
 const pokeApi = {
 	getData(): Promise<Data> {
 		const url = '/courses/';

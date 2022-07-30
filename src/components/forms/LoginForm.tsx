@@ -2,16 +2,19 @@
 import { css } from '@emotion/react';
 import { Checkbox } from 'antd';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox/Checkbox';
+import axios from 'axios';
 import { useFormik } from 'formik';
 // import { Link, navigate } from 'gatsby';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { accountApi } from 'src/apis/pokeApi';
 import AppButton from 'src/components/button';
 import ErrorMessage from 'src/components/error-message';
 import AppInput from 'src/components/input';
 import { useQueryParam } from 'src/hooks/useQueryParam';
 import { LoginFormData, LoginQueryParams } from 'src/models';
-// import AuthService from 'src/services/auth';
+import AuthService from 'src/services/auth';
+import { LoginParams } from 'src/services/auth/model';
 // import UserService from 'src/services/user';
 import { StorageKeys, UserType } from 'src/utils/enum';
 import RoutePaths from 'src/utils/routes';
@@ -37,60 +40,18 @@ const LoginForm: React.FC = () => {
 	);
 	const formik = useFormik<LoginFormData>({
 		initialValues: {
-			email: '',
-			password: '',
+			email: 'test10@gmail.com',
+			password: 'tuancuong123',
 		},
 		validationSchema: validationSchema.current,
 		validateOnChange: true,
 		validateOnBlur: true,
-		onSubmit: async (values: { email: any; password: any }) => {
+		onSubmit: async (values: LoginParams) => {
 			const { email, password } = values;
-			// POST request using fetch with async/await
-			console.log('value:   ', values);
-			const requestOptions = {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ email: email, password: password }),
-			};
-			const response = await fetch(
-				'http://127.0.0.1:8000/api/users-auth/token/',
-				requestOptions
-			);
-			console.log(response);
 
-			const data = await response.json();
-			console.log('data', data.access);
-			const requestOptions2 = {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${data.access}`,
-				},
-			};
-			const response2 = await fetch(
-				'http://127.0.0.1:8000/api/users/me/',
-				requestOptions2
-			);
-			console.log(response2);
-			const data2 = await response2.json();
-			console.log('data', data2);
-			//luuw token lai
+			const response = await AuthService.signIn(values.email, values.password);
+			console.log('test axios:', response);
 		},
-		// setIsLoading(true);
-		// try {
-		// 	await AuthService.signIn({
-		// 		username: email,
-		// 		password,
-		// 	});
-		// 	const user = await UserService.getMyProfile();
-
-		// 	handleUrlNavigation(user);
-		// } catch (error) {
-		// 	setLoginError((error as Error).message);
-		// } finally {
-		// 	setIsLoading(false);
-		// 	formik.setSubmitting(false);
-		// }
 	});
 	// useEffect(() => {
 	// 	console.log('login');
