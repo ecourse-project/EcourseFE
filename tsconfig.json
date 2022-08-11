@@ -22,6 +22,7 @@
 		"paths": {
 			"src/*": ["./src/*"]
 		},
+		"jsxImportSource": "@emotion/react",
 		"types": [
 			"@emotion/react/types/css-prop",
 			"jest",

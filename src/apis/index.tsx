@@ -7,6 +7,7 @@
 // - POST: localhost:8000/api/users/password-change/                                       =====> Change password
 const apiURL = {
 	login: 'users-auth/token/',
+	me: 'users/me/',
 	register: 'users-auth/registration/',
 	existEmail: 'users/exists/',
 	resetPwd: 'users/password-reset/',

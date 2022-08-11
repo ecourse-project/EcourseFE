@@ -1,47 +1,39 @@
-import axios from 'axios';
 import React, { useEffect } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import './App.css';
-import About from './layouts/About';
-import Admin from './layouts/Admin';
-import Control from './layouts/Control';
-// import Login from 'src/pages/login';
-import Login from 'src/sections/Login';
-import Navigation from './layouts/Navigation';
-import Register from 'src/sections/Register';
-// import Register from 'src/pages/register';
-import Home from './pages/Home';
+import Login from 'src/pages/login';
+import Logout from './pages/logout';
+import Register from 'src/pages/register';
+import Home from './pages/home';
 import Notfound from './pages/Notfound';
-import PrivateRoute from './utils/PrivateRoute';
-/** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
-import Gallery from 'src/pages/Gallery';
-import Slideshow from 'src/pages/Slideshow';
-import Slide from './pages/SlideShowImage';
 import ResetPassword from './components/forgot-password/ResetPassword';
-import CreateNewPassword from './components/forgot-password/CreateNewPassword';
+import RoutePaths from './utils/routes';
+import { StorageKeys } from './utils/enum';
+import ProductDetail from './components/products/product_detail';
 
-function App() {
+const App = () => {
+	const navigate = useNavigate();
+	useEffect(() => {
+		if (localStorage.getItem(StorageKeys.SESSION_KEY)) navigate('/home');
+		else navigate('auth/login');
+		// console.log('Mount');
+		// navigate('auth/login');
+	}, []);
 	return (
 		<div className="App">
-			<div>
-				<Navigation />
-			</div>
 			<Routes>
-				<Route path="/" element={<Home />} />
-				{/* <Route path="/home" element={<Gallery />} />
-				<Route path="/slideshow" element={<Slideshow />} /> */}
-				<Route path="carts" element={<About />} />
-				<Route path="login" element={<Login />} />
-				<Route path="control" element={<Control />} />
+				<Route path="/home" element={<Home />} />
+				<Route path="/product/:id" element={<ProductDetail />} />
+				<Route path="auth/login" element={<Login />} />
+				<Route path="auth/logout" element={<Logout />} />
+
 				<Route path="register" element={<Register />} />
 				<Route path="forgot-password" element={<ResetPassword />} />
-				<Route path="admin" element={<PrivateRoute outlet={<Admin />} />} />
 
 				<Route path="*" element={<Notfound />} />
 			</Routes>
 		</div>
 	);
-}
+};
 
 export default App;

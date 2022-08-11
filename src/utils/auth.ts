@@ -2,7 +2,6 @@
 // import { navigate } from 'gatsby';
 import { useNavigate } from 'react-router-dom';
 import RoutePaths from './routes';
-const navigate = useNavigate();
 export interface User {
 	name: string;
 	psw: string;
@@ -14,9 +13,9 @@ export const forceLogout = (): void => {
 		typeof window !== 'undefined' &&
 		!window.location.pathname.includes('/login')
 	) {
-		navigate(
-			`${RoutePaths.LOGIN}/?redirect_url=${window.location.pathname}${window.location.search}`
-		);
+		// navigate(
+		// 	`${RoutePaths.LOGIN}/?redirect_url=${window.location.pathname}${window.location.search}`
+		// );
 	}
 };
 

@@ -16,11 +16,9 @@ const root = createRoot(container);
 root.render(
 	<React.StrictMode>
 		<BrowserRouter>
-			<Provider store={store}>
-				<ThemeProvider theme={appTheme}>
-					<App />
-				</ThemeProvider>
-			</Provider>
+			<ThemeProvider theme={appTheme}>
+				<App />
+			</ThemeProvider>
 		</BrowserRouter>
 	</React.StrictMode>
 );

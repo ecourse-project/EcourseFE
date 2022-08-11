@@ -40,7 +40,7 @@ const CreateNewPassword: React.FC = () => {
 					.container {
 						padding: 50px 35px;
 						border-radius: 20px;
-						background-color: #000;
+						background-color: #051d29;
 						background-image: none;
 						backdrop-filter: blur(14px);
 						color: #fff;

@@ -1,8 +1,8 @@
 const RoutePaths = {
-	LOGIN: '/login',
+	LOGIN: '/auth/login',
 	DASHBOARD: '/',
 	VERIFY_ACCOUNT: '/verify',
-	LOGOUT: '/logout',
+	LOGOUT: '/auth/logout',
 	SETTINGS: '/settings',
 	NOT_FOUND: '/404',
 	CAMPAIGNS: '/campaigns',
@@ -29,5 +29,6 @@ const RoutePaths = {
 	CAMPAIGN_NFT_DETAIL: '/campaign-nft-detail',
 	MINT_CAMPAIGN_NFT: '/mint-campaign-nft',
 	MAILING_LISTS_CREATE: '/mailing-lists/create',
+	HOME: '/home',
 };
 export default RoutePaths;

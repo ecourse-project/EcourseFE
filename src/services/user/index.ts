@@ -11,9 +11,9 @@ import apiURL from 'src/apis';
 import { apiClient } from 'src/config/apiClient';
 
 class UserService {
-	// static getMyProfile(): Promise<User> {
-	// 	return apiIns.user.me();
-	// }
+	static getMyProfile(): Promise<any> {
+		return apiClient.get(apiURL.me);
+	}
 	// static register(args: RegisterUserRegisterArgs): Promise<User> {
 	// 	return apiIns.user.register(args);
 	// }

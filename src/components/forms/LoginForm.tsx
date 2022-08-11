@@ -48,9 +48,17 @@ const LoginForm: React.FC = () => {
 		validateOnBlur: true,
 		onSubmit: async (values: LoginParams) => {
 			const { email, password } = values;
-
-			const response = await AuthService.signIn(values.email, values.password);
-			console.log('test axios:', response);
+			try {
+				const response = await AuthService.signIn(email, password);
+				navigate('/home');
+				console.log('test axios:', response);
+				localStorage.setItem(StorageKeys.SESSION_KEY, response.toString());
+			} catch (error) {
+				setLoginError((error as Error).message);
+			} finally {
+				setIsLoading(false);
+				formik.setSubmitting(false);
+			}
 		},
 	});
 	// useEffect(() => {

@@ -5,8 +5,12 @@ import { apiClient } from 'src/config/apiClient';
 import { LoginParams } from './model';
 
 class AuthService {
-	static signIn(email: string, password: string): Promise<unknown> {
-		return apiClient.post(apiURL.login, { email: email, password: password });
+	static async signIn(email: string, password: string): Promise<string> {
+		const repsonse = await apiClient.post(apiURL.login, {
+			email: email,
+			password: password,
+		});
+		return repsonse.data.access;
 	}
 	// static verifyEmail(key: string): Promise<unknown> {
 	// 	return apiIns.auth.verifyEmail(key);

@@ -55,7 +55,7 @@ const baseStyle = (
 				border-color: ${theme.text.blackColor};
 			}
 			&:focus {
-				border: 1px solid ${theme.text.blueColor};
+				// border: 1px solid ${theme.text.blueColor};
 				box-shadow: none;
 			}
 		}

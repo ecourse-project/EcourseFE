@@ -1,6 +1,5 @@
 import { FaRegUser } from 'react-icons/fa';
 /** @jsxImportSource @emotion/react */
-/** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import { Link } from 'react-router-dom';
 import React from 'react';
@@ -47,6 +46,7 @@ const LoginUI: React.FC = () => {
 								background-color: #e7edf3;
 								color: #051d29;
 								> h2 {
+									color: #ffa535;
 									font-size: 30px;
 								}
 							}

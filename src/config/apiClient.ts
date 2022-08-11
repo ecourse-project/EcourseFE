@@ -33,7 +33,7 @@ export const apiClient = axios.create({
 	baseURL: baseUrl,
 	headers: {
 		'Content-Type': 'application/json',
-		// Authorization: `Bearer ${sessionStorage.get('Access-Token')}`,
+		// Authorization: `Bearer ${localStorage.getItem('Access-Token')}`,
 	},
 	withCredentials: true,
 });

@@ -42,12 +42,6 @@ export interface ResponseLogin {
 	message: string;
 }
 
-export interface AuthContextType {
-	isLoggedIn: boolean;
-	logIn: (username_password: UserLogin) => void;
-	logOut: () => void;
-}
-
 export interface UserLogin extends User {
 	username: string;
 	password: string;

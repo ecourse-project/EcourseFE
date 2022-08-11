@@ -42,7 +42,7 @@ const ResetPassword: React.FC = () => {
 					.container {
 						padding: 50px 35px;
 						border-radius: 20px;
-						background-color: #000;
+						background-color: #051d29;
 						background-image: none;
 						backdrop-filter: blur(14px);
 						color: #fff;
@@ -76,7 +76,7 @@ const ResetPassword: React.FC = () => {
 			`}
 		>
 			<div className="wrapper">
-				<div className="left-out" onClick={() => navigate(RoutePaths.LOGIN)}>
+				<div className="left-out" onClick={() => navigate(RoutePaths.LOGOUT)}>
 					<Image src={ArrowLeft} preview={false} />
 				</div>
 
@@ -104,7 +104,7 @@ const ResetPassword: React.FC = () => {
 										type="primary"
 										htmlType="submit"
 										// disabled={formik.isSubmitting}
-										onClick={() => navigate('/login')}
+										onClick={() => navigate(RoutePaths.LOGIN)}
 									>
 										Done
 									</AppButton>
