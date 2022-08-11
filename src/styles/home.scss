@@ -1,0 +1,14 @@
+.container-home {
+    height: 85vh;
+
+    background: url("https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/International_Pok%C3%A9mon_logo.svg/1200px-International_Pok%C3%A9mon_logo.svg.png") no-repeat center center fixed;
+    background-size: contain;
+
+    h1 {
+        font-size: 2rem;
+        font-weight: bold;
+        font-style: italic;
+
+        margin: 1rem 10rem;
+    }
+}

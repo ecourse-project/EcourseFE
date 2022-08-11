@@ -1,0 +1,58 @@
+%border-main {
+  border-color: var(--#{$prefix}color-main);
+}
+
+%color-main {
+  color: var(--#{$prefix}color-main);
+}
+
+.ant-pagination-item {
+  &-active {
+    @extend %border-main;
+  }
+
+  &:hover {
+    @extend %border-main;
+  }
+
+  a {
+    @extend %color-main;
+
+    &:hover {
+      @extend %color-main;
+    }
+  }
+}
+
+.ant-pagination-next {
+  &:hover {
+    .ant-pagination-item-link {
+      @extend %border-main;
+    }
+
+    .anticon {
+      @extend %color-main;
+    }
+  }
+}
+
+.ant-pagination-options {
+  &:hover {
+    .ant-select {
+      &:not(.ant-select-disabled) {
+        .ant-select-selector {
+          @extend %border-main;
+        }
+      }
+    }
+  }
+}
+
+.ant-pagination-jump-prev,
+.ant-pagination-jump-next {
+  .ant-pagination-item-container {
+    .ant-pagination-item-link-icon {
+      @extend %color-main;
+    }
+  }
+}
