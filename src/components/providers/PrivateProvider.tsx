@@ -1,5 +1,6 @@
+// import { navigate } from '@reach/router';
+import { useNavigate } from 'react-router-dom';
 import React, { ReactNode, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { LoadingPage } from 'src/components/loading/loadingBase';
 // import AuthAction from 'src/reducers/auth/action';
 // import UserAction from 'src/reducers/user/action';
@@ -10,7 +11,6 @@ import { StorageKeys } from 'src/utils/enum';
 import RoutePaths from 'src/utils/routes';
 
 const PrivateProvider: React.FC<{ children?: ReactNode }> = ({ children }) => {
-	const dispatch = useDispatch();
 	const [isLoading, setIsLoading] = useState(true);
 	const getUserProfile = async () => {
 		try {
@@ -43,10 +43,13 @@ const PrivateProvider: React.FC<{ children?: ReactNode }> = ({ children }) => {
 	// };
 
 	const checkAccountPermission = () => {
+		// const navigate = useNavigate();
+
 		const token = localStorage.getItem(StorageKeys.SESSION_KEY);
 		if (!token) {
 			setIsLoading(false);
-			forceLogout();
+			// navigate(RoutePaths.LOGIN);
+			// forceLogout();
 		} else {
 			getUserProfile();
 		}

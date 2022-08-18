@@ -16,7 +16,7 @@ const Notfound = () => {
 					We&apos;re fairly sure that page used to be here, but seems to have
 					gone missing. We do apologise on it&apos;s behalf.
 				</p>
-				<Link to="/home" target="_self" rel="noreferrer noopener">
+				<Link to="/" target="_self" rel="noreferrer noopener">
 					Home
 				</Link>
 			</div>

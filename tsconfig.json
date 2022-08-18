@@ -18,11 +18,12 @@
 		"isolatedModules": false,
 		"noEmit": true,
 		"noImplicitAny": false,
-		"jsx": "preserve",
+		// "jsx": "preserve",
 		"paths": {
 			"src/*": ["./src/*"]
 		},
 		"jsxImportSource": "@emotion/react",
+		"jsx": "react-jsx",
 		"types": [
 			"@emotion/react/types/css-prop",
 			"jest",

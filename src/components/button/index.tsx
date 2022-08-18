@@ -3,6 +3,7 @@
 import React from 'react';
 import { Button } from 'antd';
 import { ButtonProps } from 'antd/lib/button';
+/** @jsxImportSource @emotion/react */
 import { css, useTheme } from '@emotion/react';
 
 interface AppButtonProps extends ButtonProps {

@@ -3,7 +3,7 @@ import React from 'react';
 function ProductRating() {
 	return (
 		<div className="hstack">
-			<FontAwesomeIcon
+			{/* <FontAwesomeIcon
 				icon={['fas', 'star']}
 				size="sm"
 				className="text-warning"
@@ -27,7 +27,7 @@ function ProductRating() {
 				icon={['fas', 'star-half-alt']}
 				size="sm"
 				className="text-warning"
-			/>
+			/> */}
 		</div>
 	);
 }

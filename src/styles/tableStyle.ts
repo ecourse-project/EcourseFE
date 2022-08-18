@@ -1,10 +1,8 @@
-/** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 
 export const tableStyle = css`
 	background-color: #fff;
 	padding: 30px;
-	overflow: auto;
 	h2 {
 		font-size: 22px;
 		font-weight: 700;
@@ -15,8 +13,7 @@ export const tableStyle = css`
 		text-align: center;
 	}
 	.past-orders-table {
-		width: 1660px;
-		max-width: inherit;
+		max-width: 100%;
 		.ant-table-content {
 			.ant-table-thead {
 				.ant-table-cell {
@@ -27,7 +24,7 @@ export const tableStyle = css`
 					padding: 14px 35px 14px 0;
 					max-width: 200px;
 					&:last-child {
-						padding: 0;
+						padding-left: 20px;
 					}
 					&::before {
 						display: none;
@@ -42,18 +39,18 @@ export const tableStyle = css`
 						padding: 14px 35px 14px 0;
 						max-width: 200px;
 						&:last-child {
-							padding: 0;
+							padding-left: 20px;
 						}
 						.ant-image {
 							max-width: 83px;
 						}
 					}
 					.mint-action {
-						border-color: #ffa900 !important;
-						background-color: #ffa900 !important;
+						border-color: #ffa535 !important;
+						background-color: #ffa535 !important;
 						height: 30px;
 						width: 153px;
-						color: #333;
+						color: #000;
 						font-size: 13px;
 						font-weight: 700;
 						border-radius: 2px;
@@ -72,5 +69,10 @@ export const tableStyle = css`
 				}
 			}
 		}
+	}
+	.recipient-btn {
+		color: #fff;
+		background-color: #000;
+		border: none;
 	}
 `;

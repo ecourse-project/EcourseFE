@@ -2,10 +2,14 @@ import { FaRegUser } from 'react-icons/fa';
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import { Link } from 'react-router-dom';
-import React from 'react';
+import React, { useEffect } from 'react';
 import LoginForm from 'src/components/forms/LoginForm';
+import globalVariable from 'src/config/env';
 
 const LoginUI: React.FC = () => {
+	useEffect(() => {
+		console.log('url', globalVariable.API_URL);
+	}, []);
 	return (
 		<div
 			css={css`

@@ -40,7 +40,7 @@ const LoginForm: React.FC = () => {
 	);
 	const formik = useFormik<LoginFormData>({
 		initialValues: {
-			email: 'test10@gmail.com',
+			email: 'testcart@gmail.com',
 			password: 'tuancuong123',
 		},
 		validationSchema: validationSchema.current,
@@ -50,9 +50,11 @@ const LoginForm: React.FC = () => {
 			const { email, password } = values;
 			try {
 				const response = await AuthService.signIn(email, password);
-				navigate('/home');
-				console.log('test axios:', response);
-				localStorage.setItem(StorageKeys.SESSION_KEY, response.toString());
+				navigate('/');
+				localStorage.setItem(
+					StorageKeys.SESSION_KEY,
+					response.access.toString()
+				);
 			} catch (error) {
 				setLoginError((error as Error).message);
 			} finally {
@@ -211,7 +213,7 @@ const LoginForm: React.FC = () => {
 						Remember me
 					</Checkbox>
 				</div>
-				<Link className="forgot-pwd" to="/forgot-password/">
+				<Link className="forgot-pwd" to={RoutePaths.FORGOT_PASSWORD}>
 					Forgot password?
 				</Link>
 			</div>
