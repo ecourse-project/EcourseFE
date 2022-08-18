@@ -87,8 +87,8 @@ function ShoppingCart() {
 					</div>
 					<PricingCard
 						data={cartData.totalPrice || 0}
-						pricingOnly=""
-						children={undefined}
+						docNum={cartData.cartNum}
+						children={null}
 						visible={handleSetVisible}
 					/>
 				</div>
