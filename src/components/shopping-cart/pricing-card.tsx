@@ -7,13 +7,13 @@ import CourseService from 'src/services/course';
 import { Modal } from 'antd';
 interface ChildProps {
 	data: number;
-	pricingOnly: string;
+	docNum: number;
 	children: ReactNode;
 	visible: (value: boolean) => void;
 }
 const PricingCard: React.FC<ChildProps> = ({
 	data,
-	pricingOnly,
+	docNum,
 	children,
 	visible,
 }) => {
@@ -53,7 +53,7 @@ const PricingCard: React.FC<ChildProps> = ({
 						<span className="fw-bold h5 mb-0">{formatCurrency(data)}</span>
 					</div>
 
-					{!pricingOnly && (
+					{
 						<div className="d-grid gap-2 mt-2">
 							<AppButton
 								btnTextColor={'black'}
@@ -61,7 +61,7 @@ const PricingCard: React.FC<ChildProps> = ({
 								btnSize={'small'}
 								btnWidth={'full-w'}
 								onClick={handleOnClick}
-								disabled={btnText === 'CREATED'}
+								disabled={btnText === 'CREATED' || docNum === 0}
 							>
 								{btnText}
 							</AppButton>
@@ -69,8 +69,7 @@ const PricingCard: React.FC<ChildProps> = ({
 								<a className="btn btn-outline-primary">Continue Shopping</a>
 							</Link>
 						</div>
-					)}
-					{children}
+					}
 				</div>
 			</div>
 		</div>
