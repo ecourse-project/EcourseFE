@@ -1,6 +1,6 @@
 import React from 'react';
 import Loadable from 'react-loadable';
-// import PublicProvider from 'src/components/providers/PublicProvider';
+import PublicProvider from 'src/components/providers/PublicProvider';
 import { LoadingPage } from 'src/components/loading/loadingBase';
 
 const VerifyLoadable = Loadable({
@@ -10,9 +10,9 @@ const VerifyLoadable = Loadable({
 const VerifyPage: React.FC = () => {
 	return (
 		<React.Fragment>
-			{/* <PublicProvider> */}
-			<VerifyLoadable />
-			{/* </PublicProvider> */}
+			<PublicProvider>
+				<VerifyLoadable />
+			</PublicProvider>
 		</React.Fragment>
 	);
 };

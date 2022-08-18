@@ -23,16 +23,8 @@ import RoutePaths from 'src/utils/routes';
 import { useNavigate } from 'react-router-dom';
 import { accountApi } from 'src/apis/pokeApi';
 import UserService from 'src/services/user';
-export interface InitForm {
-	username?: string;
-	email: string;
-	password1: string;
-	password2: string;
-	first_name: string;
-	last_name: string;
-	website_url?: string;
-	phone?: string;
-}
+import { IRegistration } from 'src/models/backend_modal';
+import AuthService from 'src/services/auth';
 
 const RegisterForm: React.FC = () => {
 	const navigate = useNavigate();
@@ -40,32 +32,9 @@ const RegisterForm: React.FC = () => {
 	const [errorUploadImg, setErrorUploadImg] = React.useState<boolean>(false);
 	const validationSchema = React.useRef(
 		Yup.object().shape({
-			username: Yup.string()
-				.required(validation.username.required)
-				.test(
-					'existingUsername',
-					validation.username.format,
-					async (value: any) => {
-						try {
-							const userExist = await checkExisted(value);
-							return !userExist;
-						} catch (error) {
-							return false;
-						}
-					}
-				),
-
-			first_name: Yup.string()
-				.required(validation.firstName.required)
-				.test('alphabet', validation.firstName.format, (value: any) => {
-					if (value && value.length > 0) {
-						return regex.alphabet.test(value.trim());
-					}
-					return false;
-				}),
-			last_name: Yup.string()
-				.required(validation.lastName.required)
-				.test('alphabet', validation.lastName.format, (value: any) => {
+			full_name: Yup.string()
+				.required(validation.fullName.required)
+				.test('alphabet', validation.fullName.format, (value: any) => {
 					if (value && value.length > 0) {
 						return regex.alphabet.test(value.trim());
 					}
@@ -92,13 +61,13 @@ const RegisterForm: React.FC = () => {
 				.matches(/^[\w.-]+@([\w-]+\.)+[\w-]{1,4}$/, validation.email.invalid)
 				.test('existingEmail', validation.email.format, async (value: any) => {
 					try {
-						const emailExist = await checkExisted('', value);
-						return !emailExist;
+						const emailExist = await UserService.existsEmail(value);
+						return !emailExist.exists;
 					} catch (error) {
 						return false;
 					}
 				}),
-			password1: Yup.string()
+			password: Yup.string()
 				.required(validation.password.required)
 				.matches(regex.password, {
 					message: validation.password.invalidPwdRegex,
@@ -109,7 +78,7 @@ const RegisterForm: React.FC = () => {
 					'passwords-match',
 					validation.confirmPassword.doesNotMatch,
 					function (value) {
-						return this.parent.password1 === value;
+						return this.parent.password === value;
 					}
 				),
 		})
@@ -119,80 +88,28 @@ const RegisterForm: React.FC = () => {
 	const [isTickAgree, setIsTickAgree] = React.useState<boolean>(false);
 	const [generalError, setGeneralError] = React.useState<string>('');
 	// const userAsset = useSelector((state: RootState) => state.user.userAssets);
-	const formik = useFormik<InitForm>({
+	const formik = useFormik<IRegistration>({
 		initialValues: {
-			username: 'test',
-			first_name: 'Cuong',
-			last_name: 'Nguyen',
+			full_name: 'NHTC',
 			email: 'test@gmail.com',
-			password1: 'tuancuong123',
+			password: 'tuancuong123',
 			password2: 'tuancuong123',
 		},
 		validationSchema: validationSchema.current,
 		validateOnChange: true,
 		validateOnBlur: true,
 		onSubmit: async (values) => {
-			const { username, first_name, last_name, email, password1, password2 } =
-				values;
-			// setIsLoading(true);
-			const requestOptions = {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({
-					username: username,
-					password: password1,
-					password2: password2,
-					email: email,
-					first_name: first_name,
-					last_name: last_name,
-					avatar: 'D:/hinh/Thailand/IMG_0244.jpg',
-				}),
-			};
-			const response = await fetch(
-				'http://127.0.0.1:8000/api/users-auth/registration/',
-				requestOptions
-			);
-			console.log('response: ', response);
-			// const data = JSON.stringify({
-			// 	username: username,
-			// 	password: password1,
-			// 	password2: password2,
-			// 	email: email,
-			// 	first_name: first_name,
-			// 	last_name: last_name,
-			// 	avatar: 'D:/hinh/Thailand/IMG_0244.jpg',
-			// });
-			// const response = accountApi.register(data);
-			// console.log('165', response);
-
-			// try {
-			// 	if (values?.user_type === UserType.MANAGER) {
-			// 		delete values.dre;
-			// 		delete values.market;
-			// 		delete values.website_url;
-			// 	}
-			// 	values.last_name = values?.last_name.trim();
-			// 	values.first_name = values?.first_name.trim();
-			// 	values.phone = `+1${values.phone}`;
-			// 	if (!values.avatar) {
-			// 		delete values.avatar;
-			// 	}
-			// 	await UserService.register(values);
-			// 	localStorage.setItem('email_register', values?.email);
-			// 	navigate(RoutePaths.VERIFY_ACCOUNT);
-			// } catch (error) {
-			// 	values.phone = values.phone.slice(2);
-			// 	setGeneralError(error.message);
-			// } finally {
-			// 	formik.setSubmitting(false);
-			// 	setIsLoading(false);
-			// }
+			try {
+				UserService.register(values);
+			} catch (error) {
+				console.log(error);
+			}
 		},
 	});
-	const checkExisted = async (username = '', email = '') => {
-		const res = await UserService.existsEmail(username, email);
-		return res;
-	};
+	// const checkExisted = async (email = '') => {
+	// 	const res = await UserService.existsEmail(email);
+	// 	return res;
+	// };
 
 	const hasError = (key: string) => {
 		return (
@@ -283,61 +200,23 @@ const RegisterForm: React.FC = () => {
 					</ErrorMessage>
 				)}
 			</div>
+
 			<div className="form-item">
 				<AppInput
 					requiredMark
 					className="field firstName-field"
-					label="Username"
-					name="username"
+					label="Full Name"
+					name="full_name"
 					type="string"
-					placeholder="User Name"
-					value={formik.values.username}
+					placeholder="Full Name"
+					value={formik.values.full_name}
 					handleChange={formik.handleChange}
 					handleBlur={formik.handleBlur}
-					hasError={hasError('username')}
+					hasError={hasError('full_name')}
 				/>
-				{hasError('username') ? (
+				{hasError('full_name') ? (
 					<ErrorMessage className="error">
-						{formik.errors.username}
-					</ErrorMessage>
-				) : null}
-			</div>
-			<div className="form-item">
-				<AppInput
-					requiredMark
-					className="field firstName-field"
-					label="First Name"
-					name="first_name"
-					type="string"
-					placeholder="First Name"
-					value={formik.values.first_name}
-					handleChange={formik.handleChange}
-					handleBlur={formik.handleBlur}
-					hasError={hasError('first_name')}
-				/>
-				{hasError('first_name') ? (
-					<ErrorMessage className="error">
-						{formik.errors.first_name}
-					</ErrorMessage>
-				) : null}
-			</div>
-			<div className="form-item">
-				<AppInput
-					className="field lastName-field"
-					label="Last Name"
-					requiredMark
-					name="last_name"
-					type="string"
-					disabled={isLoading}
-					placeholder="Last Name"
-					handleChange={formik.handleChange}
-					handleBlur={formik.handleBlur}
-					value={formik.values.last_name}
-					hasError={hasError('last_name')}
-				/>
-				{hasError('last_name') ? (
-					<ErrorMessage className="error">
-						{formik.errors.last_name}
+						{formik.errors.full_name}
 					</ErrorMessage>
 				) : null}
 			</div>
@@ -372,12 +251,12 @@ const RegisterForm: React.FC = () => {
 					disabled={isLoading}
 					handleChange={formik.handleChange}
 					handleBlur={formik.handleBlur}
-					value={formik.values.password1}
+					value={formik.values.password}
 					hasError={hasError('password1')}
 				/>
 				{hasError('password1') ? (
 					<ErrorMessage className="error">
-						{formik.errors.password1}
+						{formik.errors.password}
 					</ErrorMessage>
 				) : null}
 			</div>

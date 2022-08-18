@@ -441,7 +441,7 @@ export const callApi = async (method, url, data) => {
 		body: JSON.stringify(data),
 	};
 	const response = await fetch(
-		'http://127.0.0.1:8000/api/users-auth/token/',
+		'http://127.0.0.1:4000/api/users-auth/token/',
 		requestOptions
 	);
 	console.log(`response of call API ${url}`);

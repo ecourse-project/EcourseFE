@@ -1,10 +1,10 @@
 import { string } from 'yup';
 
-export interface PaginationParams {
-	_limit: number;
-	_page: number;
-	_total: number;
-}
+// export interface PaginationParams {
+// 	_limit: number;
+// 	_page: number;
+// 	_total: number;
+// }
 
 export interface ListResponse<T> {
 	data: T[];

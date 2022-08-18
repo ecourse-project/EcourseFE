@@ -2,15 +2,15 @@
 import { emit } from 'process';
 import apiURL from 'src/apis';
 import { apiClient } from 'src/config/apiClient';
+import { OToken } from 'src/models/backend_modal';
 import { LoginParams } from './model';
 
 class AuthService {
-	static async signIn(email: string, password: string): Promise<string> {
-		const repsonse = await apiClient.post(apiURL.login, {
+	static signIn(email: string, password: string): Promise<OToken> {
+		return apiClient.post(apiURL.login(), {
 			email: email,
 			password: password,
 		});
-		return repsonse.data.access;
 	}
 	// static verifyEmail(key: string): Promise<unknown> {
 	// 	return apiIns.auth.verifyEmail(key);
@@ -19,7 +19,7 @@ class AuthService {
 	// 	return apiIns.auth.resendEmail(email);
 	// }
 	static resetPassword(email: string): Promise<unknown> {
-		return apiClient.post(apiURL.resetPwd, {
+		return apiClient.post(apiURL.resetPwd(), {
 			email: email,
 		});
 	}

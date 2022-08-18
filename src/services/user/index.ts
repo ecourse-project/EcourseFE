@@ -9,24 +9,29 @@
 
 import apiURL from 'src/apis';
 import { apiClient } from 'src/config/apiClient';
+import {
+	IRegistration,
+	OIsExist,
+	ORegistration,
+} from 'src/models/backend_modal';
 
 class UserService {
 	static getMyProfile(): Promise<any> {
-		return apiClient.get(apiURL.me);
+		return apiClient.get(apiURL.me());
 	}
-	// static register(args: RegisterUserRegisterArgs): Promise<User> {
-	// 	return apiIns.user.register(args);
-	// }
-	static async existsEmail(email: string, username: string): Promise<boolean> {
-		const res = await apiClient.get(apiURL.existEmail, {
-			params: {
-				email: email,
-				username: username,
-			},
+	static register(params: IRegistration): Promise<ORegistration> {
+		return apiClient.post(apiURL.register(), {
+			// 			email: params.email;
+			// password: params.;
+			// password2: string;
+			// full_name: string;
+			...params,
 		});
-		console.log('27', res);
-		return res.data.exists;
 	}
+	static existsEmail(email: string): Promise<OIsExist> {
+		return apiClient.get(apiURL.existEmail(email));
+	}
+
 	// static existsDRE(dre: string): Promise<boolean> {
 	// 	return apiIns.user.existsDRE(dre);
 	// }

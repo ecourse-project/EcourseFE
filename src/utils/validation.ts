@@ -51,6 +51,11 @@ const validation = {
 	role: {
 		required: 'Please select a role',
 	},
+	fullName: {
+		required: 'This field is required.',
+		trim: 'Full Name cannot include leading and trailing spaces.',
+		format: 'Full Name cannot include numeric and special characters.',
+	},
 	firstName: {
 		required: 'This field is required.',
 		trim: 'First Name cannot include leading and trailing spaces.',

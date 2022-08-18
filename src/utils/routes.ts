@@ -29,6 +29,14 @@ const RoutePaths = {
 	CAMPAIGN_NFT_DETAIL: '/campaign-nft-detail',
 	MINT_CAMPAIGN_NFT: '/mint-campaign-nft',
 	MAILING_LISTS_CREATE: '/mailing-lists/create',
-	HOME: '/home',
+	HOME: '/',
+	DOCUMENT: '/document',
+	COURSES: '/courses',
+	CLASS_ROOM: '/class-room',
+	MY_COURSES: '/my-courses',
+	CART: '/cart',
+	ORDER_CART: '/order_cart',
+	FORGOT_PASSWORD: '/forgot-password',
+	DOCUMENT_DETAIL: '/document/detail',
 };
 export default RoutePaths;

@@ -69,3 +69,9 @@ export enum PaymentModalType {
 	CREATE_CAMPAIGN = 'CREATE_CAMPAIGN',
 	MINT_NFT = 'MINT_NFT',
 }
+
+export enum GlobalStyle {
+	BACKGROUND_COLOR = '#051d29',
+	HEADER_BG = '#eef8fe',
+	BROWN_YELLOW = 'rgb(255, 165, 53)',
+}
