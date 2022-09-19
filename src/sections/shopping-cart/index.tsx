@@ -7,8 +7,7 @@ import { OCart } from 'src/models/backend_modal';
 import CourseService from 'src/services/course';
 import { Modal } from 'antd';
 import { useAppDispatch, useAppSelector } from 'src/apps/hooks';
-import { RootState } from 'src/apps/storeRedux';
-import { fetchListCart } from 'src/reducers/document/documentSlice';
+import { RootState } from 'src/reducers/model';
 function ShoppingCart() {
 	const [cart, setCart] = useState<OCart>();
 	const [isModalVisible, setIsModalVisible] = useState(true);
@@ -19,11 +18,11 @@ function ShoppingCart() {
 	const fetchData = async () => {
 		const res = await CourseService.getCart();
 		// dispatch(fetchListCart(res.documents));
-		console.log('added');
+		// console.log('added');
 		setCart(res);
 	};
 	useEffect(() => {
-		console.log('active cart', cartData);
+		// console.log('active cart', cartData);
 		// fetchData();
 		// setTotal(
 		// 	// cartData.reduce(
@@ -33,7 +32,7 @@ function ShoppingCart() {
 		// );
 	}, []);
 	useEffect(() => {
-		console.log('visible: ', isModalVisible);
+		// console.log('visible: ', isModalVisible);
 	}, [isModalVisible]);
 	const handleOk = () => {
 		setIsModalVisible(false);
@@ -43,7 +42,7 @@ function ShoppingCart() {
 		setIsModalVisible(false);
 	};
 	const handleSetVisible = (value) => {
-		console.log('value', value);
+		// console.log('value', value);
 		setIsModalVisible(value);
 	};
 	return (
@@ -55,18 +54,12 @@ function ShoppingCart() {
 							<h5 className="my-2">Danh sách tài liệu trong giỏ</h5>
 						</div>
 						<div className="card-body p-2">
-							<div className="table-responsive">
-								<table className="table table-borderless align-middle mb-0">
-									<tbody>
-										{/* {cartData.map((doc, index) => ( */}
-										{cartData.cartDoc.map((doc, index) => (
-											<div key={index}>
-												<CartItemRow document={doc} />
-											</div>
-										))}
-									</tbody>
-								</table>
-							</div>
+							{/* {cartData.map((doc, index) => ( */}
+							{cartData.listCartDoc.map((doc, index) => (
+								<div key={index}>
+									<CartItemRow document={doc} />
+								</div>
+							))}
 						</div>
 					</div>
 				</div>
@@ -87,7 +80,7 @@ function ShoppingCart() {
 					</div>
 					<PricingCard
 						data={cartData.totalPrice || 0}
-						docNum={cartData.cartNum}
+						docNum={cartData.listCartDoc.length}
 						children={null}
 						visible={handleSetVisible}
 					/>

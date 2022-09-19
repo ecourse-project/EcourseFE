@@ -42,7 +42,7 @@ export const apiClient = axios.create({
 // Add a request interceptor
 apiClient.interceptors.request.use(
 	function (config) {
-		console.log('config: ', config);
+		// console.log('config: ', config);
 		// Do something before request is sent
 		const token = localStorage.getItem(StorageKeys.SESSION_KEY);
 		if (token) {

@@ -101,6 +101,7 @@ const RegisterForm: React.FC = () => {
 		onSubmit: async (values) => {
 			try {
 				UserService.register(values);
+				navigate(RoutePaths.LOGIN);
 			} catch (error) {
 				console.log(error);
 			}

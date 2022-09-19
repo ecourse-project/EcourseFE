@@ -4,6 +4,7 @@ import { css } from '@emotion/react';
 import { Link } from 'react-router-dom';
 import React from 'react';
 import RegisterForm from 'src/components/forms/RegisterForm';
+import RoutePaths from 'src/utils/routes';
 
 const RegisterSection: React.FC = () => {
 	return (
@@ -107,7 +108,7 @@ const RegisterSection: React.FC = () => {
 				<div className="register-text">
 					<h5>
 						Already have an account?{' '}
-						<Link className="login-here" to="/login/">
+						<Link className="login-here" to={RoutePaths.LOGIN}>
 							LOGIN HERE
 						</Link>
 					</h5>

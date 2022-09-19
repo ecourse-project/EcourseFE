@@ -35,7 +35,7 @@ const RoutePaths = {
 	CLASS_ROOM: '/class-room',
 	MY_COURSES: '/my-courses',
 	CART: '/cart',
-	ORDER_CART: '/order_cart',
+	ORDER_CART: '/order-cart',
 	FORGOT_PASSWORD: '/forgot-password',
 	DOCUMENT_DETAIL: '/document/detail',
 };

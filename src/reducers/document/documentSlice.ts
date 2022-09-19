@@ -1,107 +1,105 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import {
+	createAsyncThunk,
+	createSlice,
+	current,
+	PayloadAction,
+} from '@reduxjs/toolkit';
+import { Statistic } from 'antd';
 import { access, stat } from 'fs';
-import { AppThunk, RootState } from 'src/apps/storeRedux';
-import { Document } from 'src/models/backend_modal';
+import { actionChannel } from 'redux-saga/effects';
+import {
+	Document,
+	OCart,
+	OutputOrder,
+	Pagination,
+} from 'src/models/backend_modal';
+import { OrderStatus } from 'src/sections/order/order-card';
 import CourseService from 'src/services/course';
+import { DocStatus } from 'src/utils/enum';
 // import { fetchCount } from './counterAPI';
 
 export interface DocumentState {
-	cartDoc: Document[];
-	cartNum: number;
-	bought: Document[];
+	loading: boolean;
+	listDoc: Pagination<Document>;
+	listCartDoc: Document[];
+	listBoughtDoc: Document[];
 	totalPrice: number;
-	// status: 'idle' | 'loading' | 'failed';
+	listOrder: Pagination<OutputOrder>;
 }
 
 const initialState: DocumentState = {
-	cartDoc: [],
-	cartNum: 0,
-	bought: [],
+	loading: false,
+	listDoc: {} as Pagination<Document>,
+	listOrder: {} as Pagination<OutputOrder>,
+	listCartDoc: [],
+	listBoughtDoc: [],
 	totalPrice: 0,
 };
-
-// The function below is called a thunk and allows us to perform async logic. It
-// can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This
-// will call the thunk with the `dispatch` function as the first argument. Async
-// code can then be executed and other actions can be dispatched. Thunks are
-// typically used to make async requests.
-// export const fetchListCart = createAsyncThunk(
-// 	'counter/fetchListCart',
-// 	async () => {
-// 		const response = await CourseService.getCart();
-// 		// The value we return becomes the `fulfilled` action payload
-// 		return response;
-// 	}
-// );
 
 export const documentSlice = createSlice({
 	name: 'cart',
 	initialState,
-	// The `reducers` field lets us define reducers and generate associated actions
 	reducers: {
+		fetchListDoc: (state, action: PayloadAction<Pagination<Document>>) => {
+			state.listDoc = action.payload;
+		},
+		fetchListOrder: (state, action: PayloadAction<Pagination<OutputOrder>>) => {
+			state.listOrder = action.payload;
+		},
+		cancelOrder: (state, action: PayloadAction<OutputOrder>) => {
+			state.listOrder.results.map((v) =>
+				v.id === action.payload.id ? (v.status = OrderStatus.FAILED) : ''
+			);
+		},
+		updateCart: (state, action: PayloadAction<Document>) => {
+			console.log('curernte', current(state));
+		},
 		addToCart: (state, action: PayloadAction<Document>) => {
-			// Redux Toolkit allows us to write "mutating" logic in reducers. It
-			// doesn't actually mutate the state because it uses the Immer library,
-			// which detects changes to a "draft state" and produces a brand new
-			// immutable state based off those changes
-			state.cartDoc.push(action.payload);
-			state.cartNum += 1;
-			state.totalPrice = state.cartDoc.reduce((cur, next) => {
-				return cur + next.price;
-			}, 0);
+			console.log('state', current(state));
+			state.listDoc.results.map((v) => {
+				v.id === action.payload.id ? (v.status = DocStatus.IN_CART) : '';
+			});
+			state.listCartDoc.push({ ...action.payload, status: DocStatus.IN_CART });
+			state.totalPrice += action.payload.price;
 		},
 		removeFromCart: (state, action: PayloadAction<Document>) => {
-			state.cartDoc = state.cartDoc.filter(
+			console.log('state: ', current(state));
+			state.listDoc.results.map((v) => {
+				v.id === action.payload.id ? (v.status = DocStatus.AVAILABLE) : '';
+			});
+			state.listCartDoc = state.listCartDoc.filter(
 				(cart) => cart.id !== action.payload.id
 			);
-			state.cartNum -= 1;
-			state.totalPrice = state.cartDoc.reduce((cur, next) => {
-				return cur + next.price;
-			}, 0);
+			state.totalPrice -= action.payload.price;
+		},
+		clearCart: (state) => {
+			state.listCartDoc.forEach((v) => {
+				state.listDoc.results.map((u) => {
+					u.id === v.id ? (u.status = DocStatus.PENDING) : '';
+				});
+			});
+			state.listCartDoc = [];
+			state.totalPrice = 0;
 		},
 		setTotalPrice: (state, action: PayloadAction<number>) => {
 			state.totalPrice = action.payload;
 		},
-		fetchListCart: (state, action: PayloadAction<Document[]>) => {
-			state.cartDoc = action.payload.slice();
-			state.cartNum = action.payload.length;
+
+		//======================================
+		fetchListCart: (state) => {
+			state.loading = true;
 		},
-		// checkout: (state, action: PayloadAction<Document[]>),
+		fetchListCartSuccess: (state, action: PayloadAction<OCart>) => {
+			state.loading = false;
+			state.totalPrice = action.payload.total_price;
+			state.listCartDoc = action.payload.documents;
+		},
+		fetchListCartFail: (state) => {
+			state.loading = false;
+		},
 	},
-	// The `extraReducers` field lets the slice handle actions defined elsewhere,
-	// including actions generated by createAsyncThunk or in other slices.
-	// extraReducers: (builder) => {
-	// 	builder
-	// 		.addCase(fetchListCart.pending, (state) => {
-	// 			state.status = 'loading';
-	// 		})
-	// 		.addCase(fetchListCart.fulfilled, (state, action) => {
-	// 			state.status = 'idle';
-	// 			state.cartDoc = action.payload;
-	// 		})
-	// 		.addCase(fetchListCart.rejected, (state) => {
-	// 			state.status = 'failed';
-	// 		});
-	// },
 });
 
-export const { addToCart, removeFromCart, fetchListCart, setTotalPrice } =
-	documentSlice.actions;
-
-// The function below is called a selector and allows us to select a value from
-// the state. Selectors can also be defined inline where they're used instead of
-// in the slice file. For example: `useSelector((state: RootState) => state.counter.value)`
-// export const selectCount = (state: RootState) => state.counter.value;
-
-// We can also write thunks by hand, which may contain both sync and async logic.
-// Here's an example of conditionally dispatching actions based on current state.
-// export const incrementIfOdd =
-// 	(amount: number): AppThunk =>
-// 	(dispatch, getState) => {
-// 		const currentValue = selectCount(getState());
-// 		if (currentValue % 2 === 1) {
-// 			dispatch(incrementByAmount(amount));
-// 		}
-// 	};
+export const cartActions = documentSlice.actions;
 
 export default documentSlice.reducer;

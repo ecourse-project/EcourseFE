@@ -4,7 +4,7 @@ import { FaRegUser } from 'react-icons/fa';
 import { css } from '@emotion/react';
 import { Link } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
-import ProductSimpleCard from 'src/components/products/product-simple-card';
+import ProductSimpleCard from 'src/components/products/doc-item';
 import CourseService from 'src/services/course';
 import {
 	Document,
@@ -13,22 +13,25 @@ import {
 } from 'src/models/backend_modal';
 import { useQueryParam } from 'src/hooks/useQueryParam';
 import CustomPagination from 'src/components/pagination';
+import { useAppDispatch, useAppSelector } from 'src/apps/hooks';
+import { RootState } from 'src/reducers/model';
+import AppAction from 'src/reducers/actions';
 
 const DocumentUI: React.FC = () => {
 	const [list, setList] = useState<Pagination<Document>>();
+	const listDoc = useAppSelector((state: RootState) => state.document.listDoc);
+
 	const [pagination, setPagination] = useState<PaginationParams>({
 		page: 1,
 		limit: 8,
 	});
-
-	const list1 = async (pagination) => {
-		const response = await CourseService.getAll(pagination);
-		console.log('reponse', response);
-		setList(response);
+	const dispatch = useAppDispatch();
+	const fetchDocument = async (pagination) => {
+		dispatch({ type: AppAction.FETCH_DATA, payload: pagination });
 	};
 
 	useEffect(() => {
-		list1(pagination);
+		fetchDocument(pagination);
 	}, [pagination]);
 	const onChangePage = (page: number) => {
 		console.log('pagenum', page);
@@ -37,7 +40,7 @@ const DocumentUI: React.FC = () => {
 	return (
 		<div className="container">
 			<div className="row row-cols-1 row-cols-sm-2 row-cols-lg-5 g-2 mb-5">
-				{list?.results.map((e, i) => {
+				{listDoc?.results?.map((e, i) => {
 					return (
 						<div
 							className="col"
@@ -54,7 +57,7 @@ const DocumentUI: React.FC = () => {
 			<CustomPagination
 				current={pagination.page}
 				pageSize={pagination.limit}
-				total={list?.count || 10}
+				total={listDoc?.count || 10}
 				showSizeChanger={false}
 				onChange={onChangePage}
 			/>

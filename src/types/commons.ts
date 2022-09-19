@@ -69,3 +69,5 @@ export interface Data {
 	is_activated: boolean;
 	topic: string;
 }
+
+//list khoá học

@@ -5,6 +5,7 @@ import { Button } from 'antd';
 import { ButtonProps } from 'antd/lib/button';
 /** @jsxImportSource @emotion/react */
 import { css, useTheme } from '@emotion/react';
+import theme from 'src/styles/theme';
 
 interface AppButtonProps extends ButtonProps {
 	btnTextColor: 'black' | 'white' | 'green';
@@ -28,7 +29,6 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
 		btnWidth,
 		...rest
 	} = props;
-	const theme = useTheme();
 
 	const getSize = () => {
 		switch (btnSize) {
@@ -63,7 +63,7 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
 
 		switch (btnTextColor) {
 			case 'black':
-				return theme.color.BLACK;
+				return '#000';
 			case 'white':
 				return theme.color.WHITE;
 			default:
