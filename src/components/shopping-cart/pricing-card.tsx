@@ -1,10 +1,13 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import React, { ReactNode, useState } from 'react';
 import { formatCurrency } from 'src/utils/currency';
 import AppButton from '../button';
 import CourseService from 'src/services/course';
 import { Modal } from 'antd';
+import RoutePaths from 'src/utils/routes';
+import { useAppDispatch } from 'src/apps/hooks';
+import { cartActions } from 'src/reducers/document/documentSlice';
 interface ChildProps {
 	data: number;
 	docNum: number;
@@ -18,6 +21,9 @@ const PricingCard: React.FC<ChildProps> = ({
 	visible,
 }) => {
 	const [btnText, setBtnText] = useState<string>('CHECKOUT');
+	const [open, setOpen] = useState(false);
+	const [confirmLoading, setConfirmLoading] = useState(false);
+	const [modalText, setModalText] = useState('Content of the modal');
 	const checkout = async () => {
 		CourseService.createOrder();
 	};
@@ -28,7 +34,32 @@ const PricingCard: React.FC<ChildProps> = ({
 			setBtnText('CREATED');
 		} catch (error) {}
 	};
+	const showModal = () => {
+		setOpen(true);
+	};
+	const navigate = useNavigate();
+	const dispatch = useAppDispatch();
+	const handleOk = () => {
+		setModalText('The modal will be closed after two seconds');
+		setConfirmLoading(true);
+		try {
+			CourseService.createOrder();
+			setBtnText('CREATED');
+			setTimeout(() => {
+				setOpen(false);
+				setConfirmLoading(false);
+				dispatch(cartActions.clearCart());
+				navigate(RoutePaths.ORDER_CART);
+			}, 1000);
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
+	const handleCancel = () => {
+		console.log('Clicked cancel button');
+		setOpen(false);
+	};
 	return (
 		<div className="card border-0 shadow-sm">
 			<div className="card-body">
@@ -45,7 +76,18 @@ const PricingCard: React.FC<ChildProps> = ({
 						<span>Delivery charge:</span>
 						<span className="text-success">+2,000Ks</span>
 					</div> */}
-
+					<Modal
+						title="Xác nhận đặt hàng"
+						visible={open}
+						onOk={handleOk}
+						confirmLoading={confirmLoading}
+						onCancel={handleCancel}
+					>
+						<p>
+							Xác nhận đặt đơn hàng trị giá:
+							<strong>{`${formatCurrency(data)}`}</strong>
+						</p>
+					</Modal>
 					<hr className="text-muted" />
 
 					<div className="d-flex justify-content-between">
@@ -60,7 +102,7 @@ const PricingCard: React.FC<ChildProps> = ({
 								btnStyle={'outline'}
 								btnSize={'small'}
 								btnWidth={'full-w'}
-								onClick={handleOnClick}
+								onClick={showModal}
 								disabled={btnText === 'CREATED' || docNum === 0}
 							>
 								{btnText}

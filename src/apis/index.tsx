@@ -27,7 +27,6 @@
 // =================== Payment ===================
 // - GET: /api/payment/orders/                                               =====> Create order
 // - GET: /api/payment/orders/detail/?order_id={id}                          =====> Get order
-
 const apiURL = {
 	login: () => 'api/users-auth/token/',
 	me: () => 'api/users/me/',
@@ -35,15 +34,23 @@ const apiURL = {
 	existEmail: (email) => `api/users/exists/?email=${email}`,
 	resetPwd: () => 'api/users/password-reset/',
 	changePwd: () => 'api/users/password-change/',
-	getAllDoc: (limit, page) => `api/documents/?limit=${limit}&page=${page} `,
-	getUDoc: (limit, page) =>
-		`api/documents/my-documents/?limit=${limit}&page=${page} `,
+	getAllDocs: (limit, page) => `api/documents/?limit=${limit}&page=${page}`,
+	getUDocs: (limit, page) =>
+		`api/documents/my-documents/?limit=${limit}&page=${page}`,
 	getDocDetail: (id) => `api/documents/detail/?document_id=${id}`,
 	getCart: () => `api/carts/info/`,
-	addToCart: (id) => `api/carts/document/add/?document_id=${id} `,
-	removeFromCart: (id) => `api/carts/document/remove/?document_id=${id}`,
+	addDocToCart: (id) => `api/carts/document/add/?document_id=${id} `,
+	removeDocFromCart: (id) => `api/carts/document/remove/?document_id=${id}`,
+	addCourseToCart: (id) => `api/carts/course/add/?course_id=${id} `,
+	removeCourseFromCart: (id) => `api/carts/course/remove/?course_id=${id}`,
+	getAllOrders: (limit, page) =>
+		`api/payment/orders/?limit=${limit}&page=${page}`,
+	getOrder: (id) => `api/payment/order/detail/?order_id=${id}`,
 	createOrder: () => `/api/payment/order/create`,
-	getOrder: (id) => `api/payment/orders/detail/?order_id=${id}`,
-	getAllOrder: () => `api/payment/orders`,
+	cancelOrder: (id) => `api/payment/order/cancel/?order_id=${id}`,
+	getAllCourses: (limit, page) => `api/courses/?limit=${limit}&page=${page}`,
+	getUCourses: (limit, page) =>
+		`api/courses/my-courses/?limit=${limit}&page=${page}`,
+	getCourseDetail: (id) => `api/courses/detail/?course_id=${id}`,
 };
 export default apiURL;

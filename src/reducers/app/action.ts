@@ -1,4 +1,4 @@
-enum AppAction {
+enum AppabcAction {
 	APP_LOADING = '@app/APP_LOADING',
 	RESET_ROOT_STATE = '@app/RESET_ROOT_STATE',
 	SET_THEME = '@app/SET_THEME',
@@ -9,4 +9,4 @@ enum AppAction {
 	VISIBLE_RECIPIENTS_MODAL = '@app/VISIBLE_RECIPIENTS_MODAL',
 }
 
-export default AppAction;
+export default AppabcAction;

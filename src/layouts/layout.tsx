@@ -25,7 +25,6 @@ const Layout: React.FC<LayoutProps> = (props) => {
 	// const iLoading = !!isLoading;
 	return (
 		<div
-			id={theme.layout.layoutId}
 			className={className}
 			css={css`
 				width: 100%;
@@ -39,7 +38,7 @@ const Layout: React.FC<LayoutProps> = (props) => {
 					<CookiesConsent />
 				</>
 			)} */}
-			{!isNonHeader ? <Header simple={undefined} hideAuth={undefined} /> : null}
+			{!isNonHeader ? <Header /> : null}
 			<Main>{children}</Main>
 			{/* {!isNonFooter ? <Footer simple={undefined} hideAuth={undefined} /> : null} */}
 		</div>

@@ -16,9 +16,7 @@ const Main: React.FC<Props> = ({ children }) => {
 				.main-container {
 					display: flex;
 					flex-direction: column;
-					min-height: calc(100% - ${theme.layout.headerHeight}px);
 					width: 100%;
-					color: ${theme.text.blackColor};
 				}
 			`}
 		>

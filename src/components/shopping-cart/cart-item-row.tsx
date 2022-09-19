@@ -9,20 +9,15 @@ import { css } from '@emotion/react';
 import globalVariable from 'src/config/env';
 import { useDispatch } from 'react-redux';
 import { useAppDispatch } from 'src/apps/hooks';
-import { removeFromCart } from 'src/reducers/document/documentSlice';
 import CourseService from 'src/services/course';
+import { cartActions } from 'src/reducers/document/documentSlice';
 interface ChildProps {
 	document: Document;
 }
 const CartItemRow: React.FC<ChildProps> = ({ document }) => {
 	const dispatch = useAppDispatch();
 	const handleDelete = () => {
-		try {
-			CourseService.removeFromCart(document.id);
-			dispatch(removeFromCart(document));
-		} catch (error) {
-			console.log('errror: ', error);
-		}
+		dispatch(cartActions.updateCart(document));
 	};
 	return (
 		<div
@@ -60,7 +55,8 @@ const CartItemRow: React.FC<ChildProps> = ({ document }) => {
 				<div className="document col-6">
 					<img
 						className="rounded thumb"
-						src={`${globalVariable.API_URL}${document.thumbnail.slice(1)}`}
+						// src={`${document.thumbnail.image_path}`}
+						src="https://localhost:4000/media/2022/08/14/gdcd.png"
 						width={80}
 						height={80}
 						alt="Product image."

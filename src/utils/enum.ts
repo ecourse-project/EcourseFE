@@ -75,3 +75,10 @@ export enum GlobalStyle {
 	HEADER_BG = '#eef8fe',
 	BROWN_YELLOW = 'rgb(255, 165, 53)',
 }
+
+export enum DocStatus {
+	AVAILABLE = 'AVAILABLE',
+	IN_CART = 'IN_CART',
+	PENDING = 'PENDING',
+	BOUGHT = 'BOUGHT',
+}

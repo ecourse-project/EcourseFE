@@ -40,7 +40,7 @@ const LoginForm: React.FC = () => {
 	);
 	const formik = useFormik<LoginFormData>({
 		initialValues: {
-			email: 'testcart@gmail.com',
+			email: 'testdev@gmail.com',
 			password: 'tuancuong123',
 		},
 		validationSchema: validationSchema.current,

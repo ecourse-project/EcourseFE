@@ -16,7 +16,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Carousel } from 'antd';
 import Header from 'src/layouts/header';
 
-import ProductSimpleCard from 'src/components/products/product-simple-card';
+import ProductSimpleCard from 'src/components/products/doc-item';
 import {
 	CarOutlined,
 	ConsoleSqlOutlined,
@@ -33,6 +33,9 @@ import {
 } from 'src/models/backend_modal';
 import responsiveObserve from 'antd/lib/_util/responsiveObserve';
 import CustomPagination from 'src/components/pagination';
+import { useAppDispatch, useAppSelector } from 'src/apps/hooks';
+import { RootState } from 'src/reducers/model';
+import AppAction from 'src/reducers/actions';
 
 const HomeUI = () => {
 	const [list, setList] = useState<Pagination<Document>>();
@@ -40,18 +43,20 @@ const HomeUI = () => {
 		page: 1,
 		limit: 4,
 	});
-
-	const list1 = async (pagination) => {
-		const response = await CourseService.getAll(pagination);
-		console.log('reponse', response);
-		setList(response);
+	const dispatch = useAppDispatch();
+	const fetchData = async (pagination) => {
+		dispatch({ type: AppAction.FETCH_DATA, payload: pagination });
+		// const response = await CourseService.getAll(pagination);
+		// console.log('reponse', response);
+		// setList(response);
 	};
 
 	useEffect(() => {
-		list1(pagination);
-		console.log('list: ', list);
-		console.log('pag', pagination);
+		fetchData(pagination);
+		// console.log('list: ', list);
+		// console.log('pag', pagination);
 	}, [pagination]);
+	const listDoc = useAppSelector((state: RootState) => state.document.listDoc);
 	const onChangePage = (page: number) => {
 		setPagination({ ...pagination, page });
 	};
@@ -98,7 +103,7 @@ const HomeUI = () => {
 
 				<h4 className="mb-3 fw-semibold">Most Download</h4>
 				<div className="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-3 mb-5 d-flex justify-content-around">
-					{list?.results.map((e, i) => {
+					{listDoc?.results?.map((e, i) => {
 						return (
 							<div
 								className="col"

@@ -91,12 +91,9 @@ export interface IFileUpload {
 
 export interface OFileUpload {
 	id: string;
-	created: string;
-	modified: string;
 	file_path: string;
 	file_size: string;
 	file_type: string;
-	user: string;
 }
 
 // - POST: /api/upload/upload-images/
@@ -106,12 +103,9 @@ export interface IImageUpload {
 
 export interface OImageUpload {
 	id: string;
-	created: string;
-	modified: string;
 	image_path: string;
 	image_size: string;
 	image_type: string;
-	user: string;
 }
 
 // ===========================================Documents===========================================
@@ -124,8 +118,8 @@ export interface Document {
 	title: string;
 	price: number;
 	sold: number;
-	thumbnail: string;
-	file_path: string;
+	thumbnail: OImageUpload;
+	file: OFileUpload;
 	status: string;
 }
 
@@ -148,8 +142,8 @@ export interface ODocumentUpload {
 	title: string;
 	price: number;
 	sold: number;
-	thumbnail: string;
-	file_path: string;
+	thumbnail: OImageUpload;
+	file: OFileUpload;
 	status: string;
 }
 
@@ -170,28 +164,74 @@ export interface IDocumentUpdate {
 // - DELETE: /api/documents/detail/?document_id={id}
 // Request/Response: None
 
+// ===========================================Courses===========================================
+export interface Topic {
+	id: string;
+	name: string;
+}
+
+export interface Lesson {
+	id: string;
+	name: string;
+	content: string;
+	videos: OFileUpload[];
+	documents: Document[];
+	progress: number;
+	status: string;
+}
+
+export interface Course {
+	id: string;
+	name: string;
+	topic: Topic;
+	description: string;
+	price: number;
+	sold: number;
+	lessons: Lesson[];
+	progress: number;
+	status: string;
+	thumbnail: OImageUpload;
+	sale_status: string;
+}
+
 // ===========================================Cart===========================================
 // - GET: /api/carts/info/
 export interface OCart {
 	id: string;
 	total_price: number;
 	documents: Document[];
+	courses: Course[];
 }
 
 // - GET: /api/carts/document/add/?document_id={id}
-// Request/Response: None
+export interface OutputAdd {
+	message: string;
+}
 
 // - GET: /api/carts/document/remove/?document_id={id}
-// Request/Response: None
+export interface OutputRemove {
+	message: string;
+}
 
 // ===========================================Payment===========================================
 // - GET: /api/payment/orders/
-// Request/Response: None
-export interface Order {
+// => Response: list orders
+
+// - GET: /api/payment/order/detail/?order_id={id}
+export interface OutputOrder {
 	id: string;
 	created: string;
 	code: string;
 	total_price: number;
 	documents: Document[];
+	courses: Course[];
 	status: string;
+}
+
+// - GET: /api/payment/order/create/
+// => Response: OutputOrder
+
+// - GET: /api/payment/order/cancel/?order_id={id}
+export interface OutputCancel {
+	message: string;
 }
