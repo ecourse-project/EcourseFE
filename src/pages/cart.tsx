@@ -6,7 +6,7 @@ import Layout from 'src/layouts/layout';
 import PrivateProvider from 'src/components/providers/PrivateProvider';
 
 const CartLoadable = Loadable({
-	loader: () => import('src/sections/shopping-cart/index'),
+	loader: () => import('src/sections/cart/index'),
 	loading: () => <LoadingPage isLoading={true} />,
 });
 const Cart: React.FC = () => {

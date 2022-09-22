@@ -1,13 +1,14 @@
 /* eslint-disable react/no-children-prop */
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import CartItemRow from '../../components/shopping-cart/cart-item-row';
-import PricingCard from '../../components/shopping-cart/pricing-card';
+import CartItemRow from '../../components/cart/cart-item';
 import React, { isValidElement, useEffect, useState } from 'react';
 import { OCart } from 'src/models/backend_modal';
 import CourseService from 'src/services/course';
-import { Modal } from 'antd';
+import { Image, Modal } from 'antd';
 import { useAppDispatch, useAppSelector } from 'src/apps/hooks';
 import { RootState } from 'src/reducers/model';
+import EmptyImg from 'src/assets/images/empty-cart-man.jpg';
+import PricingCard from 'src/components/cart/cart-price';
 function ShoppingCart() {
 	const [cart, setCart] = useState<OCart>();
 	const [isModalVisible, setIsModalVisible] = useState(true);
@@ -54,12 +55,15 @@ function ShoppingCart() {
 							<h5 className="my-2">Danh sách tài liệu trong giỏ</h5>
 						</div>
 						<div className="card-body p-2">
-							{/* {cartData.map((doc, index) => ( */}
-							{cartData.listCartDoc.map((doc, index) => (
-								<div key={index}>
-									<CartItemRow document={doc} />
-								</div>
-							))}
+							{cartData.listCartDoc.length ? (
+								cartData.listCartDoc.map((doc, index) => (
+									<div key={index}>
+										<CartItemRow document={doc} />
+									</div>
+								))
+							) : (
+								<Image src={EmptyImg} preview={false} />
+							)}
 						</div>
 					</div>
 				</div>

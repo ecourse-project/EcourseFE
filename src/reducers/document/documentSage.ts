@@ -30,6 +30,8 @@ import AppabcAction from '../app/action';
 // import { User } from '@goldfishcode/homemeta-cmp-sdk/libs/api/user/models';
 
 function* fetchListCart() {
+	console.log('trigger saga fetchlistcart');
+
 	try {
 		const listCarts: OCart = yield CourseService.getCart();
 		console.log('run fetchlist');
@@ -41,15 +43,17 @@ function* fetchListCart() {
 }
 
 function* watchUpdateCart(action: PayloadAction<Document>) {
+	console.log('trigger saga', action.type);
+
 	console.log('actionbase: ', action.payload);
 	try {
-		if (action.payload.status === DocStatus.AVAILABLE) {
+		if (action.payload.sale_status === DocStatus.AVAILABLE) {
 			const addTo: OutputAdd = yield CourseService.addDocToCArt(
 				action.payload.id
 			);
 			console.log('add succes: ', addTo);
 			yield put(cartActions.addToCart(action.payload));
-		} else if (action.payload.status === DocStatus.IN_CART) {
+		} else if (action.payload.sale_status === DocStatus.IN_CART) {
 			console.log('remove succes');
 
 			const removeFrom: OutputRemove = yield CourseService.removeDocFromCart(
@@ -63,6 +67,8 @@ function* watchUpdateCart(action: PayloadAction<Document>) {
 }
 
 function* fetchDoccument(action: PayloadAction<PaginationParams>) {
+	console.log('trigger saga', action.type);
+
 	try {
 		const result: Pagination<Document> = yield CourseService.getAllDocs(
 			action.payload
@@ -73,6 +79,8 @@ function* fetchDoccument(action: PayloadAction<PaginationParams>) {
 	}
 }
 function* fetchOrder(action: PayloadAction<PaginationParams>) {
+	console.log('trigger saga', action.type);
+
 	try {
 		const result: Pagination<OutputOrder> = yield CourseService.getAllOrders(
 			action.payload
@@ -84,6 +92,7 @@ function* fetchOrder(action: PayloadAction<PaginationParams>) {
 }
 
 function* cancelOrder(action: PayloadAction<OutputOrder>) {
+	console.log('trigger saga', action.type);
 	try {
 		const result: Pagination<OutputCancel> = yield CourseService.cancelOrder(
 			action.payload.id

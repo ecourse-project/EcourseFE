@@ -2,12 +2,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, useNavigate } from 'react-router-dom';
 import React, { ReactNode, useState } from 'react';
 import { formatCurrency } from 'src/utils/currency';
-import AppButton from '../button';
 import CourseService from 'src/services/course';
 import { Modal } from 'antd';
 import RoutePaths from 'src/utils/routes';
 import { useAppDispatch } from 'src/apps/hooks';
 import { cartActions } from 'src/reducers/document/documentSlice';
+import AppButton from 'src/components/button';
 interface ChildProps {
 	data: number;
 	docNum: number;
@@ -24,9 +24,6 @@ const PricingCard: React.FC<ChildProps> = ({
 	const [open, setOpen] = useState(false);
 	const [confirmLoading, setConfirmLoading] = useState(false);
 	const [modalText, setModalText] = useState('Content of the modal');
-	const checkout = async () => {
-		CourseService.createOrder();
-	};
 	const handleOnClick = () => {
 		// visible(true);
 		try {
@@ -107,9 +104,9 @@ const PricingCard: React.FC<ChildProps> = ({
 							>
 								{btnText}
 							</AppButton>
-							<Link to="/">
-								<a className="btn btn-outline-primary">Continue Shopping</a>
-							</Link>
+							{/* <Link to="/">
+								<div className="btn btn-outline-primary">Continue Shopping</div>
+							</Link> */}
 						</div>
 					}
 				</div>

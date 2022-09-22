@@ -8,7 +8,7 @@ import ResetPassword from './components/forgot-password/ResetPassword';
 import { useQueryParam } from './hooks/useQueryParam';
 import Cart from './pages/cart';
 import Document from './pages/documents';
-import DocumentDetail from './pages/documents_detail';
+import DocumentDetail from './pages/documents-detail';
 import Home from './pages/home';
 import Logout from './pages/logout';
 import Notfound from './pages/Notfound';

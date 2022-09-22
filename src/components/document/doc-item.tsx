@@ -26,22 +26,22 @@ const DocItemCard: React.FC<ChildProps> = (props) => {
 	const cartData = useAppSelector((state: RootState) => state.document);
 	const dispatch = useAppDispatch();
 	useEffect(() => {
-		if (document.status === DocStatus.AVAILABLE) {
+		if (document.sale_status === DocStatus.AVAILABLE) {
 			setBtnString('Thêm');
-		} else if (document.status === DocStatus.IN_CART) {
+		} else if (document.sale_status === DocStatus.IN_CART) {
 			setBtnString('Xoá');
-		} else if (document.status === DocStatus.PENDING) {
+		} else if (document.sale_status === DocStatus.PENDING) {
 			setBtnString('Chờ thanh toán');
-		} else if (document.status === DocStatus.BOUGHT) {
+		} else if (document.sale_status === DocStatus.BOUGHT) {
 			setBtnString('Đã thanh toán');
 		}
 	}, [document]);
 	const handleClick = () => {
 		try {
-			if (document.status === DocStatus.AVAILABLE) {
+			if (document.sale_status === DocStatus.AVAILABLE) {
 				setBtnString('Xoá');
 				dispatch(cartActions.updateCart(document));
-			} else if (document.status === DocStatus.IN_CART) {
+			} else if (document.sale_status === DocStatus.IN_CART) {
 				setBtnString('Thêm');
 				dispatch(cartActions.updateCart(document));
 			}
@@ -89,28 +89,28 @@ const DocItemCard: React.FC<ChildProps> = (props) => {
 				}
 			`}
 		>
-			{/* <Link to={`/document/&id=${document.id}`}> */}
-			<div className="content row">
-				<img
-					className="card-img-top"
-					src={`${document.thumbnail}`}
-					alt="document image."
-				/>
-			</div>
-			<div className="card-body text-start row">
-				<div className="mb-1 text-decoration-none ">
-					<h2 className="title">{document.name}</h2>
+			<Link to={`/document/detail?id=${document.id}`}>
+				<div className="content row">
+					<img
+						className="card-img-top"
+						src={`${document.thumbnail.image_path}`}
+						alt="document image."
+					/>
 				</div>
-				<p className="description row">
-					Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid iste
-					vitae nihil beatae dignissimos, possimus molestiae ab, temporibus
-					eligendi, necessitatibus architecto? Provident animi quisquam dolorum
-					doloribus cum illum porro voluptate!
-				</p>
-				<p className="download">Số lượt tải: {document.sold}</p>
-				{/* <ProductRating /> */}
-			</div>
-			{/* </Link> */}
+				<div className="card-body text-start row">
+					<div className="mb-1 text-decoration-none ">
+						<h2 className="title">{document.name}</h2>
+					</div>
+					<p className="description row">
+						Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid
+						iste vitae nihil beatae dignissimos, possimus molestiae ab,
+						temporibus eligendi, necessitatibus architecto? Provident animi
+						quisquam dolorum doloribus cum illum porro voluptate!
+					</p>
+					<p className="download">Số lượt tải: {document.sold}</p>
+					{/* <ProductRating /> */}
+				</div>
+			</Link>
 			<div className="row">
 				<h5 className="mb-0 fw-semibold mt-2 col">
 					<WalletOutlined />
@@ -126,8 +126,8 @@ const DocItemCard: React.FC<ChildProps> = (props) => {
 						btnSize={'small'}
 						btnWidth={'full-w'}
 						disabled={
-							document.status === DocStatus.PENDING ||
-							document.status === DocStatus.BOUGHT
+							document.sale_status === DocStatus.PENDING ||
+							document.sale_status === DocStatus.BOUGHT
 						}
 						onClick={handleClick}
 					>

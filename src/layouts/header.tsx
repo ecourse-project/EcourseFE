@@ -277,6 +277,7 @@ import ShoppingCartTwoToneIcon from '@mui/icons-material/ShoppingCartTwoTone';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import LogoutIcon from '@mui/icons-material/Logout';
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import { Badge } from '@mui/material';
@@ -319,38 +320,20 @@ function Header() {
 	return (
 		<div
 			css={css`
+				.menu-setting-icon svg {
+					margin-right: 5px !important;
+					color: red;
+				}
+				.menu-setting {
+					color: #fff;
+					font-size: 50px;
+				}
 				.menu-item {
-					-webkit-box-align: center;
-					align-items: center;
-					-webkit-box-pack: center;
-					justify-content: center;
-					position: relative;
-					box-sizing: border-box;
-					-webkit-tap-highlight-color: transparent;
-					background-color: transparent;
-					outline: 0px;
-					border: 0px;
-					margin: 16px 0px;
-					cursor: pointer;
-					user-select: none;
-					vertical-align: middle;
-					appearance: none;
-					text-decoration: none;
-					font-family: Roboto, Helvetica, Arial, sans-serif;
-					font-weight: 600;
 					font-size: 1rem;
-					line-height: 1.75;
 					letter-spacing: 0.1em;
-					text-transform: uppercase;
-					min-width: 64px;
-					padding: 6px 8px;
-					border-radius: 4px;
-					transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
-						box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
-						border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
-						color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+					font-weight: 600;
 					color: white;
-					display: block;
+					font-family: Roboto, Helvetica, Arial, sans-serif;
 				}
 				.nav-link {
 					opacity: 0.6;
@@ -371,17 +354,21 @@ function Header() {
 					opacity: 1;
 					font-weight: 700;
 				}
-
-				.setting-icon svg {
-					margin-right: 5px !important;
-					color: red;
-				}
 			`}
 		>
 			<AppBar position="static">
 				<Container maxWidth="xl">
 					<Toolbar disableGutters>
-						<AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+						<Link to={RoutePaths.HOME}>
+							<AutoStoriesIcon
+								sx={{
+									display: { xs: 'none', md: 'flex' },
+									mr: 1,
+									fontSize: 40,
+									color: '#d26868',
+								}}
+							/>
+						</Link>
 						<Typography
 							variant="h6"
 							noWrap
@@ -395,6 +382,9 @@ function Header() {
 								letterSpacing: '.3rem',
 								color: 'inherit',
 								textDecoration: 'none',
+								'&:hover': {
+									color: '#fff',
+								},
 							}}
 						>
 							LOGO
@@ -538,11 +528,18 @@ function Header() {
 								{settings.map((setting) => (
 									<MenuItem key={setting.name} onClick={handleCloseUserMenu}>
 										<Typography
+											className="menu-setting"
 											textAlign="center"
 											component="a"
 											href={setting.to}
+											sx={{
+												color: '#fff',
+												'& .icon': {
+													marginRight: '10px',
+												},
+											}}
 										>
-											<span className="setting-icon">{setting.icon}</span>
+											<span className="icon">{setting.icon}</span>
 											{`${setting.name}`}
 										</Typography>
 									</MenuItem>
