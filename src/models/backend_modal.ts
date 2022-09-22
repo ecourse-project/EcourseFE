@@ -113,6 +113,8 @@ export interface OImageUpload {
 // - GET: /api/documents/my-documents/?limit={number}&page={number}
 export interface Document {
 	id: string;
+	created: string;
+	modified: string;
 	name: string;
 	description: string;
 	title: string;
@@ -120,7 +122,7 @@ export interface Document {
 	sold: number;
 	thumbnail: OImageUpload;
 	file: OFileUpload;
-	status: string;
+	sale_status: string;
 }
 
 // - POST: /api/documents/
@@ -144,7 +146,7 @@ export interface ODocumentUpload {
 	sold: number;
 	thumbnail: OImageUpload;
 	file: OFileUpload;
-	status: string;
+	sale_status: string;
 }
 
 export interface Data {
@@ -165,23 +167,40 @@ export interface IDocumentUpdate {
 // Request/Response: None
 
 // ===========================================Courses===========================================
+export interface CourseDocument {
+	id: string;
+	created: string;
+	modified: string;
+	name: string;
+	description: string;
+	title: string;
+	file: OFileUpload;
+}
+
 export interface Topic {
 	id: string;
+	created: string;
+	modified: string;
 	name: string;
 }
 
 export interface Lesson {
 	id: string;
+	created: string;
+	modified: string;
 	name: string;
+	lesson_number: number;
 	content: string;
 	videos: OFileUpload[];
-	documents: Document[];
+	documents: CourseDocument[];
 	progress: number;
 	status: string;
 }
 
 export interface Course {
 	id: string;
+	created: string;
+	modified: string;
 	name: string;
 	topic: Topic;
 	description: string;

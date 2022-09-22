@@ -16,7 +16,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Carousel } from 'antd';
 import Header from 'src/layouts/header';
 
-import ProductSimpleCard from 'src/components/products/doc-item';
+import ProductSimpleCard from 'src/components/document/doc-item';
 import {
 	CarOutlined,
 	ConsoleSqlOutlined,

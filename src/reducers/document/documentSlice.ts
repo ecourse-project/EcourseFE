@@ -7,13 +7,13 @@ import {
 import { Statistic } from 'antd';
 import { access, stat } from 'fs';
 import { actionChannel } from 'redux-saga/effects';
+import { OrderStatus } from 'src/components/order/order-card';
 import {
 	Document,
 	OCart,
 	OutputOrder,
 	Pagination,
 } from 'src/models/backend_modal';
-import { OrderStatus } from 'src/sections/order/order-card';
 import CourseService from 'src/services/course';
 import { DocStatus } from 'src/utils/enum';
 // import { fetchCount } from './counterAPI';
@@ -57,15 +57,18 @@ export const documentSlice = createSlice({
 		addToCart: (state, action: PayloadAction<Document>) => {
 			console.log('state', current(state));
 			state.listDoc.results.map((v) => {
-				v.id === action.payload.id ? (v.status = DocStatus.IN_CART) : '';
+				v.id === action.payload.id ? (v.sale_status = DocStatus.IN_CART) : '';
 			});
-			state.listCartDoc.push({ ...action.payload, status: DocStatus.IN_CART });
+			state.listCartDoc.push({
+				...action.payload,
+				sale_status: DocStatus.IN_CART,
+			});
 			state.totalPrice += action.payload.price;
 		},
 		removeFromCart: (state, action: PayloadAction<Document>) => {
 			console.log('state: ', current(state));
 			state.listDoc.results.map((v) => {
-				v.id === action.payload.id ? (v.status = DocStatus.AVAILABLE) : '';
+				v.id === action.payload.id ? (v.sale_status = DocStatus.AVAILABLE) : '';
 			});
 			state.listCartDoc = state.listCartDoc.filter(
 				(cart) => cart.id !== action.payload.id
@@ -75,7 +78,7 @@ export const documentSlice = createSlice({
 		clearCart: (state) => {
 			state.listCartDoc.forEach((v) => {
 				state.listDoc.results.map((u) => {
-					u.id === v.id ? (u.status = DocStatus.PENDING) : '';
+					u.id === v.id ? (u.sale_status = DocStatus.PENDING) : '';
 				});
 			});
 			state.listCartDoc = [];

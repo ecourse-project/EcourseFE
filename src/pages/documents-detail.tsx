@@ -12,11 +12,11 @@ const DocumentDetailLoadable = Loadable({
 const DocumentDetail: React.FC = () => {
 	return (
 		<React.Fragment>
-			{/* <PrivateProvider> */}
-			<Layout>
-				<DocumentDetailLoadable />
-			</Layout>
-			{/* </PrivateProvider> */}
+			<PrivateProvider>
+				<Layout>
+					<DocumentDetailLoadable />
+				</Layout>
+			</PrivateProvider>
 		</React.Fragment>
 	);
 };

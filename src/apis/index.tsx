@@ -27,6 +27,7 @@
 // =================== Payment ===================
 // - GET: /api/payment/orders/                                               =====> Create order
 // - GET: /api/payment/orders/detail/?order_id={id}                          =====> Get order
+
 const apiURL = {
 	login: () => 'api/users-auth/token/',
 	me: () => 'api/users/me/',

@@ -81,7 +81,6 @@ const OrderCardItem: React.FC<OrderItemPropType> = (props) => {
 			dispatch({ type: AppAction.CANCEL_ORDER, payload: orderItem });
 			genExtra();
 			setConfirmLoading(false);
-			document.getElementById('info-icon')?.click();
 			setOpen(false);
 		}, 1000);
 	};

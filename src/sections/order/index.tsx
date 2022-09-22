@@ -1,20 +1,13 @@
 /* eslint-disable react/no-children-prop */
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import CartItemRow from '../../components/shopping-cart/cart-item-row';
-import PricingCard from '../../components/shopping-cart/pricing-card';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import CourseService from 'src/services/course';
-import OrderCart from 'src/pages/order-cart';
-import OrderCardItem from './order-card';
+import { Typography } from 'antd';
 import { useAppDispatch, useAppSelector } from 'src/apps/hooks';
-import { RootState } from 'src/reducers/model';
-import AppAction from 'src/reducers/actions';
-import { pagination } from 'src/utils/api';
+import OrderCardItem from 'src/components/order/order-card';
 import { PaginationParams } from 'src/models/backend_modal';
-import { Divider, Typography } from 'antd';
-import BaseModal from 'src/components/modal';
+import AppAction from 'src/reducers/actions';
+import { RootState } from 'src/reducers/model';
 const { Title, Paragraph, Text, Link } = Typography;
 
 const OrderCartUI = () => {
