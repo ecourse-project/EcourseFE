@@ -355,7 +355,7 @@ const DocDetail: React.FC = () => {
 					loading={loading}
 					onClick={handleUpdateBtn}
 					disabled={docStatus === DocStatus.PENDING}
-					href={docStatus === DocStatus.BOUGHT ? doc.file.file_path : ''}
+					href={docStatus === DocStatus.BOUGHT ? doc.file.file_path : undefined}
 					target="blank"
 				>
 					{docStatus === DocStatus.AVAILABLE

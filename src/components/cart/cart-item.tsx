@@ -55,8 +55,9 @@ const CartItemRow: React.FC<ChildProps> = ({ document }) => {
 				<div className="document col-6">
 					<img
 						className="rounded thumb"
-						// src={`${document.thumbnail.image_path}`}
-						src="https://localhost:4000/media/2022/08/14/gdcd.png"
+						src={`${document.thumbnail.image_path}`}
+						// src="https://localhost:4000/media/2022/08/14/gdcd.png"
+
 						width={80}
 						height={80}
 						alt="Product image."
