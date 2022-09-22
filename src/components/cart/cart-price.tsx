@@ -107,7 +107,7 @@ const PricingCard: React.FC<ChildProps> = ({
 						btnSize={'small'}
 						btnWidth={'full-w'}
 						onClick={showModal}
-						href={docNum === 0 ? RoutePaths.DOCUMENT : ''}
+						href={docNum === 0 ? RoutePaths.DOCUMENT : undefined}
 					>
 						{btnText}
 					</AppButton>
