@@ -4,11 +4,17 @@ import CartItemRow from '../../components/cart/cart-item';
 import React, { isValidElement, useEffect, useState } from 'react';
 import { OCart } from 'src/models/backend_modal';
 import CourseService from 'src/services/course';
-import { Image, Modal } from 'antd';
+import { Checkbox, Col, Divider, Image, Modal, Row } from 'antd';
 import { useAppDispatch, useAppSelector } from 'src/apps/hooks';
 import { RootState } from 'src/reducers/model';
 import EmptyImg from 'src/assets/images/empty-cart-man.jpg';
 import PricingCard from 'src/components/cart/cart-price';
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
+import type { CheckboxValueType } from 'antd/es/checkbox/Group';
+import type { CheckboxChangeEvent } from 'antd/es/checkbox';
+
+const CheckboxGroup = Checkbox.Group;
 function ShoppingCart() {
 	const [cart, setCart] = useState<OCart>();
 	const [isModalVisible, setIsModalVisible] = useState(true);
@@ -42,67 +48,111 @@ function ShoppingCart() {
 	const handleCancel = () => {
 		setIsModalVisible(false);
 	};
+	const [checkedList, setCheckedList] = useState<string[]>([]);
+	const [indeterminate, setIndeterminate] = useState(true);
+	const [checkAll, setCheckAll] = useState(false);
+	// const plainOptions = ['Apple', 'Pear', 'Orange'];
+	const plainOptions = cartData.listCartDoc;
+	useEffect(() => {
+		console.log('checklist ', checkedList);
+	}, [checkedList]);
+	const onChange = (list) => {
+		setCheckedList(list);
+		console.log('list ', list);
+		setIndeterminate(!!list.length && list.length < plainOptions.length);
+		setCheckAll(list.length === plainOptions.length);
+	};
+
+	const onCheckAllChange = (e: CheckboxChangeEvent) => {
+		setCheckedList(e.target.checked ? plainOptions.map((v) => v.id) : []);
+		setIndeterminate(false);
+		setCheckAll(e.target.checked);
+	};
 	const handleSetVisible = (value) => {
 		// console.log('value', value);
 		setIsModalVisible(value);
 	};
 	return (
-		<div className="container py-4">
-			<div className="row g-3">
-				<div className="col-lg-8">
-					<div className="card border-0 shadow-sm">
-						<div className="card-header bg-white">
-							<h5 className="my-2">Danh sách tài liệu trong giỏ</h5>
-						</div>
-						<div className="card-body p-2">
-							{cartData.listCartDoc.length ? (
-								cartData.listCartDoc.map((doc, index) => (
+		<div
+			className="container"
+			css={css`
+				.empty-img {
+					opacity: 0.6;
+				}
+				.ant-checkbox {
+					width: 25px;
+					height: 25px;
+					.ant-checkbox-inner {
+						width: 25px;
+						height: 25px;
+						&:after {
+							width: 8.714286px;
+							height: 19.142857px;
+							border: 3px solid #fff;
+							border-top: 0;
+							border-left: 0;
+						}
+					}
+				}
+				.checkbox-group {
+					.ant-checkbox-wrapper {
+						align-item: start;
+					}
+				}
+
+				.check-all {
+					.ant-checkbox-indeterminate {
+						.ant-checkbox-inner:after {
+							width: 15px;
+							height: 15px;
+						}
+					}
+				}
+			`}
+		>
+			<h2>Danh sách tài liệu trong giỏ</h2>
+			<Row>
+				<Col span={16}>
+					{cartData.listCartDoc.length ? (
+						<>
+							<Checkbox
+								className="check-all"
+								indeterminate={indeterminate}
+								onChange={onCheckAllChange}
+								checked={checkAll}
+							>
+								<h3>Chọn tất cả tài liệu</h3>
+							</Checkbox>
+							<Divider />
+							<CheckboxGroup
+								value={checkedList}
+								onChange={onChange}
+								className="checkbox-group"
+							>
+								{cartData.listCartDoc.map((doc, index) => (
 									<div key={index}>
-										<CartItemRow document={doc} />
+										<Checkbox value={doc.id}>
+											<CartItemRow document={doc} />
+										</Checkbox>
 									</div>
-								))
-							) : (
-								<Image src={EmptyImg} preview={false} />
-							)}
-						</div>
+								))}
+							</CheckboxGroup>
+						</>
+					) : (
+						<Image src={EmptyImg} preview={false} className="empty-img" />
+					)}
+				</Col>
+				<Col span={8}>
+					<div className="">
+						<PricingCard
+							data={cartData.totalPrice || 0}
+							docNum={cartData.listCartDoc.length}
+							children={null}
+							visible={handleSetVisible}
+						/>
 					</div>
-				</div>
-				<div className="col-lg-4">
-					<div className="card mb-3 border-0 shadow-sm">
-						<div className="card-body">
-							<div className="input-group">
-								<input
-									className="form-control"
-									type="text"
-									placeholder="Coupon code here"
-								/>
-								<button type="button" className="btn btn-primary">
-									Apply
-								</button>
-							</div>
-						</div>
-					</div>
-					<PricingCard
-						data={cartData.totalPrice || 0}
-						docNum={cartData.listCartDoc.length}
-						children={null}
-						visible={handleSetVisible}
-					/>
-				</div>
-				{/* <Modal
-					title="Basic Modal"
-					visible={isModalVisible}
-					onOk={handleOk}
-					onCancel={handleCancel}
-				>
-					<p>Some contents...</p>
-					<p>Some contents...</p>
-					<p>Some contents...</p>
-				</Modal> */}
-			</div>
-			<br />
-			<br />
-			<br />
+				</Col>
+			</Row>
 		</div>
 	);
 }

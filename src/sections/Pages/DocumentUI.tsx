@@ -25,7 +25,7 @@ const DocumentUI: React.FC = () => {
 	const params: DocumentParams = useQueryParam();
 	const [pagination, setPagination] = useState<PaginationParams>({
 		page: params.page || 1,
-		limit: 8,
+		limit: 10,
 	});
 	const dispatch = useAppDispatch();
 	const fetchDocument = async (pagination) => {

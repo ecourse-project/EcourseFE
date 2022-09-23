@@ -3,11 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { formatCurrency } from 'src/utils/currency';
 import CourseService from 'src/services/course';
-import { Modal } from 'antd';
+import { Image, Modal } from 'antd';
 import RoutePaths from 'src/utils/routes';
 import { useAppDispatch } from 'src/apps/hooks';
 import { cartActions } from 'src/reducers/document/documentSlice';
 import AppButton from 'src/components/button';
+import Img from 'src/assets/images/bill.jpg';
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 interface ChildProps {
@@ -78,6 +79,11 @@ const PricingCard: React.FC<ChildProps> = ({
 				a.ant-btn {
 					padding-top: 8px !important;
 				}
+				.total-price {
+					display: flex;
+					justify-content: space-between;
+					font-size: 20px;
+				}
 			`}
 		>
 			<Modal
@@ -93,29 +99,25 @@ const PricingCard: React.FC<ChildProps> = ({
 				</p>
 			</Modal>
 			<hr className="text-muted" />
-
-			<div className="d-flex justify-content-between">
-				<span className="h5">Total:</span>
-				<span className="fw-bold h5 mb-0">{formatCurrency(data)}</span>
+			<Image src={Img} />
+			<div className="total-price">
+				<span>Total:</span>
+				<span>{formatCurrency(data)}</span>
 			</div>
 
-			{
-				<div className="d-grid gap-2 mt-2">
-					<AppButton
-						btnTextColor={'black'}
-						btnStyle={'outline'}
-						btnSize={'small'}
-						btnWidth={'full-w'}
-						onClick={showModal}
-						href={docNum === 0 ? RoutePaths.DOCUMENT : undefined}
-					>
-						{btnText}
-					</AppButton>
-					{/* <Link to="/">
+			<AppButton
+				btnTextColor={'black'}
+				btnStyle={'outline'}
+				btnSize={'small'}
+				btnWidth={'full-w'}
+				onClick={showModal}
+				href={docNum === 0 ? RoutePaths.DOCUMENT : undefined}
+			>
+				{btnText}
+			</AppButton>
+			{/* <Link to="/">
 								<div className="btn btn-outline-primary">Continue Shopping</div>
 							</Link> */}
-				</div>
-			}
 		</div>
 	);
 };

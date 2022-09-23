@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/display-name */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button } from 'antd';
 import { ButtonProps } from 'antd/lib/button';
 /** @jsxImportSource @emotion/react */
@@ -29,7 +29,6 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
 		btnWidth,
 		...rest
 	} = props;
-
 	const getSize = () => {
 		switch (btnSize) {
 			case 'large':
@@ -169,7 +168,7 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
 				font-weight: 500;
 				padding: 12px 20px 12px 24px;
 				border-radius: ${borderRadius ? borderRadius : 'initial'};
-				cursor: ${disabled ? 'default' : 'pointer'};
+				cursor: ${disabled ? 'not-allowed !important' : 'pointer'};
 
 				.ant-btn-loading-icon {
 					position: relative;
@@ -190,98 +189,7 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
 						color: #333;
 					}
 				}
-				&.btn-skip {
-					background-color: #fff !important;
-					transition: all 400ms ease;
-					color: #333;
-					font-weight: 600;
-					letter-spacing: initial;
-					&:hover {
-						letter-spacing: 8px;
-						color: #333;
-					}
-				}
-				&.btn-agentlookup {
-					background-color: #faae18 !important;
-					transition: all 400ms ease;
-					color: #333;
-					font-weight: 600;
-					letter-spacing: initial;
-					&:hover {
-						letter-spacing: 8px;
-						color: #333;
-					}
-				}
-				&.btn-website {
-					min-width: 200px;
-					min-height: 50px;
-					margin-top: 20px;
-					padding-top: 12px;
-					padding-bottom: 12px;
-					border-radius: 3px;
-					background-color: #031f2d;
-					font-weight: 500;
-					letter-spacing: 4px;
-					text-transform: uppercase;
-					display: inline-block;
-					padding: 9px 15px;
-					background-color: #3898ec;
-					color: white;
-					border: 0;
-					line-height: inherit;
-					text-decoration: none;
-					cursor: pointer;
-					border-radius: 0;
-					border-radius: 4px;
-				}
-				&.btn-setting {
-					padding-right: 40px;
-					padding-left: 40px;
-					border-radius: 3px;
-					height: 48px;
-					padding: 12px 20px 12px 24px;
-					justify-content: center;
-					align-items: center;
-					border-style: none;
-					background-color: #031f2d;
-					background-image: none;
-					transition: box-shadow 600ms ease, border-color 600ms ease,
-						color 600ms ease, background-color 600ms ease;
-					color: #fff;
-					font-size: 14px;
-					line-height: 20px;
-					font-weight: 600;
-					text-align: center;
-					letter-spacing: 4px;
-					text-decoration: none;
-					text-transform: uppercase;
-					&:hover {
-						background-color: #ffa900 !important;
-					}
-				}
-				&.btn-protected {
-					height: 48px;
-					padding: 12px 20px 12px 24px;
-					justify-content: center;
-					align-items: center;
-					border-style: none;
-					border-radius: 0px;
-					background-color: #031f2d;
-					background-image: none;
-					transition: box-shadow 600ms ease, border-color 600ms ease,
-						color 600ms ease, background-color 600ms ease;
-					color: #fff;
-					font-size: 14px;
-					line-height: 20px;
-					font-weight: 400;
-					text-align: center;
-					letter-spacing: 4px;
-					text-decoration: none;
-					text-transform: uppercase;
-					&:hover {
-						background-color: #ffa900 !important;
-					}
-				}
+
 				&.bth-header {
 					@media only screen and (max-width: ${theme.media.desktops}px) {
 						height: 36px;
@@ -313,96 +221,8 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
 				}
 				&.overview-btn {
 					min-width: 200px;
-
 					letter-spacing: 4px;
 				}
-				&.btn-downsizes {
-					max-width: 200px !important;
-					background-color: #ffa900 !important;
-					transition: all 500ms ease;
-					font-weight: 500;
-					text-transform: uppercase;
-					border: none;
-					margin-top: 20px;
-					padding-top: 12px;
-					padding-bottom: 12px;
-					border-radius: 3px;
-					font-weight: 500;
-					letter-spacing: 4px;
-					display: inline-block;
-					padding: 9px 15px;
-					color: white;
-					border: 0;
-					line-height: inherit;
-					text-decoration: none;
-					cursor: pointer;
-					&:hover {
-						background-color: #0096f4 !important;
-						color: #fff;
-					}
-					@media only screen and (max-width: ${theme.media.phones}px) {
-						max-width: 100% !important;
-						margin-top: 46px;
-					}
-				}
-				&.btn-managetAgents {
-					max-width: 100% !important;
-					height: 54px;
-					background-color: #ffa900 !important;
-					transition: all 400ms ease;
-					text-transform: uppercase;
-					border-radius: 3px;
-					letter-spacing: 0px;
-					display: inline-block;
-					padding: 1px 15px;
-					color: #000;
-					border: 0;
-					line-height: inherit;
-					text-decoration: none;
-					cursor: pointer;
-					font-weight: 600;
-					&:hover {
-						border: none;
-					}
-				}
-				${colorHover
-					? `
-        &:hover,
-        :active,
-        :focus,
-        :visited,
-        :active {
-          color: ${
-						colorHover === 'darkBlue' || colorHover === 'BRICK'
-							? '#fff'
-							: colorHover === 'white'
-							? '#051d29'
-							: 'initial'
-					}!important;
-          background: ${
-						colorHover === 'darkBlue'
-							? '#043046'
-							: colorHover === 'BRICK'
-							? '#900'
-							: colorHover === 'white'
-							? '#fff'
-							: 'initial'
-					}!important;
-          border: ${nonBordered ? 'none' : getBorderStyle()};
-        `
-					: `
-        &:hover,
-        :active,
-        :focus,
-        :visited,
-        :active {
-          color: ${getTextColor()};
-          background: ${getBackgroundColor()};
-          background-image: ${getBackgroundColor()};
-          border: ${nonBordered ? 'none' : getBorderStyle()};
-        }
-        }
-        `}
 			`}
 			{...rest}
 		>
