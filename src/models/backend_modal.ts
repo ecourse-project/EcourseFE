@@ -15,10 +15,9 @@ export interface Pagination<T> {
 }
 
 // ===========================================Users Auth===========================================
-// - POST: /api/users-auth/registration/
 export interface IRegistration {
 	email: string;
-	password: string;
+	password1: string;
 	password2: string;
 	full_name: string;
 }
@@ -28,7 +27,6 @@ export interface ORegistration {
 	full_name: string;
 }
 
-// - POST: /api/users-auth/token/
 export interface IToken {
 	email: string;
 	password: string;
@@ -39,7 +37,6 @@ export interface OToken {
 	access: string;
 }
 
-// - POST: /api/users-auth/token/refresh/
 export interface ITokenRefresh {
 	refresh: string;
 }
@@ -49,8 +46,7 @@ export interface OTokenRefresh {
 }
 
 // ===========================================Users===========================================
-// - GET: /api/users/me/
-export interface OProfile {
+export interface User {
 	id: string;
 	email: string;
 	full_name: string;
@@ -58,12 +54,10 @@ export interface OProfile {
 	phone: string;
 }
 
-// - GET: /api/users/exists/?email=binh@mail.com
 export interface OIsExist {
 	exists: boolean;
 }
 
-// - POST: /api/users/password-reset/
 export interface IPasswordRest {
 	email: string;
 }
@@ -72,10 +66,9 @@ export interface OPasswordRest {
 	detail: string;
 }
 
-// - POST: /api/users/password-change/
 export interface IPasswordChange {
 	old_password: string;
-	password: string;
+	password1: string;
 	password2: string;
 }
 
@@ -84,7 +77,6 @@ export interface OPasswordChange {
 }
 
 // ===========================================Upload===========================================
-// - POST: /api/upload/upload-files/
 export interface IFileUpload {
 	file: string;
 }
@@ -96,7 +88,6 @@ export interface OFileUpload {
 	file_type: string;
 }
 
-// - POST: /api/upload/upload-images/
 export interface IImageUpload {
 	file: string;
 }
@@ -109,8 +100,6 @@ export interface OImageUpload {
 }
 
 // ===========================================Documents===========================================
-// - GET: /api/documents/?limit={number}&page={number}
-// - GET: /api/documents/my-documents/?limit={number}&page={number}
 export interface Document {
 	id: string;
 	created: string;
@@ -123,10 +112,9 @@ export interface Document {
 	thumbnail: OImageUpload;
 	file: OFileUpload;
 	sale_status: string;
+	is_selling: boolean;
 }
 
-// - POST: /api/documents/
-// Ràng buộc chỉ cho upload duy nhất 1 ảnh và 1 file
 export interface IDocumentUpload {
 	name: string;
 	description: string;
@@ -153,7 +141,6 @@ export interface Data {
 	data: Document[];
 }
 
-// - PUT/PATCH: /api/documents/detail/?document_id={id}
 export interface IDocumentUpdate {
 	name: string;
 	description: string;
@@ -162,9 +149,6 @@ export interface IDocumentUpdate {
 	image: string;
 	file: string;
 }
-
-// - DELETE: /api/documents/detail/?document_id={id}
-// Request/Response: None
 
 // ===========================================Courses===========================================
 export interface CourseDocument {
@@ -211,10 +195,25 @@ export interface Course {
 	status: string;
 	thumbnail: OImageUpload;
 	sale_status: string;
+	is_selling: boolean;
+}
+
+// ===========================================Comments===========================================
+export interface ReplyComment {
+	id: string;
+	user: User;
+	content: string;
+}
+
+export interface Comment {
+	id: string;
+	user: User;
+	content: string;
+	course_id: string;
+	reply_comments: ReplyComment[];
 }
 
 // ===========================================Cart===========================================
-// - GET: /api/carts/info/
 export interface OCart {
 	id: string;
 	total_price: number;
@@ -222,21 +221,20 @@ export interface OCart {
 	courses: Course[];
 }
 
-// - GET: /api/carts/document/add/?document_id={id}
 export interface OutputAdd {
 	message: string;
 }
 
-// - GET: /api/carts/document/remove/?document_id={id}
 export interface OutputRemove {
 	message: string;
 }
 
 // ===========================================Payment===========================================
-// - GET: /api/payment/orders/
-// => Response: list orders
+export interface CreateOrderArg {
+	documents: string[];
+	courses: string[];
+}
 
-// - GET: /api/payment/order/detail/?order_id={id}
 export interface OutputOrder {
 	id: string;
 	created: string;
@@ -247,10 +245,6 @@ export interface OutputOrder {
 	status: string;
 }
 
-// - GET: /api/payment/order/create/
-// => Response: OutputOrder
-
-// - GET: /api/payment/order/cancel/?order_id={id}
 export interface OutputCancel {
 	message: string;
 }

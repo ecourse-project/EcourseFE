@@ -1,8 +1,10 @@
 import {
+	all,
 	call,
 	ForkEffect,
 	put,
 	select,
+	take,
 	takeEvery,
 	takeLatest,
 } from 'redux-saga/effects';
@@ -11,6 +13,7 @@ import CourseService from 'src/services/course';
 import { cartActions } from './documentSlice';
 import { current, PayloadAction } from '@reduxjs/toolkit';
 import {
+	CreateOrderArg,
 	Document,
 	OCart,
 	OutputAdd,
@@ -24,6 +27,7 @@ import { DocStatus } from 'src/utils/enum';
 import { runInContext } from 'vm';
 import AppAction from '../actions';
 import AppabcAction from '../app/action';
+import { fork } from 'child_process';
 // import MailingService from 'src/services/mailing';
 // import MailingAction from './action';
 // import { AlertTextError } from 'src/alert/NotificationAlert';
@@ -52,14 +56,14 @@ function* watchUpdateCart(action: PayloadAction<Document>) {
 				action.payload.id
 			);
 			console.log('add succes: ', addTo);
-			yield put(cartActions.addToCart(action.payload));
+			yield put(cartActions.addDocToCart(action.payload));
 		} else if (action.payload.sale_status === DocStatus.IN_CART) {
 			console.log('remove succes');
 
 			const removeFrom: OutputRemove = yield CourseService.removeDocFromCart(
 				action.payload.id
 			);
-			yield put(cartActions.removeFromCart(action.payload));
+			yield put(cartActions.removeDocFromCart(action.payload));
 		}
 	} catch (error) {
 		console.log('error update cart', error);
@@ -103,11 +107,28 @@ function* cancelOrder(action: PayloadAction<OutputOrder>) {
 	}
 }
 
+function* fetchAllData(action: PayloadAction<PaginationParams>) {
+	console.log('trigger saga', action.type);
+	try {
+		const [docs, orders, carts] = yield all([
+			call(CourseService.getAllDocs, action.payload),
+			call(CourseService.getAllOrders, action.payload),
+			call(CourseService.getCart),
+		]);
+		yield put(cartActions.fetchListDoc(docs));
+		yield put(cartActions.fetchListOrder(orders));
+		yield put(cartActions.fetchListCartSuccess(carts));
+	} catch (error) {
+		console.log('fetch all error', error);
+	}
+}
+
 function* documentSaga(): Generator<ForkEffect<never>, void, unknown> {
 	console.log('run document saga');
 	yield takeLatest(AppAction.FETCH_DATA, fetchDoccument);
 	yield takeLatest(AppAction.FETCH_ORDER, fetchOrder);
 	yield takeLatest(AppAction.CANCEL_ORDER, cancelOrder);
+	yield takeLatest(AppAction.FETCH_ALL_DATA, fetchAllData);
 	yield takeLatest(cartActions.fetchListCart.type, fetchListCart);
 	yield takeLatest(cartActions.updateCart.type, watchUpdateCart);
 }

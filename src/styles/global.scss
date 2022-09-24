@@ -1,274 +1,269 @@
-// @import "variables";
-// @import "root";
 
-// // Components
-// @import "pagination";
+@font-face {
+    font-family: "Fa brands 400";
+    font-weight: 400;
+    font-style: normal;
 
-// @font-face {
-//     font-family: "Fa brands 400";
-//     font-weight: 400;
-//     font-style: normal;
+    src: url("../assets/fonts/fa-brands-400.ttf") format("truetype");
+    font-display: swap;
+}
+@font-face {
+    font-family: "Fa 400";
+    font-weight: 400;
+    font-style: normal;
 
-//     src: url("../assets/fonts/fa-brands-400.ttf") format("truetype");
-//     font-display: swap;
-// }
-// @font-face {
-//     font-family: "Fa 400";
-//     font-weight: 400;
-//     font-style: normal;
+    src: url("../assets/fonts/fa-regular-400.ttf") format("truetype");
+    font-display: swap;
+}
+@font-face {
+    font-family: "Fa solid 900";
+    font-weight: 400;
+    font-style: normal;
 
-//     src: url("../assets/fonts/fa-regular-400.ttf") format("truetype");
-//     font-display: swap;
-// }
-// @font-face {
-//     font-family: "Fa solid 900";
-//     font-weight: 400;
-//     font-style: normal;
+    src: url("../assets/fonts/fa-solid-900.ttf") format("truetype");
+    font-display: swap;
+}
+@font-face {
+    font-family: "Fa duotone 900";
+    font-weight: 400;
+    font-style: normal;
 
-//     src: url("../assets/fonts/fa-solid-900.ttf") format("truetype");
-//     font-display: swap;
-// }
-// @font-face {
-//     font-family: "Fa duotone 900";
-//     font-weight: 400;
-//     font-style: normal;
+    src: url("../assets/fonts/fa-duotone-900.ttf") format("truetype");
+    font-display: swap;
+}
+@font-face {
+    font-family: "Fa 300";
+    font-weight: 300;
+    font-style: normal;
 
-//     src: url("../assets/fonts/fa-duotone-900.ttf") format("truetype");
-//     font-display: swap;
-// }
-// @font-face {
-//     font-family: "Fa 300";
-//     font-weight: 300;
-//     font-style: normal;
+    src: url("../assets/fonts/fa-light-300.ttf") format("truetype");
+    font-display: swap;
+}
 
-//     src: url("../assets/fonts/fa-light-300.ttf") format("truetype");
-//     font-display: swap;
-// }
+/// font Montserrat
+@font-face {
+    font-family: Montserrat;
+    font-weight: 900;
+    font-style: normal;
 
-// /// font Montserrat
-// @font-face {
-//     font-family: Montserrat;
-//     font-weight: 900;
-//     font-style: normal;
+    src: url("../assets/fonts/Montserrat-Black.ttf") format("truetype");
+}
 
-//     src: url("../assets/fonts/Montserrat-Black.ttf") format("truetype");
-// }
+@font-face {
+    font-family: Montserrat;
+    font-weight: 900;
+    font-style: italic;
 
-// @font-face {
-//     font-family: Montserrat;
-//     font-weight: 900;
-//     font-style: italic;
+    src: url("../assets/fonts/Montserrat-BlackItalic.ttf") format("truetype");
+}
 
-//     src: url("../assets/fonts/Montserrat-BlackItalic.ttf") format("truetype");
-// }
+@font-face {
+    font-family: Montserrat;
+    font-weight: 700;
+    font-style: normal;
 
-// @font-face {
-//     font-family: Montserrat;
-//     font-weight: 700;
-//     font-style: normal;
+    src: url("../assets/fonts/Montserrat-Bold.ttf") format("truetype");
+}
 
-//     src: url("../assets/fonts/Montserrat-Bold.ttf") format("truetype");
-// }
+@font-face {
+    font-family: Montserrat;
+    font-weight: 700;
+    font-style: italic;
 
-// @font-face {
-//     font-family: Montserrat;
-//     font-weight: 700;
-//     font-style: italic;
+    src: url("../assets/fonts/Montserrat-BoldItalic.ttf") format("truetype");
+}
+@font-face {
+    font-family: Montserrat;
+    font-weight: 600;
+    font-style: normal;
 
-//     src: url("../assets/fonts/Montserrat-BoldItalic.ttf") format("truetype");
-// }
-// @font-face {
-//     font-family: Montserrat;
-//     font-weight: 600;
-//     font-style: normal;
+    src: url("../assets/fonts/Montserrat-SemiBold.ttf") format("truetype");
+}
 
-//     src: url("../assets/fonts/Montserrat-SemiBold.ttf") format("truetype");
-// }
+@font-face {
+    font-family: Montserrat;
+    font-weight: 600;
+    font-style: italic;
 
-// @font-face {
-//     font-family: Montserrat;
-//     font-weight: 600;
-//     font-style: italic;
+    src: url("../assets/fonts/Montserrat-SemiBoldItalic.ttf") format("truetype");
+}
 
-//     src: url("../assets/fonts/Montserrat-SemiBoldItalic.ttf") format("truetype");
-// }
+@font-face {
+    font-family: Montserrat;
+    font-weight: 500;
+    font-style: normal;
 
-// @font-face {
-//     font-family: Montserrat;
-//     font-weight: 500;
-//     font-style: normal;
+    src: url("../assets/fonts/Montserrat-Medium.ttf") format("truetype");
+}
 
-//     src: url("../assets/fonts/Montserrat-Medium.ttf") format("truetype");
-// }
+@font-face {
+    font-family: Montserrat;
+    font-weight: 500;
+    font-style: italic;
 
-// @font-face {
-//     font-family: Montserrat;
-//     font-weight: 500;
-//     font-style: italic;
+    src: url("../assets/fonts/Montserrat-MediumItalic.ttf") format("truetype");
+}
 
-//     src: url("../assets/fonts/Montserrat-MediumItalic.ttf") format("truetype");
-// }
+@font-face {
+    font-family: Montserrat;
+    font-weight: 400;
+    font-style: normal;
 
-// @font-face {
-//     font-family: Montserrat;
-//     font-weight: 400;
-//     font-style: normal;
+    src: url("../assets/fonts/Montserrat-Regular.ttf") format("truetype");
+}
 
-//     src: url("../assets/fonts/Montserrat-Regular.ttf") format("truetype");
-// }
+@font-face {
+    font-family: Montserrat;
+    font-weight: 400;
+    font-style: italic;
 
-// @font-face {
-//     font-family: Montserrat;
-//     font-weight: 400;
-//     font-style: italic;
+    src: url("../assets/fonts/Montserrat-Italic.ttf") format("truetype");
+}
 
-//     src: url("../assets/fonts/Montserrat-Italic.ttf") format("truetype");
-// }
+@font-face {
+    font-family: Montserrat;
+    font-weight: 300;
+    font-style: normal;
 
-// @font-face {
-//     font-family: Montserrat;
-//     font-weight: 300;
-//     font-style: normal;
+    src: url("../assets/fonts/Montserrat-Light.ttf") format("truetype");
+}
 
-//     src: url("../assets/fonts/Montserrat-Light.ttf") format("truetype");
-// }
+@font-face {
+    font-family: Montserrat;
+    font-weight: 300;
+    font-style: italic;
 
-// @font-face {
-//     font-family: Montserrat;
-//     font-weight: 300;
-//     font-style: italic;
+    src: url("../assets/fonts/Montserrat-LightItalic.ttf") format("truetype");
+}
 
-//     src: url("../assets/fonts/Montserrat-LightItalic.ttf") format("truetype");
-// }
+@font-face {
+    font-family: Montserrat;
+    font-weight: 100;
+    font-style: normal;
 
-// @font-face {
-//     font-family: Montserrat;
-//     font-weight: 100;
-//     font-style: normal;
+    src: url("../assets/fonts/Montserrat-Thin.ttf") format("truetype");
+}
 
-//     src: url("../assets/fonts/Montserrat-Thin.ttf") format("truetype");
-// }
+@font-face {
+    font-family: Montserrat;
+    font-weight: 100;
+    font-style: italic;
 
-// @font-face {
-//     font-family: Montserrat;
-//     font-weight: 100;
-//     font-style: italic;
+    src: url("../assets/fonts/Montserrat-ThinItalic.ttf") format("truetype");
+}
+/// end font Montserrat
+/// font FiraSans
+@font-face {
+    font-family: FiraSans;
+    font-weight: 900;
+    font-style: normal;
 
-//     src: url("../assets/fonts/Montserrat-ThinItalic.ttf") format("truetype");
-// }
-// /// end font Montserrat
-// /// font FiraSans
-// @font-face {
-//     font-family: FiraSans;
-//     font-weight: 900;
-//     font-style: normal;
+    src: url("../assets/fonts/FiraSans-Black.ttf") format("truetype");
+}
 
-//     src: url("../assets/fonts/FiraSans-Black.ttf") format("truetype");
-// }
+@font-face {
+    font-family: FiraSans;
+    font-weight: 900;
+    font-style: italic;
 
-// @font-face {
-//     font-family: FiraSans;
-//     font-weight: 900;
-//     font-style: italic;
+    src: url("../assets/fonts/FiraSans-BlackItalic.ttf") format("truetype");
+}
 
-//     src: url("../assets/fonts/FiraSans-BlackItalic.ttf") format("truetype");
-// }
+@font-face {
+    font-family: FiraSans;
+    font-weight: 700;
+    font-style: normal;
 
-// @font-face {
-//     font-family: FiraSans;
-//     font-weight: 700;
-//     font-style: normal;
+    src: url("../assets/fonts/FiraSans-Bold.ttf") format("truetype");
+}
 
-//     src: url("../assets/fonts/FiraSans-Bold.ttf") format("truetype");
-// }
+@font-face {
+    font-family: FiraSans;
+    font-weight: 700;
+    font-style: italic;
 
-// @font-face {
-//     font-family: FiraSans;
-//     font-weight: 700;
-//     font-style: italic;
+    src: url("../assets/fonts/FiraSans-BoldItalic.ttf") format("truetype");
+}
+@font-face {
+    font-family: FiraSans;
+    font-weight: 600;
+    font-style: normal;
 
-//     src: url("../assets/fonts/FiraSans-BoldItalic.ttf") format("truetype");
-// }
-// @font-face {
-//     font-family: FiraSans;
-//     font-weight: 600;
-//     font-style: normal;
+    src: url("../assets/fonts/FiraSans-SemiBold.ttf") format("truetype");
+}
 
-//     src: url("../assets/fonts/FiraSans-SemiBold.ttf") format("truetype");
-// }
+@font-face {
+    font-family: FiraSans;
+    font-weight: 600;
+    font-style: italic;
 
-// @font-face {
-//     font-family: FiraSans;
-//     font-weight: 600;
-//     font-style: italic;
+    src: url("../assets/fonts/FiraSans-SemiBoldItalic.ttf") format("truetype");
+}
 
-//     src: url("../assets/fonts/FiraSans-SemiBoldItalic.ttf") format("truetype");
-// }
+@font-face {
+    font-family: FiraSans;
+    font-weight: 500;
+    font-style: normal;
 
-// @font-face {
-//     font-family: FiraSans;
-//     font-weight: 500;
-//     font-style: normal;
+    src: url("../assets/fonts/FiraSans-Medium.ttf") format("truetype");
+}
 
-//     src: url("../assets/fonts/FiraSans-Medium.ttf") format("truetype");
-// }
+@font-face {
+    font-family: FiraSans;
+    font-weight: 500;
+    font-style: italic;
 
-// @font-face {
-//     font-family: FiraSans;
-//     font-weight: 500;
-//     font-style: italic;
+    src: url("../assets/fonts/FiraSans-MediumItalic.ttf") format("truetype");
+}
 
-//     src: url("../assets/fonts/FiraSans-MediumItalic.ttf") format("truetype");
-// }
+@font-face {
+    font-family: FiraSans;
+    font-weight: 400;
+    font-style: normal;
 
-// @font-face {
-//     font-family: FiraSans;
-//     font-weight: 400;
-//     font-style: normal;
+    src: url("../assets/fonts/FiraSans-Regular.ttf") format("truetype");
+}
 
-//     src: url("../assets/fonts/FiraSans-Regular.ttf") format("truetype");
-// }
+@font-face {
+    font-family: FiraSans;
+    font-weight: 400;
+    font-style: italic;
 
-// @font-face {
-//     font-family: FiraSans;
-//     font-weight: 400;
-//     font-style: italic;
+    src: url("../assets/fonts/FiraSans-Italic.ttf") format("truetype");
+}
 
-//     src: url("../assets/fonts/FiraSans-Italic.ttf") format("truetype");
-// }
+@font-face {
+    font-family: FiraSans;
+    font-weight: 300;
+    font-style: normal;
 
-// @font-face {
-//     font-family: FiraSans;
-//     font-weight: 300;
-//     font-style: normal;
+    src: url("../assets/fonts/FiraSans-Light.ttf") format("truetype");
+}
 
-//     src: url("../assets/fonts/FiraSans-Light.ttf") format("truetype");
-// }
+@font-face {
+    font-family: FiraSans;
+    font-weight: 300;
+    font-style: italic;
 
-// @font-face {
-//     font-family: FiraSans;
-//     font-weight: 300;
-//     font-style: italic;
+    src: url("../assets/fonts/FiraSans-LightItalic.ttf") format("truetype");
+}
 
-//     src: url("../assets/fonts/FiraSans-LightItalic.ttf") format("truetype");
-// }
+@font-face {
+    font-family: FiraSans;
+    font-weight: 100;
+    font-style: normal;
 
-// @font-face {
-//     font-family: FiraSans;
-//     font-weight: 100;
-//     font-style: normal;
+    src: url("../assets/fonts/FiraSans-Thin.ttf") format("truetype");
+}
 
-//     src: url("../assets/fonts/FiraSans-Thin.ttf") format("truetype");
-// }
+@font-face {
+    font-family: FiraSans;
+    font-weight: 100;
+    font-style: italic;
 
-// @font-face {
-//     font-family: FiraSans;
-//     font-weight: 100;
-//     font-style: italic;
-
-//     src: url("../assets/fonts/FiraSans-ThinItalic.ttf") format("truetype");
-// }
-/// end font FiraSans
+    src: url("../assets/fonts/FiraSans-ThinItalic.ttf") format("truetype");
+}
+// / end font FiraSans
 @font-face {
     font-family: Roboto;
     font-weight: 400;
@@ -280,7 +275,7 @@ html {
     scroll-behavior: smooth;
 }
 body {
-    font-family: Roboto, sans-serif;
+    font-family: Montserrat,Roboto, sans-serif;
     font-size: 16px;
 
     color: #333;
@@ -349,4 +344,22 @@ h3 {
 }
 .page-container {
     max-width: 80%;
+}
+.ant-breadcrumb {
+    font-size: 20px;
+    font-weight: 600;
+}
+.ant-divider-with-text-left {
+    &::before {
+        border-top: 1px solid #000 !important;
+    }
+
+    &::after {
+        border-top: 1px solid #000 !important;
+    }
+}
+
+.ant-divider-inner-text {
+    min-width:      fit-content;
+    min-width: -moz-fit-content;
 }

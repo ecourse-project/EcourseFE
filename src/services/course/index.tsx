@@ -3,20 +3,41 @@ import apiURL from 'src/apis';
 import { apiClient } from 'src/config/apiClient';
 import {
 	Course,
+	CreateOrderArg,
 	Document,
 	OCart,
 	OIsExist,
 	OPasswordChange,
 	OPasswordRest,
+	ORegistration,
 	OutputAdd,
 	OutputCancel,
 	OutputOrder,
 	OutputRemove,
 	Pagination,
 	PaginationParams,
+	User,
 } from 'src/models/backend_modal';
 
 class CourseService {
+	static myInfo(): Promise<User> {
+		return apiClient.get(apiURL.me());
+	}
+
+	static register(
+		email: string,
+		password1: string,
+		password2: string,
+		full_name: string
+	): Promise<ORegistration> {
+		return apiClient.post(apiURL.register(), {
+			email: email,
+			password1: password1,
+			password2: password2,
+			full_name: full_name,
+		});
+	}
+
 	static existEmail(email: string): Promise<OIsExist> {
 		return apiClient.get(apiURL.existEmail(email));
 	}
@@ -39,6 +60,10 @@ class CourseService {
 
 	static getAllDocs(params: PaginationParams): Promise<Pagination<Document>> {
 		return apiClient.get(apiURL.getAllDocs(params.limit, params.page));
+	}
+
+	static getMostDownloadDocs(): Promise<Document> {
+		return apiClient.get(apiURL.getMostDownloadDocs());
 	}
 
 	static getUserDocs(params: PaginationParams): Promise<Pagination<Document>> {
@@ -87,8 +112,8 @@ class CourseService {
 		return apiClient.get(apiURL.getOrder(id));
 	}
 
-	static createOrder(): Promise<OutputOrder> {
-		return apiClient.get(apiURL.createOrder());
+	static createOrder(params: CreateOrderArg): Promise<OutputOrder> {
+		return apiClient.post(apiURL.createOrder(), params);
 	}
 
 	static cancelOrder(id: string): Promise<OutputCancel> {
@@ -105,6 +130,24 @@ class CourseService {
 
 	static getCourseDetail(id: string): Promise<Course> {
 		return apiClient.get(apiURL.getCourseDetail(id));
+	}
+
+	static createComment(
+		owner_id: string,
+		course_id: string,
+		user_id: string,
+		content: string
+	): Promise<Comment> {
+		return apiClient.post(apiURL.createComment(), {
+			owner_id: owner_id,
+			course_id: course_id,
+			user_id: user_id,
+			content: content,
+		});
+	}
+
+	static listComments(id: string): Promise<Comment[]> {
+		return apiClient.get(apiURL.listComments(id));
 	}
 }
 export default CourseService;

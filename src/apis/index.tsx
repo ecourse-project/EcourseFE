@@ -36,6 +36,7 @@ const apiURL = {
 	resetPwd: () => 'api/users/password-reset/',
 	changePwd: () => 'api/users/password-change/',
 	getAllDocs: (limit, page) => `api/documents/?limit=${limit}&page=${page}`,
+	getMostDownloadDocs: () => `api/documents/most-download`,
 	getUDocs: (limit, page) =>
 		`api/documents/my-documents/?limit=${limit}&page=${page}`,
 	getDocDetail: (id) => `api/documents/detail/?document_id=${id}`,
@@ -47,11 +48,14 @@ const apiURL = {
 	getAllOrders: (limit, page) =>
 		`api/payment/orders/?limit=${limit}&page=${page}`,
 	getOrder: (id) => `api/payment/order/detail/?order_id=${id}`,
-	createOrder: () => `/api/payment/order/create`,
+	createOrder: () => `/api/payment/order/create/`,
 	cancelOrder: (id) => `api/payment/order/cancel/?order_id=${id}`,
 	getAllCourses: (limit, page) => `api/courses/?limit=${limit}&page=${page}`,
 	getUCourses: (limit, page) =>
 		`api/courses/my-courses/?limit=${limit}&page=${page}`,
 	getCourseDetail: (id) => `api/courses/detail/?course_id=${id}`,
+	createComment: () => `api/comments/create/`,
+	listComments: (id) => `api/comments/list/?course_id=${id}`,
 };
+
 export default apiURL;

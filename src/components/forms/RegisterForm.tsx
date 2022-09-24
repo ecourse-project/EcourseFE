@@ -41,20 +41,6 @@ const RegisterForm: React.FC = () => {
 					return false;
 				}),
 
-			// phone: Yup.string()
-			// 	// .required(validation.phone.required)
-			// 	.matches(regex.phoneNumber, {
-			// 		message: validation.phone.invalid,
-			// 	}),
-			website_url: Yup.string().notRequired(),
-			// .when('user_type', {
-			// 	is: (user_type: string) => user_type !== UserType.MANAGER,
-			// 	then: Yup.string()
-			// 		.required(validation.website.required)
-			// 		.matches(validation.website.regWeb, {
-			// 			message: validation.website.url,
-			// 		}),
-			// }),
 			email: Yup.string()
 				.required(validation.email.required)
 				.email(validation.email.invalid)
@@ -67,7 +53,7 @@ const RegisterForm: React.FC = () => {
 						return false;
 					}
 				}),
-			password: Yup.string()
+			password1: Yup.string()
 				.required(validation.password.required)
 				.matches(regex.password, {
 					message: validation.password.invalidPwdRegex,
@@ -78,7 +64,7 @@ const RegisterForm: React.FC = () => {
 					'passwords-match',
 					validation.confirmPassword.doesNotMatch,
 					function (value) {
-						return this.parent.password === value;
+						return this.parent.password1 === value;
 					}
 				),
 		})
@@ -92,7 +78,7 @@ const RegisterForm: React.FC = () => {
 		initialValues: {
 			full_name: 'NHTC',
 			email: 'test@gmail.com',
-			password: 'tuancuong123',
+			password1: 'tuancuong123',
 			password2: 'tuancuong123',
 		},
 		validationSchema: validationSchema.current,
@@ -100,7 +86,9 @@ const RegisterForm: React.FC = () => {
 		validateOnBlur: true,
 		onSubmit: async (values) => {
 			try {
-				UserService.register(values);
+				const user = await UserService.register(values);
+				console.log('user:  ', user);
+				localStorage.setItem('email_register', values?.email);
 				navigate(RoutePaths.LOGIN);
 			} catch (error) {
 				console.log(error);
@@ -252,12 +240,12 @@ const RegisterForm: React.FC = () => {
 					disabled={isLoading}
 					handleChange={formik.handleChange}
 					handleBlur={formik.handleBlur}
-					value={formik.values.password}
+					value={formik.values.password1}
 					hasError={hasError('password1')}
 				/>
 				{hasError('password1') ? (
 					<ErrorMessage className="error">
-						{formik.errors.password}
+						{formik.errors.password1}
 					</ErrorMessage>
 				) : null}
 			</div>
@@ -282,7 +270,7 @@ const RegisterForm: React.FC = () => {
 					</ErrorMessage>
 				) : null}
 			</div>
-			<div className="form-item">
+			{/* <div className="form-item">
 				<Checkbox onChange={onChange}>I agree to all statements in</Checkbox>
 				<span
 					onClick={() => {
@@ -293,7 +281,7 @@ const RegisterForm: React.FC = () => {
 				>
 					Terms of Service
 				</span>
-			</div>
+			</div> */}
 			{generalError && generalError.length > 0 && (
 				<ErrorMessage>{generalError}</ErrorMessage>
 			)}
@@ -307,20 +295,20 @@ const RegisterForm: React.FC = () => {
 					borderRadius="5px"
 					type="primary"
 					htmlType="submit"
-					disabled={!isTickAgree || formik.isSubmitting}
+					// disabled={!isTickAgree || formik.isSubmitting}
 					onClick={() => {
 						console.log('click');
-						// setTimeout(() => {
-						// 	const errElement = document.querySelector('.error');
-						// 	if (errElement) {
-						// 		setTimeout(() => {
-						// 			errElement.scrollIntoView({
-						// 				behavior: 'smooth',
-						// 				block: 'center',
-						// 			});
-						// 		}, 500);
-						// 	}
-						// }, 2000);
+						setTimeout(() => {
+							const errElement = document.querySelector('.error');
+							if (errElement) {
+								setTimeout(() => {
+									errElement.scrollIntoView({
+										behavior: 'smooth',
+										block: 'center',
+									});
+								}, 500);
+							}
+						}, 2000);
 					}}
 				>
 					Create Account

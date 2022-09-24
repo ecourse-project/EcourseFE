@@ -16,6 +16,9 @@ import { VerticalAlignBottomOutlined, WalletOutlined } from '@ant-design/icons';
 import { DocStatus, GlobalStyle } from 'src/utils/enum';
 import { isObject } from 'formik';
 import { Button } from 'antd';
+import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
+
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
 interface ChildProps {
 	document: Document; // try not to use any.
 }
@@ -36,6 +39,7 @@ const DocItemCard: React.FC<ChildProps> = (props) => {
 	const [added, setAdded] = useState(false);
 	const [btnString, setBtnString] = useState<string>(BtnString.AVAILABLE);
 	const cartData = useAppSelector((state: RootState) => state.document);
+	const [loading, setLoading] = useState<boolean>(false);
 	const dispatch = useAppDispatch();
 	useEffect(() => {
 		if (document.sale_status === DocStatus.AVAILABLE) {
@@ -48,18 +52,18 @@ const DocItemCard: React.FC<ChildProps> = (props) => {
 			setBtnString(BtnString.BOUGHT);
 		}
 	}, [document]);
+
 	const handleClick = () => {
-		try {
+		setLoading(true);
+		setTimeout(() => {
 			if (document.sale_status === DocStatus.AVAILABLE) {
-				setBtnString(BtnString.IN_CART);
 				dispatch(cartActions.updateCart(document));
+				setLoading(false);
 			} else if (document.sale_status === DocStatus.IN_CART) {
-				setBtnString(BtnString.AVAILABLE);
 				dispatch(cartActions.updateCart(document));
+				setLoading(false);
 			}
-		} catch (error) {
-			console.log('error: ', error);
-		}
+		}, 500);
 	};
 	return (
 		<div
@@ -79,10 +83,20 @@ const DocItemCard: React.FC<ChildProps> = (props) => {
 					text-overflow: ellipsis;
 					color: gray;
 				}
-
+				@media only screen and (min-width: 1200px) {
+					.ant-btn[disabled] {
+						letter-spacing: 2px;
+					}
+				}
+				@media only screen and (max-width: 1200px) {
+					.ant-btn[disabled] {
+						letter-spacing: 0px;
+					}
+				}
 				.download {
 					font-weight: bold;
 				}
+
 				.card-img-top {
 					object-fit: contain;
 					width: 15ppx;
@@ -97,6 +111,7 @@ const DocItemCard: React.FC<ChildProps> = (props) => {
 				.card-btn {
 					width: 100%;
 					color: #000;
+					border-color: #000;
 					&:hover {
 						border-color: ${btnString === BtnString.AVAILABLE
 							? Color.AVAILABLE
@@ -107,6 +122,20 @@ const DocItemCard: React.FC<ChildProps> = (props) => {
 							: Color.IN_CART};
 						letter-spacing: 8px;
 					}
+				}
+
+				.anticon-loading {
+					position: absolute;
+					top: -7px !important;
+					left: -32px !important;
+					font-size: 18px;
+					color: ${btnString === BtnString.AVAILABLE
+						? Color.AVAILABLE
+						: Color.IN_CART};
+				}
+				.price-tag {
+					display: flex;
+					justify-content: space-evenly;
 				}
 			`}
 		>
@@ -134,11 +163,15 @@ const DocItemCard: React.FC<ChildProps> = (props) => {
 					</p>
 				</div>
 			</Link>
-			<div>
-				<h5>
+			<div className="price-tag">
+				<span>
 					<WalletOutlined />
 					{formatCurrency(document.price)}
-				</h5>
+				</span>
+
+				{document.sale_status === DocStatus.BOUGHT && (
+					<TaskAltIcon sx={{ color: `${Color.BOUGHT}` }} />
+				)}
 			</div>
 			<AppButton
 				className="card-btn"
@@ -146,9 +179,11 @@ const DocItemCard: React.FC<ChildProps> = (props) => {
 				btnStyle={'outline'}
 				btnSize={'small'}
 				btnWidth={'full-w'}
+				loading={loading}
 				disabled={
 					document.sale_status === DocStatus.PENDING ||
-					document.sale_status === DocStatus.BOUGHT
+					document.sale_status === DocStatus.BOUGHT ||
+					loading
 				}
 				onClick={handleClick}
 			>

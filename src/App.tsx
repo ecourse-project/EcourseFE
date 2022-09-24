@@ -20,24 +20,18 @@ import { StorageKeys } from './utils/enum';
 import RoutePaths from './utils/routes';
 const App = () => {
 	const navigate = useNavigate();
-	const queryParams = useQueryParam();
 	const dispatch = useAppDispatch();
-	const fetchData = async () => {
-		const res = await CourseService.getCart();
-		dispatch(cartActions.fetchListCart());
-		dispatch(cartActions.setTotalPrice(res.total_price));
-	};
+
 	useEffect(() => {
-		dispatch(cartActions.fetchListCart());
 		dispatch({
-			type: AppAction.FETCH_ORDER,
+			type: AppAction.FETCH_ALL_DATA,
 			payload: {
 				page: 1,
-				limit: 1,
+				limit: 10,
 			},
 		});
-		if (!localStorage.getItem(StorageKeys.SESSION_KEY)) navigate('/auth/login');
-
+		if (!localStorage.getItem(StorageKeys.SESSION_KEY))
+			navigate(RoutePaths.LOGIN);
 		// navigate('/home');
 	}, []);
 	return (

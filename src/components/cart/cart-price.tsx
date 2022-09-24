@@ -8,20 +8,21 @@ import RoutePaths from 'src/utils/routes';
 import { useAppDispatch } from 'src/apps/hooks';
 import { cartActions } from 'src/reducers/document/documentSlice';
 import AppButton from 'src/components/button';
-import Img from 'src/assets/images/bill.jpg';
+import Img from 'src/assets/images/harry.jpg';
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
+import { CreateOrderArg } from 'src/models/backend_modal';
 interface ChildProps {
-	data: number;
+	totalPrice: number;
 	docNum: number;
 	children: ReactNode;
-	visible: (value: boolean) => void;
+	checkedDoc: CreateOrderArg;
 }
 const PricingCard: React.FC<ChildProps> = ({
-	data,
+	totalPrice,
 	docNum,
+	checkedDoc,
 	children,
-	visible,
 }) => {
 	const [btnText, setBtnText] = useState<string>('Thanh toán');
 	const [open, setOpen] = useState(false);
@@ -30,7 +31,7 @@ const PricingCard: React.FC<ChildProps> = ({
 	const handleOnClick = () => {
 		// visible(true);
 		try {
-			CourseService.createOrder();
+			CourseService.createOrder(checkedDoc);
 			setBtnText('CREATED');
 		} catch (error) {}
 	};
@@ -43,12 +44,11 @@ const PricingCard: React.FC<ChildProps> = ({
 		setModalText('The modal will be closed after two seconds');
 		setConfirmLoading(true);
 		try {
-			CourseService.createOrder();
-			setBtnText('CREATED');
+			CourseService.createOrder(checkedDoc);
 			setTimeout(() => {
 				setOpen(false);
 				setConfirmLoading(false);
-				dispatch(cartActions.clearCart());
+				dispatch(cartActions.clearCart(checkedDoc));
 				navigate(RoutePaths.ORDER_CART);
 			}, 1000);
 		} catch (error) {
@@ -95,14 +95,14 @@ const PricingCard: React.FC<ChildProps> = ({
 			>
 				<p>
 					Xác nhận đặt đơn hàng trị giá:
-					<strong>{`${formatCurrency(data)}`}</strong>
+					<strong>{`${formatCurrency(totalPrice)}`}</strong>
 				</p>
 			</Modal>
 			<hr className="text-muted" />
 			<Image src={Img} />
 			<div className="total-price">
 				<span>Total:</span>
-				<span>{formatCurrency(data)}</span>
+				<span>{formatCurrency(totalPrice)}</span>
 			</div>
 
 			<AppButton

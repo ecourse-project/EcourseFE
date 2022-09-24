@@ -2,7 +2,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CartItemRow from '../../components/cart/cart-item';
 import React, { isValidElement, useEffect, useState } from 'react';
-import { OCart } from 'src/models/backend_modal';
+import { CreateOrderArg, OCart } from 'src/models/backend_modal';
 import CourseService from 'src/services/course';
 import { Checkbox, Col, Divider, Image, Modal, Row } from 'antd';
 import { useAppDispatch, useAppSelector } from 'src/apps/hooks';
@@ -19,59 +19,31 @@ function ShoppingCart() {
 	const [cart, setCart] = useState<OCart>();
 	const [isModalVisible, setIsModalVisible] = useState(true);
 	const cartData = useAppSelector((state: RootState) => state.document);
-	const [total, setTotal] = useState(0);
-	const dispatch = useAppDispatch();
-	// const data = useAppSelector((state: RootState) => state.document.cartDoc);
-	const fetchData = async () => {
-		const res = await CourseService.getCart();
-		// dispatch(fetchListCart(res.documents));
-		// console.log('added');
-		setCart(res);
-	};
-	useEffect(() => {
-		// console.log('active cart', cartData);
-		// fetchData();
-		// setTotal(
-		// 	// cartData.reduce(
-		// 	// 	(previousValue, currentValue) => previousValue + currentValue.price,
-		// 	// 	total
-		// 	// )
-		// );
-	}, []);
-	useEffect(() => {
-		// console.log('visible: ', isModalVisible);
-	}, [isModalVisible]);
-	const handleOk = () => {
-		setIsModalVisible(false);
-	};
 
-	const handleCancel = () => {
-		setIsModalVisible(false);
-	};
-	const [checkedList, setCheckedList] = useState<string[]>([]);
+	const [checkedListDoc, setCheckedListDoc] = useState<string[]>([]);
+	const [checkedListCourse, setCheckedListCourse] = useState<string[]>([]);
 	const [indeterminate, setIndeterminate] = useState(true);
 	const [checkAll, setCheckAll] = useState(false);
-	// const plainOptions = ['Apple', 'Pear', 'Orange'];
-	const plainOptions = cartData.listCartDoc;
+	const dispatch = useAppDispatch();
+	// const data = useAppSelector((state: RootState) => state.document.cartDoc);
+
+	const plainOptions = cartData.appCart.documents;
 	useEffect(() => {
-		console.log('checklist ', checkedList);
-	}, [checkedList]);
+		console.log('list ', checkedListDoc);
+	}, [checkedListDoc]);
 	const onChange = (list) => {
-		setCheckedList(list);
+		setCheckedListDoc(list);
 		console.log('list ', list);
 		setIndeterminate(!!list.length && list.length < plainOptions.length);
 		setCheckAll(list.length === plainOptions.length);
 	};
 
 	const onCheckAllChange = (e: CheckboxChangeEvent) => {
-		setCheckedList(e.target.checked ? plainOptions.map((v) => v.id) : []);
+		setCheckedListDoc(e.target.checked ? plainOptions.map((v) => v.id) : []);
 		setIndeterminate(false);
 		setCheckAll(e.target.checked);
 	};
-	const handleSetVisible = (value) => {
-		// console.log('value', value);
-		setIsModalVisible(value);
-	};
+
 	return (
 		<div
 			className="container"
@@ -108,12 +80,16 @@ function ShoppingCart() {
 						}
 					}
 				}
+				.ant-checkbox-wrapper {
+					display: flex;
+					align-items: center;
+				}
 			`}
 		>
 			<h2>Danh sách tài liệu trong giỏ</h2>
-			<Row>
-				<Col span={16}>
-					{cartData.listCartDoc.length ? (
+			<Row gutter={[16, 16]}>
+				<Col span={18}>
+					{cartData?.appCart?.documents?.length ? (
 						<>
 							<Checkbox
 								className="check-all"
@@ -125,11 +101,11 @@ function ShoppingCart() {
 							</Checkbox>
 							<Divider />
 							<CheckboxGroup
-								value={checkedList}
+								value={checkedListDoc}
 								onChange={onChange}
 								className="checkbox-group"
 							>
-								{cartData.listCartDoc.map((doc, index) => (
+								{cartData.appCart.documents.map((doc, index) => (
 									<div key={index}>
 										<Checkbox value={doc.id}>
 											<CartItemRow document={doc} />
@@ -142,13 +118,18 @@ function ShoppingCart() {
 						<Image src={EmptyImg} preview={false} className="empty-img" />
 					)}
 				</Col>
-				<Col span={8}>
+				<Col span={6}>
 					<div className="">
 						<PricingCard
-							data={cartData.totalPrice || 0}
-							docNum={cartData.listCartDoc.length}
+							totalPrice={cartData.appCart.total_price || 0}
+							docNum={cartData?.appCart?.documents?.length}
 							children={null}
-							visible={handleSetVisible}
+							checkedDoc={
+								{
+									documents: checkedListDoc,
+									courses: checkedListCourse,
+								} as CreateOrderArg
+							}
 						/>
 					</div>
 				</Col>

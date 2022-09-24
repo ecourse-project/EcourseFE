@@ -11,6 +11,7 @@ import { useDispatch } from 'react-redux';
 import { useAppDispatch } from 'src/apps/hooks';
 import CourseService from 'src/services/course';
 import { cartActions } from 'src/reducers/document/documentSlice';
+import { DeleteOutlined, TagOutlined } from '@ant-design/icons';
 interface ChildProps {
 	document: Document;
 }
@@ -28,33 +29,61 @@ const CartItemRow: React.FC<ChildProps> = ({ document }) => {
 					align-items: center;
 					justify-content: center;
 				}
-				.document {
+				.document-item {
 					display: flex;
-					justify-content: space-evenly;
-					align-items: center;
+					flex-direction: row;
+					align-items: flex-end;
+					justify-content: space-between;
+					.document-content {
+						display: flex;
+					}
 				}
-				.des {
-					font-size: 15px;
+				.description {
 					text-align: left;
-					display: -webkit-box;
-					-webkit-line-clamp: 2;
-					-webkit-box-orient: vertical;
-					overflow: hidden;
-					text-overflow: ellipsis;
+					max-width: 80%;
+					padding: 0 20px;
+					.description-content {
+						font-size: 15px;
+						text-align: left;
+						display: -webkit-box;
+						-webkit-line-clamp: 2;
+						-webkit-box-orient: vertical;
+						overflow: hidden;
+						text-overflow: ellipsis;
+					}
 				}
 				.thumb {
 					objectfit: 'cover';
 					margin: 10px;
+					border-radius: 5px;
 				}
-				.price {
-					margin: 10px;
+				.price-group {
+					position: relative;
+					font-size: 20px;
+					margin-bottom: 10px;
+
+					.price {
+						margin: 10px;
+						.anticon-tag {
+							position: absolute;
+
+							left: -10%;
+							bottom: 23%;
+						}
+					}
+					.anticon-delete {
+						&:hover {
+							font-size: 22px;
+							color: red;
+						}
+					}
 				}
 			`}
 		>
-			<div className="row">
-				<div className="document col-6">
+			<div className="document-item">
+				<div className="document-content">
 					<img
-						className="rounded thumb"
+						className="thumb"
 						src={`${document.thumbnail.image_path}`}
 						// src="https://localhost:4000/media/2022/08/14/gdcd.png"
 
@@ -63,25 +92,17 @@ const CartItemRow: React.FC<ChildProps> = ({ document }) => {
 						alt="Product image."
 						style={{ objectFit: 'cover' }}
 					/>
-					<span className="h5">
-						<Link to="/product/1">
-							<a className="link-dark text-decoration-none">{document.name}</a>
-						</Link>
-						<p className="des">{document.description}</p>
-					</span>
+					<div className="description">
+						<h4>{document.name}</h4>
+						<p className="description-content">{document.description}</p>
+					</div>
 				</div>
-
-				<div className="col-6 price-group">
-					<h6 className="price">{formatCurrency(document.price)}</h6>
-					<span>
-						<button
-							className="btn btn-sm btn-danger trash"
-							type="button"
-							onClick={handleDelete}
-						>
-							<FontAwesomeIcon icon={faTrashCan} />
-						</button>
-					</span>
+				<div className="price-group">
+					<p className="price">
+						<TagOutlined />
+						{formatCurrency(document.price)}
+					</p>
+					<DeleteOutlined onClick={handleDelete} />
 				</div>
 			</div>
 		</div>
