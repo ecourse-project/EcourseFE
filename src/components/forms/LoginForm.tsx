@@ -38,9 +38,10 @@ const LoginForm: React.FC = () => {
 	const [rememberMe, setRememberMe] = useState(
 		localStorage.getItem(StorageKeys.REMEMBER_ME_KEY) === 'true' ? true : false
 	);
+	const registerEmail = localStorage.getItem('email_register');
 	const formik = useFormik<LoginFormData>({
 		initialValues: {
-			email: 'testdev@gmail.com',
+			email: registerEmail || '',
 			password: 'tuancuong123',
 		},
 		validationSchema: validationSchema.current,
@@ -63,44 +64,6 @@ const LoginForm: React.FC = () => {
 			}
 		},
 	});
-	// useEffect(() => {
-	// 	console.log('login');
-	// }, []);
-	// const handleUrlNavigation = (user: {
-	// 	user_type: any;
-	// 	on_boarding_complete: any;
-	// }) => {
-	// 	if (!queryParams) return;
-
-	// 	const { redirect_url } = queryParams;
-	// 	if (redirect_url) {
-	// 		if (
-	// 			redirect_url === RoutePaths.DASHBOARD &&
-	// 			user?.user_type === UserType.MANAGER
-	// 		) {
-	// 			navigate(RoutePaths.SETUP_MANAGER);
-	// 		} else {
-	// 			navigate(redirect_url);
-	// 		}
-	// 	} else if (
-	// 		user.user_type === UserType.AGENT &&
-	// 		!user.on_boarding_complete
-	// 	) {
-	// 		navigate(RoutePaths.ON_BOARDING);
-	// 	} else if (user.user_type === UserType.AGENT && user.on_boarding_complete) {
-	// 		navigate(RoutePaths.AGENT_REPORT);
-	// 	} else if (
-	// 		user?.user_type === UserType.MANAGER &&
-	// 		user?.on_boarding_complete
-	// 	) {
-	// 		navigate(RoutePaths.MANAGER);
-	// 	} else if (
-	// 		user?.user_type === UserType.MANAGER &&
-	// 		!user?.on_boarding_complete
-	// 	) {
-	// 		navigate(RoutePaths.SETUP_MANAGER);
-	// 	}
-	// };
 
 	const hasError = (key: string) => {
 		return (

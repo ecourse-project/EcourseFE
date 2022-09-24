@@ -2,107 +2,138 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CartItemRow from '../../components/cart/cart-item';
 import React, { isValidElement, useEffect, useState } from 'react';
-import { OCart } from 'src/models/backend_modal';
+import { CreateOrderArg, OCart } from 'src/models/backend_modal';
 import CourseService from 'src/services/course';
-import { Image, Modal } from 'antd';
+import { Checkbox, Col, Divider, Image, Modal, Row } from 'antd';
 import { useAppDispatch, useAppSelector } from 'src/apps/hooks';
 import { RootState } from 'src/reducers/model';
 import EmptyImg from 'src/assets/images/empty-cart-man.jpg';
 import PricingCard from 'src/components/cart/cart-price';
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
+import type { CheckboxValueType } from 'antd/es/checkbox/Group';
+import type { CheckboxChangeEvent } from 'antd/es/checkbox';
+
+const CheckboxGroup = Checkbox.Group;
 function ShoppingCart() {
 	const [cart, setCart] = useState<OCart>();
 	const [isModalVisible, setIsModalVisible] = useState(true);
 	const cartData = useAppSelector((state: RootState) => state.document);
-	const [total, setTotal] = useState(0);
+
+	const [checkedListDoc, setCheckedListDoc] = useState<string[]>([]);
+	const [checkedListCourse, setCheckedListCourse] = useState<string[]>([]);
+	const [indeterminate, setIndeterminate] = useState(true);
+	const [checkAll, setCheckAll] = useState(false);
 	const dispatch = useAppDispatch();
 	// const data = useAppSelector((state: RootState) => state.document.cartDoc);
-	const fetchData = async () => {
-		const res = await CourseService.getCart();
-		// dispatch(fetchListCart(res.documents));
-		// console.log('added');
-		setCart(res);
-	};
+
+	const plainOptions = cartData.appCart.documents;
 	useEffect(() => {
-		// console.log('active cart', cartData);
-		// fetchData();
-		// setTotal(
-		// 	// cartData.reduce(
-		// 	// 	(previousValue, currentValue) => previousValue + currentValue.price,
-		// 	// 	total
-		// 	// )
-		// );
-	}, []);
-	useEffect(() => {
-		// console.log('visible: ', isModalVisible);
-	}, [isModalVisible]);
-	const handleOk = () => {
-		setIsModalVisible(false);
+		console.log('list ', checkedListDoc);
+	}, [checkedListDoc]);
+	const onChange = (list) => {
+		setCheckedListDoc(list);
+		console.log('list ', list);
+		setIndeterminate(!!list.length && list.length < plainOptions.length);
+		setCheckAll(list.length === plainOptions.length);
 	};
 
-	const handleCancel = () => {
-		setIsModalVisible(false);
+	const onCheckAllChange = (e: CheckboxChangeEvent) => {
+		setCheckedListDoc(e.target.checked ? plainOptions.map((v) => v.id) : []);
+		setIndeterminate(false);
+		setCheckAll(e.target.checked);
 	};
-	const handleSetVisible = (value) => {
-		// console.log('value', value);
-		setIsModalVisible(value);
-	};
+
 	return (
-		<div className="container py-4">
-			<div className="row g-3">
-				<div className="col-lg-8">
-					<div className="card border-0 shadow-sm">
-						<div className="card-header bg-white">
-							<h5 className="my-2">Danh sách tài liệu trong giỏ</h5>
-						</div>
-						<div className="card-body p-2">
-							{cartData.listCartDoc.length ? (
-								cartData.listCartDoc.map((doc, index) => (
+		<div
+			className="container"
+			css={css`
+				.empty-img {
+					opacity: 0.6;
+				}
+				.ant-checkbox {
+					width: 25px;
+					height: 25px;
+					.ant-checkbox-inner {
+						width: 25px;
+						height: 25px;
+						&:after {
+							width: 8.714286px;
+							height: 19.142857px;
+							border: 3px solid #fff;
+							border-top: 0;
+							border-left: 0;
+						}
+					}
+				}
+				.checkbox-group {
+					.ant-checkbox-wrapper {
+						align-item: start;
+					}
+				}
+
+				.check-all {
+					.ant-checkbox-indeterminate {
+						.ant-checkbox-inner:after {
+							width: 15px;
+							height: 15px;
+						}
+					}
+				}
+				.ant-checkbox-wrapper {
+					display: flex;
+					align-items: center;
+				}
+			`}
+		>
+			<h2>Danh sách tài liệu trong giỏ</h2>
+			<Row gutter={[16, 16]}>
+				<Col span={18}>
+					{cartData?.appCart?.documents?.length ? (
+						<>
+							<Checkbox
+								className="check-all"
+								indeterminate={indeterminate}
+								onChange={onCheckAllChange}
+								checked={checkAll}
+							>
+								<h3>Chọn tất cả tài liệu</h3>
+							</Checkbox>
+							<Divider />
+							<CheckboxGroup
+								value={checkedListDoc}
+								onChange={onChange}
+								className="checkbox-group"
+							>
+								{cartData.appCart.documents.map((doc, index) => (
 									<div key={index}>
-										<CartItemRow document={doc} />
+										<Checkbox value={doc.id}>
+											<CartItemRow document={doc} />
+										</Checkbox>
 									</div>
-								))
-							) : (
-								<Image src={EmptyImg} preview={false} />
-							)}
-						</div>
+								))}
+							</CheckboxGroup>
+						</>
+					) : (
+						<Image src={EmptyImg} preview={false} className="empty-img" />
+					)}
+				</Col>
+				<Col span={6}>
+					<div className="">
+						<PricingCard
+							totalPrice={cartData.appCart.total_price || 0}
+							docNum={cartData?.appCart?.documents?.length}
+							children={null}
+							checkedDoc={
+								{
+									documents: checkedListDoc,
+									courses: checkedListCourse,
+								} as CreateOrderArg
+							}
+						/>
 					</div>
-				</div>
-				<div className="col-lg-4">
-					<div className="card mb-3 border-0 shadow-sm">
-						<div className="card-body">
-							<div className="input-group">
-								<input
-									className="form-control"
-									type="text"
-									placeholder="Coupon code here"
-								/>
-								<button type="button" className="btn btn-primary">
-									Apply
-								</button>
-							</div>
-						</div>
-					</div>
-					<PricingCard
-						data={cartData.totalPrice || 0}
-						docNum={cartData.listCartDoc.length}
-						children={null}
-						visible={handleSetVisible}
-					/>
-				</div>
-				{/* <Modal
-					title="Basic Modal"
-					visible={isModalVisible}
-					onOk={handleOk}
-					onCancel={handleCancel}
-				>
-					<p>Some contents...</p>
-					<p>Some contents...</p>
-					<p>Some contents...</p>
-				</Modal> */}
-			</div>
-			<br />
-			<br />
-			<br />
+				</Col>
+			</Row>
 		</div>
 	);
 }

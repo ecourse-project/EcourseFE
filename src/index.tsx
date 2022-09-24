@@ -9,6 +9,7 @@ import 'antd/dist/antd.css';
 // import { ThemeProvider } from '@emotion/react';
 import appTheme from 'src/styles/theme';
 import { store } from './apps/storeRedux';
+import 'src/styles/global.scss';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);

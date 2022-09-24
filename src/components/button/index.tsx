@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/display-name */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button } from 'antd';
 import { ButtonProps } from 'antd/lib/button';
 /** @jsxImportSource @emotion/react */
@@ -29,7 +29,6 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
 		btnWidth,
 		...rest
 	} = props;
-
 	const getSize = () => {
 		switch (btnSize) {
 			case 'large':
@@ -170,7 +169,10 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
 				padding: 12px 20px 12px 24px;
 				border-radius: ${borderRadius ? borderRadius : 'initial'};
 				cursor: ${disabled ? 'default' : 'pointer'};
-
+				&,
+				span {
+					transition: all 400ms ease;
+				}
 				.ant-btn-loading-icon {
 					position: relative;
 					.anticon.anticon-loading.anticon-spin {
@@ -180,36 +182,36 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
 					}
 				}
 				&.btn-login {
-					background-color: #faae18 !important;
+					background-color: #ffa535 !important;
 					transition: all 400ms ease;
-					color: #333;
-					font-weight: 600;
+					color: #000;
+					font-weight: 700;
 					letter-spacing: initial;
 					&:hover {
 						letter-spacing: 8px;
-						color: #333;
+						color: #000;
 					}
 				}
 				&.btn-skip {
 					background-color: #fff !important;
 					transition: all 400ms ease;
-					color: #333;
+					color: #000;
 					font-weight: 600;
 					letter-spacing: initial;
 					&:hover {
 						letter-spacing: 8px;
-						color: #333;
+						color: #000;
 					}
 				}
 				&.btn-agentlookup {
 					background-color: #faae18 !important;
 					transition: all 400ms ease;
-					color: #333;
-					font-weight: 600;
+					color: #000;
+					font-weight: 700;
 					letter-spacing: initial;
 					&:hover {
 						letter-spacing: 8px;
-						color: #333;
+						color: #000;
 					}
 				}
 				&.btn-website {
@@ -219,7 +221,7 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
 					padding-top: 12px;
 					padding-bottom: 12px;
 					border-radius: 3px;
-					background-color: #031f2d;
+					background-color: #000;
 					font-weight: 500;
 					letter-spacing: 4px;
 					text-transform: uppercase;
@@ -234,6 +236,39 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
 					border-radius: 0;
 					border-radius: 4px;
 				}
+				&.btn-generic {
+					font-size: 18px;
+					height: 45px !important;
+					max-width: 200px !important;
+					background-color: #ffa900 !important;
+					font-weight: 500;
+					text-transform: uppercase;
+					border: none;
+					margin-top: 30px;
+					padding-top: 12px;
+					padding-bottom: 12px;
+					border-radius: 3px;
+					font-weight: 500 !important;
+					letter-spacing: 4px;
+					display: inline-block;
+					padding: 9px 15px;
+					color: white;
+					border: 0;
+					line-height: inherit;
+					text-decoration: none;
+					cursor: pointer;
+					&:active,
+					&:focus,
+					&:hover {
+						background-color: #ffa900 !important;
+						color: #fff;
+						border: none;
+					}
+					@media only screen and (max-width: ${theme.media.phones}px) {
+						max-width: 100% !important;
+						margin-top: 46px;
+					}
+				}
 				&.btn-setting {
 					padding-right: 40px;
 					padding-left: 40px;
@@ -243,30 +278,7 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
 					justify-content: center;
 					align-items: center;
 					border-style: none;
-					background-color: #031f2d;
-					background-image: none;
-					transition: box-shadow 600ms ease, border-color 600ms ease,
-						color 600ms ease, background-color 600ms ease;
-					color: #fff;
-					font-size: 14px;
-					line-height: 20px;
-					font-weight: 600;
-					text-align: center;
-					letter-spacing: 4px;
-					text-decoration: none;
-					text-transform: uppercase;
-					&:hover {
-						background-color: #ffa900 !important;
-					}
-				}
-				&.btn-protected {
-					height: 48px;
-					padding: 12px 20px 12px 24px;
-					justify-content: center;
-					align-items: center;
-					border-style: none;
-					border-radius: 0px;
-					background-color: #031f2d;
+					background-color: #000;
 					background-image: none;
 					transition: box-shadow 600ms ease, border-color 600ms ease,
 						color 600ms ease, background-color 600ms ease;
@@ -279,10 +291,36 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
 					text-decoration: none;
 					text-transform: uppercase;
 					&:hover {
-						background-color: #ffa900 !important;
+						background-color: #ffa535 !important;
+					}
+				}
+				&.btn-protected {
+					height: 48px;
+					padding: 12px 20px 12px 24px;
+					justify-content: center;
+					align-items: center;
+					border-style: none;
+					border-radius: 0px;
+					background-color: #000;
+					background-image: none;
+					transition: box-shadow 600ms ease, border-color 600ms ease,
+						color 600ms ease, background-color 600ms ease;
+					color: #fff;
+					font-size: 14px;
+					line-height: 20px;
+					font-weight: 400;
+					text-align: center;
+					letter-spacing: 4px;
+					text-decoration: none;
+					text-transform: uppercase;
+					&:hover {
+						background-color: #ffa535 !important;
 					}
 				}
 				&.bth-header {
+					font-weight: 300;
+					font-size: 14px;
+					opacity: 0.8;
 					@media only screen and (max-width: ${theme.media.desktops}px) {
 						height: 36px;
 						font-size: 12px;
@@ -318,7 +356,7 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
 				}
 				&.btn-downsizes {
 					max-width: 200px !important;
-					background-color: #ffa900 !important;
+					background-color: #ffa535 !important;
 					transition: all 500ms ease;
 					font-weight: 500;
 					text-transform: uppercase;
@@ -327,7 +365,6 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
 					padding-top: 12px;
 					padding-bottom: 12px;
 					border-radius: 3px;
-					font-weight: 500;
 					letter-spacing: 4px;
 					display: inline-block;
 					padding: 9px 15px;
@@ -348,7 +385,7 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
 				&.btn-managetAgents {
 					max-width: 100% !important;
 					height: 54px;
-					background-color: #ffa900 !important;
+					background-color: #ffa535 !important;
 					transition: all 400ms ease;
 					text-transform: uppercase;
 					border-radius: 3px;
@@ -404,6 +441,7 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
         }
         `}
 			`}
+			disabled={disabled}
 			{...rest}
 		>
 			{children}

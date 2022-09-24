@@ -4,11 +4,12 @@ import {
 	current,
 	PayloadAction,
 } from '@reduxjs/toolkit';
-import { Statistic } from 'antd';
+import { List, Statistic } from 'antd';
 import { access, stat } from 'fs';
 import { actionChannel } from 'redux-saga/effects';
 import { OrderStatus } from 'src/components/order/order-card';
 import {
+	CreateOrderArg,
 	Document,
 	OCart,
 	OutputOrder,
@@ -21,9 +22,8 @@ import { DocStatus } from 'src/utils/enum';
 export interface DocumentState {
 	loading: boolean;
 	listDoc: Pagination<Document>;
-	listCartDoc: Document[];
+	appCart: OCart;
 	listBoughtDoc: Document[];
-	totalPrice: number;
 	listOrder: Pagination<OutputOrder>;
 }
 
@@ -31,9 +31,8 @@ const initialState: DocumentState = {
 	loading: false,
 	listDoc: {} as Pagination<Document>,
 	listOrder: {} as Pagination<OutputOrder>,
-	listCartDoc: [],
+	appCart: {} as OCart,
 	listBoughtDoc: [],
-	totalPrice: 0,
 };
 
 export const documentSlice = createSlice({
@@ -46,6 +45,9 @@ export const documentSlice = createSlice({
 		fetchListOrder: (state, action: PayloadAction<Pagination<OutputOrder>>) => {
 			state.listOrder = action.payload;
 		},
+		createOrder: (state, action: PayloadAction<OutputOrder>) => {
+			state.listOrder.results.push(action.payload);
+		},
 		cancelOrder: (state, action: PayloadAction<OutputOrder>) => {
 			state.listOrder.results.map((v) =>
 				v.id === action.payload.id ? (v.status = OrderStatus.FAILED) : ''
@@ -54,38 +56,45 @@ export const documentSlice = createSlice({
 		updateCart: (state, action: PayloadAction<Document>) => {
 			console.log('curernte', current(state));
 		},
-		addToCart: (state, action: PayloadAction<Document>) => {
+		addDocToCart: (state, action: PayloadAction<Document>) => {
 			console.log('state', current(state));
 			state.listDoc.results.map((v) => {
 				v.id === action.payload.id ? (v.sale_status = DocStatus.IN_CART) : '';
 			});
-			state.listCartDoc.push({
+			state.appCart.documents.push({
 				...action.payload,
 				sale_status: DocStatus.IN_CART,
 			});
-			state.totalPrice += action.payload.price;
+			state.appCart.total_price += action.payload.price;
 		},
-		removeFromCart: (state, action: PayloadAction<Document>) => {
+		removeDocFromCart: (state, action: PayloadAction<Document>) => {
 			console.log('state: ', current(state));
 			state.listDoc.results.map((v) => {
 				v.id === action.payload.id ? (v.sale_status = DocStatus.AVAILABLE) : '';
 			});
-			state.listCartDoc = state.listCartDoc.filter(
+			state.appCart.documents = state.appCart.documents.filter(
 				(cart) => cart.id !== action.payload.id
 			);
-			state.totalPrice -= action.payload.price;
+			state.appCart.total_price -= action.payload.price;
 		},
-		clearCart: (state) => {
-			state.listCartDoc.forEach((v) => {
+		clearCart: (state, action: PayloadAction<CreateOrderArg>) => {
+			state.appCart.documents.forEach((v) => {
 				state.listDoc.results.map((u) => {
 					u.id === v.id ? (u.sale_status = DocStatus.PENDING) : '';
 				});
 			});
-			state.listCartDoc = [];
-			state.totalPrice = 0;
+			// will do the same with course
+			action.payload.documents.forEach((v) => {
+				state.appCart.documents = state.appCart.documents.filter((u) => {
+					if (u.id === v) {
+						state.appCart.total_price -= u.price;
+					}
+					return u.id !== v;
+				});
+			});
 		},
 		setTotalPrice: (state, action: PayloadAction<number>) => {
-			state.totalPrice = action.payload;
+			state.appCart.total_price = action.payload;
 		},
 
 		//======================================
@@ -94,8 +103,7 @@ export const documentSlice = createSlice({
 		},
 		fetchListCartSuccess: (state, action: PayloadAction<OCart>) => {
 			state.loading = false;
-			state.totalPrice = action.payload.total_price;
-			state.listCartDoc = action.payload.documents;
+			state.appCart = action.payload;
 		},
 		fetchListCartFail: (state) => {
 			state.loading = false;

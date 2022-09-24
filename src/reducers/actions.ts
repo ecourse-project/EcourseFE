@@ -4,6 +4,8 @@ enum AppAction {
 	FETCH_DATA = 'FETCH_DATA',
 	FETCH_ORDER = 'FETCH_ORDER',
 	CANCEL_ORDER = 'CANCEL_ORDER',
+	FETCH_ALL_DATA = 'FETCH_ALL_DATA',
+	CREATE_ORDER = 'CREATE_ORDER',
 }
 
 export default AppAction;

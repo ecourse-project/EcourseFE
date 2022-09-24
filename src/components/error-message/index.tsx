@@ -4,6 +4,7 @@
 import { css, useTheme } from '@emotion/react';
 import React from 'react';
 import isEqual from 'react-fast-compare';
+import theme from 'src/styles/theme';
 
 interface ErrorMessageProps {
 	className?: string;
@@ -11,7 +12,6 @@ interface ErrorMessageProps {
 }
 const ErrorMessage: React.FC<ErrorMessageProps> = React.memo(
 	({ children, className }) => {
-		const theme = useTheme();
 		return (
 			<div
 				className={className}

@@ -4,11 +4,14 @@ import {
 	CheckCircleOutlined,
 	ClockCircleOutlined,
 	CloseCircleOutlined,
+	DownloadOutlined,
 	ExclamationCircleOutlined,
 	FileSearchOutlined,
 	MinusCircleOutlined,
+	MinusSquareOutlined,
 	MoreOutlined,
 	PicCenterOutlined,
+	PlusCircleOutlined,
 	SwapOutlined,
 	SyncOutlined,
 } from '@ant-design/icons';
@@ -17,6 +20,7 @@ import { css } from '@emotion/react';
 import {
 	Breadcrumb,
 	Button,
+	Divider,
 	Dropdown,
 	Menu,
 	PageHeader,
@@ -35,6 +39,7 @@ import { formatCurrency } from 'src/utils/currency';
 import { DocStatus } from 'src/utils/enum';
 import { formatDate } from 'src/utils/format';
 import RoutePaths from 'src/utils/routes';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 const { Paragraph, Title } = Typography;
 const menu = (
 	<Menu
@@ -182,63 +187,43 @@ const DocDetail: React.FC = () => {
 	const params: DocDetailParams = useQueryParam();
 	const [doc, setDoc] = useState<Document>({} as Document);
 	const [loading, setLoading] = useState(false);
-	const [docStatus, setDocStatus] = useState<string>(DocStatus.AVAILABLE);
 	const dispatch = useAppDispatch();
 	const getDocDetail = async (id: string) => {
 		try {
 			const docDetail: Document = await CourseService.getDocDetail(id);
 			console.log('doc detail', docDetail);
 			setDoc(docDetail);
-			setDocStatus(docDetail.sale_status);
 		} catch (error) {
 			console.log('error get detail', error);
 		}
 	};
 	useEffect(() => {
 		console.log('params', params);
-		getDocDetail(params.id);
-	}, []);
 
-	const routes = [
-		{
-			path: `${RoutePaths.HOME}`,
-			breadcrumbName: 'Trang chủ',
-		},
-		{
-			path: `${RoutePaths.DOCUMENT}`,
-			breadcrumbName: 'Tài liệu',
-		},
-		{
-			path: '#',
-			breadcrumbName: `${doc?.name}`,
-		},
-	];
+		!loading && getDocDetail(params.id);
+	}, [loading]);
 
 	const content = (
 		<div className="content-wrapper">
-			<Title>{doc?.name}</Title>
-			<Paragraph>
-				<FileSearchOutlined />
-				{'  '}
-				{doc?.description}
-			</Paragraph>
-			<div>
-				<CalendarOutlined />
-				{`  Ngày cập nhật: ${formatDate(doc?.created)}`}
+			<div className="content-detail">
+				<Title>{doc?.name}</Title>
+				<Paragraph>
+					<FileSearchOutlined />
+					{'  '}
+					{doc?.description}
+				</Paragraph>
+				<div>
+					<CalendarOutlined />
+					{`  Ngày cập nhật: ${formatDate(doc?.created)}`}
+				</div>
 			</div>
 		</div>
 	);
 	const handleUpdateBtn = () => {
 		if (doc.sale_status !== DocStatus.BOUGHT) {
 			setLoading(true);
+			dispatch(cartActions.updateCart(doc));
 			setTimeout(() => {
-				const obj: Document = { ...doc, sale_status: docStatus };
-				dispatch(cartActions.updateCart(obj || ({} as Document)));
-				setDocStatus(
-					docStatus === DocStatus.AVAILABLE
-						? DocStatus.IN_CART
-						: DocStatus.AVAILABLE
-				);
 				setLoading(false);
 			}, 1000);
 		}
@@ -254,44 +239,69 @@ const DocDetail: React.FC = () => {
 					font-size: 20px;
 					font-weight: 600;
 				}
+
 				.ant-btn-primary {
 					width: 160px;
 					height: 35px;
 					border-radius: 2px;
-					background-color: ${docStatus === DocStatus.AVAILABLE && '#17a2b8'};
-					background-color: ${docStatus === DocStatus.IN_CART && '#ed5e68'};
-					background-color: ${docStatus === DocStatus.PENDING && '#6c757d'};
-					background-color: ${docStatus === DocStatus.BOUGHT && '#28a745'};
+					background-color: ${doc.sale_status === DocStatus.AVAILABLE &&
+					'#17a2b8'};
+					background-color: ${doc.sale_status === DocStatus.IN_CART &&
+					'#ed5e68'};
+					background-color: ${doc.sale_status === DocStatus.PENDING &&
+					'#6c757d'};
+					background-color: ${doc.sale_status === DocStatus.BOUGHT &&
+					'#28a745'};
 					border-color: unset;
 					color: #fff;
 					font-weight: 700;
-
+					letter-spacing: 3px;
 					height: 50px;
 					border-radius: 4px;
+					&:hover {
+						letter-spacing: 6px;
+					}
+					.anticon {
+						vertical-align: inherit;
+						font-size: 16px;
+						font-weight: 700;
+					}
 				}
 				.content-wrapper {
 					font-size: 15px;
 					.anticon {
 						font-size: 25px;
 					}
+					.content-detail {
+						border: 1px solid #000;
+						border-left: none;
+						border-right: none;
+						padding: 20px 5px;
+					}
 				}
 				a.ant-btn {
 					padding-top: 8px !important;
 				}
+				.ant-page-header {
+				}
 			`}
 		>
-			<Breadcrumb separator={separator}>
-				<Breadcrumb.Item href={RoutePaths.HOME}>Trang chính</Breadcrumb.Item>
-				<Breadcrumb.Item href={RoutePaths.DOCUMENT}>Tài liệu</Breadcrumb.Item>
-				<Breadcrumb.Item href="">{doc.title}</Breadcrumb.Item>
-			</Breadcrumb>
+			<Divider orientation="left">
+				<Breadcrumb separator={separator}>
+					<Breadcrumb.Item href={RoutePaths.HOME}>Trang chính</Breadcrumb.Item>
+					<Breadcrumb.Item href={RoutePaths.DOCUMENT}>Tài liệu</Breadcrumb.Item>
+					<Breadcrumb.Item href="">{doc.title}</Breadcrumb.Item>
+				</Breadcrumb>
+			</Divider>
 			<PageHeader
 				title={doc?.title}
 				className="site-page-header"
 				// subTitle="This is a subtitle"
 				tags={
 					<>
-						<Tag color="blue">{doc?.sold} Downloaded</Tag>
+						{tags(TagState.SUCCESS, `${doc.sold} lượt mua`)}
+						{tags(TagState.WAITING, 'Cập nhật gần đây')}
+
 						{doc.sale_status === DocStatus.PENDING &&
 							tags(TagState.PROCESSING, 'Chờ thanh toán')}
 						{doc.sale_status === DocStatus.BOUGHT &&
@@ -300,28 +310,6 @@ const DocDetail: React.FC = () => {
 							doc.sale_status === DocStatus.IN_CART) &&
 							tags(TagState.ERROR, `Bán chạy của chủ đề ${doc.title}`)}
 					</>
-				}
-				extra={
-					[
-						// <Button key="3">Operation</Button>,
-						// <Button key="2">Operation</Button>,
-						// <Button
-						// 	key="1"
-						// 	type="primary"
-						// 	loading={loading}
-						// 	onClick={handleUpdateBtn}
-						// 	disabled={
-						// 		docStatus === DocStatus.PENDING || docStatus === DocStatus.BOUGHT
-						// 	}
-						// >
-						// 	{docStatus === DocStatus.AVAILABLE
-						// 		? 'THÊM'
-						// 		: docStatus === DocStatus.IN_CART
-						// 		? 'XOÁ'
-						// 		: ''}
-						// </Button>,
-						// <DropdownMenu key="more" />,
-					]
 				}
 				avatar={{
 					src: 'https://avatars1.githubusercontent.com/u/8186664?s=460&v=4',
@@ -339,33 +327,49 @@ const DocDetail: React.FC = () => {
 				>
 					{content}
 				</Content>
-				<Row>
-					<Statistic
-						title="Price"
-						value={formatCurrency(doc?.price || 0)}
-						style={{
-							margin: '0 32px',
-						}}
-					/>
-				</Row>
-				<Button
-					key="1"
-					type="primary"
-					className="add-btn"
-					loading={loading}
-					onClick={handleUpdateBtn}
-					disabled={docStatus === DocStatus.PENDING}
-					href={docStatus === DocStatus.BOUGHT ? doc.file.file_path : undefined}
-					target="blank"
-				>
-					{docStatus === DocStatus.AVAILABLE
-						? 'THÊM'
-						: docStatus === DocStatus.IN_CART
-						? 'XOÁ'
-						: docStatus === DocStatus.BOUGHT
-						? 'Tải xuống'
-						: ''}
-				</Button>
+				<Statistic
+					// title="GIÁ"
+					value={formatCurrency(doc?.price || 0)}
+					style={{
+						marginLeft: '10px',
+						fontWeight: 'bold',
+					}}
+				/>
+				{doc.sale_status !== DocStatus.PENDING ? (
+					<Button
+						key="1"
+						type="primary"
+						className="add-btn"
+						loading={loading}
+						onClick={handleUpdateBtn}
+						disabled={doc.sale_status === DocStatus.PENDING}
+						href={
+							doc.sale_status === DocStatus.BOUGHT
+								? doc.file.file_path
+								: undefined
+						}
+						target="blank"
+					>
+						{doc.sale_status === DocStatus.AVAILABLE
+							? 'THÊM'
+							: doc.sale_status === DocStatus.IN_CART
+							? 'XOÁ'
+							: doc.sale_status === DocStatus.BOUGHT
+							? 'Tải xuống'
+							: ''}
+						{doc.sale_status === DocStatus.AVAILABLE ? (
+							<PlusCircleOutlined />
+						) : doc.sale_status === DocStatus.IN_CART ? (
+							<MinusCircleOutlined />
+						) : doc.sale_status === DocStatus.BOUGHT ? (
+							<DownloadOutlined />
+						) : (
+							''
+						)}
+					</Button>
+				) : (
+					''
+				)}
 			</PageHeader>
 		</div>
 	);

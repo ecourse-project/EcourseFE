@@ -13,6 +13,7 @@ const Main: React.FC<Props> = ({ children }) => {
 				justify-content: center;
 				align-items: flex-start;
 				background-color: #e7edf3;
+				width: 100%;
 				.main-container {
 					display: flex;
 					flex-direction: column;

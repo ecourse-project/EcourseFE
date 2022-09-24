@@ -7,9 +7,6 @@ import LoginForm from 'src/components/forms/LoginForm';
 import globalVariable from 'src/config/env';
 
 const LoginUI: React.FC = () => {
-	useEffect(() => {
-		console.log('url', globalVariable.API_URL);
-	}, []);
 	return (
 		<div
 			css={css`
