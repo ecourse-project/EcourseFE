@@ -76,7 +76,7 @@ export enum GlobalStyle {
 	BROWN_YELLOW = 'rgb(255, 165, 53)',
 }
 
-export enum DocStatus {
+export enum SaleStatusEnum {
 	AVAILABLE = 'AVAILABLE',
 	IN_CART = 'IN_CART',
 	PENDING = 'PENDING',

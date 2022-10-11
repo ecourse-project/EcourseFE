@@ -27,18 +27,23 @@ import { css } from '@emotion/react';
 import { Badge } from '@mui/material';
 import { useAppSelector } from 'src/apps/hooks';
 import { RootState } from 'src/reducers/model';
+import { Image } from 'antd';
 
 const pages = [
 	{ name: 'Tài liệu', to: `${RoutePaths.DOCUMENT}` },
-	{ name: 'Khoá học', to: `${RoutePaths.ORDER_CART}` },
+	{ name: 'Khoá học', to: `${RoutePaths.COURSE}` },
 ];
 const settings = [
-	{ name: 'Trang cá nhân', to: '', icon: <ManageAccountsIcon /> },
+	{
+		name: 'Trang cá nhân',
+		to: `${RoutePaths.MY_ACCOUNT}`,
+		icon: <ManageAccountsIcon />,
+	},
 	{ name: 'Đăng xuất', to: `${RoutePaths.LOGIN}`, icon: <LogoutIcon /> },
 ];
 
 function Header() {
-	const data = useAppSelector((state: RootState) => state.document);
+	const data = useAppSelector((state: RootState) => state.app);
 	const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
 		null
 	);
@@ -103,7 +108,7 @@ function Header() {
 			<AppBar position="static">
 				<Container maxWidth="xl">
 					<Toolbar disableGutters>
-						<Link to={RoutePaths.HOME}>
+						<Link to={RoutePaths.CART}>
 							<AutoStoriesIcon
 								sx={{
 									display: { xs: 'none', md: 'flex' },
@@ -231,7 +236,10 @@ function Header() {
 									color="inherit"
 								>
 									<Badge
-										badgeContent={data?.appCart?.documents?.length}
+										badgeContent={
+											data?.appCart?.documents?.length +
+											data?.appCart?.courses?.length
+										}
 										color="error"
 									>
 										<ShoppingCartIcon />
@@ -244,7 +252,10 @@ function Header() {
 									aria-label="show 17 new notifications"
 									color="inherit"
 								>
-									<Badge badgeContent={data?.listOrder?.count} color="error">
+									<Badge
+										badgeContent={data?.listOrder?.results?.length}
+										color="error"
+									>
 										<AccountBalanceWalletIcon />
 									</Badge>
 								</IconButton>

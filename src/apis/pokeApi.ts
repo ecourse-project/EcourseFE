@@ -40,7 +40,6 @@ const pokeApi = {
 		return axiosClient.get(url);
 	},
 	getListDetail: async (): Promise<PokemonTypes[]> => {
-		console.log('Fetch duoc goi');
 		try {
 			const res = await pokeApi.getPokemon(0, 100);
 			const result = await Promise.all(

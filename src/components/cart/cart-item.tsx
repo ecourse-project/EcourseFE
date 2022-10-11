@@ -1,25 +1,45 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
-import React from 'react';
-import { Document } from 'src/models/backend_modal';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Course, Document } from 'src/models/backend_modal';
 import { formatCurrency } from 'src/utils/currency';
+import {
+	ConsoleSqlOutlined,
+	DeleteOutlined,
+	TagOutlined,
+} from '@ant-design/icons';
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import globalVariable from 'src/config/env';
-import { useDispatch } from 'react-redux';
-import { useAppDispatch } from 'src/apps/hooks';
-import CourseService from 'src/services/course';
-import { cartActions } from 'src/reducers/document/documentSlice';
-import { DeleteOutlined, TagOutlined } from '@ant-design/icons';
+import { useAppDispatch, useAppSelector } from 'src/apps/hooks';
+import { docActions } from 'src/reducers/document/documentSlice';
+import { set } from 'immer/dist/internal';
+import { RootState } from 'src/reducers/model';
+import { debounce } from 'lodash';
+import { Spin } from 'antd';
+import { courseAction } from 'src/reducers/course/courseSlice';
+
 interface ChildProps {
-	document: Document;
+	document?: Document;
+	course?: Course;
 }
-const CartItemRow: React.FC<ChildProps> = ({ document }) => {
+const CartItemRow: React.FC<ChildProps> = ({ document, course }) => {
+	const [deleteLoading, setDelettLoading] = useState<boolean>(false);
 	const dispatch = useAppDispatch();
-	const handleDelete = () => {
-		dispatch(cartActions.updateCart(document));
-	};
+
+	const debounceDeleteDoc = useCallback(
+		debounce((e) => {
+			e.stopPropagation();
+			document && dispatch(docActions.updateCart(document));
+			setDelettLoading(false);
+		}, 300),
+		[]
+	);
+	const debounceDeleteCourse = useCallback(
+		debounce((e) => {
+			e.stopPropagation();
+			course && dispatch(courseAction.updateCart(course));
+			setDelettLoading(false);
+		}, 300),
+		[]
+	);
 	return (
 		<div
 			className="container"
@@ -42,6 +62,10 @@ const CartItemRow: React.FC<ChildProps> = ({ document }) => {
 					text-align: left;
 					max-width: 80%;
 					padding: 0 20px;
+					.doc-name {
+						font-size: 16px;
+						text-decoration: underline;
+					}
 					.description-content {
 						font-size: 15px;
 						text-align: left;
@@ -80,31 +104,82 @@ const CartItemRow: React.FC<ChildProps> = ({ document }) => {
 				}
 			`}
 		>
-			<div className="document-item">
-				<div className="document-content">
-					<img
-						className="thumb"
-						src={`${document.thumbnail.image_path}`}
-						// src="https://localhost:4000/media/2022/08/14/gdcd.png"
+			{document && !course && (
+				<div className="document-item">
+					<div className="document-content">
+						<img
+							className="thumb"
+							src={`${document.thumbnail.image_path}`}
+							// src="https://localhost:4000/media/2022/08/14/gdcd.png"
 
-						width={80}
-						height={80}
-						alt="Product image."
-						style={{ objectFit: 'cover' }}
-					/>
-					<div className="description">
-						<h4>{document.name}</h4>
-						<p className="description-content">{document.description}</p>
+							width={80}
+							height={80}
+							alt="Product image."
+							style={{ objectFit: 'cover' }}
+						/>
+						<div className="description">
+							<p className="doc-name">{document.name}</p>
+							<p className="description-content">{document.description}</p>
+						</div>
+					</div>
+					<div className="price-group">
+						<p className="price">
+							<TagOutlined />
+							{formatCurrency(document.price, true)}
+						</p>
+						{deleteLoading ? (
+							<Spin size="default" />
+						) : (
+							<DeleteOutlined
+								onClick={(e) => {
+									e.stopPropagation();
+									e.preventDefault();
+									setDelettLoading(true);
+									debounceDeleteDoc(e);
+								}}
+							/>
+						)}
 					</div>
 				</div>
-				<div className="price-group">
-					<p className="price">
-						<TagOutlined />
-						{formatCurrency(document.price)}
-					</p>
-					<DeleteOutlined onClick={handleDelete} />
+			)}
+			{!document && course && (
+				<div className="document-item">
+					<div className="document-content">
+						<img
+							className="thumb"
+							src={`${course?.thumbnail?.image_path}`}
+							// src="https://localhost:4000/media/2022/08/14/gdcd.png"
+
+							width={80}
+							height={80}
+							alt="Product image."
+							style={{ objectFit: 'cover' }}
+						/>
+						<div className="description">
+							<p className="doc-name">{course.name}</p>
+							<p className="description-content">{course.description}</p>
+						</div>
+					</div>
+					<div className="price-group">
+						<p className="price">
+							<TagOutlined />
+							{formatCurrency(course.price, true)}
+						</p>
+						{deleteLoading ? (
+							<Spin size="default" />
+						) : (
+							<DeleteOutlined
+								onClick={(e) => {
+									e.stopPropagation();
+									e.preventDefault();
+									setDelettLoading(true);
+									debounceDeleteCourse(e);
+								}}
+							/>
+						)}
+					</div>
 				</div>
-			</div>
+			)}
 		</div>
 	);
 };

@@ -1,5 +1,3 @@
-// =========================================== BASE ===========================================
-
 export interface PaginationParams {
 	limit: number;
 	page: number;
@@ -12,6 +10,13 @@ export interface Pagination<T> {
 	};
 	count: number;
 	results: Array<T>;
+}
+
+export enum SaleStatusEnum {
+	AVAILABLE = 'AVAILABLE',
+	IN_CART = 'IN_CART',
+	PENDING = 'PENDING',
+	BOUGHT = 'BOUGHT',
 }
 
 // ===========================================Users Auth===========================================
@@ -84,8 +89,9 @@ export interface IFileUpload {
 export interface OFileUpload {
 	id: string;
 	file_path: string;
-	file_size: string;
 	file_type: string;
+	file_name: string;
+	duration: number;
 }
 
 export interface IImageUpload {
@@ -95,7 +101,6 @@ export interface IImageUpload {
 export interface OImageUpload {
 	id: string;
 	image_path: string;
-	image_size: string;
 	image_type: string;
 }
 
@@ -111,8 +116,12 @@ export interface Document {
 	sold: number;
 	thumbnail: OImageUpload;
 	file: OFileUpload;
-	sale_status: string;
+	sale_status: SaleStatusEnum;
 	is_selling: boolean;
+	views: number;
+	rating: number;
+	num_of_rates: number;
+	is_favorite: boolean;
 }
 
 export interface IDocumentUpload {
@@ -125,7 +134,6 @@ export interface IDocumentUpload {
 }
 
 export interface ODocumentUpload {
-	//----------> Là Document ở trên
 	id: string;
 	name: string;
 	description: string;
@@ -151,9 +159,17 @@ export interface IDocumentUpdate {
 }
 
 // ===========================================Courses===========================================
+export enum ProgressStatusEnum {
+	IN_PROGRESS = 'IN_PROGRESS',
+	COMPLETED = 'COMPLETED',
+}
+
+export interface UpdateProgressOutput {
+	is_completed: boolean;
+}
+
 export interface CourseDocument {
 	id: string;
-	created: string;
 	modified: string;
 	name: string;
 	description: string;
@@ -163,39 +179,40 @@ export interface CourseDocument {
 
 export interface Topic {
 	id: string;
-	created: string;
-	modified: string;
 	name: string;
 }
 
 export interface Lesson {
 	id: string;
-	created: string;
-	modified: string;
 	name: string;
 	lesson_number: number;
 	content: string;
 	videos: OFileUpload[];
 	documents: CourseDocument[];
 	progress: number;
-	status: string;
 }
 
 export interface Course {
 	id: string;
-	created: string;
 	modified: string;
 	name: string;
 	topic: Topic;
 	description: string;
 	price: number;
 	sold: number;
-	lessons: Lesson[];
-	progress: number;
-	status: string;
+	lessons?: Lesson[];
+	progress?: number;
+	status: ProgressStatusEnum;
 	thumbnail: OImageUpload;
-	sale_status: string;
-	is_selling: boolean;
+	sale_status: SaleStatusEnum;
+	views: number;
+	rating: number;
+	num_of_rates: number;
+	mark: number;
+	is_done_quiz?: boolean;
+	is_favorite: boolean;
+	docs_completed?: string[];
+	videos_completed?: string[];
 }
 
 // ===========================================Comments===========================================
@@ -214,9 +231,21 @@ export interface Comment {
 }
 
 // ===========================================Cart===========================================
+export enum MoveEnum {
+	LIST = 'LIST',
+	CART = 'CART',
+	FAVORITE = 'FAVORITE',
+}
+
 export interface OCart {
 	id: string;
 	total_price: number;
+	documents: Document[];
+	courses: Course[];
+}
+
+export interface FavoriteList {
+	id: string;
 	documents: Document[];
 	courses: Course[];
 }
@@ -233,6 +262,7 @@ export interface OutputRemove {
 export interface CreateOrderArg {
 	documents: string[];
 	courses: string[];
+	total_price: number;
 }
 
 export interface OutputOrder {
@@ -247,4 +277,40 @@ export interface OutputOrder {
 
 export interface OutputCancel {
 	message: string;
+}
+
+export interface CalculatePriceArgs {
+	documents: string[];
+	courses: string[];
+}
+
+export interface TotalPrice {
+	total_price: number;
+}
+
+// ===========================================Rating===========================================
+export enum RatingEnum {
+	ONE = 1,
+	TWO = 2,
+	THREE = 3,
+	FOUR = 4,
+	FIVE = 5,
+}
+
+export interface RateDocArgs {
+	document_id: string;
+	rating: RatingEnum;
+}
+
+export interface RateCourseArgs {
+	course_id: string;
+	rating: RatingEnum;
+}
+
+export interface Rating {
+	id: string;
+	created: string;
+	modified: string;
+	user: User;
+	rating: RatingEnum;
 }
