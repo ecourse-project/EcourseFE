@@ -1,9 +1,10 @@
 import { css, useTheme } from '@emotion/react';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 // import { ToastContainerCustom } from 'src/alert/NotificationAlert';
 // import CookiesConsent from 'src/components/cookie-consent';
 import { LoadingPage } from 'src/components/loading/loadingBase';
+import { RootState } from 'src/reducers/model';
 // import { RootState } from 'src/reducers/model';
 import Footer from './footer';
 import Header from './header';
@@ -17,12 +18,15 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = (props) => {
 	const { children, isNonFooter, isNonHeader, className } = props;
-	// const isLoading = useSelector((state: RootState) => state.app.loading);
+	const isLoading = useSelector((state: RootState) => state.app.loading);
 
 	const theme = useTheme();
 	const isBrowser = typeof window !== 'undefined';
 
-	// const iLoading = !!isLoading;
+	const iLoading = !!isLoading;
+	useEffect(() => {
+		console.log('iloading: ', iLoading);
+	}, [iLoading]);
 	return (
 		<div
 			className={className}
@@ -31,16 +35,16 @@ const Layout: React.FC<LayoutProps> = (props) => {
 				height: 100%;
 			`}
 		>
-			{/* {iLoading && <LoadingPage isLoading={!!isLoading} />} */}
-			{/* <ToastContainerCustom />
-			{isBrowser && (
+			{iLoading && <LoadingPage isLoading={!!isLoading} />}
+			{/* <ToastContainerCustom /> */}
+			{/* {isBrowser && (
 				<>
 					<CookiesConsent />
 				</>
 			)} */}
-			{!isNonHeader ? <Header /> : null}
-			<Main>{children}</Main>
-			{/* {!isNonFooter ? <Footer simple={undefined} hideAuth={undefined} /> : null} */}
+			{!isNonHeader || !iLoading ? <Header /> : null}
+			{!iLoading && <Main>{children}</Main>}
+			{/* {!isNonFooter || !iLoading ? <Footer /> : null} */}
 		</div>
 	);
 };

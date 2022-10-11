@@ -1,72 +1,45 @@
+import { PayloadAction } from '@reduxjs/toolkit';
+import { ForkEffect, put, takeLatest } from 'redux-saga/effects';
 import {
-	all,
-	call,
-	ForkEffect,
-	put,
-	select,
-	take,
-	takeEvery,
-	takeLatest,
-} from 'redux-saga/effects';
-import { ActionBase } from '..';
-import CourseService from 'src/services/course';
-import { cartActions } from './documentSlice';
-import { current, PayloadAction } from '@reduxjs/toolkit';
-import {
-	CreateOrderArg,
 	Document,
-	OCart,
-	OutputAdd,
-	OutputCancel,
-	OutputOrder,
-	OutputRemove,
+	MoveEnum,
 	Pagination,
 	PaginationParams,
+	SaleStatusEnum,
 } from 'src/models/backend_modal';
-import { DocStatus } from 'src/utils/enum';
-import { runInContext } from 'vm';
+import CourseService from 'src/services/course';
 import AppAction from '../actions';
-import AppabcAction from '../app/action';
-import { fork } from 'child_process';
-// import MailingService from 'src/services/mailing';
-// import MailingAction from './action';
-// import { AlertTextError } from 'src/alert/NotificationAlert';
-// import { User } from '@goldfishcode/homemeta-cmp-sdk/libs/api/user/models';
-
-function* fetchListCart() {
-	console.log('trigger saga fetchlistcart');
-
-	try {
-		const listCarts: OCart = yield CourseService.getCart();
-		console.log('run fetchlist');
-		yield put(cartActions.fetchListCartSuccess(listCarts));
-	} catch (err) {
-		console.error(' list mailing list failure: ', err);
-		yield put(cartActions.fetchListCartFail());
-	}
-}
+import { appActions } from '../app/appSlice';
+import { docActions, LoadingEnum } from './documentSlice';
 
 function* watchUpdateCart(action: PayloadAction<Document>) {
 	console.log('trigger saga', action.type);
-
-	console.log('actionbase: ', action.payload);
 	try {
-		if (action.payload.sale_status === DocStatus.AVAILABLE) {
-			const addTo: OutputAdd = yield CourseService.addDocToCArt(
-				action.payload.id
+		yield put(docActions.updateLoading(LoadingEnum.INCREMENT));
+		if (action.payload.sale_status === SaleStatusEnum.AVAILABLE) {
+			const addTo: Document = yield CourseService.moveDoc(
+				action.payload.id,
+				MoveEnum.LIST,
+				MoveEnum.CART
 			);
-			console.log('add succes: ', addTo);
-			yield put(cartActions.addDocToCart(action.payload));
-		} else if (action.payload.sale_status === DocStatus.IN_CART) {
+			console.log('add succes: ');
+			yield put(docActions.updateStatusAddDoc(addTo));
+			yield put(appActions.addDocToCart(addTo));
+		} else if (action.payload.sale_status === SaleStatusEnum.IN_CART) {
 			console.log('remove succes');
 
-			const removeFrom: OutputRemove = yield CourseService.removeDocFromCart(
-				action.payload.id
+			const removeFrom: Document = yield CourseService.moveDoc(
+				action.payload.id,
+				MoveEnum.CART,
+				MoveEnum.LIST
 			);
-			yield put(cartActions.removeDocFromCart(action.payload));
+			yield put(docActions.updateStatusRemoveDoc(removeFrom));
+			yield put(appActions.removeDocFromCart(removeFrom));
 		}
 	} catch (error) {
 		console.log('error update cart', error);
+	} finally {
+		yield put(docActions.updateLoading(LoadingEnum.DESCREMENT));
 	}
 }
 
@@ -77,60 +50,16 @@ function* fetchDoccument(action: PayloadAction<PaginationParams>) {
 		const result: Pagination<Document> = yield CourseService.getAllDocs(
 			action.payload
 		);
-		yield put(cartActions.fetchListDoc(result));
+		yield put(docActions.fetchListDoc(result));
 	} catch (error) {
 		console.log('error fetch doc', error);
-	}
-}
-function* fetchOrder(action: PayloadAction<PaginationParams>) {
-	console.log('trigger saga', action.type);
-
-	try {
-		const result: Pagination<OutputOrder> = yield CourseService.getAllOrders(
-			action.payload
-		);
-		yield put(cartActions.fetchListOrder(result));
-	} catch (error) {
-		console.log('error fetch order', error);
-	}
-}
-
-function* cancelOrder(action: PayloadAction<OutputOrder>) {
-	console.log('trigger saga', action.type);
-	try {
-		const result: Pagination<OutputCancel> = yield CourseService.cancelOrder(
-			action.payload.id
-		);
-		yield put(cartActions.cancelOrder(action.payload));
-	} catch (error) {
-		console.log('error cancel order', error);
-	}
-}
-
-function* fetchAllData(action: PayloadAction<PaginationParams>) {
-	console.log('trigger saga', action.type);
-	try {
-		const [docs, orders, carts] = yield all([
-			call(CourseService.getAllDocs, action.payload),
-			call(CourseService.getAllOrders, action.payload),
-			call(CourseService.getCart),
-		]);
-		yield put(cartActions.fetchListDoc(docs));
-		yield put(cartActions.fetchListOrder(orders));
-		yield put(cartActions.fetchListCartSuccess(carts));
-	} catch (error) {
-		console.log('fetch all error', error);
 	}
 }
 
 function* documentSaga(): Generator<ForkEffect<never>, void, unknown> {
 	console.log('run document saga');
-	yield takeLatest(AppAction.FETCH_DATA, fetchDoccument);
-	yield takeLatest(AppAction.FETCH_ORDER, fetchOrder);
-	yield takeLatest(AppAction.CANCEL_ORDER, cancelOrder);
-	yield takeLatest(AppAction.FETCH_ALL_DATA, fetchAllData);
-	yield takeLatest(cartActions.fetchListCart.type, fetchListCart);
-	yield takeLatest(cartActions.updateCart.type, watchUpdateCart);
+	yield takeLatest(AppAction.FETCH_DOCUMENT, fetchDoccument);
+	yield takeLatest(docActions.updateCart.type, watchUpdateCart);
 }
 
 export default documentSaga;

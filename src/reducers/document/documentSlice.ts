@@ -1,13 +1,6 @@
-import {
-	createAsyncThunk,
-	createSlice,
-	current,
-	PayloadAction,
-} from '@reduxjs/toolkit';
-import { List, Statistic } from 'antd';
-import { access, stat } from 'fs';
-import { actionChannel } from 'redux-saga/effects';
-import { OrderStatus } from 'src/components/order/order-card';
+import { createSlice, current, PayloadAction } from '@reduxjs/toolkit';
+import { List } from 'antd';
+import { OrderStatus } from 'src/components/order/order-item';
 import {
 	CreateOrderArg,
 	Document,
@@ -15,102 +8,93 @@ import {
 	OutputOrder,
 	Pagination,
 } from 'src/models/backend_modal';
-import CourseService from 'src/services/course';
-import { DocStatus } from 'src/utils/enum';
-// import { fetchCount } from './counterAPI';
-
+import { SaleStatusEnum } from 'src/models/backend_modal';
 export interface DocumentState {
-	loading: boolean;
+	updateLoading: number;
 	listDoc: Pagination<Document>;
-	appCart: OCart;
 	listBoughtDoc: Document[];
-	listOrder: Pagination<OutputOrder>;
+	mostDownDoc: Document[];
+}
+
+export enum LoadingEnum {
+	INCREMENT = 'INCREMENT',
+	DESCREMENT = 'DESCREMENT',
 }
 
 const initialState: DocumentState = {
-	loading: false,
+	updateLoading: 0,
 	listDoc: {} as Pagination<Document>,
-	listOrder: {} as Pagination<OutputOrder>,
-	appCart: {} as OCart,
 	listBoughtDoc: [],
+	mostDownDoc: [],
 };
 
 export const documentSlice = createSlice({
-	name: 'cart',
+	name: 'document',
 	initialState,
 	reducers: {
 		fetchListDoc: (state, action: PayloadAction<Pagination<Document>>) => {
 			state.listDoc = action.payload;
 		},
-		fetchListOrder: (state, action: PayloadAction<Pagination<OutputOrder>>) => {
-			state.listOrder = action.payload;
-		},
-		createOrder: (state, action: PayloadAction<OutputOrder>) => {
-			state.listOrder.results.push(action.payload);
-		},
-		cancelOrder: (state, action: PayloadAction<OutputOrder>) => {
-			state.listOrder.results.map((v) =>
-				v.id === action.payload.id ? (v.status = OrderStatus.FAILED) : ''
-			);
+
+		fetchMostDoc: (state, action: PayloadAction<Document[]>) => {
+			state.mostDownDoc = action.payload;
 		},
 		updateCart: (state, action: PayloadAction<Document>) => {
 			console.log('curernte', current(state));
 		},
-		addDocToCart: (state, action: PayloadAction<Document>) => {
-			console.log('state', current(state));
-			state.listDoc.results.map((v) => {
-				v.id === action.payload.id ? (v.sale_status = DocStatus.IN_CART) : '';
-			});
-			state.appCart.documents.push({
-				...action.payload,
-				sale_status: DocStatus.IN_CART,
-			});
-			state.appCart.total_price += action.payload.price;
+		updateLoading: (state, action) => {
+			state.updateLoading =
+				action.payload === LoadingEnum.INCREMENT
+					? state.updateLoading + 1
+					: state.updateLoading > 0
+					? state.updateLoading - 1
+					: 0;
 		},
-		removeDocFromCart: (state, action: PayloadAction<Document>) => {
-			console.log('state: ', current(state));
-			state.listDoc.results.map((v) => {
-				v.id === action.payload.id ? (v.sale_status = DocStatus.AVAILABLE) : '';
-			});
-			state.appCart.documents = state.appCart.documents.filter(
-				(cart) => cart.id !== action.payload.id
+		updateStatusAddDoc: (state, action: PayloadAction<Document>) => {
+			const idx = state.listDoc.results?.findIndex(
+				(v) => v.id === action.payload.id
 			);
-			state.appCart.total_price -= action.payload.price;
+			if (idx >= 0) {
+				state.listDoc.results.splice(idx, 1, action.payload);
+			}
+			const mostIdx = state.mostDownDoc?.findIndex(
+				(v) => v.id === action.payload.id
+			);
+			if (mostIdx < 0) return;
+			state.mostDownDoc.splice(mostIdx, 1, action.payload);
 		},
-		clearCart: (state, action: PayloadAction<CreateOrderArg>) => {
-			state.appCart.documents.forEach((v) => {
-				state.listDoc.results.map((u) => {
-					u.id === v.id ? (u.sale_status = DocStatus.PENDING) : '';
-				});
-			});
-			// will do the same with course
-			action.payload.documents.forEach((v) => {
-				state.appCart.documents = state.appCart.documents.filter((u) => {
-					if (u.id === v) {
-						state.appCart.total_price -= u.price;
-					}
-					return u.id !== v;
-				});
-			});
-		},
-		setTotalPrice: (state, action: PayloadAction<number>) => {
-			state.appCart.total_price = action.payload;
-		},
+		updateStatusRemoveDoc: (state, action: PayloadAction<any>) => {
+			const idx = state.listDoc.results?.findIndex(
+				(v) => v.id === action.payload.id
+			);
+			if (idx >= 0) {
+				state.listDoc.results.splice(idx, 1, action.payload);
+			}
 
+			const mostIdx = state.mostDownDoc.findIndex(
+				(v) => v.id === action.payload.id
+			);
+			if (mostIdx < 0) return;
+			state.mostDownDoc.splice(mostIdx, 1, action.payload);
+		},
+		setIsFavourite: (state, action: PayloadAction<Document>) => {
+			const idxDoc = state.listDoc.results?.findIndex(
+				(v) => v.id === action.payload.id
+			);
+			if (idxDoc >= 0) {
+				state.listDoc.results.splice(idxDoc, 1, action.payload);
+			}
+			const mostIdx = state.mostDownDoc?.findIndex(
+				(v) => v.id === action.payload.id
+			);
+			if (mostIdx >= 0) {
+				state.mostDownDoc.splice(mostIdx, 1, action.payload);
+			}
+		},
 		//======================================
-		fetchListCart: (state) => {
-			state.loading = true;
-		},
-		fetchListCartSuccess: (state, action: PayloadAction<OCart>) => {
-			state.loading = false;
-			state.appCart = action.payload;
-		},
-		fetchListCartFail: (state) => {
-			state.loading = false;
-		},
 	},
 });
 
-export const cartActions = documentSlice.actions;
+export const docActions = documentSlice.actions;
 
 export default documentSlice.reducer;

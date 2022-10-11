@@ -36,15 +36,25 @@ const apiURL = {
 	resetPwd: () => 'api/users/password-reset/',
 	changePwd: () => 'api/users/password-change/',
 	getAllDocs: (limit, page) => `api/documents/?limit=${limit}&page=${page}`,
-	getMostDownloadDocs: () => `api/documents/most-download`,
+	getMostDownloadDocs: () => `api/documents/most-download/`,
 	getUDocs: (limit, page) =>
 		`api/documents/my-documents/?limit=${limit}&page=${page}`,
 	getDocDetail: (id) => `api/documents/detail/?document_id=${id}`,
 	getCart: () => `api/carts/info/`,
-	addDocToCart: (id) => `api/carts/document/add/?document_id=${id} `,
-	removeDocFromCart: (id) => `api/carts/document/remove/?document_id=${id}`,
-	addCourseToCart: (id) => `api/carts/course/add/?course_id=${id} `,
-	removeCourseFromCart: (id) => `api/carts/course/remove/?course_id=${id}`,
+	getFavoriteList: () => `api/carts/favorite/info/`,
+	addDocToCart: (id) => `api/carts/document/cart/add/?document_id=${id}`,
+	addDocToFavoriteList: (id) =>
+		`api/carts/document/favorite/add/?document_id=${id}`,
+	removeDocFromCart: (id) =>
+		`api/carts/document/cart/remove/?document_id=${id}`,
+	removeDocFromFavoriteList: (id) =>
+		`api/carts/document/favorite/remove/?document_id=${id}`,
+	addCourseToCart: (id) => `api/carts/course/cart/add/?course_id=${id}`,
+	addCourseToFavoriteList: (id) =>
+		`api/carts/course/favorite/add/?course_id=${id}`,
+	removeCourseFromCart: (id) => `api/carts/course/cart/remove/?course_id=${id}`,
+	removeCourseFromFavoriteList: (id) =>
+		`api/carts/course/favorite/remove/?course_id=${id}`,
 	getAllOrders: (limit, page) =>
 		`api/payment/orders/?limit=${limit}&page=${page}`,
 	getOrder: (id) => `api/payment/order/detail/?order_id=${id}`,
@@ -56,6 +66,8 @@ const apiURL = {
 	getCourseDetail: (id) => `api/courses/detail/?course_id=${id}`,
 	createComment: () => `api/comments/create/`,
 	listComments: (id) => `api/comments/list/?course_id=${id}`,
+	rateDocument: () => `api/rating/document/rate/`,
+	rateCourse: () => `api/rating/course/rate/`,
 };
 
 export default apiURL;

@@ -1,60 +1,63 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Link, useNavigate } from 'react-router-dom';
+import { Divider, Image, Modal } from 'antd';
 import React, { ReactNode, useEffect, useState } from 'react';
-import { formatCurrency } from 'src/utils/currency';
-import CourseService from 'src/services/course';
-import { Image, Modal } from 'antd';
-import RoutePaths from 'src/utils/routes';
+import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from 'src/apps/hooks';
-import { cartActions } from 'src/reducers/document/documentSlice';
-import AppButton from 'src/components/button';
 import Img from 'src/assets/images/harry.jpg';
+import AppButton from 'src/components/button';
+import { docActions } from 'src/reducers/document/documentSlice';
+import CourseService from 'src/services/course';
+import { formatCurrency, formatCurrencySymbol } from 'src/utils/currency';
+import RoutePaths from 'src/utils/routes';
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { CreateOrderArg } from 'src/models/backend_modal';
+import CurrencyRubleIcon from '@mui/icons-material/CurrencyRuble';
+import {
+	CalculatePriceArgs,
+	CreateOrderArg,
+	TotalPrice,
+} from 'src/models/backend_modal';
+import { GlobalStyle } from 'src/utils/enum';
+import AppAction from 'src/reducers/actions';
 interface ChildProps {
-	totalPrice: number;
 	docNum: number;
 	children: ReactNode;
-	checkedDoc: CreateOrderArg;
+	checkoutList: CreateOrderArg;
 }
 const PricingCard: React.FC<ChildProps> = ({
-	totalPrice,
 	docNum,
-	checkedDoc,
+	checkoutList,
 	children,
 }) => {
 	const [btnText, setBtnText] = useState<string>('Thanh toán');
 	const [open, setOpen] = useState(false);
 	const [confirmLoading, setConfirmLoading] = useState(false);
 	const [modalText, setModalText] = useState('Content of the modal');
-	const handleOnClick = () => {
-		// visible(true);
-		try {
-			CourseService.createOrder(checkedDoc);
-			setBtnText('CREATED');
-		} catch (error) {}
-	};
+	const [totalPrice, setTotalPrice] = useState<TotalPrice>();
+
 	const showModal = () => {
-		setOpen(true);
+		docNum && setOpen(true);
 	};
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
-	const handleOk = () => {
+
+	const handleOk = async () => {
 		setModalText('The modal will be closed after two seconds');
 		setConfirmLoading(true);
 		try {
-			CourseService.createOrder(checkedDoc);
+			// const newOrder = await CourseService.createOrder(checkoutList);
 			setTimeout(() => {
 				setOpen(false);
 				setConfirmLoading(false);
-				dispatch(cartActions.clearCart(checkedDoc));
+				// dispatch(docActions.clearCart(checkoutList));
+				// dispatch(docActions.createOrder(newOrder));
+				dispatch({ type: AppAction.CREATE_ORDER, payload: checkoutList });
 				navigate(RoutePaths.ORDER_CART);
 			}, 1000);
 		} catch (error) {
 			console.log(error);
 		}
 	};
+
 	useEffect(() => {
 		if (docNum === 0) {
 			setBtnText('Tiếp tục chọn tài liệu');
@@ -63,17 +66,17 @@ const PricingCard: React.FC<ChildProps> = ({
 		}
 	}, [docNum]);
 	const handleCancel = () => {
-		console.log('Clicked cancel button');
 		setOpen(false);
 	};
+	const currency = <CurrencyRubleIcon />;
 	return (
 		<div
 			className=""
 			css={css`
 				.ant-btn {
-					letter-spacing: 4px;
+					letter-spacing: 2px;
 					&:hover {
-						letter-spacing: 6px;
+						letter-spacing: 4px;
 					}
 				}
 				a.ant-btn {
@@ -83,6 +86,28 @@ const PricingCard: React.FC<ChildProps> = ({
 					display: flex;
 					justify-content: space-between;
 					font-size: 20px;
+				}
+
+				.ant-statistic {
+					text-align: left;
+				}
+				.total-price {
+					font-size: 18px;
+					cursor: pointer;
+					font-weight: 400;
+				}
+				.current-price {
+					font-family: monospace;
+					font-weight: 700;
+					font-size: 36px;
+					cursor: pointer;
+					text-align: left;
+					&:hover {
+						color: ${GlobalStyle.BROWN_YELLOW};
+					}
+				}
+				.ant-divider {
+					margin: 0;
 				}
 			`}
 		>
@@ -95,22 +120,31 @@ const PricingCard: React.FC<ChildProps> = ({
 			>
 				<p>
 					Xác nhận đặt đơn hàng trị giá:
-					<strong>{`${formatCurrency(totalPrice)}`}</strong>
+					<strong>{` ${formatCurrencySymbol(
+						checkoutList.total_price,
+						'VND'
+					)}`}</strong>
 				</p>
 			</Modal>
-			<hr className="text-muted" />
 			<Image src={Img} />
-			<div className="total-price">
-				<span>Total:</span>
-				<span>{formatCurrency(totalPrice)}</span>
+			<div className="total-price">Tổng đơn:</div>
+			<Divider />
+			<div className="current-price">
+				{formatCurrencySymbol(checkoutList.total_price, 'VND', true)}
+				{/* {'/'}
+				{formatCurrencySymbol(totalPrice, 'VND', true)} */}
+				{/* {totalPrice} */}
 			</div>
-
+			{/* <Statistic title="Tổng" value={formatCurrency(totalPrice)} /> */}
 			<AppButton
 				btnTextColor={'black'}
 				btnStyle={'outline'}
 				btnSize={'small'}
 				btnWidth={'full-w'}
 				onClick={showModal}
+				// disabled={
+				// 	checkedDoc.documents.length === 0 && checkedDoc.courses.length === 0
+				// }
 				href={docNum === 0 ? RoutePaths.DOCUMENT : undefined}
 			>
 				{btnText}

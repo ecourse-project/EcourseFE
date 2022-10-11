@@ -1,4 +1,3 @@
-
 @font-face {
     font-family: "Fa brands 400";
     font-weight: 400;
@@ -271,12 +270,38 @@
 
     src: url("../assets/fonts/Roboto-Black.ttf") format("truetype");
 }
+
+font-face {
+    font-family: Abyssinica SIL;
+    font-weight: 400;
+    font-style: normal;
+
+    src: url("../assets/fonts/AbyssinicaSIL-Regular.ttf") format("truetype");
+}
+
+
+
+:root {
+    --color: #fafafa;
+
+    --button: #b3b3b3;
+    --button-color: #0a0a0a;
+    --shadow: #000;
+    --bg: #737373;
+    --header: #7a7a7a;
+    --lit-header: #e6e6e6;
+    --speed: 2s;
+    --page-header: 30px;
+    --subject: 27px;
+}
+
+
 html {
     scroll-behavior: smooth;
 }
 body {
-    font-family: Montserrat,Roboto, sans-serif;
-    font-size: 16px;
+    font-family: Montserrat, Roboto, sans-serif;
+    font-size: 14px;
 
     color: #333;
 }
@@ -344,6 +369,26 @@ h3 {
 }
 .page-container {
     max-width: 80%;
+    min-height: 80vh;
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: calc(var(--bs-gutter-x) * .5);
+    padding-left: calc(var(--bs-gutter-x) * .5);
+
+    border-radius: 5px;
+    box-shadow: rgb(0 0 0 / 24%) 0 3px 8px;
+
+    --bs-gutter-x: 5rem;
+    --bs-gutter-y: 0;
+}
+@media screen and (min-width: 2000px) {
+    .page-container {
+        max-width: 50%;
+    }
+}
+.ant-divider {
+    margin: 0;
+    padding: 16px;
 }
 .ant-breadcrumb {
     font-size: 20px;
@@ -358,8 +403,22 @@ h3 {
         border-top: 1px solid #000 !important;
     }
 }
+.ant-divider-with-text-center {
+    &::before {
+        border-top: 1px solid #000 !important;
+    }
 
+    &::after {
+        border-top: 1px solid #000 !important;
+    }
+}
 .ant-divider-inner-text {
-    min-width:      fit-content;
+    font-size: var(--page-header) !important;
+    font-weight: 700;
+
     min-width: -moz-fit-content;
+    min-width:      fit-content;
+}
+.ant-pagination {
+    padding: 25px 0;
 }

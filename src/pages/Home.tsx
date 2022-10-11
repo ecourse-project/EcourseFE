@@ -6,7 +6,7 @@ import Layout from 'src/layouts/layout';
 import PrivateProvider from 'src/components/providers/PrivateProvider';
 
 const HomeLoadable = Loadable({
-	loader: () => import('src/layouts/Home'),
+	loader: () => import('src/sections/Pages/HomeUI'),
 	loading: () => <LoadingPage isLoading={true} />,
 });
 const Home: React.FC = () => {

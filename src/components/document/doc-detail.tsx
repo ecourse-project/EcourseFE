@@ -20,26 +20,31 @@ import { css } from '@emotion/react';
 import {
 	Breadcrumb,
 	Button,
+	Comment,
 	Divider,
 	Dropdown,
+	Form,
+	List,
 	Menu,
 	PageHeader,
 	Row,
 	Statistic,
 	Tag,
+	Tooltip,
 	Typography,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { useAppDispatch } from 'src/apps/hooks';
+import { useAppDispatch, useAppSelector } from 'src/apps/hooks';
 import { useQueryParam } from 'src/hooks/useQueryParam';
-import { Document } from 'src/models/backend_modal';
-import { cartActions } from 'src/reducers/document/documentSlice';
+import { Document, SaleStatusEnum } from 'src/models/backend_modal';
+import { docActions } from 'src/reducers/document/documentSlice';
 import CourseService from 'src/services/course';
 import { formatCurrency } from 'src/utils/currency';
-import { DocStatus } from 'src/utils/enum';
 import { formatDate } from 'src/utils/format';
 import RoutePaths from 'src/utils/routes';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { RootState } from 'src/reducers/model';
+import TextArea from 'antd/lib/input/TextArea';
 const { Paragraph, Title } = Typography;
 const menu = (
 	<Menu
@@ -179,6 +184,61 @@ const tags = (tagState: TagState, text: string) => {
 	}
 };
 
+const data = [
+	{
+		actions: [<span key="comment-list-reply-to-0">Reply to</span>],
+		author: 'Han Solo',
+		avatar: 'https://joeschmoe.io/api/v1/random',
+		content: (
+			<p>
+				We supply a series of design principles, practical patterns and high
+				quality design resources (Sketch and Axure), to help people create their
+				product prototypes beautifully and efficiently.
+			</p>
+		),
+		datetime: (
+			<Tooltip title="2016-11-22 11:22:33">
+				<span>8 hours ago</span>
+			</Tooltip>
+		),
+	},
+	{
+		actions: [<span key="comment-list-reply-to-0">Reply to</span>],
+		author: 'Han Solo',
+		avatar: 'https://joeschmoe.io/api/v1/random',
+		content: (
+			<p>
+				We supply a series of design principles, practical patterns and high
+				quality design resources (Sketch and Axure), to help people create their
+				product prototypes beautifully and efficiently.
+			</p>
+		),
+		datetime: (
+			<Tooltip title="2016-11-22 10:22:33">
+				<span>9 hours ago</span>
+			</Tooltip>
+		),
+	},
+];
+
+// const Editor = ({ onChange, onSubmit, submitting, value }: EditorProps) => (
+// 	<>
+// 		<Form.Item>
+// 			<TextArea rows={4} onChange={onChange} value={value} />
+// 		</Form.Item>
+// 		<Form.Item>
+// 			<Button
+// 				htmlType="submit"
+// 				loading={submitting}
+// 				onClick={onSubmit}
+// 				type="primary"
+// 			>
+// 				Add Comment
+// 			</Button>
+// 		</Form.Item>
+// 	</>
+// );
+
 interface DocDetailParams {
 	id: string;
 }
@@ -188,20 +248,25 @@ const DocDetail: React.FC = () => {
 	const [doc, setDoc] = useState<Document>({} as Document);
 	const [loading, setLoading] = useState(false);
 	const dispatch = useAppDispatch();
-	const getDocDetail = async (id: string) => {
+	const listDoc = useAppSelector(
+		(state: RootState) => state.document.listDoc.results
+	);
+	const fetchDocDetail = async (id: string) => {
 		try {
 			const docDetail: Document = await CourseService.getDocDetail(id);
-			console.log('doc detail', docDetail);
 			setDoc(docDetail);
 		} catch (error) {
 			console.log('error get detail', error);
 		}
 	};
 	useEffect(() => {
-		console.log('params', params);
+		fetchDocDetail(params.id);
+	}, []);
 
-		!loading && getDocDetail(params.id);
-	}, [loading]);
+	useEffect(() => {
+		const document = listDoc?.filter((v) => v.id === doc.id)[0];
+		document && setDoc(document);
+	}, [listDoc]);
 
 	const content = (
 		<div className="content-wrapper">
@@ -220,9 +285,9 @@ const DocDetail: React.FC = () => {
 		</div>
 	);
 	const handleUpdateBtn = () => {
-		if (doc.sale_status !== DocStatus.BOUGHT) {
+		if (doc.sale_status !== SaleStatusEnum.BOUGHT) {
 			setLoading(true);
-			dispatch(cartActions.updateCart(doc));
+			dispatch(docActions.updateCart(doc));
 			setTimeout(() => {
 				setLoading(false);
 			}, 1000);
@@ -231,7 +296,7 @@ const DocDetail: React.FC = () => {
 
 	return (
 		<div
-			className="container"
+			className="page-container"
 			css={css`
 				max-width: 70%;
 				text-align: left;
@@ -244,13 +309,13 @@ const DocDetail: React.FC = () => {
 					width: 160px;
 					height: 35px;
 					border-radius: 2px;
-					background-color: ${doc.sale_status === DocStatus.AVAILABLE &&
+					background-color: ${doc.sale_status === SaleStatusEnum.AVAILABLE &&
 					'#17a2b8'};
-					background-color: ${doc.sale_status === DocStatus.IN_CART &&
+					background-color: ${doc.sale_status === SaleStatusEnum.IN_CART &&
 					'#ed5e68'};
-					background-color: ${doc.sale_status === DocStatus.PENDING &&
+					background-color: ${doc.sale_status === SaleStatusEnum.PENDING &&
 					'#6c757d'};
-					background-color: ${doc.sale_status === DocStatus.BOUGHT &&
+					background-color: ${doc.sale_status === SaleStatusEnum.BOUGHT &&
 					'#28a745'};
 					border-color: unset;
 					color: #fff;
@@ -287,7 +352,7 @@ const DocDetail: React.FC = () => {
 			`}
 		>
 			<Divider orientation="left">
-				<Breadcrumb separator={separator}>
+				<Breadcrumb separator={<SwapOutlined />}>
 					<Breadcrumb.Item href={RoutePaths.HOME}>Trang chính</Breadcrumb.Item>
 					<Breadcrumb.Item href={RoutePaths.DOCUMENT}>Tài liệu</Breadcrumb.Item>
 					<Breadcrumb.Item href="">{doc.title}</Breadcrumb.Item>
@@ -302,12 +367,12 @@ const DocDetail: React.FC = () => {
 						{tags(TagState.SUCCESS, `${doc.sold} lượt mua`)}
 						{tags(TagState.WAITING, 'Cập nhật gần đây')}
 
-						{doc.sale_status === DocStatus.PENDING &&
+						{doc.sale_status === SaleStatusEnum.PENDING &&
 							tags(TagState.PROCESSING, 'Chờ thanh toán')}
-						{doc.sale_status === DocStatus.BOUGHT &&
+						{doc.sale_status === SaleStatusEnum.BOUGHT &&
 							tags(TagState.SUCCESS, 'Đã mua')}
-						{(doc.sale_status === DocStatus.AVAILABLE ||
-							doc.sale_status === DocStatus.IN_CART) &&
+						{(doc.sale_status === SaleStatusEnum.AVAILABLE ||
+							doc.sale_status === SaleStatusEnum.IN_CART) &&
 							tags(TagState.ERROR, `Bán chạy của chủ đề ${doc.title}`)}
 					</>
 				}
@@ -335,33 +400,33 @@ const DocDetail: React.FC = () => {
 						fontWeight: 'bold',
 					}}
 				/>
-				{doc.sale_status !== DocStatus.PENDING ? (
+				{doc.sale_status !== SaleStatusEnum.PENDING ? (
 					<Button
 						key="1"
 						type="primary"
 						className="add-btn"
 						loading={loading}
 						onClick={handleUpdateBtn}
-						disabled={doc.sale_status === DocStatus.PENDING}
 						href={
-							doc.sale_status === DocStatus.BOUGHT
+							doc.sale_status === SaleStatusEnum.BOUGHT
 								? doc.file.file_path
 								: undefined
 						}
 						target="blank"
+						disabled={loading}
 					>
-						{doc.sale_status === DocStatus.AVAILABLE
+						{doc.sale_status === SaleStatusEnum.AVAILABLE
 							? 'THÊM'
-							: doc.sale_status === DocStatus.IN_CART
+							: doc.sale_status === SaleStatusEnum.IN_CART
 							? 'XOÁ'
-							: doc.sale_status === DocStatus.BOUGHT
+							: doc.sale_status === SaleStatusEnum.BOUGHT
 							? 'Tải xuống'
 							: ''}
-						{doc.sale_status === DocStatus.AVAILABLE ? (
+						{doc.sale_status === SaleStatusEnum.AVAILABLE ? (
 							<PlusCircleOutlined />
-						) : doc.sale_status === DocStatus.IN_CART ? (
+						) : doc.sale_status === SaleStatusEnum.IN_CART ? (
 							<MinusCircleOutlined />
-						) : doc.sale_status === DocStatus.BOUGHT ? (
+						) : doc.sale_status === SaleStatusEnum.BOUGHT ? (
 							<DownloadOutlined />
 						) : (
 							''
@@ -371,6 +436,23 @@ const DocDetail: React.FC = () => {
 					''
 				)}
 			</PageHeader>
+			<List
+				className="comment-list"
+				header={`${data.length} replies`}
+				itemLayout="horizontal"
+				dataSource={data}
+				renderItem={(item) => (
+					<li>
+						<Comment
+							actions={item.actions}
+							author={item.author}
+							avatar={item.avatar}
+							content={item.content}
+							datetime={item.datetime}
+						/>
+					</li>
+				)}
+			/>
 		</div>
 	);
 };
