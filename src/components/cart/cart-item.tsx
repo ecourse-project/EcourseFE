@@ -21,14 +21,14 @@ interface ChildProps {
 	course?: Course;
 }
 const CartItemRow: React.FC<ChildProps> = ({ document, course }) => {
-	const [deleteLoading, setDelettLoading] = useState<boolean>(false);
+	const [deleteLoading, setDeletetLoading] = useState<boolean>(false);
 	const dispatch = useAppDispatch();
 
 	const debounceDeleteDoc = useCallback(
 		debounce((e) => {
 			e.stopPropagation();
 			document && dispatch(docActions.updateCart(document));
-			setDelettLoading(false);
+			setDeletetLoading(false);
 		}, 300),
 		[]
 	);
@@ -36,7 +36,7 @@ const CartItemRow: React.FC<ChildProps> = ({ document, course }) => {
 		debounce((e) => {
 			e.stopPropagation();
 			course && dispatch(courseAction.updateCart(course));
-			setDelettLoading(false);
+			setDeletetLoading(false);
 		}, 300),
 		[]
 	);
@@ -134,7 +134,7 @@ const CartItemRow: React.FC<ChildProps> = ({ document, course }) => {
 								onClick={(e) => {
 									e.stopPropagation();
 									e.preventDefault();
-									setDelettLoading(true);
+									setDeletetLoading(true);
 									debounceDeleteDoc(e);
 								}}
 							/>
@@ -172,7 +172,7 @@ const CartItemRow: React.FC<ChildProps> = ({ document, course }) => {
 								onClick={(e) => {
 									e.stopPropagation();
 									e.preventDefault();
-									setDelettLoading(true);
+									setDeletetLoading(true);
 									debounceDeleteCourse(e);
 								}}
 							/>

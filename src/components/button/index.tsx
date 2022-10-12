@@ -181,6 +181,16 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
 						left: -25px;
 					}
 				}
+				&.btn-cmt {
+					background-color: red !important;
+					min-width: 200px;
+					border-radius: 5px;
+					margin: 10px 0;
+					letter-spacing: 2px;
+					&:hover {
+						letter-spacing: 4px;
+					}
+				}
 				&.btn-login {
 					background-color: #ffa535 !important;
 					transition: all 400ms ease;

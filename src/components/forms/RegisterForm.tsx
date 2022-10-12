@@ -47,7 +47,7 @@ const RegisterForm: React.FC = () => {
 				.matches(/^[\w.-]+@([\w-]+\.)+[\w-]{1,4}$/, validation.email.invalid)
 				.test('existingEmail', validation.email.format, async (value: any) => {
 					try {
-						const emailExist = await UserService.existsEmail(value);
+						const emailExist = await UserService.existEmail(value);
 						return !emailExist.exists;
 					} catch (error) {
 						return false;
@@ -85,8 +85,14 @@ const RegisterForm: React.FC = () => {
 		validateOnChange: true,
 		validateOnBlur: true,
 		onSubmit: async (values) => {
+			const { full_name, password1, password2, email } = values;
 			try {
-				const user = await UserService.register(values);
+				const user = await UserService.register(
+					full_name,
+					password1,
+					password2,
+					email
+				);
 				console.log('user:  ', user);
 				localStorage.setItem('email_register', values?.email);
 				navigate(RoutePaths.LOGIN);

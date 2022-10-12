@@ -9,6 +9,7 @@ import {
 	OCart,
 	OutputOrder,
 	Pagination,
+	User,
 } from 'src/models/backend_modal';
 import { SaleStatusEnum } from 'src/models/backend_modal';
 export interface AppState {
@@ -16,6 +17,7 @@ export interface AppState {
 	listOrder: Pagination<OutputOrder>;
 	listFav: FavoriteList;
 	loading: number;
+	user: User;
 }
 
 export enum LoadingEnum {
@@ -28,12 +30,16 @@ const initialState: AppState = {
 	listOrder: {} as Pagination<OutputOrder>,
 	listFav: {} as FavoriteList,
 	loading: 0,
+	user: {} as User,
 };
 
 export const appSlice = createSlice({
 	name: 'app',
 	initialState,
 	reducers: {
+		setMyProfile: (state, action: PayloadAction<User>) => {
+			state.user = action.payload;
+		},
 		addDocToCart: (state, action: PayloadAction<Document>) => {
 			console.log('add doc to cart ');
 			state.appCart.documents.push({
@@ -81,7 +87,7 @@ export const appSlice = createSlice({
 			});
 		},
 		removeCourseFromCart: (state, action: PayloadAction<Course>) => {
-			state.appCart.documents = state.appCart.documents.filter(
+			state.appCart.courses = state.appCart.courses.filter(
 				(cart) => cart.id !== action.payload.id
 			);
 		},

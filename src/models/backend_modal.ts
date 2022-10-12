@@ -222,7 +222,7 @@ export interface ReplyComment {
 	content: string;
 }
 
-export interface Comment {
+export interface CourseComment {
 	id: string;
 	user: User;
 	content: string;
