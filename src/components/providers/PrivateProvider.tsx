@@ -9,16 +9,16 @@ import UserService from 'src/services/user';
 import { forceLogout } from 'src/utils/auth';
 import { StorageKeys } from 'src/utils/enum';
 import RoutePaths from 'src/utils/routes';
-
+import { User } from 'src/models/backend_modal';
+import { useAppDispatch } from 'src/apps/hooks';
+import { appActions } from 'src/reducers/app/appSlice';
 const PrivateProvider: React.FC<{ children?: ReactNode }> = ({ children }) => {
+	const dispatch = useAppDispatch();
 	const [isLoading, setIsLoading] = useState(true);
 	const getUserProfile = async () => {
 		try {
-			const profile = await UserService.getMyProfile();
-			// dispatch({
-			// 	type: AuthAction.RUN_AUTHENTICATED_FLOW,
-			// 	payload: profile,
-			// });
+			const profile: User = await UserService.myInfo();
+			dispatch(appActions.setMyProfile(profile));
 		} catch (error) {
 			forceLogout();
 		} finally {

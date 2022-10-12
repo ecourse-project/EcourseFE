@@ -69,7 +69,7 @@ const DocItemCard: React.FC<ChildProps> = (props) => {
 				dispatch(docActions.updateCart(document));
 				setLoading(false);
 			}
-		}, 500);
+		}, 300);
 	};
 	const handleAddFav = async (id) => {
 		setLoading(true);
@@ -194,6 +194,9 @@ const DocItemCard: React.FC<ChildProps> = (props) => {
 					margin-left: 10px;
 					opacity: 0.7;
 				}
+				[ant-click-animating-without-extra-node='true']:after {
+					display: none;
+				}
 			`}
 		>
 			<div className="pop-up">
@@ -291,7 +294,10 @@ const DocItemCard: React.FC<ChildProps> = (props) => {
 						document.sale_status === SaleStatusEnum.BOUGHT ||
 						loading
 					}
-					onClick={handleClick}
+					onClick={(e) => {
+						e.stopPropagation();
+						handleClick();
+					}}
 				>
 					{btnString}
 				</AppButton>

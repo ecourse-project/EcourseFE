@@ -74,9 +74,9 @@ const PricingCard: React.FC<ChildProps> = ({
 			className=""
 			css={css`
 				.ant-btn {
-					letter-spacing: 2px;
+					letter-spacing: 1px;
 					&:hover {
-						letter-spacing: 4px;
+						letter-spacing: 2px;
 					}
 				}
 				a.ant-btn {

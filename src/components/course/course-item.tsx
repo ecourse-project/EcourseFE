@@ -66,10 +66,10 @@ const CourseItem: React.FC<ChildProps> = (props) => {
 		setLoading(true);
 		setTimeout(() => {
 			if (course.sale_status === SaleStatusEnum.AVAILABLE) {
-				// dispatch(courseAction.updateCart(course));
+				dispatch(courseAction.updateCart(course));
 				setLoading(false);
 			} else if (course.sale_status === SaleStatusEnum.IN_CART) {
-				// dispatch(courseAction.updateCart(course));
+				dispatch(courseAction.updateCart(course));
 				setLoading(false);
 			}
 		}, 500);

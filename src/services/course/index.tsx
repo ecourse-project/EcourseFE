@@ -4,6 +4,7 @@ import { apiClient } from 'src/config/apiClient';
 import {
 	CalculatePriceArgs,
 	Course,
+	CourseComment,
 	CreateOrderArg,
 	Document,
 	FavoriteList,
@@ -218,7 +219,7 @@ class CourseService {
 		course_id: string,
 		user_id: string,
 		content: string
-	): Promise<Comment> {
+	): Promise<CourseComment> {
 		return apiClient.post(apiURL.createComment(), {
 			owner_id: owner_id,
 			course_id: course_id,
@@ -227,7 +228,7 @@ class CourseService {
 		});
 	}
 
-	static listComments(id: string): Promise<Comment[]> {
+	static listComments(id: string): Promise<CourseComment[]> {
 		return apiClient.get(apiURL.listComments(id));
 	}
 

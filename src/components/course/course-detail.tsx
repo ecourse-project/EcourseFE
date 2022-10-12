@@ -4,26 +4,27 @@ import {
 	CheckCircleOutlined,
 	ClockCircleOutlined,
 	CloseCircleOutlined,
-	DownloadOutlined,
 	ExclamationCircleOutlined,
 	FileSearchOutlined,
 	MinusCircleOutlined,
-	MinusSquareOutlined,
 	MoreOutlined,
-	PicCenterOutlined,
 	PlusCircleOutlined,
 	SwapOutlined,
 	SyncOutlined,
+	VerticalLeftOutlined,
 } from '@ant-design/icons';
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import {
+	Avatar,
 	Breadcrumb,
 	Button,
+	Col,
 	Comment,
 	Divider,
 	Dropdown,
 	Form,
+	Image,
 	List,
 	Menu,
 	PageHeader,
@@ -33,20 +34,29 @@ import {
 	Tooltip,
 	Typography,
 } from 'antd';
+import 'antd/dist/antd.css';
+import TextArea from 'antd/lib/input/TextArea';
+import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'src/apps/hooks';
 import { useQueryParam } from 'src/hooks/useQueryParam';
-import { Course, Document, SaleStatusEnum } from 'src/models/backend_modal';
-import { docActions } from 'src/reducers/document/documentSlice';
+import {
+	CourseComment,
+	Course,
+	SaleStatusEnum,
+	User,
+} from 'src/models/backend_modal';
+import { courseAction } from 'src/reducers/course/courseSlice';
+import { RootState } from 'src/reducers/model';
 import CourseService from 'src/services/course';
-import { formatCurrency } from 'src/utils/currency';
+import { formatCurrencySymbol } from 'src/utils/currency';
 import { formatDate } from 'src/utils/format';
 import RoutePaths from 'src/utils/routes';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { RootState } from 'src/reducers/model';
-import TextArea from 'antd/lib/input/TextArea';
-import { courseAction } from 'src/reducers/course/courseSlice';
+import CommentForm from '../comment';
+import CommentItem from '../comment/comment-item';
+import LessonItem from './course-progress/lesson-item';
 const { Paragraph, Title } = Typography;
+
 const menu = (
 	<Menu
 		items={[
@@ -185,61 +195,6 @@ const tags = (tagState: TagState, text: string) => {
 	}
 };
 
-const data = [
-	{
-		actions: [<span key="comment-list-reply-to-0">Reply to</span>],
-		author: 'Han Solo',
-		avatar: 'https://joeschmoe.io/api/v1/random',
-		content: (
-			<p>
-				We supply a series of design principles, practical patterns and high
-				quality design resources (Sketch and Axure), to help people create their
-				product prototypes beautifully and efficiently.
-			</p>
-		),
-		datetime: (
-			<Tooltip title="2016-11-22 11:22:33">
-				<span>8 hours ago</span>
-			</Tooltip>
-		),
-	},
-	{
-		actions: [<span key="comment-list-reply-to-0">Reply to</span>],
-		author: 'Han Solo',
-		avatar: 'https://joeschmoe.io/api/v1/random',
-		content: (
-			<p>
-				We supply a series of design principles, practical patterns and high
-				quality design resources (Sketch and Axure), to help people create their
-				product prototypes beautifully and efficiently.
-			</p>
-		),
-		datetime: (
-			<Tooltip title="2016-11-22 10:22:33">
-				<span>9 hours ago</span>
-			</Tooltip>
-		),
-	},
-];
-
-// const Editor = ({ onChange, onSubmit, submitting, value }: EditorProps) => (
-// 	<>
-// 		<Form.Item>
-// 			<TextArea rows={4} onChange={onChange} value={value} />
-// 		</Form.Item>
-// 		<Form.Item>
-// 			<Button
-// 				htmlType="submit"
-// 				loading={submitting}
-// 				onClick={onSubmit}
-// 				type="primary"
-// 			>
-// 				Add Comment
-// 			</Button>
-// 		</Form.Item>
-// 	</>
-// );
-
 interface DocDetailParams {
 	id: string;
 }
@@ -248,10 +203,15 @@ const CourseDetail: React.FC = () => {
 	const params: DocDetailParams = useQueryParam();
 	const [course, setCourse] = useState<Course>({} as Course);
 	const [loading, setLoading] = useState(false);
+	const [comment, setComment] = useState<CourseComment[]>([]);
+	const [replyTo, setReplyTo] = useState<User>({} as User);
+	const [showReplyBox, setShowReplyBox] = useState<boolean>(false);
 	const dispatch = useAppDispatch();
 	const listCourse = useAppSelector(
 		(state: RootState) => state.course.listCourse.results
 	);
+	const userProfile = useAppSelector((state: RootState) => state.app.user);
+
 	const fetchDocDetail = async (id: string) => {
 		try {
 			const course: Course = await CourseService.getCourseDetail(id);
@@ -260,8 +220,19 @@ const CourseDetail: React.FC = () => {
 			console.log('error get detail', error);
 		}
 	};
+
+	const fetchComment = async (id: string) => {
+		try {
+			const cmt: CourseComment[] = await CourseService.listComments(id);
+			cmt && setComment(cmt);
+		} catch (error) {
+			console.log('error get cmt', error);
+		}
+	};
+
 	useEffect(() => {
 		fetchDocDetail(params.id);
+		fetchComment(params.id);
 	}, []);
 
 	useEffect(() => {
@@ -295,6 +266,28 @@ const CourseDetail: React.FC = () => {
 		}
 	};
 
+	const onAddComment = async (value) => {
+		console.log(value);
+		if (!value) return;
+		const cmt = await CourseService.createComment(
+			'',
+			course.id,
+			userProfile.id,
+			value
+		);
+		cmt && fetchComment(params.id);
+	};
+	const handleReply = async (content: string, item: CourseComment) => {
+		console.log('reply', item);
+		console.log('reply content', content);
+		const reply = await CourseService.createComment(
+			item.id,
+			course.id,
+			userProfile.id,
+			content
+		);
+		reply && fetchComment(params.id);
+	};
 	return (
 		<div
 			className="page-container"
@@ -326,6 +319,14 @@ const CourseDetail: React.FC = () => {
 					border-radius: 4px;
 					&:hover {
 						letter-spacing: 6px;
+						background-color: ${course.sale_status ===
+							SaleStatusEnum.AVAILABLE && '#17a2b8'};
+						background-color: ${course.sale_status === SaleStatusEnum.IN_CART &&
+						'#ed5e68'};
+						background-color: ${course.sale_status === SaleStatusEnum.PENDING &&
+						'#6c757d'};
+						background-color: ${course.sale_status === SaleStatusEnum.BOUGHT &&
+						'#28a745'};
 					}
 					.anticon {
 						vertical-align: inherit;
@@ -349,6 +350,35 @@ const CourseDetail: React.FC = () => {
 					padding-top: 8px !important;
 				}
 				.ant-page-header {
+				}
+				.course_info {
+					height: 450px;
+					margin: 10px 0;
+					.ant-image {
+						height: 450px;
+						width: 100%;
+						.thumbnail {
+							height: 100%;
+							border-radius: 10px;
+						}
+					}
+					.lessons {
+						max-height: 100%;
+						overflow: auto;
+					}
+				}
+				.list_lesson_header {
+					text-align: center;
+					font-size: 14px;
+					font-weight: 550;
+				}
+				.list_lesson {
+					padding: 0 15px;
+				}
+				@media (max-width: 992px) {
+					.thumbnail_wrapper {
+						display: none;
+					}
 				}
 			`}
 		>
@@ -380,82 +410,116 @@ const CourseDetail: React.FC = () => {
 				avatar={{
 					src: 'https://avatars1.githubusercontent.com/u/8186664?s=460&v=4',
 				}}
+				extra={
+					course.sale_status !== SaleStatusEnum.PENDING && [
+						<Button
+							key="1"
+							type="primary"
+							className="add-btn"
+							loading={loading}
+							onClick={handleUpdateBtn}
+							href={
+								course.sale_status === SaleStatusEnum.BOUGHT
+									? `${RoutePaths.COURSE_PROGRESS}?id=${course.id}`
+									: undefined
+							}
+							target="_self"
+							disabled={loading}
+						>
+							{course.sale_status === SaleStatusEnum.AVAILABLE
+								? 'THÊM'
+								: course.sale_status === SaleStatusEnum.IN_CART
+								? 'XOÁ'
+								: course.sale_status === SaleStatusEnum.BOUGHT
+								? 'VÀO HỌC'
+								: ''}
+							{course.sale_status === SaleStatusEnum.AVAILABLE ? (
+								<PlusCircleOutlined />
+							) : course.sale_status === SaleStatusEnum.IN_CART ? (
+								<MinusCircleOutlined />
+							) : course.sale_status === SaleStatusEnum.BOUGHT ? (
+								<VerticalLeftOutlined />
+							) : (
+								''
+							)}
+						</Button>,
+					]
+				}
 			>
-				<Content
-					extraContent={
-						<img
-							src={course?.thumbnail?.image_path || ''}
-							alt="content"
-							width="200"
-							style={{ marginLeft: 40 }}
+				<Content extraContent={undefined}>{content}</Content>
+				<Row className="course_info">
+					<Col lg={12} md={0} className="thumbnail_wrapper">
+						<Image
+							className="thumbnail"
+							src={course?.thumbnail?.image_path}
+							preview={false}
 						/>
-					}
-				>
-					{content}
-				</Content>
+					</Col>
+					<Col lg={12} md={24} className="lessons">
+						<p className="list_lesson_header">Các bài học trong khoá</p>
+						<List
+							className="list_lesson"
+							itemLayout="horizontal"
+							dataSource={course?.lessons}
+							renderItem={(item) => (
+								<LessonItem lesson={item} isCourseDetail={true} />
+							)}
+						/>
+					</Col>
+				</Row>
 				<Statistic
 					// title="GIÁ"
-					value={formatCurrency(course?.price || 0)}
+					value={formatCurrencySymbol(course?.price || 0, 'VND', true)}
 					style={{
 						marginLeft: '10px',
 						fontWeight: 'bold',
 					}}
 				/>
-				{course.sale_status !== SaleStatusEnum.PENDING ? (
-					<Button
-						key="1"
-						type="primary"
-						className="add-btn"
-						loading={loading}
-						onClick={handleUpdateBtn}
-						href={
-							course.sale_status === SaleStatusEnum.BOUGHT
-								? `${RoutePaths.COURSE_PROGRESS}?id=${course.id}`
-								: undefined
-						}
-						target="_self"
-						disabled={loading}
-					>
-						{course.sale_status === SaleStatusEnum.AVAILABLE
-							? 'THÊM'
-							: course.sale_status === SaleStatusEnum.IN_CART
-							? 'XOÁ'
-							: course.sale_status === SaleStatusEnum.BOUGHT
-							? 'VÀO HỌC'
-							: ''}
-						{course.sale_status === SaleStatusEnum.AVAILABLE ? (
-							<PlusCircleOutlined />
-						) : course.sale_status === SaleStatusEnum.IN_CART ? (
-							<MinusCircleOutlined />
-						) : course.sale_status === SaleStatusEnum.BOUGHT ? (
-							<DownloadOutlined />
-						) : (
-							''
-						)}
-					</Button>
-				) : (
-					''
-				)}
 			</PageHeader>
-			<List
-				className="comment-list"
-				header={`${data.length} replies`}
-				itemLayout="horizontal"
-				dataSource={data}
-				renderItem={(item) => (
-					<li>
-						<Comment
-							actions={item.actions}
-							author={item.author}
-							avatar={item.avatar}
-							content={item.content}
-							datetime={item.datetime}
-						/>
-					</li>
-				)}
+
+			{comment?.length ? (
+				<List
+					className="comment-list"
+					header={`${comment.length} replies`}
+					itemLayout="horizontal"
+					dataSource={comment}
+					renderItem={(item) => (
+						<li>
+							<CommentItem
+								item={item}
+								onAddReply={(value) => handleReply(value, item)}
+							/>
+						</li>
+					)}
+				/>
+			) : (
+				<div></div>
+			)}
+			<Comment
+				avatar={
+					<Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />
+				}
+				content={<CommentForm onAddComment={onAddComment} />}
 			/>
 		</div>
 	);
 };
 
 export default CourseDetail;
+// {
+// 	actions: [<span key="comment-list-reply-to-0">Reply to</span>],
+// 	author: 'Han Solo',
+// 	avatar: 'https://joeschmoe.io/api/v1/random',
+// 	content: (
+// 		<p>
+// 			We supply a series of design principles, practical patterns and high
+// 			quality design resources (Sketch and Axure), to help people create their
+// 			product prototypes beautifully and efficiently.
+// 		</p>
+// 	),
+// 	datetime: (
+// 		<Tooltip title="2016-11-22 11:22:33">
+// 			<span>8 hours ago</span>
+// 		</Tooltip>
+// 	),
+// },

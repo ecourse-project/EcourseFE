@@ -122,26 +122,34 @@ function ShoppingCart() {
 					opacity: 0.6;
 				}
 				.ant-checkbox {
-					width: 16px;
-					height: 16px;
+					width: 19px;
+					height: 19px;
 					.ant-checkbox-inner {
-						width: 16px;
-						height: 16px;
+						width: 19px;
+						height: 19px;
 						&:after {
-							width: 8.714286px;
-							height: 19.142857px;
+							width: 6.714286px;
+							height: 15.142857px;
+
 							border: 3px solid #fff;
 							border-top: 0;
 							border-left: 0;
 						}
 					}
 				}
+
 				.checkbox-group {
 					.ant-checkbox-wrapper {
 						align-item: start;
 					}
 				}
-
+				.ant-checkbox-indeterminate .ant-checkbox-inner:after {
+					background-color: #1c1d1f;
+				}
+				.ant-checkbox-checked .ant-checkbox-inner {
+					border-color: #1c1d1f;
+					background-color: #1c1d1f;
+				}
 				.check-all {
 					.ant-checkbox-indeterminate {
 						.ant-checkbox-inner:after {
@@ -154,6 +162,10 @@ function ShoppingCart() {
 					display: flex;
 					align-items: center;
 				}
+				.cart-list {
+					overflow: auto;
+					max-height: 78vh;
+				}
 			`}
 		>
 			<Divider orientation="left">
@@ -164,8 +176,8 @@ function ShoppingCart() {
 			</Divider>
 			<h2>Danh sách tài liệu trong giỏ</h2>
 			<Row gutter={[16, 16]}>
-				<Col span={18}>
-					{cartData?.appCart?.documents.length ? (
+				<Col span={18} className="cart-list">
+					{cartData?.appCart?.documents.length && (
 						<>
 							<Checkbox
 								className="check-all"
@@ -187,7 +199,8 @@ function ShoppingCart() {
 								}))}
 							/>
 						</>
-					) : cartData?.appCart?.courses?.length ? (
+					)}
+					{cartData?.appCart?.courses?.length && (
 						<>
 							<Checkbox
 								className="check-all"
@@ -209,9 +222,11 @@ function ShoppingCart() {
 								}))}
 							/>
 						</>
-					) : (
-						<Image src={EmptyImg} preview={false} className="empty-img" />
 					)}
+					{cartData.appCart.documents.length === 0 &&
+						cartData.appCart.courses.length === 0 && (
+							<Image src={EmptyImg} preview={false} className="empty-img" />
+						)}
 				</Col>
 				<Col span={6}>
 					<div className="">
