@@ -1,30 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { Checkbox } from 'antd';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox/Checkbox';
 import { useFormik } from 'formik';
-import React, { useEffect } from 'react';
+import React from 'react';
 import AppButton from 'src/components/button';
 import ErrorMessage from 'src/components/error-message';
 import AppInput from 'src/components/input';
-import AppSelect from 'src/components/select';
 import regex from 'src/utils/regularExpression';
 import validation from 'src/utils/validation';
-// import AvatarUpload from 'src/components/upload-avatar';
 import * as Yup from 'yup';
-// import UserService from 'src/services/user';
-import { useSelector } from 'react-redux';
-// import { RootState } from 'src/reducers/model';
-// import { navigate } from 'gatsby';
-import { formatPhoneNumber } from 'src/utils/format';
-import { UserType } from 'src/utils/enum';
-import RoutePaths from 'src/utils/routes';
+
 import { useNavigate } from 'react-router-dom';
-import { accountApi } from 'src/apis/pokeApi';
-import UserService from 'src/services/user';
+import useDebouncedCallback from 'src/hooks/useDebouncedCallback';
 import { IRegistration } from 'src/models/backend_modal';
-import AuthService from 'src/services/auth';
+import UserService from 'src/services/user';
+import RoutePaths from 'src/utils/routes';
 
 const RegisterForm: React.FC = () => {
 	const navigate = useNavigate();
@@ -45,10 +36,10 @@ const RegisterForm: React.FC = () => {
 				.required(validation.email.required)
 				.email(validation.email.invalid)
 				.matches(/^[\w.-]+@([\w-]+\.)+[\w-]{1,4}$/, validation.email.invalid)
-				.test('existingEmail', validation.email.format, async (value: any) => {
+				.test('existingEmail', validation.email.format, (value: any) => {
 					try {
-						const emailExist = await UserService.existEmail(value);
-						return !emailExist.exists;
+						if (!value) return;
+						return debounceCheckExist(value);
 					} catch (error) {
 						return false;
 					}
@@ -101,10 +92,10 @@ const RegisterForm: React.FC = () => {
 			}
 		},
 	});
-	// const checkExisted = async (email = '') => {
-	// 	const res = await UserService.existsEmail(email);
-	// 	return res;
-	// };
+	const debounceCheckExist = useDebouncedCallback(async (email = '') => {
+		const res = await UserService.existEmail(email);
+		return !res;
+	}, 1000);
 
 	const hasError = (key: string) => {
 		return (

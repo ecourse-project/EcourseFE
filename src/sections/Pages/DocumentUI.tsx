@@ -48,7 +48,7 @@ const DocumentUI: React.FC = () => {
 			<Divider orientation="left">
 				<Breadcrumb separator={<SwapOutlined />}>
 					<Breadcrumb.Item href={RoutePaths.HOME}>Trang chính</Breadcrumb.Item>
-					<Breadcrumb.Item href={''}>Tài liệu</Breadcrumb.Item>
+					<Breadcrumb.Item>Tài liệu</Breadcrumb.Item>
 				</Breadcrumb>
 			</Divider>
 			<div
@@ -72,7 +72,7 @@ const DocumentUI: React.FC = () => {
 							min-width: 25% !important;
 						}
 					}
-					@media only screen and (min-width: 1300px) {
+					@media only screen and (min-width: 1350px) {
 						.ant-col {
 							max-width: 20% !important;
 							min-width: 20% !important;

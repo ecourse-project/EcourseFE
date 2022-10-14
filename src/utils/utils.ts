@@ -433,6 +433,8 @@
 // 	const fee = (FLAT_FEE_NFT + recipients * FEE_PER_RECIPIENT).toFixed(2);
 // 	return parseFloat(fee);
 // };
+import moment, { Moment } from 'moment';
+
 const baseUrl = '';
 export const callApi = async (method, url, data) => {
 	const requestOptions = {
@@ -446,4 +448,17 @@ export const callApi = async (method, url, data) => {
 	);
 	console.log(`response of call API ${url}`);
 	return response;
+};
+
+export interface DurationTime {
+	days: number;
+	hours: number;
+	milliseconds: number;
+	minutes: number;
+	months: number;
+	seconds: number;
+	years: number;
+}
+export const formatDurationTime = (durationTime: string | number) => {
+	return moment.duration(durationTime, 'second')['_data'] as DurationTime;
 };

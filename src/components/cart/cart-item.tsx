@@ -109,7 +109,7 @@ const CartItemRow: React.FC<ChildProps> = ({ document, course }) => {
 					<div className="document-content">
 						<img
 							className="thumb"
-							src={`${document.thumbnail.image_path}`}
+							src={`${document?.thumbnail?.image_path}`}
 							// src="https://localhost:4000/media/2022/08/14/gdcd.png"
 
 							width={80}
@@ -118,14 +118,14 @@ const CartItemRow: React.FC<ChildProps> = ({ document, course }) => {
 							style={{ objectFit: 'cover' }}
 						/>
 						<div className="description">
-							<p className="doc-name">{document.name}</p>
-							<p className="description-content">{document.description}</p>
+							<p className="doc-name">{document?.name}</p>
+							<p className="description-content">{document?.description}</p>
 						</div>
 					</div>
 					<div className="price-group">
 						<p className="price">
 							<TagOutlined />
-							{formatCurrency(document.price, true)}
+							{formatCurrency(document?.price, true)}
 						</p>
 						{deleteLoading ? (
 							<Spin size="default" />

@@ -1,69 +1,68 @@
 import {
 	Avatar,
-	Card,
-	Checkbox,
 	Col,
-	Divider,
+	Comment,
+	CommentProps,
 	List,
 	Popover,
 	Progress,
 	Row,
-	Tooltip,
 } from 'antd';
 import React, {
 	createContext,
-	useCallback,
 	useContext,
 	useEffect,
 	useReducer,
 	useState,
 } from 'react';
 /** @jsxImportSource @emotion/react */
+import { DownOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
+import { Collapse } from 'antd';
+import _ from 'lodash';
+import ReactPlayer from 'react-player';
+import {
+	Link,
+	UNSAFE_NavigationContext,
+	useLocation,
+	useNavigate,
+} from 'react-router-dom';
 import { useQueryParam } from 'src/hooks/useQueryParam';
-import CourseService from 'src/services/course';
 import {
 	Course,
+	CourseComment,
 	CourseDocument,
 	Lesson,
 	OFileUpload,
+	Pagination,
+	PaginationParams,
 } from 'src/models/backend_modal';
+import CourseService from 'src/services/course';
 import RoutePaths from 'src/utils/routes';
-import { Link } from 'react-router-dom';
-import {
-	DownOutlined,
-	IeCircleFilled,
-	LeftCircleFilled,
-	LeftCircleOutlined,
-	PlayCircleFilled,
-	PlayCircleOutlined,
-	RightCircleFilled,
-	RightCircleOutlined,
-} from '@ant-design/icons';
-import { Collapse } from 'antd';
-import { DivBlank } from '../../loading/loadingBase';
-import ReactPlayer from 'react-player';
-import { Document, Page } from 'react-pdf/dist/esm/entry.webpack';
-import { pdfjs } from 'react-pdf';
-import _, { debounce } from 'lodash';
 // pdfjs.GlobalWorkerOptions.workerSrc = `/path/to/your/worker.js`;
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
-import { duration } from '@mui/material';
 // import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
-import { Worker } from '@react-pdf-viewer/core';
 // Import the main component
-import { Viewer, LoadError } from '@react-pdf-viewer/core';
 
 // Import the styles
 import '@react-pdf-viewer/core/lib/styles/index.css';
+import { useAppSelector } from 'src/apps/hooks';
+import CommentForm from 'src/components/comment';
+import CommentItem from 'src/components/comment/comment-item';
+import { RootState } from 'src/reducers/model';
 import PdfViewer from '../../pdf';
-import { select } from 'redux-saga/effects';
-import LessonItem from './lesson-item';
 import reducer, {
 	CourseProgressAction,
 	CourseProgressContextType,
 	initialState,
 } from './context/reducer';
+import LessonItem from './lesson-item';
+
+import { History } from 'history';
+import { Beforeunload } from 'react-beforeunload';
+import history from 'history/browser';
+import CustomPagination from 'src/components/pagination';
+
 const { Panel } = Collapse;
 interface CourseParams {
 	id: string;
@@ -85,8 +84,84 @@ const CourseProgress = () => {
 	const [selectItemDoc, setSelectItemDoc] = useState<CourseDocument>();
 	const [numPages, setNumPages] = useState<number>();
 	const [pageNumber, setPageNumber] = useState<number>(1);
+	const [comment, setComment] = useState<CourseComment[]>([]);
+	const [totalCmt, setTotalCmt] = useState<number>(0);
 	const params: CourseParams = useQueryParam();
+	const userProfile = useAppSelector((state: RootState) => state.app.user);
 
+	const [pagination, setPagination] = useState<PaginationParams>({
+		page: 1,
+		limit: 5,
+	});
+	const navigator = React.useContext(UNSAFE_NavigationContext)
+		.navigator as History;
+
+	const [states, setStates] = React.useState<string>(window.location.pathname);
+
+	const location = useLocation();
+	const navigate = useNavigate();
+	const navigation = useContext(UNSAFE_NavigationContext).navigator as History;
+	// React.useLayoutEffect(() => {
+	// 	// if (navigation) {
+	// 	// 	navigation.listen((locationListener: Update) =>
+	// 	// 		setStates(locationListener?.location?.pathname)
+	// 	// 	);
+	// 	// }
+	// 	unlisten();
+	// }, [location]);
+	// const unlisten = () => {
+	// 	console.log('enter listen');
+	// 	history.listen(({ action, location }) => {
+	// 		console.log(
+	// 			`The current URL is ${location.pathname}${location.search}${location.hash}`
+	// 		);
+	// 		console.log(`The last navigation action was ${action}`);
+	// 	});
+	// };
+	const onChangePage = (page: number) => {
+		setPagination({ ...pagination, page });
+		// navigate(`${RoutePaths.DOCUMENT}/?page=${page}`);
+	};
+	const fetchComment = async (id: string, limit, page) => {
+		try {
+			const cmt: Pagination<CourseComment> = await CourseService.listComments(
+				id,
+				limit,
+				page
+			);
+			cmt && setComment(cmt.results);
+			setTotalCmt(cmt.count);
+		} catch (error) {
+			console.log('error get cmt', error);
+		}
+	};
+
+	useEffect(() => {
+		fetchComment(params.id, pagination.limit, pagination.page);
+	}, [pagination]);
+
+	const onAddComment = async (value) => {
+		console.log(value);
+		if (!value) return;
+		const cmt = await CourseService.createComment(
+			'',
+			course?.id || '',
+			userProfile.id,
+			value
+		);
+		setPagination({ ...pagination, page: 1 });
+		cmt && fetchComment(params.id, pagination.limit, pagination.page);
+	};
+	const handleReply = async (content: string, item: CourseComment) => {
+		const reply = await CourseService.createComment(
+			item.id,
+			course?.id || '',
+			userProfile.id,
+			content
+		);
+		// setPagination({ ...pagination, page: 1 });
+		reply && fetchComment(params.id, pagination.limit, pagination.page);
+	};
 	const getCourseDetail = async (id: string) => {
 		const courseDetail = await CourseService.getCourseDetail(id);
 		setCourse(courseDetail);
@@ -99,6 +174,7 @@ const CourseProgress = () => {
 	};
 	useEffect(() => {
 		getCourseDetail(params.id);
+		fetchComment(params.id, pagination.limit, pagination.page);
 	}, []);
 
 	useEffect(() => {
@@ -156,13 +232,13 @@ const CourseProgress = () => {
 		// );
 		// setCheckedDoc(docChecked?.map((v) => v.file.id) || []);
 	}, [course]);
-
-	// const debounceSetCheckList = useCallback(
-	// 	debounce(() => {
-	// 		CourseService.UpdateCourseVideoProgress();
-	// 	}, 500),
-	// 	[checkedVideo]
-	// );
+	// useEffect(() => {
+	// 	window.onbeforeunload = function (e) {
+	// 		const dialogText = 'Nguyn hoang utan cuong';
+	// 		e.returnValue = dialogText;
+	// 		return dialogText;
+	// 	};
+	// }, []);
 
 	return (
 		<div
@@ -214,6 +290,9 @@ const CourseProgress = () => {
 						padding: 0 10px;
 						font-size: 19px;
 						cursor: pointer;
+					}
+					.video_wrapper {
+						height: 30%;
 					}
 					.document_content {
 						display: flex;
@@ -319,7 +398,16 @@ const CourseProgress = () => {
 					width: 100%;
 					max-width: 100%;
 					--bs-gutter-x: 0;
-					height: 92vh;
+
+					.comment_group {
+						padding-left: 60px;
+					}
+					@media (min-width: 1500px) {
+						max-width: 90%;
+						.video_wrapper {
+							height: 16.7%;
+						}
+					}
 					.ant-collapse {
 						width: 100%;
 
@@ -360,38 +448,82 @@ const CourseProgress = () => {
 				<Row>
 					<Col span={16} className="course_content">
 						{state.selectedVideo && (
-							<ReactPlayer
-								url={state.selectedVideo?.file_path}
-								width="100%"
-								height="unset"
-								controls={true}
-								config={{
-									file: {
-										attributes: {
-											onContextMenu: (e: { preventDefault: () => any }) =>
-												e.preventDefault(),
-											controlsList: 'nodownload',
+							<div className="video_wrapper">
+								<ReactPlayer
+									url={state.selectedVideo?.file_path}
+									width="100%"
+									height="100%"
+									controls={true}
+									config={{
+										file: {
+											attributes: {
+												onContextMenu: (e: { preventDefault: () => any }) =>
+													e.preventDefault(),
+												controlsList: 'nodownload',
+											},
 										},
-									},
-								}}
-								onEnded={() => {
-									dispatch({
-										type: CourseProgressAction.SET_COMPLETE_VIDEO,
-									});
-								}}
-								onError={(e) => console.log(e)}
-								onClickPreview={(e) => console.log(e)}
-								canPlay={false}
-								playing={false}
-								playsinline
-								playIcon={<PlayCircleOutlined />}
-								light={false}
-								stopOnUnmount={false}
-							/>
+									}}
+									onEnded={() => {
+										dispatch({
+											type: CourseProgressAction.SET_COMPLETE_VIDEO,
+										});
+									}}
+									onError={(e) => console.log(e)}
+									onClickPreview={(e) => console.log(e)}
+									playing={false}
+									playsinline
+									playIcon={<PlayCircleOutlined />}
+									light={false}
+									stopOnUnmount={false}
+								/>
+							</div>
 						)}
 						{!_.isEmpty(state.selectedDoc) && (
 							<PdfViewer url={state.selectedDoc?.file?.file_path} />
 						)}
+
+						<div className="comment_group">
+							<Comment
+								avatar={
+									<Avatar
+										src="https://joeschmoe.io/api/v1/random"
+										alt="Han Solo"
+									/>
+								}
+								content={<CommentForm onAddComment={onAddComment} />}
+							/>
+							{comment?.length ? (
+								<List
+									className="comment-list"
+									header={`${comment.length} replies`}
+									itemLayout="horizontal"
+									dataSource={comment}
+									renderItem={(item) => (
+										<li>
+											<CommentItem
+												item={item}
+												onAddReply={(value) => handleReply(value, item)}
+											/>
+										</li>
+									)}
+								/>
+							) : (
+								<div></div>
+							)}
+						</div>
+						<div
+							css={css`
+								text-align: center;
+							`}
+						>
+							<CustomPagination
+								current={pagination.page}
+								pageSize={pagination.limit}
+								total={totalCmt}
+								showSizeChanger={false}
+								onChange={onChangePage}
+							/>
+						</div>
 					</Col>
 					<Col span={8} className="course_list">
 						<List

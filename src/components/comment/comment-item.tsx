@@ -1,4 +1,5 @@
 import { Avatar, Comment, Tooltip } from 'antd';
+import moment from 'moment';
 import React, { useState } from 'react';
 import { CourseComment } from 'src/models/backend_modal';
 import CommentForm from '.';
@@ -42,8 +43,10 @@ const CommentItem: React.FC<CommentItemProps> = (props) => {
 				</div>
 			}
 			datetime={
-				<Tooltip title="2016-11-22 11:22:33">
-					<span>8 hours ago</span>
+				<Tooltip
+					title={moment(item.created).format('dddd, MMMM Do YYYY, h:mm:ss a')}
+				>
+					<span>{`${moment(item.created).toNow(true)} ago`}</span>
 				</Tooltip>
 			}
 		>
@@ -63,8 +66,12 @@ const CommentItem: React.FC<CommentItemProps> = (props) => {
 								}
 								content={<div>{v.content}</div>}
 								datetime={
-									<Tooltip title="2016-11-22 11:22:33">
-										<span>8 hours ago</span>
+									<Tooltip
+										title={moment(v.created).format(
+											'dddd, MMMM Do YYYY, h:mm:ss a'
+										)}
+									>
+										<span>{`${moment(v.created).toNow(true)} ago`}</span>
 									</Tooltip>
 								}
 							/>
