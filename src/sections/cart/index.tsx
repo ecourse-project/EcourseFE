@@ -18,9 +18,10 @@ import { css } from '@emotion/react';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 import CourseService from 'src/services/course';
 import RoutePaths from 'src/utils/routes';
+import useDebouncedCallback from 'src/hooks/useDebouncedCallback';
 
 const CheckboxGroup = Checkbox.Group;
-function ShoppingCart() {
+function CartUI() {
 	const [cart, setCart] = useState<OCart>();
 	const [isModalVisible, setIsModalVisible] = useState(true);
 
@@ -39,12 +40,12 @@ function ShoppingCart() {
 	const dispatch = useAppDispatch();
 	// const data = useAppSelector((state: RootState) => state.document.cartDoc);
 
-	const cartData = useAppSelector((state: RootState) => state.app);
+	const cartData = useAppSelector((state: RootState) => state.app.appCart);
 	useEffect(() => {
 		console.log('cartdataa', cartData);
 	}, [cartData]);
-	const docCart = cartData.appCart?.documents;
-	const courseCart = cartData.appCart?.courses;
+	const docCart = cartData?.documents;
+	const courseCart = cartData?.courses;
 	const onChangeDoc = (list) => {
 		// setCheckedListDoc(list.map((v) => v.id));
 		setCheckedListDoc(list);
@@ -55,7 +56,7 @@ function ShoppingCart() {
 	const onCheckAllChangeDoc = (e: CheckboxChangeEvent) => {
 		setCheckedListDoc(
 			// e.target.checked ? Array.from(Array(docCart?.length).keys()) : []
-			e.target.checked ? cartData.appCart.documents.map((v) => v.id) : []
+			e.target.checked ? cartData?.documents.map((v) => v.id) : []
 		);
 		setIndeterminateDoc(false);
 		setCheckAllDoc(e.target.checked);
@@ -72,7 +73,7 @@ function ShoppingCart() {
 	const onCheckAllChangeCourse = (e: CheckboxChangeEvent) => {
 		setCheckedListCourse(
 			// e.target.checked ? Array.from(Array(courseCart?.length).keys()) : []
-			e.target.checked ? cartData.appCart.courses.map((v) => v.id) : []
+			e.target.checked ? cartData?.courses.map((v) => v.id) : []
 		);
 		setIndeterminateCourse(false);
 		setCheckAllCourse(e.target.checked);
@@ -91,29 +92,31 @@ function ShoppingCart() {
 	// const debounceSetCheckList = useCallback(
 	// 	(checkedListDoc, checkedListCourse) => {
 	// 		console.log('before call debounce');
-	// 		// debounce((checkedListDoc, checkedListCourse) => {
-	// 		// 	console.log('set again');
-	// 		// 	// setCheckedList({
-	// 		// 	// 	documents: checkedListDoc.map((v) => v.toString()),
-	// 		// 	// 	courses: checkedListCourse.map((v) => v.id),
-	// 		// 	// });
-	// 		// }, 1000);
+	// 		debounce((checkedListDoc, checkedListCourse) => {
+	// 			console.log('set again');
+	// 			// setCheckedList({
+	// 			// 	documents: checkedListDoc.map((v) => v.toString()),
+	// 			// 	courses: checkedListCourse.map((v) => v.id),
+	// 			// });
+	// 		}, 1000);
 	// 		setAgain();
-	// 	},
+	// 	}
 	// );
-
+	const debouncePrice = useDebouncedCallback(
+		async (checkedList: CalculatePriceArgs) => {
+			if (checkedList.courses?.length || checkedList.documents?.length) {
+				const price = await CourseService.calculatePrice(checkedList);
+				setTotalPrice(price.total_price);
+			} else {
+				setTotalPrice(0);
+			}
+		},
+		1000
+	);
 	useEffect(() => {
-		const totalPrice = getTotalPrice(checkedList);
-		if (!checkedList.documents?.length && !checkedList.courses?.length)
-			setTotalPrice(0);
+		debouncePrice(checkedList);
 	}, [checkedList]);
 
-	const getTotalPrice = async (checkedList: CalculatePriceArgs) => {
-		if (checkedList.courses?.length || checkedList.documents?.length) {
-			const price = await CourseService.calculatePrice(checkedList);
-			setTotalPrice(price.total_price);
-		}
-	};
 	return (
 		<div
 			className="page-container"
@@ -139,6 +142,8 @@ function ShoppingCart() {
 				}
 
 				.checkbox-group {
+					max-height: 40%;
+					overflow: auto;
 					.ant-checkbox-wrapper {
 						align-item: start;
 					}
@@ -177,7 +182,7 @@ function ShoppingCart() {
 			<h2>Danh sách tài liệu trong giỏ</h2>
 			<Row gutter={[16, 16]}>
 				<Col span={18} className="cart-list">
-					{cartData?.appCart?.documents.length && (
+					{cartData?.documents?.length && (
 						<>
 							<Checkbox
 								className="check-all"
@@ -192,7 +197,7 @@ function ShoppingCart() {
 								onChange={onChangeDoc}
 								className="checkbox-group"
 								value={checkedListDoc}
-								options={cartData.appCart.documents.map((v) => ({
+								options={cartData?.documents?.map((v) => ({
 									label: <CartItemRow document={v} />,
 									value: v.id,
 									Properties: null,
@@ -200,7 +205,7 @@ function ShoppingCart() {
 							/>
 						</>
 					)}
-					{cartData?.appCart?.courses?.length && (
+					{cartData?.courses?.length && (
 						<>
 							<Checkbox
 								className="check-all"
@@ -215,7 +220,7 @@ function ShoppingCart() {
 								onChange={onChangeCourse}
 								className="checkbox-group"
 								value={checkedListCourse}
-								options={cartData.appCart.courses.map((v) => ({
+								options={cartData?.courses.map((v) => ({
 									label: <CartItemRow course={v} />,
 									value: v.id,
 									Properties: null,
@@ -223,18 +228,15 @@ function ShoppingCart() {
 							/>
 						</>
 					)}
-					{cartData.appCart.documents.length === 0 &&
-						cartData.appCart.courses.length === 0 && (
+					{cartData?.documents?.length === 0 &&
+						cartData?.courses?.length === 0 && (
 							<Image src={EmptyImg} preview={false} className="empty-img" />
 						)}
 				</Col>
 				<Col span={6}>
 					<div className="">
 						<PricingCard
-							docNum={
-								cartData?.appCart?.documents?.length +
-								cartData?.appCart?.courses?.length
-							}
+							docNum={cartData?.documents?.length + cartData?.courses?.length}
 							children={null}
 							checkoutList={
 								{
@@ -250,4 +252,4 @@ function ShoppingCart() {
 	);
 }
 
-export default ShoppingCart;
+export default CartUI;

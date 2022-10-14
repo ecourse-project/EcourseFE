@@ -7,7 +7,7 @@ import { StorageKeys } from 'src/utils/enum';
 // import { RootState } from 'src/reducers/model';
 import UserService from 'src/services/user';
 // import AuthAction from 'src/reducers/auth/action';
-import { checkingProfileAvailable, forceLogout } from 'src/utils/auth';
+import { checkingProfileAvailable } from 'src/utils/auth';
 import RoutePaths from 'src/utils/routes';
 import { useNavigate } from 'react-router-dom';
 const PublicProvider: React.FC<{ children?: ReactNode }> = ({ children }) => {
@@ -22,7 +22,7 @@ const PublicProvider: React.FC<{ children?: ReactNode }> = ({ children }) => {
 			// 	payload: profile,
 			// });
 		} catch (error) {
-			forceLogout();
+			// ForceLogout();
 		} finally {
 			setIsLoading(false);
 		}

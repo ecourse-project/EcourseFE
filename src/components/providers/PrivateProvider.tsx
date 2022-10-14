@@ -20,6 +20,7 @@ const PrivateProvider: React.FC<{ children?: ReactNode }> = ({ children }) => {
 			const profile: User = await UserService.myInfo();
 			dispatch(appActions.setMyProfile(profile));
 		} catch (error) {
+			console.log('abc');
 			forceLogout();
 		} finally {
 			setIsLoading(false);

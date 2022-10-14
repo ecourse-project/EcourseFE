@@ -6,14 +6,42 @@ import { Collapse, List } from 'antd';
 import { debounce } from 'lodash';
 import React, { useContext, useEffect, useState } from 'react';
 import { CourseDocument, Lesson, OFileUpload } from 'src/models/backend_modal';
+import { DurationTime, formatDurationTime } from 'src/utils/utils';
 import { CourseProgressAction } from './context/reducer';
 import { CourseProgressContext } from './course-progress';
 const { Panel } = Collapse;
+import moment, { Moment } from 'moment';
 
 interface LessonItemProps {
 	lesson: Lesson;
 	isCourseDetail?: boolean;
 }
+
+const DisplayDurationTime = (duration) => {
+	const time: DurationTime = formatDurationTime(duration);
+	const hourString = `${
+		time.hours > 1
+			? time.hours + ' hours : '
+			: time.hours === 1
+			? time.hours + ' hour : '
+			: ''
+	}`;
+	const minuteString = `${
+		time.minutes > 1
+			? time.minutes + ' minutes : '
+			: time.minutes === 1
+			? time.minutes + ' minute : '
+			: ''
+	}`;
+	const secondString = `${
+		time.seconds > 1
+			? time.seconds + ' seconds'
+			: time.seconds === 1
+			? time.seconds + ' second'
+			: ''
+	}`;
+	return hourString + minuteString + secondString;
+};
 
 const LessonItem: React.FC<LessonItemProps> = (props) => {
 	const { lesson, isCourseDetail = false } = props;
@@ -38,7 +66,14 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
 	}, [state]);
 
 	useEffect(() => {
-		console.log(isCourseDetail);
+		const a = moment('2022-10-01T16:43:12.610782+07:00');
+		const b = moment('2022-10-13T16:43:12.610782+07:00');
+
+		// console.log(
+		// 	'moment from now',
+		// 	moment('2022-10-13T16:43:12.610782+07:00').toNow()
+		// );
+		console.log('moment from now', a.toNow(true));
 	}, []);
 
 	return (
@@ -117,8 +152,8 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
 						header={`Bài ${lesson.lesson_number}: ${lesson?.name}`}
 						key="1"
 					>
-						{/* <Collapse defaultActiveKey={['1']}> */}
-						<Collapse>
+						<Collapse defaultActiveKey={['1']}>
+							{/* <Collapse> */}
 							<Panel
 								header={
 									<>
@@ -172,7 +207,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
 											<div className="">{`${i + 1}. ${v.file_name}`}</div>
 											<div className="video_duration">
 												<PlayCircleFilled />
-												{`${v.duration} minutes`}
+												{`${DisplayDurationTime(500)}`}
 											</div>
 										</div>
 									</div>

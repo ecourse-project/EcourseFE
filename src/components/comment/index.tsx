@@ -48,11 +48,11 @@ const CommentForm: React.FC<CommentFormProps> = ({ onAddComment }) => {
 			// 	return;
 			// }
 			setSubmitting(true);
-			onAddComment(values?.content);
 			setTimeout(() => {
 				formik.setFieldValue('content', '');
+				onAddComment(values?.content);
 				setSubmitting(false);
-			}, 1000);
+			}, 800);
 		},
 	});
 

@@ -18,12 +18,14 @@ import {
 	OutputCancel,
 	OutputOrder,
 	OutputRemove,
+	OVerifyToken,
 	Pagination,
 	PaginationParams,
 	RateCourseArgs,
 	RateDocArgs,
 	Rating,
 	TotalPrice,
+	UpdateLessonArgs,
 	UpdateProgressOutput,
 	User,
 } from 'src/models/backend_modal';
@@ -35,6 +37,7 @@ const apiURL = {
 	existEmail: (email) => `api/users/exists/?email=${email}`,
 	resetPwd: () => 'api/users/password-reset/',
 	changePwd: () => 'api/users/password-change/',
+	verifyToken: () => `api/users-auth/token/verify/`,
 
 	getAllDocs: (limit, page) => `api/documents/?limit=${limit}&page=${page}`,
 	getMostDownloadDocs: () => `api/documents/most-download/`,
@@ -61,13 +64,11 @@ const apiURL = {
 	getUCourses: (limit, page) =>
 		`api/courses/my-courses/?limit=${limit}&page=${page}`,
 	getCourseDetail: (id) => `api/courses/detail/?course_id=${id}`,
-	UpdateCourseDocumentProgress: (course_id, doc_id) =>
-		`api/courses/course-progress/document/?course_id=${course_id}&course_doc_id=${doc_id}`,
-	UpdateCourseVideoProgress: (course_id, file_id) =>
-		`api/courses/course-progress/video/?course_id=${course_id}&file_id=${file_id}`,
+	updateLessonProgress: () => `api/courses/update-lesson-progress/`,
 
 	createComment: () => `api/comments/create/`,
-	listComments: (id) => `api/comments/list/?course_id=${id}`,
+	listComments: (id, limit, page) =>
+		`api/comments/list/?course_id=${id}&limit=${limit}&page=${page}`,
 
 	rateDocument: () => `api/rating/document/rate/`,
 	rateCourse: () => `api/rating/course/rate/`,
@@ -110,6 +111,10 @@ class CourseService {
 			password1: password1,
 			password2: password2,
 		});
+	}
+
+	static verifyToken(token: string): Promise<OVerifyToken> {
+		return apiClient.post(apiURL.verifyToken(), { token: token });
 	}
 
 	static getAllDocs(params: PaginationParams): Promise<Pagination<Document>> {
@@ -198,20 +203,10 @@ class CourseService {
 		return apiClient.get(apiURL.getCourseDetail(id));
 	}
 
-	static UpdateCourseDocumentProgress(
-		course_id: string,
-		doc_id: string
-	): Promise<UpdateProgressOutput> {
-		return apiClient.get(
-			apiURL.UpdateCourseDocumentProgress(course_id, doc_id)
-		);
-	}
-
-	static UpdateCourseVideoProgress(
-		course_id: string,
-		file_id: string
-	): Promise<UpdateProgressOutput> {
-		return apiClient.get(apiURL.UpdateCourseVideoProgress(course_id, file_id));
+	static updateLessonProgress(
+		params: UpdateLessonArgs
+	): Promise<UpdateLessonArgs> {
+		return apiClient.post(apiURL.updateLessonProgress(), params);
 	}
 
 	static createComment(
@@ -228,8 +223,12 @@ class CourseService {
 		});
 	}
 
-	static listComments(id: string): Promise<CourseComment[]> {
-		return apiClient.get(apiURL.listComments(id));
+	static listComments(
+		id: string,
+		limit: number,
+		page: number
+	): Promise<Pagination<CourseComment>> {
+		return apiClient.get(apiURL.listComments(id, limit, page));
 	}
 
 	static rateDocument(params: RateDocArgs): Promise<Rating> {

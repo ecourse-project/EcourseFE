@@ -38,6 +38,7 @@ import 'antd/dist/antd.css';
 import TextArea from 'antd/lib/input/TextArea';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'src/apps/hooks';
 import { useQueryParam } from 'src/hooks/useQueryParam';
 import {
@@ -45,6 +46,7 @@ import {
 	Course,
 	SaleStatusEnum,
 	User,
+	Pagination,
 } from 'src/models/backend_modal';
 import { courseAction } from 'src/reducers/course/courseSlice';
 import { RootState } from 'src/reducers/model';
@@ -204,12 +206,12 @@ const CourseDetail: React.FC = () => {
 	const [course, setCourse] = useState<Course>({} as Course);
 	const [loading, setLoading] = useState(false);
 	const [comment, setComment] = useState<CourseComment[]>([]);
-	const [replyTo, setReplyTo] = useState<User>({} as User);
-	const [showReplyBox, setShowReplyBox] = useState<boolean>(false);
 	const dispatch = useAppDispatch();
 	const listCourse = useAppSelector(
 		(state: RootState) => state.course.listCourse.results
 	);
+	const navigate = useNavigate();
+
 	const userProfile = useAppSelector((state: RootState) => state.app.user);
 
 	const fetchDocDetail = async (id: string) => {
@@ -223,8 +225,12 @@ const CourseDetail: React.FC = () => {
 
 	const fetchComment = async (id: string) => {
 		try {
-			const cmt: CourseComment[] = await CourseService.listComments(id);
-			cmt && setComment(cmt);
+			const cmt: Pagination<CourseComment> = await CourseService.listComments(
+				id,
+				10,
+				1
+			);
+			cmt && setComment(cmt.results);
 		} catch (error) {
 			console.log('error get cmt', error);
 		}
@@ -256,6 +262,7 @@ const CourseDetail: React.FC = () => {
 			</div>
 		</div>
 	);
+
 	const handleUpdateBtn = () => {
 		if (course.sale_status !== SaleStatusEnum.BOUGHT) {
 			setLoading(true);
@@ -263,6 +270,9 @@ const CourseDetail: React.FC = () => {
 			setTimeout(() => {
 				setLoading(false);
 			}, 1000);
+		} else {
+			console.log('click to progress');
+			navigate(`${RoutePaths.COURSE_PROGRESS}?id=${course.id}`);
 		}
 	};
 
@@ -418,11 +428,6 @@ const CourseDetail: React.FC = () => {
 							className="add-btn"
 							loading={loading}
 							onClick={handleUpdateBtn}
-							href={
-								course.sale_status === SaleStatusEnum.BOUGHT
-									? `${RoutePaths.COURSE_PROGRESS}?id=${course.id}`
-									: undefined
-							}
 							target="_self"
 							disabled={loading}
 						>
@@ -476,31 +481,34 @@ const CourseDetail: React.FC = () => {
 					}}
 				/>
 			</PageHeader>
-
-			{comment?.length ? (
-				<List
-					className="comment-list"
-					header={`${comment.length} replies`}
-					itemLayout="horizontal"
-					dataSource={comment}
-					renderItem={(item) => (
-						<li>
-							<CommentItem
-								item={item}
-								onAddReply={(value) => handleReply(value, item)}
-							/>
-						</li>
+			{course.sale_status === SaleStatusEnum.BOUGHT && (
+				<div>
+					{comment?.length ? (
+						<List
+							className="comment-list"
+							header={`${comment.length} replies`}
+							itemLayout="horizontal"
+							dataSource={comment}
+							renderItem={(item) => (
+								<li>
+									<CommentItem
+										item={item}
+										onAddReply={(value) => handleReply(value, item)}
+									/>
+								</li>
+							)}
+						/>
+					) : (
+						<div></div>
 					)}
-				/>
-			) : (
-				<div></div>
+					<Comment
+						avatar={
+							<Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />
+						}
+						content={<CommentForm onAddComment={onAddComment} />}
+					/>
+				</div>
 			)}
-			<Comment
-				avatar={
-					<Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />
-				}
-				content={<CommentForm onAddComment={onAddComment} />}
-			/>
 		</div>
 	);
 };

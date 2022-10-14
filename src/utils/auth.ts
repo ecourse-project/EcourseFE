@@ -1,6 +1,4 @@
-// import { User } from '@goldfishcode/homemeta-cmp-sdk/libs/api/user/models';
-// import { navigate } from 'gatsby';
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import RoutePaths from './routes';
 export interface User {
 	name: string;
@@ -13,9 +11,7 @@ export const forceLogout = (): void => {
 		typeof window !== 'undefined' &&
 		!window.location.pathname.includes('/login')
 	) {
-		// navigate(
-		// 	`${RoutePaths.LOGIN}/?redirect_url=${window.location.pathname}${window.location.search}`
-		// );
+		Navigate({ to: RoutePaths.LOGIN });
 	}
 };
 

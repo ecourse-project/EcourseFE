@@ -1,3 +1,5 @@
+// =========================================== BASE ===========================================
+
 export interface PaginationParams {
 	limit: number;
 	page: number;
@@ -50,6 +52,11 @@ export interface OTokenRefresh {
 	access: string;
 }
 
+export interface OVerifyToken {
+	detail?: string;
+	code?: string;
+}
+
 // ===========================================Users===========================================
 export interface User {
 	id: string;
@@ -89,6 +96,7 @@ export interface IFileUpload {
 export interface OFileUpload {
 	id: string;
 	file_path: string;
+	file_size: number;
 	file_type: string;
 	file_name: string;
 	duration: number;
@@ -100,6 +108,7 @@ export interface IImageUpload {
 
 export interface OImageUpload {
 	id: string;
+	image_size: number;
 	image_path: string;
 	image_type: string;
 }
@@ -161,11 +170,17 @@ export interface IDocumentUpdate {
 // ===========================================Courses===========================================
 export enum ProgressStatusEnum {
 	IN_PROGRESS = 'IN_PROGRESS',
-	COMPLETED = 'COMPLETED',
+	DONE = 'DONE',
 }
 
 export interface UpdateProgressOutput {
 	is_completed: boolean;
+}
+
+export interface UpdateLessonArgs {
+	course_id: string;
+	documents: string[];
+	videos: string[];
 }
 
 export interface CourseDocument {
@@ -219,12 +234,14 @@ export interface Course {
 export interface ReplyComment {
 	id: string;
 	user: User;
+	created: string;
 	content: string;
 }
 
 export interface CourseComment {
 	id: string;
 	user: User;
+	created: string;
 	content: string;
 	course_id: string;
 	reply_comments: ReplyComment[];

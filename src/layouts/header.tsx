@@ -42,7 +42,12 @@ const settings = [
 	{ name: 'Đăng xuất', to: `${RoutePaths.LOGIN}`, icon: <LogoutIcon /> },
 ];
 
-function Header() {
+interface HeaderProps {
+	headerClassName: string;
+}
+
+const Header: React.FC<HeaderProps> = (props) => {
+	const { headerClassName } = props;
 	const data = useAppSelector((state: RootState) => state.app);
 	const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
 		null
@@ -68,6 +73,7 @@ function Header() {
 
 	return (
 		<div
+			className={headerClassName}
 			css={css`
 				.menu-setting-icon svg {
 					margin-right: 5px !important;
@@ -309,5 +315,5 @@ function Header() {
 			</AppBar>
 		</div>
 	);
-}
+};
 export default Header;

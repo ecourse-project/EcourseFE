@@ -33,6 +33,9 @@ const Layout: React.FC<LayoutProps> = (props) => {
 			css={css`
 				width: 100%;
 				height: 100%;
+				.headerNav {
+					height: 4vh;
+				}
 			`}
 		>
 			{iLoading && <LoadingPage isLoading={!!isLoading} />}
@@ -42,7 +45,9 @@ const Layout: React.FC<LayoutProps> = (props) => {
 					<CookiesConsent />
 				</>
 			)} */}
-			{!isNonHeader || !iLoading ? <Header /> : null}
+			{!isNonHeader || !iLoading ? (
+				<Header headerClassName="headerNav" />
+			) : null}
 			{!iLoading && <Main>{children}</Main>}
 			{/* {!isNonFooter || !iLoading ? <Footer /> : null} */}
 		</div>
