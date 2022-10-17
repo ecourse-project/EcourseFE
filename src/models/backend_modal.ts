@@ -173,14 +173,10 @@ export enum ProgressStatusEnum {
 	DONE = 'DONE',
 }
 
-export interface UpdateProgressOutput {
-	is_completed: boolean;
-}
-
 export interface UpdateLessonArgs {
-	course_id: string;
-	documents: string[];
-	videos: string[];
+	lesson_id: string;
+	completed_docs: string[];
+	completed_videos: string[];
 }
 
 export interface CourseDocument {
@@ -317,11 +313,13 @@ export enum RatingEnum {
 export interface RateDocArgs {
 	document_id: string;
 	rating: RatingEnum;
+	comment: string;
 }
 
 export interface RateCourseArgs {
 	course_id: string;
 	rating: RatingEnum;
+	comment: string;
 }
 
 export interface Rating {
@@ -330,4 +328,46 @@ export interface Rating {
 	modified: string;
 	user: User;
 	rating: RatingEnum;
+	comment: string;
+}
+
+// ===========================================Quiz===========================================
+export enum AnswerChoiceEnum {
+	A = 'A',
+	B = 'B',
+	C = 'C',
+	D = 'D',
+}
+
+export interface Quiz {
+	id: string;
+	course: string;
+	question_number: number;
+	question: string;
+	A: string;
+	B: string;
+	C: string;
+	D: string;
+}
+
+export interface UserAnswersArgs {
+	quiz_id: string;
+	answer_choice: AnswerChoiceEnum;
+}
+
+export interface QuizResultArgs {
+	course_id: string;
+	answers: UserAnswersArgs[];
+}
+
+export interface CorrectAnswer {
+	id: string;
+	correct_answer: AnswerChoiceEnum;
+}
+
+export interface QuizResult {
+	mark: number;
+	correct_answers: number;
+	total_quiz: number;
+	quiz_answer: CorrectAnswer[];
 }

@@ -1,12 +1,14 @@
 import {
 	Avatar,
+	Button,
 	Col,
 	Comment,
-	CommentProps,
 	List,
 	Popover,
 	Progress,
+	Rate,
 	Row,
+	Tabs,
 } from 'antd';
 import React, {
 	createContext,
@@ -16,10 +18,17 @@ import React, {
 	useState,
 } from 'react';
 /** @jsxImportSource @emotion/react */
-import { DownOutlined, PlayCircleOutlined } from '@ant-design/icons';
+import {
+	AndroidOutlined,
+	AppleOutlined,
+	DownOutlined,
+	PlayCircleOutlined,
+	StarFilled,
+} from '@ant-design/icons';
 import { css } from '@emotion/react';
 import { Collapse } from 'antd';
 import _ from 'lodash';
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import ReactPlayer from 'react-player';
 import {
 	Link,
@@ -36,132 +45,70 @@ import {
 	OFileUpload,
 	Pagination,
 	PaginationParams,
+	RateCourseArgs,
+	RatingEnum,
+	UpdateLessonArgs,
 } from 'src/models/backend_modal';
 import CourseService from 'src/services/course';
 import RoutePaths from 'src/utils/routes';
-// pdfjs.GlobalWorkerOptions.workerSrc = `/path/to/your/worker.js`;
-import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
-// import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
-// Import the main component
 
-// Import the styles
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import { useAppSelector } from 'src/apps/hooks';
-import CommentForm from 'src/components/comment';
+import CommentForm from 'src/components/comment/comment-form';
 import CommentItem from 'src/components/comment/comment-item';
 import { RootState } from 'src/reducers/model';
 import PdfViewer from '../../pdf';
 import reducer, {
 	CourseProgressAction,
 	CourseProgressContextType,
-	initialState,
 } from './context/reducer';
 import LessonItem from './lesson-item';
 
 import { History } from 'history';
-import { Beforeunload } from 'react-beforeunload';
-import history from 'history/browser';
 import CustomPagination from 'src/components/pagination';
+import CommentSection from 'src/components/comment';
+import RatingModal from 'src/components/modal/rating-modal';
 
 const { Panel } = Collapse;
-interface CourseParams {
+export interface CourseParams {
 	id: string;
 	lesson?: string;
 	video?: string;
 	doc?: string;
+	tab?: string;
 }
 
 export const CourseProgressContext = createContext<{
 	state: CourseProgressContextType;
 	dispatch: React.Dispatch<any>;
-}>({ state: initialState, dispatch: () => null });
+}>({ state: {} as CourseProgressContextType, dispatch: () => null });
 
 const CourseProgress = () => {
-	const [state, dispatch] = useReducer(reducer, initialState);
-
 	const [course, setCourse] = useState<Course>();
 	const [selectItemVideo, setSelectItemVideo] = useState<OFileUpload>();
 	const [selectItemDoc, setSelectItemDoc] = useState<CourseDocument>();
 	const [numPages, setNumPages] = useState<number>();
 	const [pageNumber, setPageNumber] = useState<number>(1);
-	const [comment, setComment] = useState<CourseComment[]>([]);
-	const [totalCmt, setTotalCmt] = useState<number>(0);
 	const params: CourseParams = useQueryParam();
+	const [openRatingModal, setOpenRatingModal] = useState<boolean>(false);
+	const [videoLoading, setVideoLoading] = useState<boolean>(true);
+	const [feedback, setFeedback] = useState<string>('');
+	const [star, setStar] = useState<number>(0);
 	const userProfile = useAppSelector((state: RootState) => state.app.user);
 
-	const [pagination, setPagination] = useState<PaginationParams>({
-		page: 1,
-		limit: 5,
-	});
-	const navigator = React.useContext(UNSAFE_NavigationContext)
-		.navigator as History;
-
-	const [states, setStates] = React.useState<string>(window.location.pathname);
-
-	const location = useLocation();
-	const navigate = useNavigate();
-	const navigation = useContext(UNSAFE_NavigationContext).navigator as History;
-	// React.useLayoutEffect(() => {
-	// 	// if (navigation) {
-	// 	// 	navigation.listen((locationListener: Update) =>
-	// 	// 		setStates(locationListener?.location?.pathname)
-	// 	// 	);
-	// 	// }
-	// 	unlisten();
-	// }, [location]);
-	// const unlisten = () => {
-	// 	console.log('enter listen');
-	// 	history.listen(({ action, location }) => {
-	// 		console.log(
-	// 			`The current URL is ${location.pathname}${location.search}${location.hash}`
-	// 		);
-	// 		console.log(`The last navigation action was ${action}`);
-	// 	});
-	// };
-	const onChangePage = (page: number) => {
-		setPagination({ ...pagination, page });
-		// navigate(`${RoutePaths.DOCUMENT}/?page=${page}`);
+	const initialState: CourseProgressContextType = {
+		selectedDoc: {} as CourseDocument,
+		selectedVideo: {} as OFileUpload,
+		currentLesson: '',
+		isDoneVideo: false,
+		updateParams: [] as Lesson[],
 	};
-	const fetchComment = async (id: string, limit, page) => {
-		try {
-			const cmt: Pagination<CourseComment> = await CourseService.listComments(
-				id,
-				limit,
-				page
-			);
-			cmt && setComment(cmt.results);
-			setTotalCmt(cmt.count);
-		} catch (error) {
-			console.log('error get cmt', error);
-		}
-	};
+	const [state, dispatch] = useReducer(reducer, initialState);
 
 	useEffect(() => {
-		fetchComment(params.id, pagination.limit, pagination.page);
-	}, [pagination]);
+		console.log('state update paramse change ', state.updateParams);
+	}, [state.updateParams]);
 
-	const onAddComment = async (value) => {
-		console.log(value);
-		if (!value) return;
-		const cmt = await CourseService.createComment(
-			'',
-			course?.id || '',
-			userProfile.id,
-			value
-		);
-		setPagination({ ...pagination, page: 1 });
-		cmt && fetchComment(params.id, pagination.limit, pagination.page);
-	};
-	const handleReply = async (content: string, item: CourseComment) => {
-		const reply = await CourseService.createComment(
-			item.id,
-			course?.id || '',
-			userProfile.id,
-			content
-		);
-		// setPagination({ ...pagination, page: 1 });
-		reply && fetchComment(params.id, pagination.limit, pagination.page);
-	};
 	const getCourseDetail = async (id: string) => {
 		const courseDetail = await CourseService.getCourseDetail(id);
 		setCourse(courseDetail);
@@ -171,10 +118,36 @@ const CourseProgress = () => {
 				type: CourseProgressAction.SET_SELECTED_VIDEO,
 				payload: courseDetail.lessons[0].videos[0],
 			});
+		console.log('re dispatch');
+		dispatch({
+			type: CourseProgressAction.UPDATE_CHECKED_ITEM,
+			payload: courseDetail.lessons,
+		});
 	};
+
+	const rateCourse = async (
+		course_id: string,
+		rating: RatingEnum,
+		comment: string
+	) => {
+		try {
+			await CourseService.rateCourse({
+				course_id,
+				rating,
+				comment,
+			} as RateCourseArgs);
+		} catch (error) {
+			console.log('error', error);
+		}
+	};
+
+	const handleSaveRating = () => {
+		rateCourse(params.id, RatingEnum.FIVE, feedback);
+		setOpenRatingModal(false);
+	};
+
 	useEffect(() => {
 		getCourseDetail(params.id);
-		fetchComment(params.id, pagination.limit, pagination.page);
 	}, []);
 
 	useEffect(() => {
@@ -192,7 +165,7 @@ const CourseProgress = () => {
 			: `${url}?id=${params.id}`;
 		if (docId || videoId)
 			window.history.pushState({ path: newUrl }, '', newUrl);
-	}, [state]);
+	}, [state.selectedDoc, state.selectedVideo]);
 
 	useEffect(() => {
 		//reload current watch
@@ -202,7 +175,7 @@ const CourseProgress = () => {
 		if (params.video) {
 			const selected = lesson?.videos?.filter((v) => v.id === params.video)[0];
 			dispatch({
-				type: CourseProgressAction.SET_COMPLETE_VIDEO,
+				type: CourseProgressAction.SET_SELECTED_VIDEO,
 				payload: selected,
 			});
 		} else if (params.doc) {
@@ -232,14 +205,27 @@ const CourseProgress = () => {
 		// );
 		// setCheckedDoc(docChecked?.map((v) => v.file.id) || []);
 	}, [course]);
-	// useEffect(() => {
-	// 	window.onbeforeunload = function (e) {
-	// 		const dialogText = 'Nguyn hoang utan cuong';
-	// 		e.returnValue = dialogText;
-	// 		return dialogText;
-	// 	};
-	// }, []);
 
+	useEffect(() => {
+		console.log('selected: ', state.selectedVideo, selectItemDoc);
+	}, [state.selectedVideo, state.selectedDoc]);
+	const items = [
+		{
+			label: 'Bình luận',
+			key: 'comment',
+			children: <CommentSection />,
+		}, // remember to pass the key prop
+		{
+			label: 'Nhận xét',
+			key: 'feedback',
+			children: (
+				<Rate
+					onChange={(value) => console.log('value', value)}
+					defaultValue={1}
+				/>
+			),
+		},
+	];
 	return (
 		<div
 			css={css`
@@ -250,7 +236,33 @@ const CourseProgress = () => {
 					width: 100%;
 					display: flex;
 					justify-content: space-around;
+					padding: 0 7%;
+					.right_box {
+						display: flex;
+						justify-content: flex-end;
+						gap: 10px;
+					}
+					.rating {
+						height: 100%;
+						display: flex;
+						align-items: center;
+						.anticon-star {
+							font-size: 18px;
+							color: #faad14;
+						}
+						.rating_btn {
+							background: #000;
+							border-color: #000;
+							color: #fff;
+							font-weight: 500;
+							font-size: 16px;
+							padding: 4px 4px;
 
+							&:hover {
+								opacity: 0.7;
+							}
+						}
+					}
 					.course_header {
 						color: #fff;
 						font-weight: 600;
@@ -386,12 +398,6 @@ const CourseProgress = () => {
 						input[type='checkbox'] {
 							accent-color: #1c1d1f;
 						}
-						.video_duration {
-							display: flex;
-							align-items: center;
-							justify-content: space-evenly;
-							min-width: 115px;
-						}
 					}
 				}
 				.page-container {
@@ -400,12 +406,19 @@ const CourseProgress = () => {
 					--bs-gutter-x: 0;
 
 					.comment_group {
-						padding-left: 60px;
+						padding: 10px;
+						flex-direction: column;
 					}
+
 					@media (min-width: 1500px) {
 						max-width: 90%;
 						.video_wrapper {
+							visibility: ${videoLoading ? 'hidden' : ''};
 							height: 16.7%;
+							margin: auto;
+						}
+						.pdf_wrapper {
+							width: 100%;
 						}
 					}
 					.ant-collapse {
@@ -415,6 +428,9 @@ const CourseProgress = () => {
 							padding: 0;
 						}
 					}
+				}
+				.tab-section {
+					padding: 50px;
 				}
 			`}
 		>
@@ -427,103 +443,89 @@ const CourseProgress = () => {
 						{course?.name}
 					</Link>
 				</Col>
-				<Col className="progress">
-					<Progress
-						className="progress_circle"
-						type="circle"
-						strokeColor={{
-							'0%': '#108ee9',
-							'100%': '#87d068',
-						}}
-						percent={course?.progress}
-					/>
-					<span className="progress_label">
-						<Popover content={'abc'} title="Title">
-							Tiến độ <DownOutlined />
-						</Popover>
-					</span>
+				<Col span={12} className="right_box">
+					<div className="rating">
+						<StarFilled />
+						<Button
+							className="rating_btn"
+							onClick={() => setOpenRatingModal(true)}
+						>
+							Đánh giá
+						</Button>
+					</div>
+
+					<div className="progress">
+						<Progress
+							className="progress_circle"
+							type="circle"
+							strokeColor={{
+								'0%': '#108ee9',
+								'100%': '#87d068',
+							}}
+							percent={course?.progress}
+						/>
+						<span className="progress_label">
+							<Popover title="abc">
+								Tiến độ <DownOutlined />
+							</Popover>
+						</span>
+					</div>
 				</Col>
 			</Row>
 			<div className="page-container">
 				<Row>
 					<Col span={16} className="course_content">
-						{state.selectedVideo && (
-							<div className="video_wrapper">
-								<ReactPlayer
-									url={state.selectedVideo?.file_path}
-									width="100%"
-									height="100%"
-									controls={true}
-									config={{
-										file: {
-											attributes: {
-												onContextMenu: (e: { preventDefault: () => any }) =>
-													e.preventDefault(),
-												controlsList: 'nodownload',
+						<Row>
+							{state.selectedVideo && (
+								<div className="video_wrapper">
+									<ReactPlayer
+										url={state.selectedVideo?.file_path}
+										width="100%"
+										height="100%"
+										controls={true}
+										onReady={() => {
+											console.log('readuy');
+											setVideoLoading(false);
+										}}
+										onBuffer={() => console.log('buffer')}
+										onBufferEnd={() => console.log('buffer end')}
+										config={{
+											file: {
+												attributes: {
+													onContextMenu: (e: { preventDefault: () => any }) =>
+														e.preventDefault(),
+													controlsList: 'nodownload',
+												},
 											},
-										},
-									}}
-									onEnded={() => {
-										dispatch({
-											type: CourseProgressAction.SET_COMPLETE_VIDEO,
-										});
-									}}
-									onError={(e) => console.log(e)}
-									onClickPreview={(e) => console.log(e)}
-									playing={false}
-									playsinline
-									playIcon={<PlayCircleOutlined />}
-									light={false}
-									stopOnUnmount={false}
-								/>
-							</div>
-						)}
-						{!_.isEmpty(state.selectedDoc) && (
-							<PdfViewer url={state.selectedDoc?.file?.file_path} />
-						)}
-
-						<div className="comment_group">
-							<Comment
-								avatar={
-									<Avatar
-										src="https://joeschmoe.io/api/v1/random"
-										alt="Han Solo"
+										}}
+										onEnded={() => {
+											dispatch({
+												type: CourseProgressAction.SET_COMPLETE_VIDEO,
+											});
+										}}
+										onProgress={(v) => console.log('progress', v)}
+										onError={(e) => console.log(e)}
+										onClickPreview={(e) => console.log(e)}
+										playing={false}
+										playsinline
+										playIcon={<PlayCircleOutlined />}
+										light={false}
+										stopOnUnmount={false}
 									/>
-								}
-								content={<CommentForm onAddComment={onAddComment} />}
-							/>
-							{comment?.length ? (
-								<List
-									className="comment-list"
-									header={`${comment.length} replies`}
-									itemLayout="horizontal"
-									dataSource={comment}
-									renderItem={(item) => (
-										<li>
-											<CommentItem
-												item={item}
-												onAddReply={(value) => handleReply(value, item)}
-											/>
-										</li>
-									)}
-								/>
-							) : (
-								<div></div>
+								</div>
 							)}
-						</div>
-						<div
-							css={css`
-								text-align: center;
-							`}
-						>
-							<CustomPagination
-								current={pagination.page}
-								pageSize={pagination.limit}
-								total={totalCmt}
-								showSizeChanger={false}
-								onChange={onChangePage}
-							/>
-						</div>
+							{!_.isEmpty(state.selectedDoc) && (
+								<div className="pdf_wrapper">
+									<PdfViewer url={state.selectedDoc?.file?.file_path} />
+								</div>
+							)}
+						</Row>
+						<Tabs
+							items={items}
+							defaultActiveKey={params.tab}
+							className="tab-section"
+						/>
+						;
 					</Col>
 					<Col span={8} className="course_list">
 						<List
@@ -537,6 +539,15 @@ const CourseProgress = () => {
 						/>
 					</Col>
 				</Row>
+				<div className="rating-modal-1">
+					<RatingModal
+						visible={openRatingModal}
+						countStar={(value) => setStar(value)}
+						onChangeFeedback={(value) => setFeedback(value)}
+						onClose={() => setOpenRatingModal(false)}
+						onSave={handleSaveRating}
+					/>
+				</div>
 			</div>
 		</div>
 	);

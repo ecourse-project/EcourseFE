@@ -2,7 +2,7 @@ import { Avatar, Comment, Tooltip } from 'antd';
 import moment from 'moment';
 import React, { useState } from 'react';
 import { CourseComment } from 'src/models/backend_modal';
-import CommentForm from '.';
+import CommentForm from './comment-form';
 
 interface CommentItemProps {
 	item: CourseComment;

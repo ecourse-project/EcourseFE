@@ -18,11 +18,13 @@ const BaseModal: React.FC<BaseModalProps> = ({
 	return (
 		<Modal
 			className="base-modal"
-			closeIcon={<img src={IconClose} alt="" />}
+			// closeIcon={<img src={IconClose} alt="" />}
+			closeIcon={null}
 			visible={visible}
 			onOk={onOK}
 			onCancel={onCancel}
 			{...props}
+			footer={null}
 		>
 			{children}
 		</Modal>

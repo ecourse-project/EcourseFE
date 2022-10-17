@@ -1,16 +1,26 @@
-import { PlayCircleFilled } from '@ant-design/icons';
+import { FileTextOutlined, PlayCircleFilled } from '@ant-design/icons';
 /** @jsxImportSource @emotion/react */
 
 import { css } from '@emotion/react';
 import { Collapse, List } from 'antd';
 import { debounce } from 'lodash';
 import React, { useContext, useEffect, useState } from 'react';
-import { CourseDocument, Lesson, OFileUpload } from 'src/models/backend_modal';
+import {
+	CourseDocument,
+	Lesson,
+	OFileUpload,
+	UpdateLessonArgs,
+} from 'src/models/backend_modal';
 import { DurationTime, formatDurationTime } from 'src/utils/utils';
-import { CourseProgressAction } from './context/reducer';
+import {
+	CourseProgressAction,
+	CourseProgressContextType,
+} from './context/reducer';
 import { CourseProgressContext } from './course-progress';
 const { Panel } = Collapse;
 import moment, { Moment } from 'moment';
+import useDebouncedCallback from 'src/hooks/useDebouncedCallback';
+import CourseService from 'src/services/course';
 
 interface LessonItemProps {
 	lesson: Lesson;
@@ -19,27 +29,31 @@ interface LessonItemProps {
 
 const DisplayDurationTime = (duration) => {
 	const time: DurationTime = formatDurationTime(duration);
-	const hourString = `${
-		time.hours > 1
-			? time.hours + ' hours : '
-			: time.hours === 1
-			? time.hours + ' hour : '
-			: ''
-	}`;
-	const minuteString = `${
-		time.minutes > 1
-			? time.minutes + ' minutes : '
-			: time.minutes === 1
-			? time.minutes + ' minute : '
-			: ''
-	}`;
-	const secondString = `${
-		time.seconds > 1
-			? time.seconds + ' seconds'
-			: time.seconds === 1
-			? time.seconds + ' second'
-			: ''
-	}`;
+	// const hourString = `${
+	// 	time.hours > 1
+	// 		? time.hours + ' hours : '
+	// 		: time.hours === 1
+	// 		? time.hours + ' hour : '
+	// 		: ''
+	// }`;
+	// const minuteString = `${
+	// 	time.minutes > 1
+	// 		? time.minutes + ' minutes : '
+	// 		: time.minutes === 1
+	// 		? time.minutes + ' minute : '
+	// 		: ''
+	// }`;
+	// const secondString = `${
+	// 	time.seconds > 1
+	// 		? time.seconds + ' seconds'
+	// 		: time.seconds === 1
+	// 		? time.seconds + ' second'
+	// 		: ''
+	// }`;
+
+	const hourString = `${time.hours > 0 ? time.hours + ':' : ''}`;
+	const minuteString = `${time.minutes > 0 ? time.minutes + ':' : ''}`;
+	const secondString = `${time.seconds > 0 ? time.seconds : ''}`;
 	return hourString + minuteString + secondString;
 };
 
@@ -49,32 +63,37 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
 
 	const [checkedVideo, setCheckedVideo] = useState<string[]>([]);
 	const [checkedDoc, setCheckedDoc] = useState<string[]>([]);
-	useEffect(() => {
-		debounce(() => {
-			console.log('change: ', checkedVideo, checkedDoc);
-		}, 500);
-	}, [checkedVideo, checkedDoc]);
+
+	// useEffect(() => {
+	// 	console.log('checked change:  ', checkedVideo, checkedDoc);
+	// 	debounceCheckedItem(checkedVideo, checkedDoc);
+	// }, [checkedVideo, checkedDoc]);
+	// useEffect(() => {
+	// 	console.log('inital chjeck ', lesson.name, checkedDoc, checkedVideo);
+	// 	console.log('inital lesson ', lesson.videos);
+
+	// 	console.log('inital state ', state);
+	// }, [checkedVideo, checkedDoc, state]);
+
+	// const debounceCheckedItem = useDebouncedCallback((videos, docs) => {
+	// 	dispatch({
+	// 		type: CourseProgressAction.UPDATE_CHECKED_ITEM,
+	// 		payload: {
+	// 			videos: [...videos],
+	// 			documents: [...docs],
+	// 		} as UpdateProgressParams,
+	// 	});
+	// 	console.log('call back debounce');
+	// }, 1000);
 
 	useEffect(() => {
 		if (state.isDoneVideo) {
 			const idx = checkedVideo.indexOf(state.selectedVideo.id);
-			console.log('idx', idx);
-			if (idx < 0) {
+			if (idx >= 0) {
 				setCheckedVideo([...checkedVideo, state.selectedVideo.id]);
 			}
 		}
-	}, [state]);
-
-	useEffect(() => {
-		const a = moment('2022-10-01T16:43:12.610782+07:00');
-		const b = moment('2022-10-13T16:43:12.610782+07:00');
-
-		// console.log(
-		// 	'moment from now',
-		// 	moment('2022-10-13T16:43:12.610782+07:00').toNow()
-		// );
-		console.log('moment from now', a.toNow(true));
-	}, []);
+	}, [state.isDoneVideo]);
 
 	return (
 		<div
@@ -130,10 +149,15 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
 						display: flex;
 						align-items: center;
 						justify-content: space-evenly;
-						min-width: 115px;
+						min-width: 80px;
 					}
 				}
-
+				.item_info {
+					height: 50px;
+					display: flex;
+					flex-direction: column;
+					justify-content: space-evenly;
+				}
 				.ant-collapse {
 					width: 100%;
 					.ant-collapse-content > .ant-collapse-content-box {
@@ -203,7 +227,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
 												onClick={(e) => e.stopPropagation()}
 											/>
 										)}
-										<div>
+										<div className="item_info">
 											<div className="">{`${i + 1}. ${v.file_name}`}</div>
 											<div className="video_duration">
 												<PlayCircleFilled />
@@ -249,7 +273,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
 									>
 										{!isCourseDetail && (
 											<input
-												value={v?.file?.file_path}
+												value={v?.id}
 												type="checkbox"
 												onChange={(e) => {
 													if (checkedDoc.includes(e.target.value)) {
@@ -264,7 +288,13 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
 												onClick={(e) => e.stopPropagation()}
 											/>
 										)}
-										<span className="">{`${i + 1}. ${v.name}`}</span>
+										<div className="item_info">
+											<div className="">{`${i + 1}. ${v.name}`}</div>
+											<div className="video_duration">
+												<FileTextOutlined />
+												{`${(v?.file?.file_size / 1000000).toFixed(2)} MB`}
+											</div>
+										</div>
 									</div>
 								))}
 							</Panel>

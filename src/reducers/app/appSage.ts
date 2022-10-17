@@ -27,10 +27,8 @@ function* fetchListCart() {
 		yield put(appActions.setAppLoading(LoadingEnum.INCREMENT));
 
 		const listCarts: OCart = yield CourseService.getCart();
-		console.log('run fetchlist');
 		yield put(appActions.fetchListCartSuccess(listCarts));
 	} catch (err) {
-		console.error(' fetch list cart failure: ', err);
 	} finally {
 		yield put(appActions.setAppLoading(LoadingEnum.DESCREMENT));
 	}
@@ -79,7 +77,6 @@ function* fetchAllData(action: PayloadAction<PaginationParams>) {
 			call(CourseService.getAllOrders, action.payload),
 			call(CourseService.getCart),
 		]);
-		console.log('fetch list cart success', carts);
 		yield put(appActions.fetchListOrder(orders));
 		yield put(appActions.fetchListCartSuccess(carts));
 	} catch (error) {

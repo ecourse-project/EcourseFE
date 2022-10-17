@@ -54,7 +54,7 @@ import CourseService from 'src/services/course';
 import { formatCurrencySymbol } from 'src/utils/currency';
 import { formatDate } from 'src/utils/format';
 import RoutePaths from 'src/utils/routes';
-import CommentForm from '../comment';
+import CommentForm from '../comment/comment-form';
 import CommentItem from '../comment/comment-item';
 import LessonItem from './course-progress/lesson-item';
 const { Paragraph, Title } = Typography;

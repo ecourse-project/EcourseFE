@@ -24,9 +24,7 @@ const Layout: React.FC<LayoutProps> = (props) => {
 	const isBrowser = typeof window !== 'undefined';
 
 	const iLoading = !!isLoading;
-	useEffect(() => {
-		console.log('iloading: ', iLoading);
-	}, [iLoading]);
+
 	return (
 		<div
 			className={className}
