@@ -29,6 +29,7 @@ import {
 	Rating,
 	TotalPrice,
 	UpdateLessonArgs,
+	UpdateProgressArgs,
 	User,
 } from 'src/models/backend_modal';
 
@@ -208,7 +209,7 @@ class CourseService {
 		return apiClient.get(apiURL.getCourseDetail(id));
 	}
 
-	static updateLessonProgress(params: UpdateLessonArgs[]): Promise<any> {
+	static updateLessonProgress(params: UpdateProgressArgs): Promise<any> {
 		return apiClient.post(apiURL.updateLessonProgress(), params);
 	}
 

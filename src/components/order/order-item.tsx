@@ -112,7 +112,11 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
 						.ant-collapse-header-text {
 							width: 60%;
 						}
-
+						.demo-loadmore-list {
+							&:first-child {
+								border-bottom: 6px solid #000;
+							}
+						}
 						.header-row {
 							justify-content: space-between;
 							padding: 0 40px;
@@ -126,6 +130,9 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
 							display: flex;
 							justify-content: flex-end;
 						}
+						.ant-list-split .ant-list-item {
+							border-bottom: none;
+						}
 						.MuiSvgIcon-root {
 							font-size: 30px;
 							border-radius: 50px;
@@ -136,6 +143,11 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
 											? `color: green`
 											: `color: red`
 								  }`}
+						}
+						.ant-statistic-title {
+							color: #000;
+							font-size: 18px;
+							font-weight: 600;
 						}
 					`}
 				>
@@ -171,40 +183,48 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
 							}
 							style={{ width: '100%', textAlign: 'left' }}
 						>
-							<List
-								className="demo-loadmore-list"
-								itemLayout="horizontal"
-								dataSource={orderItem.documents}
-								renderItem={(item) => (
-									<List.Item>
-										<Skeleton avatar title={false} active loading={false}>
-											<List.Item.Meta
-												title={<a href="https://ant.design">{item.name}</a>}
-												description={item.description}
-												style={{ marginRight: '20px' }}
-											/>
-											<div>{formatCurrency(item.price)}</div>
-										</Skeleton>
-									</List.Item>
-								)}
-							/>
-							<List
-								className="demo-loadmore-list"
-								itemLayout="horizontal"
-								dataSource={orderItem.courses}
-								renderItem={(item) => (
-									<List.Item>
-										<Skeleton avatar title={false} active loading={false}>
-											<List.Item.Meta
-												title={<a href="https://ant.design">{item.name}</a>}
-												description={item.description}
-												style={{ marginRight: '20px' }}
-											/>
-											<div>{formatCurrency(item.price)}</div>
-										</Skeleton>
-									</List.Item>
-								)}
-							/>
+							{orderItem.documents.length ? (
+								<List
+									className="demo-loadmore-list"
+									itemLayout="horizontal"
+									dataSource={orderItem.documents}
+									renderItem={(item) => (
+										<List.Item>
+											<Skeleton avatar title={false} active loading={false}>
+												<List.Item.Meta
+													title={<a href="https://ant.design">{item.name}</a>}
+													description={item.description}
+													style={{ marginRight: '20px' }}
+												/>
+												<div>{formatCurrency(item.price)}</div>
+											</Skeleton>
+										</List.Item>
+									)}
+								/>
+							) : (
+								<></>
+							)}
+							{orderItem.courses.length ? (
+								<List
+									className="demo-loadmore-list"
+									itemLayout="horizontal"
+									dataSource={orderItem.courses}
+									renderItem={(item) => (
+										<List.Item>
+											<Skeleton avatar title={false} active loading={false}>
+												<List.Item.Meta
+													title={<a href="https://ant.design">{item.name}</a>}
+													description={item.description}
+													style={{ marginRight: '20px' }}
+												/>
+												<div>{formatCurrency(item.price)}</div>
+											</Skeleton>
+										</List.Item>
+									)}
+								/>
+							) : (
+								<></>
+							)}
 							<Row className="total">
 								<Statistic
 									className="total2"

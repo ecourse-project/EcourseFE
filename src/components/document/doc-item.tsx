@@ -4,9 +4,11 @@ import { Link } from 'react-router-dom';
 import { Document, MoveEnum } from 'src/models/backend_modal';
 /** @jsxImportSource @emotion/react */
 import {
+	EyeFilled,
 	EyeOutlined,
 	HeartFilled,
 	HeartOutlined,
+	LikeFilled,
 	LikeOutlined,
 	VerticalAlignBottomOutlined,
 	WalletOutlined,
@@ -61,14 +63,13 @@ const DocItemCard: React.FC<ChildProps> = (props) => {
 
 	const handleClick = () => {
 		setLoading(true);
+		if (document.sale_status === SaleStatusEnum.AVAILABLE) {
+			dispatch(docActions.updateCart(document));
+		} else if (document.sale_status === SaleStatusEnum.IN_CART) {
+			dispatch(docActions.updateCart(document));
+		}
 		setTimeout(() => {
-			if (document.sale_status === SaleStatusEnum.AVAILABLE) {
-				dispatch(docActions.updateCart(document));
-				setLoading(false);
-			} else if (document.sale_status === SaleStatusEnum.IN_CART) {
-				dispatch(docActions.updateCart(document));
-				setLoading(false);
-			}
+			setLoading(false);
 		}, 300);
 	};
 	const handleAddFav = async (id) => {
@@ -112,10 +113,11 @@ const DocItemCard: React.FC<ChildProps> = (props) => {
 					overflow: hidden;
 					text-overflow: ellipsis;
 					white-space: normal;
-					font-size: 20px;
-					font-weight: 700;
 					margin: 0.5rem 0;
 					font-family: 'Montserrat';
+					text-align: left;
+\					font-size: 17px;
+					font-weight: 600;
 				}
 				.description {
 					text-align: left;
@@ -138,24 +140,28 @@ const DocItemCard: React.FC<ChildProps> = (props) => {
 					}
 				}
 				.download {
-					font-weight: bold;
+					font-weight: 600;
 				}
 
 				.doc--image {
-					position: relative;
-
-					padding-bottom: 56.25%;
-					width: 100%;
+					width: 240px;
+					height: 240px;
+					max-width: 100%;
+					margin-bottom: 10px;
 					.doc-img {
-						position: absolute;
 						width: 100%;
 						height: 100%;
+						object-fit: scale-down;
 					}
+				}
+				.doc_info {
+					margin: 0 10px;
 				}
 				.anticon {
 					position: relative;
 					bottom: 3px;
 					right: 6px;
+					font-size: 18px;
 					color: ${GlobalStyle.BROWN_YELLOW};
 				}
 				.card-btn {
@@ -163,13 +169,13 @@ const DocItemCard: React.FC<ChildProps> = (props) => {
 					color: #000;
 					border-color: #000;
 					&:hover {
-						border-color: ${btnString === BtnString.AVAILABLE
-							? Color.AVAILABLE
-							: Color.IN_CART};
+						border-color: ${
+							btnString === BtnString.AVAILABLE
+								? Color.AVAILABLE
+								: Color.IN_CART
+						};
 
-						color: ${btnString === BtnString.AVAILABLE
-							? Color.AVAILABLE
-							: Color.IN_CART};
+						color: ${btnString === BtnString.AVAILABLE ? Color.AVAILABLE : Color.IN_CART};
 						letter-spacing: 8px;
 					}
 				}
@@ -179,9 +185,7 @@ const DocItemCard: React.FC<ChildProps> = (props) => {
 					top: -7px !important;
 					left: -32px !important;
 					font-size: 18px;
-					color: ${btnString === BtnString.AVAILABLE
-						? Color.AVAILABLE
-						: Color.IN_CART};
+					color: ${btnString === BtnString.AVAILABLE ? Color.AVAILABLE : Color.IN_CART};
 				}
 				.price-tag {
 					display: flex;
@@ -189,6 +193,8 @@ const DocItemCard: React.FC<ChildProps> = (props) => {
 					font-weight: 600;
 					font-size: 22px;
 					margin-left: 10px;
+					align-items: center;
+
 				}
 				.doc-info {
 					margin-left: 10px;
@@ -227,10 +233,10 @@ const DocItemCard: React.FC<ChildProps> = (props) => {
 
 							<Tag color="geekblue">Best Seller</Tag>
 							<p>Cập nhật: {formatDate(document.created)}</p>
-							<p>Loại tệp: {document.file.file_type}</p>
+							<p>Loại tệp: {document?.file?.file_type}</p>
 							<p>
 								Dung lượng:{' '}
-								{/* {(Number(document.file.file_size) / 1024000).toFixed(1)} MB */}
+								{(Number(document?.file?.file_size) / 1024000).toFixed(1)} MB
 							</p>
 
 							<p>{document.description}</p>
@@ -245,25 +251,23 @@ const DocItemCard: React.FC<ChildProps> = (props) => {
 						<div className="doc--image">
 							<img
 								className="doc-img"
-								width={240}
-								height={135}
 								src={`${document.thumbnail.image_path}`}
 								alt="document image."
 							/>
 						</div>
 
-						<div className="title">{document.name}</div>
-						<div className="doc-info">
+						<div className="doc_info">
+							<div className="title">{document.name}</div>
 							{/* <p className="description">{document.description}</p> */}
 							<p className="download">
 								<VerticalAlignBottomOutlined />
 								Số lượt tải: {document.sold}
 							</p>
 							<p className="download">
-								<EyeOutlined /> Số lượt xem: {document.views}
+								<EyeFilled /> Số lượt xem: {document.views}
 							</p>
 							<p className="download">
-								<LikeOutlined /> Đánh giá: {document.rating}
+								<LikeFilled /> Đánh giá: {document.rating}
 								<br />
 								{`(${document.num_of_rates} lượt đánh gía)`}
 							</p>

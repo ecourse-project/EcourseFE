@@ -3,7 +3,7 @@
 import { css } from '@emotion/react';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox/Checkbox';
 import { useFormik } from 'formik';
-import React from 'react';
+import React, { useEffect } from 'react';
 import AppButton from 'src/components/button';
 import ErrorMessage from 'src/components/error-message';
 import AppInput from 'src/components/input';
@@ -16,6 +16,7 @@ import useDebouncedCallback from 'src/hooks/useDebouncedCallback';
 import { IRegistration } from 'src/models/backend_modal';
 import UserService from 'src/services/user';
 import RoutePaths from 'src/utils/routes';
+import { debounce } from 'lodash';
 
 const RegisterForm: React.FC = () => {
 	const navigate = useNavigate();
@@ -36,14 +37,23 @@ const RegisterForm: React.FC = () => {
 				.required(validation.email.required)
 				.email(validation.email.invalid)
 				.matches(/^[\w.-]+@([\w-]+\.)+[\w-]{1,4}$/, validation.email.invalid)
-				.test('existingEmail', validation.email.format, (value: any) => {
-					try {
-						if (!value) return;
-						return debounceCheckExist(value);
-					} catch (error) {
-						return false;
+				.test(
+					'existingEmail',
+					validation.email.format,
+					async (value?: string) => {
+						console.log('value', value);
+						try {
+							if (!value) return false;
+							// const x = await debounceCheckExist(value);
+							const x = await debouncedApi(value);
+							console.log('x', x);
+
+							return !x?.exists || true;
+						} catch (error) {
+							return false;
+						}
 					}
-				}),
+				),
 			password1: Yup.string()
 				.required(validation.password.required)
 				.matches(regex.password, {
@@ -79,10 +89,10 @@ const RegisterForm: React.FC = () => {
 			const { full_name, password1, password2, email } = values;
 			try {
 				const user = await UserService.register(
-					full_name,
+					email,
 					password1,
 					password2,
-					email
+					full_name
 				);
 				console.log('user:  ', user);
 				localStorage.setItem('email_register', values?.email);
@@ -92,11 +102,13 @@ const RegisterForm: React.FC = () => {
 			}
 		},
 	});
-	const debounceCheckExist = useDebouncedCallback(async (email = '') => {
-		const res = await UserService.existEmail(email);
-		return !res;
-	}, 1000);
-
+	useEffect(() => {
+		console.log('eroirr', formik.errors);
+	}, [formik.errors]);
+	// const debounceCheckExist = debounce(UserService.existEmail, 1000);
+	const debouncedApi = debounce(UserService.existEmail, 300, {
+		trailing: true,
+	});
 	const hasError = (key: string) => {
 		return (
 			Object.keys(formik.errors).length > 0 &&

@@ -64,14 +64,13 @@ const CourseItem: React.FC<ChildProps> = (props) => {
 
 	const handleClick = () => {
 		setLoading(true);
+		if (course.sale_status === SaleStatusEnum.AVAILABLE) {
+			dispatch(courseAction.updateCart(course));
+		} else if (course.sale_status === SaleStatusEnum.IN_CART) {
+			dispatch(courseAction.updateCart(course));
+		}
 		setTimeout(() => {
-			if (course.sale_status === SaleStatusEnum.AVAILABLE) {
-				dispatch(courseAction.updateCart(course));
-				setLoading(false);
-			} else if (course.sale_status === SaleStatusEnum.IN_CART) {
-				dispatch(courseAction.updateCart(course));
-				setLoading(false);
-			}
+			setLoading(false);
 		}, 500);
 	};
 	const handleAddFav = async (id) => {
@@ -115,6 +114,9 @@ const CourseItem: React.FC<ChildProps> = (props) => {
 					overflow: hidden;
 					text-overflow: ellipsis;
 					white-space: normal;
+					text-align: left;
+					font-size: 17px;
+					font-weight: 600;
 				}
 				.description {
 					text-align: left;
@@ -141,15 +143,19 @@ const CourseItem: React.FC<ChildProps> = (props) => {
 				}
 
 				.doc--image {
-					position: relative;
+					width: 240px;
+					height: 240px;
+					max-width: 100%;
+					margin-bottom: 10px;
 
-					padding-bottom: 56.25%;
-					width: 100%;
 					.doc-img {
-						position: absolute;
 						width: 100%;
 						height: 100%;
+						object-fit: scale-down;
 					}
+				}
+				.course_info {
+					margin: 0 10px;
 				}
 				.anticon {
 					position: relative;
@@ -184,9 +190,14 @@ const CourseItem: React.FC<ChildProps> = (props) => {
 				}
 				.price-tag {
 					display: flex;
-					justify-content: space-evenly;
+					justify-content: flex-start;
 					font-weight: 600;
 					font-size: 22px;
+					align-items: center;
+					margin-left: 10px;
+				}
+				[ant-click-animating-without-extra-node='true']:after {
+					display: none;
 				}
 			`}
 		>
@@ -195,8 +206,8 @@ const CourseItem: React.FC<ChildProps> = (props) => {
 				content={
 					<div
 						css={css`
-							max-width: 300px;
-							.title {
+							max-width: 250px;
+							.title-popup {
 								font-weight: 700;
 								font-size: 15px;
 							}
@@ -213,11 +224,11 @@ const CourseItem: React.FC<ChildProps> = (props) => {
 							}
 						`}
 					>
-						<p className="title">{course.name}</p>
+						<p className="title-popup">{course.name}</p>
 
 						<Tag color="geekblue">Best Seller</Tag>
 						<p>Cập nhật: {formatDate(course?.modified)}</p>
-						{/* <p>Số bài học: {course?.lessons?.length}</p> */}
+						<p>Số bài học: {course?.lessons?.length}</p>
 						{/* <p>
 							Dung lượng: {(Number(course.) / 1024000).toFixed(1)}{' '}
 						MB
@@ -235,17 +246,14 @@ const CourseItem: React.FC<ChildProps> = (props) => {
 					<div className="doc--image">
 						<img
 							className="doc-img"
-							width={240}
-							height={135}
 							src={`${course?.thumbnail?.image_path}`}
 							alt="document image."
 						/>
 					</div>
-					<div>
+					<div className="course_info">
 						<div>
 							<h4 className="title">{course.name}</h4>
 						</div>
-						<p className="description">{course.description}</p>
 						<p className="download">
 							<VerticalAlignBottomOutlined />
 							Số lượt tải: {course.sold}
@@ -280,9 +288,9 @@ const CourseItem: React.FC<ChildProps> = (props) => {
 					btnWidth={'full-w'}
 					loading={loading}
 					disabled={
+						loading ||
 						course.sale_status === SaleStatusEnum.PENDING ||
-						course.sale_status === SaleStatusEnum.BOUGHT ||
-						loading
+						course.sale_status === SaleStatusEnum.BOUGHT
 					}
 					onClick={handleClick}
 				>

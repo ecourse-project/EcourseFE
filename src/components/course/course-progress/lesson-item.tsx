@@ -4,23 +4,12 @@ import { FileTextOutlined, PlayCircleFilled } from '@ant-design/icons';
 import { css } from '@emotion/react';
 import { Collapse, List } from 'antd';
 import { debounce } from 'lodash';
-import React, { useContext, useEffect, useState } from 'react';
-import {
-	CourseDocument,
-	Lesson,
-	OFileUpload,
-	UpdateLessonArgs,
-} from 'src/models/backend_modal';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { Lesson, UpdateLessonArgs } from 'src/models/backend_modal';
 import { DurationTime, formatDurationTime } from 'src/utils/utils';
-import {
-	CourseProgressAction,
-	CourseProgressContextType,
-} from './context/reducer';
+import { CourseProgressAction } from './context/reducer';
 import { CourseProgressContext } from './course-progress';
 const { Panel } = Collapse;
-import moment, { Moment } from 'moment';
-import useDebouncedCallback from 'src/hooks/useDebouncedCallback';
-import CourseService from 'src/services/course';
 
 interface LessonItemProps {
 	lesson: Lesson;
@@ -61,13 +50,16 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
 	const { lesson, isCourseDetail = false } = props;
 	const { state, dispatch } = useContext(CourseProgressContext);
 
-	const [checkedVideo, setCheckedVideo] = useState<string[]>([]);
-	const [checkedDoc, setCheckedDoc] = useState<string[]>([]);
+	const [checkedVideo, setCheckedVideo] = useState<string[]>(
+		lesson.videos_completed || []
+	);
+	const [checkedDoc, setCheckedDoc] = useState<string[]>(
+		lesson.docs_completed || []
+	);
 
-	// useEffect(() => {
-	// 	console.log('checked change:  ', checkedVideo, checkedDoc);
-	// 	debounceCheckedItem(checkedVideo, checkedDoc);
-	// }, [checkedVideo, checkedDoc]);
+	useEffect(() => {
+		debounceCheckedItem(checkedVideo, checkedDoc);
+	}, [checkedVideo, checkedDoc]);
 	// useEffect(() => {
 	// 	console.log('inital chjeck ', lesson.name, checkedDoc, checkedVideo);
 	// 	console.log('inital lesson ', lesson.videos);
@@ -79,12 +71,26 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
 	// 	dispatch({
 	// 		type: CourseProgressAction.UPDATE_CHECKED_ITEM,
 	// 		payload: {
-	// 			videos: [...videos],
-	// 			documents: [...docs],
-	// 		} as UpdateProgressParams,
+	// 			lesson_id: lesson.id,
+	// 			completed_videos: [...(videos || [])],
+	// 			completed_docs: [...(docs || [])],
+	// 		} as UpdateLessonArgs,
 	// 	});
 	// 	console.log('call back debounce');
 	// }, 1000);
+	const debounceCheckedItem = useCallback(
+		debounce((videos, docs) => {
+			dispatch({
+				type: CourseProgressAction.UPDATE_CHECKED_ITEM,
+				payload: {
+					lesson_id: lesson.id,
+					completed_videos: [...(videos || [])],
+					completed_docs: [...(docs || [])],
+				} as UpdateLessonArgs,
+			});
+		}, 1000),
+		[]
+	);
 
 	useEffect(() => {
 		if (state.isDoneVideo) {
@@ -161,7 +167,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
 				.ant-collapse {
 					width: 100%;
 					.ant-collapse-content > .ant-collapse-content-box {
-						padding: 0;
+						padding: 0 !important;
 					}
 				}
 			`}
@@ -224,7 +230,9 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
 														setCheckedVideo([...checkedVideo, e.target.value]);
 													}
 												}}
-												onClick={(e) => e.stopPropagation()}
+												onClick={(e) => {
+													e.stopPropagation();
+												}}
 											/>
 										)}
 										<div className="item_info">
@@ -238,8 +246,8 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
 								))}
 							</Panel>
 						</Collapse>
-						{/* <Collapse defaultActiveKey="1"> */}
-						<Collapse>
+						<Collapse defaultActiveKey="1">
+							{/* <Collapse> */}
 							<Panel
 								header={
 									<>
@@ -273,19 +281,25 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
 									>
 										{!isCourseDetail && (
 											<input
-												value={v?.id}
+												value={v.id}
 												type="checkbox"
+												checked={checkedDoc.includes(v.id)}
 												onChange={(e) => {
 													if (checkedDoc.includes(e.target.value)) {
+														console.log('vao if include', e.target.value);
 														const newChecked = checkedDoc.filter(
 															(v) => v !== e.target.value
 														);
 														setCheckedDoc(newChecked);
 													} else {
+														console.log('vao else include', e.target.value);
+
 														setCheckedDoc([...checkedDoc, e.target.value]);
 													}
 												}}
-												onClick={(e) => e.stopPropagation()}
+												onClick={(e) => {
+													e.stopPropagation();
+												}}
 											/>
 										)}
 										<div className="item_info">

@@ -24,22 +24,24 @@ const CartItemRow: React.FC<ChildProps> = ({ document, course }) => {
 	const [deleteLoading, setDeletetLoading] = useState<boolean>(false);
 	const dispatch = useAppDispatch();
 
-	const debounceDeleteDoc = useCallback(
-		debounce((e) => {
-			e.stopPropagation();
-			document && dispatch(docActions.updateCart(document));
+	const deleteDoc = () => {
+		setDeletetLoading(true);
+		document && dispatch(docActions.updateCart(document));
+		setTimeout(() => {
 			setDeletetLoading(false);
-		}, 300),
-		[]
-	);
-	const debounceDeleteCourse = useCallback(
-		debounce((e) => {
-			e.stopPropagation();
-			course && dispatch(courseAction.updateCart(course));
+		}, 300);
+	};
+	const deleteCourse = () => {
+		setDeletetLoading(true);
+
+		course && dispatch(courseAction.updateCart(course));
+		setTimeout(() => {
 			setDeletetLoading(false);
-		}, 300),
-		[]
-	);
+		}, 300);
+	};
+	useEffect(() => {
+		console.log('course', course);
+	}, []);
 	return (
 		<div
 			className="container"
@@ -48,6 +50,7 @@ const CartItemRow: React.FC<ChildProps> = ({ document, course }) => {
 					display: flex;
 					align-items: center;
 					justify-content: center;
+					width: 18%;
 				}
 				.document-item {
 					display: flex;
@@ -135,7 +138,7 @@ const CartItemRow: React.FC<ChildProps> = ({ document, course }) => {
 									e.stopPropagation();
 									e.preventDefault();
 									setDeletetLoading(true);
-									debounceDeleteDoc(e);
+									deleteDoc();
 								}}
 							/>
 						)}
@@ -172,8 +175,7 @@ const CartItemRow: React.FC<ChildProps> = ({ document, course }) => {
 								onClick={(e) => {
 									e.stopPropagation();
 									e.preventDefault();
-									setDeletetLoading(true);
-									debounceDeleteCourse(e);
+									deleteCourse();
 								}}
 							/>
 						)}

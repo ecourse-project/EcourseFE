@@ -82,6 +82,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ onAddComment }) => {
 				.btn-cancel {
 					border: none;
 					margin: 10px 0;
+					color: #000;
 					&:hover {
 						border: none;
 					}

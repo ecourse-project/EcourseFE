@@ -6,6 +6,7 @@ interface BaseModalProps extends ModalProps {
 	visible: boolean;
 	onOK?: () => void;
 	onCancel?: () => void;
+	footer?: boolean | null;
 }
 
 const BaseModal: React.FC<BaseModalProps> = ({
@@ -13,6 +14,7 @@ const BaseModal: React.FC<BaseModalProps> = ({
 	onOK,
 	onCancel,
 	children,
+	footer,
 	...props
 }) => {
 	return (
@@ -24,7 +26,7 @@ const BaseModal: React.FC<BaseModalProps> = ({
 			onOk={onOK}
 			onCancel={onCancel}
 			{...props}
-			footer={null}
+			footer={footer}
 		>
 			{children}
 		</Modal>

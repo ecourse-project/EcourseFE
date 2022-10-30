@@ -168,8 +168,11 @@ function CartUI() {
 					align-items: center;
 				}
 				.cart-list {
+					height: 85vh;
+				}
+				.cart-list-item {
 					overflow: auto;
-					max-height: 78vh;
+					max-height: 100vh;
 				}
 			`}
 		>
@@ -180,9 +183,9 @@ function CartUI() {
 				</Breadcrumb>
 			</Divider>
 			<h2>Danh sách tài liệu trong giỏ</h2>
-			<Row gutter={[16, 16]}>
-				<Col span={18} className="cart-list">
-					{cartData?.documents?.length && (
+			<Row gutter={[16, 16]} className="cart-list">
+				<Col span={18} className="cart-list-item">
+					{cartData?.documents?.length ? (
 						<>
 							<Checkbox
 								className="check-all"
@@ -204,8 +207,10 @@ function CartUI() {
 								}))}
 							/>
 						</>
+					) : (
+						<></>
 					)}
-					{cartData?.courses?.length && (
+					{cartData?.courses?.length ? (
 						<>
 							<Checkbox
 								className="check-all"
@@ -227,6 +232,8 @@ function CartUI() {
 								}))}
 							/>
 						</>
+					) : (
+						<></>
 					)}
 					{cartData?.documents?.length === 0 &&
 						cartData?.courses?.length === 0 && (

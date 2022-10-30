@@ -77,6 +77,7 @@ function* fetchAllData(action: PayloadAction<PaginationParams>) {
 			call(CourseService.getAllOrders, action.payload),
 			call(CourseService.getCart),
 		]);
+		console.log('cart fetch all', carts);
 		yield put(appActions.fetchListOrder(orders));
 		yield put(appActions.fetchListCartSuccess(carts));
 	} catch (error) {

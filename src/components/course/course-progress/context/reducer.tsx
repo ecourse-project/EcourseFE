@@ -3,6 +3,7 @@ import {
 	Lesson,
 	OFileUpload,
 	UpdateLessonArgs,
+	UserAnswersArgs,
 } from 'src/models/backend_modal';
 
 export interface CourseProgressContextType {
@@ -10,7 +11,8 @@ export interface CourseProgressContextType {
 	selectedVideo: OFileUpload;
 	currentLesson: string;
 	isDoneVideo: boolean;
-	updateParams: Lesson[];
+	updateParams: UpdateLessonArgs[];
+	answerSheet: UserAnswersArgs[];
 }
 
 interface Action {
@@ -24,6 +26,7 @@ export enum CourseProgressAction {
 	SET_COMPLETE_VIDEO = 'SET_COMPLETE_VIDEO',
 	SET_CURRENT_LESSON = 'SET_CURRENT_LESSON',
 	UPDATE_CHECKED_ITEM = 'UPDATE_CHECKED_ITEM',
+	UPDATE_CHECKED_ANSWER = 'UPDATE_CHECKED_ANSWER',
 }
 
 const reducer = (
@@ -31,11 +34,39 @@ const reducer = (
 	action: Action
 ): CourseProgressContextType => {
 	switch (action.type) {
-		case CourseProgressAction.UPDATE_CHECKED_ITEM:
-			console.log('trigger ', action);
+		case CourseProgressAction.UPDATE_CHECKED_ANSWER:
+			const currentAnswer = [...state.answerSheet];
+			if (!currentAnswer.length) {
+				return {
+					...state,
+					answerSheet: action.payload,
+				};
+			}
+			const idxAnswer = currentAnswer.findIndex(
+				(v) => v.quiz_id === action.payload.quiz_id
+			);
+			if (idxAnswer < 0) return state;
+			currentAnswer.splice(idxAnswer, 1, action.payload);
 			return {
 				...state,
-				updateParams: action.payload,
+				answerSheet: currentAnswer,
+			};
+		case CourseProgressAction.UPDATE_CHECKED_ITEM:
+			const currentState = [...state.updateParams];
+			if (!currentState.length) {
+				return {
+					...state,
+					updateParams: action.payload,
+				};
+			}
+			const idx = currentState.findIndex(
+				(v) => v.lesson_id === action.payload.lesson_id
+			);
+			if (idx < 0) return state;
+			currentState.splice(idx, 1, action.payload);
+			return {
+				...state,
+				updateParams: currentState,
 			};
 		case CourseProgressAction.SET_SELECTED_DOC:
 			return {

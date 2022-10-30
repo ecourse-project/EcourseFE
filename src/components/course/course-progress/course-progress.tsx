@@ -1,61 +1,45 @@
-import {
-	Avatar,
-	Button,
-	Col,
-	Comment,
-	List,
-	Popover,
-	Progress,
-	Rate,
-	Row,
-	Tabs,
-} from 'antd';
+import { Button, Col, List, Popover, Progress, Row, Tabs } from 'antd';
 import React, {
 	createContext,
-	useContext,
 	useEffect,
 	useReducer,
+	useRef,
 	useState,
 } from 'react';
 /** @jsxImportSource @emotion/react */
 import {
-	AndroidOutlined,
-	AppleOutlined,
 	DownOutlined,
 	PlayCircleOutlined,
 	StarFilled,
 } from '@ant-design/icons';
 import { css } from '@emotion/react';
 import { Collapse } from 'antd';
-import _ from 'lodash';
+import _, { isEmpty } from 'lodash';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import ReactPlayer from 'react-player';
-import {
-	Link,
-	UNSAFE_NavigationContext,
-	useLocation,
-	useNavigate,
-} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useQueryParam } from 'src/hooks/useQueryParam';
 import {
+	AnswerChoiceEnum,
 	Course,
-	CourseComment,
 	CourseDocument,
 	Lesson,
 	OFileUpload,
-	Pagination,
-	PaginationParams,
+	Quiz,
+	QuizResult,
+	QuizResultArgs,
 	RateCourseArgs,
+	Rating,
 	RatingEnum,
 	UpdateLessonArgs,
+	UpdateProgressArgs,
+	UserAnswersArgs,
 } from 'src/models/backend_modal';
 import CourseService from 'src/services/course';
 import RoutePaths from 'src/utils/routes';
 
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import { useAppSelector } from 'src/apps/hooks';
-import CommentForm from 'src/components/comment/comment-form';
-import CommentItem from 'src/components/comment/comment-item';
 import { RootState } from 'src/reducers/model';
 import PdfViewer from '../../pdf';
 import reducer, {
@@ -64,11 +48,12 @@ import reducer, {
 } from './context/reducer';
 import LessonItem from './lesson-item';
 
-import { History } from 'history';
-import CustomPagination from 'src/components/pagination';
+import ExamImg from 'src/assets/images/exam.png';
 import CommentSection from 'src/components/comment';
+import FeedbackSection from 'src/components/comment/feedbacks';
 import RatingModal from 'src/components/modal/rating-modal';
-
+import useDebouncedCallback from 'src/hooks/useDebouncedCallback';
+import QuizSection from './quiz';
 const { Panel } = Collapse;
 export interface CourseParams {
 	id: string;
@@ -76,6 +61,13 @@ export interface CourseParams {
 	video?: string;
 	doc?: string;
 	tab?: string;
+	exam?: boolean;
+}
+
+interface IProgress {
+	done: number;
+	sum: number;
+	progress_num: number;
 }
 
 export const CourseProgressContext = createContext<{
@@ -92,57 +84,162 @@ const CourseProgress = () => {
 	const params: CourseParams = useQueryParam();
 	const [openRatingModal, setOpenRatingModal] = useState<boolean>(false);
 	const [videoLoading, setVideoLoading] = useState<boolean>(true);
+	const [sumVid, setSumVid] = useState<number>(0);
+	const [sumDoc, setSumDoc] = useState<number>(0);
 	const [feedback, setFeedback] = useState<string>('');
 	const [star, setStar] = useState<number>(0);
 	const userProfile = useAppSelector((state: RootState) => state.app.user);
-
+	const [myRate, setMyRate] = useState<Rating>({} as Rating);
+	const [isShowQuiz, setIsShowQuiz] = useState<boolean>(params?.exam || false);
+	const [listQuiz, setListQuiz] = useState<Quiz[]>([]);
+	const [loading, setLoading] = useState<boolean>(false);
+	const [resultQuiz, setResultQuiz] = useState<QuizResult>();
 	const initialState: CourseProgressContextType = {
 		selectedDoc: {} as CourseDocument,
 		selectedVideo: {} as OFileUpload,
 		currentLesson: '',
 		isDoneVideo: false,
-		updateParams: [] as Lesson[],
+		updateParams: [] as UpdateLessonArgs[],
+		answerSheet: [],
 	};
 	const [state, dispatch] = useReducer(reducer, initialState);
+	const isInitialMount = useRef(true);
 
+	// useEffect(() => {
+	// 	console.log('State: ', state);
+	// }, [state]);
 	useEffect(() => {
-		console.log('state update paramse change ', state.updateParams);
+		const updateParams: UpdateProgressArgs = {
+			course_id: params.id || '',
+			lessons: state.updateParams,
+		};
+		debounceUpdateProgress(updateParams);
 	}, [state.updateParams]);
 
-	const getCourseDetail = async (id: string) => {
-		const courseDetail = await CourseService.getCourseDetail(id);
-		setCourse(courseDetail);
+	const debounceUpdateProgress = useDebouncedCallback(
+		async (params: UpdateProgressArgs) => {
+			try {
+				await CourseService.updateLessonProgress(params);
+			} catch (error) {
+				console.log('error update', error);
+			}
+		},
+		1000
+	);
 
-		courseDetail.lessons &&
-			dispatch({
-				type: CourseProgressAction.SET_SELECTED_VIDEO,
-				payload: courseDetail.lessons[0].videos[0],
+	const getCourseDetail = async (id: string) => {
+		try {
+			setLoading(true);
+			const courseDetail = await CourseService.getCourseDetail(id);
+			setCourse(courseDetail);
+
+			if (params.doc && courseDetail.lessons) {
+				const idxLesson = courseDetail?.lessons.findIndex(
+					(v) => v.id === params.lesson
+				);
+				if (idxLesson >= 0) {
+					const idxDoc = courseDetail.lessons[idxLesson].documents.findIndex(
+						(doc) => doc.id === params.doc
+					);
+					if (idxDoc >= 0) {
+						dispatch({
+							type: CourseProgressAction.SET_SELECTED_DOC,
+							payload: courseDetail.lessons[idxLesson].documents[idxDoc],
+						});
+					}
+				}
+			} else if (params.video && courseDetail.lessons) {
+				const idxLesson = courseDetail?.lessons.findIndex(
+					(v) => v.id === params.lesson
+				);
+				if (idxLesson >= 0) {
+					const idxVid = courseDetail.lessons[idxLesson].videos.findIndex(
+						(video) => video.id === params.video
+					);
+					if (idxVid >= 0) {
+						dispatch({
+							type: CourseProgressAction.SET_SELECTED_DOC,
+							payload: courseDetail.lessons[idxLesson].documents[idxVid],
+						});
+					}
+				}
+			} else if (courseDetail.lessons && !params.exam) {
+				dispatch({
+					type: CourseProgressAction.SET_CURRENT_LESSON,
+					payload: courseDetail.lessons[0].id,
+				});
+				dispatch({
+					type: CourseProgressAction.SET_SELECTED_VIDEO,
+					payload: courseDetail.lessons[0].videos[0],
+				});
+			} else if (params.exam) {
+				setIsShowQuiz(true);
+			}
+			const res = courseDetail?.lessons?.map((v) => {
+				setSumDoc(sumDoc + v?.documents?.length);
+				setSumVid(sumVid + v?.videos?.length);
+				return {
+					lesson_id: v.id,
+					completed_docs: [...(v?.docs_completed || [])],
+					completed_videos: [...(v?.videos_completed || [])],
+				} as UpdateLessonArgs;
 			});
-		console.log('re dispatch');
-		dispatch({
-			type: CourseProgressAction.UPDATE_CHECKED_ITEM,
-			payload: courseDetail.lessons,
-		});
+			setSumDoc(
+				courseDetail.lessons?.reduce((p, c) => p + c.documents.length, 0) || 0
+			);
+			setSumVid(
+				courseDetail.lessons?.reduce((p, c) => p + c.videos.length, 0) || 0
+			);
+
+			dispatch({
+				type: CourseProgressAction.UPDATE_CHECKED_ITEM,
+				payload: res,
+			});
+			const quizList = await CourseService.listQuiz(courseDetail.id);
+			setListQuiz(quizList);
+			const initialAnswer = quizList.map(
+				(v) =>
+					({
+						quiz_id: v.id,
+						answer_choice: AnswerChoiceEnum.NO_CHOICE,
+					} as UserAnswersArgs)
+			);
+			dispatch({
+				type: CourseProgressAction.UPDATE_CHECKED_ANSWER,
+				payload: initialAnswer,
+			});
+		} catch (error) {
+			console.log(error);
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	const rateCourse = async (
 		course_id: string,
-		rating: RatingEnum,
+		rating: number,
 		comment: string
 	) => {
 		try {
-			await CourseService.rateCourse({
+			if (rating === 1) rating = RatingEnum.ONE;
+			if (rating === 2) rating = RatingEnum.TWO;
+			if (rating === 3) rating = RatingEnum.THREE;
+			if (rating === 4) rating = RatingEnum.FOUR;
+			if (rating === 5) rating = RatingEnum.FIVE;
+
+			const rate = await CourseService.rateCourse({
 				course_id,
 				rating,
 				comment,
 			} as RateCourseArgs);
+			setMyRate(rate);
 		} catch (error) {
 			console.log('error', error);
 		}
 	};
 
 	const handleSaveRating = () => {
-		rateCourse(params.id, RatingEnum.FIVE, feedback);
+		rateCourse(params.id, star, feedback);
 		setOpenRatingModal(false);
 	};
 
@@ -151,21 +248,27 @@ const CourseProgress = () => {
 	}, []);
 
 	useEffect(() => {
-		const url =
-			window.location.protocol +
-			'//' +
-			window.location.host +
-			window.location.pathname;
-		const videoId = state.selectedVideo?.id;
-		const docId = state.selectedDoc?.file?.id;
-		const newUrl = videoId
-			? `${url}?id=${params.id}&lesson=${state.currentLesson}&video=${videoId}`
-			: docId
-			? `${url}?id=${params.id}&lesson=${state.currentLesson}&doc=${docId}`
-			: `${url}?id=${params.id}`;
-		if (docId || videoId)
+		if (isInitialMount.current) {
+			isInitialMount.current = false;
+		} else if (!loading) {
+			const url =
+				window.location.protocol +
+				'//' +
+				window.location.host +
+				window.location.pathname;
+			const videoId = state.selectedVideo?.id;
+			const docId = state.selectedDoc?.file?.id;
+			const newUrl = videoId
+				? `${url}?id=${params.id}&lesson=${state.currentLesson}&video=${videoId}`
+				: docId
+				? `${url}?id=${params.id}&lesson=${state.currentLesson}&doc=${docId}`
+				: `${url}?id=${params.id}&exam=true`;
 			window.history.pushState({ path: newUrl }, '', newUrl);
-	}, [state.selectedDoc, state.selectedVideo]);
+			if (!isEmpty(state.selectedDoc) || !isEmpty(state.selectedVideo)) {
+				setIsShowQuiz(false);
+			}
+		}
+	}, [state.selectedDoc, state.selectedVideo, isShowQuiz]);
 
 	useEffect(() => {
 		//reload current watch
@@ -182,33 +285,13 @@ const CourseProgress = () => {
 			const selected = lesson?.documents?.filter(
 				(v) => v.file.id === params.doc
 			)[0];
-			console.log('select', selected);
 			dispatch({
 				type: CourseProgressAction.SET_SELECTED_DOC,
 				payload: selected,
 			});
 		}
-		//update checked
-		// const vidChecked = lesson?.videos.filter(
-		// 	(v) =>
-		// 		course &&
-		// 		course?.videos_completed &&
-		// 		course?.videos_completed?.indexOf(v?.id) > -1
-		// );
-		// setCheckedVideo(vidChecked?.map((v) => v.id) || []);
-
-		// const docChecked = lesson?.documents.filter(
-		// 	(v) =>
-		// 		course &&
-		// 		course?.docs_completed &&
-		// 		course?.docs_completed?.indexOf(v?.id) > -1
-		// );
-		// setCheckedDoc(docChecked?.map((v) => v.file.id) || []);
 	}, [course]);
 
-	useEffect(() => {
-		console.log('selected: ', state.selectedVideo, selectItemDoc);
-	}, [state.selectedVideo, state.selectedDoc]);
 	const items = [
 		{
 			label: 'Bình luận',
@@ -218,14 +301,40 @@ const CourseProgress = () => {
 		{
 			label: 'Nhận xét',
 			key: 'feedback',
-			children: (
-				<Rate
-					onChange={(value) => console.log('value', value)}
-					defaultValue={1}
-				/>
-			),
+			children: <FeedbackSection rateList={course?.rating_detail || []} />,
 		},
 	];
+	const calculateProgress = () => {
+		const doneDoc = state.updateParams.reduce(
+			(p, c) => p + c.completed_docs.length,
+			0
+		);
+		const doneVid = state.updateParams.reduce(
+			(p, c) => p + c.completed_videos.length,
+			0
+		);
+		return {
+			done: doneDoc + doneVid,
+			sum: sumDoc + sumVid,
+			progress_num: ((doneDoc + doneVid) * 100) / (sumDoc + sumVid),
+		} as IProgress;
+	};
+	const showQuiz = () => {
+		dispatch({
+			type: CourseProgressAction.SET_SELECTED_DOC,
+			payload: {} as CourseDocument,
+		});
+		setIsShowQuiz(true);
+	};
+
+	const onSubmitQuiz = async () => {
+		const result = await CourseService.getQuizResult({
+			course_id: course?.id,
+			answers: state.answerSheet,
+		} as QuizResultArgs);
+		setResultQuiz(result);
+	};
+
 	return (
 		<div
 			css={css`
@@ -237,6 +346,9 @@ const CourseProgress = () => {
 					display: flex;
 					justify-content: space-around;
 					padding: 0 7%;
+					.ant-col {
+						height: 100%;
+					}
 					.right_box {
 						display: flex;
 						justify-content: flex-end;
@@ -291,6 +403,7 @@ const CourseProgress = () => {
 							margin-left: 10px;
 							font-size: 15px;
 							font-weight: 500;
+							cursor: pointer;
 							.anticon-down {
 								vertical-align: baseline;
 							}
@@ -352,8 +465,20 @@ const CourseProgress = () => {
 					}
 				}
 				.course_list {
-					max-height: 90vh;
+					max-height: 100vh;
 					overflow: auto;
+					.quiz_header {
+						.ant-collapse-header {
+							cursor: none;
+						}
+						.ant-collapse-header-text {
+							font-weight: 700;
+							color: #000;
+						}
+					}
+					.quiz_name {
+						cursor: pointer;
+					}
 					.course_lesson {
 						.ant-collapse-header {
 							font-weight: 700;
@@ -409,7 +534,9 @@ const CourseProgress = () => {
 						padding: 10px;
 						flex-direction: column;
 					}
-
+					.pdf_wrapper {
+						width: 100%;
+					}
 					@media (min-width: 1500px) {
 						max-width: 90%;
 						.video_wrapper {
@@ -417,15 +544,12 @@ const CourseProgress = () => {
 							height: 16.7%;
 							margin: auto;
 						}
-						.pdf_wrapper {
-							width: 100%;
-						}
 					}
 					.ant-collapse {
 						width: 100%;
 
 						.ant-collapse-content > .ant-collapse-content-box {
-							padding: 0;
+							padding: 16px;
 						}
 					}
 				}
@@ -462,11 +586,17 @@ const CourseProgress = () => {
 								'0%': '#108ee9',
 								'100%': '#87d068',
 							}}
-							percent={course?.progress}
+							percent={calculateProgress().progress_num}
 						/>
 						<span className="progress_label">
-							<Popover title="abc">
-								Tiến độ <DownOutlined />
+							<Popover
+								content={`${
+									calculateProgress().done + '/' + calculateProgress().sum
+								} đã hoàn thành`}
+								placement="bottom"
+							>
+								Tiến độ
+								<DownOutlined />
 							</Popover>
 						</span>
 					</div>
@@ -476,7 +606,7 @@ const CourseProgress = () => {
 				<Row>
 					<Col span={16} className="course_content">
 						<Row>
-							{state.selectedVideo && (
+							{!_.isEmpty(state.selectedVideo) ? (
 								<div className="video_wrapper">
 									<ReactPlayer
 										url={state.selectedVideo?.file_path}
@@ -484,11 +614,10 @@ const CourseProgress = () => {
 										height="100%"
 										controls={true}
 										onReady={() => {
-											console.log('readuy');
 											setVideoLoading(false);
 										}}
-										onBuffer={() => console.log('buffer')}
-										onBufferEnd={() => console.log('buffer end')}
+										// onBuffer={() => console.log('buffer')}
+										// onBufferEnd={() => console.log('buffer end')}
 										config={{
 											file: {
 												attributes: {
@@ -503,9 +632,8 @@ const CourseProgress = () => {
 												type: CourseProgressAction.SET_COMPLETE_VIDEO,
 											});
 										}}
-										onProgress={(v) => console.log('progress', v)}
-										onError={(e) => console.log(e)}
-										onClickPreview={(e) => console.log(e)}
+										// onProgress={(v) => console.log('progress', v)}
+										onError={(e) => console.log('video errror', e)}
 										playing={false}
 										playsinline
 										playIcon={<PlayCircleOutlined />}
@@ -513,11 +641,20 @@ const CourseProgress = () => {
 										stopOnUnmount={false}
 									/>
 								</div>
-							)}
-							{!_.isEmpty(state.selectedDoc) && (
+							) : !_.isEmpty(state.selectedDoc) ? (
 								<div className="pdf_wrapper">
 									<PdfViewer url={state.selectedDoc?.file?.file_path} />
 								</div>
+							) : isShowQuiz ? (
+								<CourseProgressContext.Provider value={{ state, dispatch }}>
+									<QuizSection
+										listQuiz={listQuiz}
+										onSubmit={onSubmitQuiz}
+										result={resultQuiz || course?.quiz_detail}
+									/>
+								</CourseProgressContext.Provider>
+							) : (
+								<>{isShowQuiz}</>
 							)}
 						</Row>
 						<Tabs
@@ -525,9 +662,28 @@ const CourseProgress = () => {
 							defaultActiveKey={params.tab}
 							className="tab-section"
 						/>
-						;
 					</Col>
 					<Col span={8} className="course_list">
+						{calculateProgress().progress_num === 100 ? (
+							<Collapse defaultActiveKey={['1']} collapsible="disabled">
+								<Panel
+									header="Bài kiểm tra"
+									key="1"
+									showArrow={false}
+									className="quiz_header"
+								>
+									<div className="quiz_name" onClick={showQuiz}>
+										<img src={ExamImg} width={30} height={30} />
+										<span>{`   Bài kiểm tra cuối khoá `}</span>
+										<p>
+											<strong>{course?.name}</strong>
+										</p>
+									</div>
+								</Panel>
+							</Collapse>
+						) : (
+							<div></div>
+						)}
 						<List
 							itemLayout="horizontal"
 							dataSource={course?.lessons}
@@ -546,6 +702,7 @@ const CourseProgress = () => {
 						onChangeFeedback={(value) => setFeedback(value)}
 						onClose={() => setOpenRatingModal(false)}
 						onSave={handleSaveRating}
+						rated={isEmpty(myRate) ? course?.my_rating : myRate}
 					/>
 				</div>
 			</div>

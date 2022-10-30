@@ -131,6 +131,8 @@ export interface Document {
 	rating: number;
 	num_of_rates: number;
 	is_favorite: boolean;
+	rating_detail?: Rating[];
+	my_rating?: Rating;
 }
 
 export interface IDocumentUpload {
@@ -179,6 +181,11 @@ export interface UpdateLessonArgs {
 	completed_videos: string[];
 }
 
+export interface UpdateProgressArgs {
+	course_id: string;
+	lessons: UpdateLessonArgs[];
+}
+
 export interface CourseDocument {
 	id: string;
 	modified: string;
@@ -200,7 +207,8 @@ export interface Lesson {
 	content: string;
 	videos: OFileUpload[];
 	documents: CourseDocument[];
-	progress: number;
+	docs_completed?: string[];
+	videos_completed?: string[];
 }
 
 export interface Course {
@@ -222,8 +230,9 @@ export interface Course {
 	mark: number;
 	is_done_quiz?: boolean;
 	is_favorite: boolean;
-	docs_completed?: string[];
-	videos_completed?: string[];
+	rating_detail?: Rating[];
+	my_rating?: Rating;
+	quiz_detail: QuizResult;
 }
 
 // ===========================================Comments===========================================
@@ -310,6 +319,11 @@ export enum RatingEnum {
 	FIVE = 5,
 }
 
+export interface UserRatingInfo {
+	full_name: string;
+	avatar: string;
+}
+
 export interface RateDocArgs {
 	document_id: string;
 	rating: RatingEnum;
@@ -325,8 +339,7 @@ export interface RateCourseArgs {
 export interface Rating {
 	id: string;
 	created: string;
-	modified: string;
-	user: User;
+	user: UserRatingInfo;
 	rating: RatingEnum;
 	comment: string;
 }
@@ -337,12 +350,12 @@ export enum AnswerChoiceEnum {
 	B = 'B',
 	C = 'C',
 	D = 'D',
+	NO_CHOICE = '-1',
 }
 
 export interface Quiz {
 	id: string;
 	course: string;
-	question_number: number;
 	question: string;
 	A: string;
 	B: string;
@@ -353,6 +366,7 @@ export interface Quiz {
 export interface UserAnswersArgs {
 	quiz_id: string;
 	answer_choice: AnswerChoiceEnum;
+	correct_answer?: AnswerChoiceEnum;
 }
 
 export interface QuizResultArgs {
@@ -366,8 +380,8 @@ export interface CorrectAnswer {
 }
 
 export interface QuizResult {
-	mark: number;
+	mark?: number;
 	correct_answers: number;
 	total_quiz: number;
-	quiz_answer: CorrectAnswer[];
+	quiz_answers: UserAnswersArgs[];
 }

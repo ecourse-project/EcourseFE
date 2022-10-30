@@ -1,18 +1,22 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import { Rate } from 'antd';
+import { Avatar, Card, Rate } from 'antd';
+import Meta from 'antd/lib/card/Meta';
 import TextArea from 'antd/lib/input/TextArea';
+import { isEmpty } from 'lodash';
 import React, { useState } from 'react';
+import { Rating } from 'src/models/backend_modal';
 import BaseModal from '.';
 import AppButton from '../button';
 import AppInput from '../input';
 interface RatingModalProps {
 	visible: boolean;
 	countStar: (value) => void;
-	onChangeFeedback: (value) => void;
+	onChangeFeedback?: (value) => void;
 	onClose: () => void;
 	onSave: () => void;
 	defaultContent?: string;
+	rated?: Rating;
 }
 const RatingModal: React.FC<RatingModalProps> = (props) => {
 	const {
@@ -21,6 +25,7 @@ const RatingModal: React.FC<RatingModalProps> = (props) => {
 		onChangeFeedback,
 		onClose,
 		onSave,
+		rated,
 		defaultContent,
 	} = props;
 	const [star, setStar] = useState<number>(0);
@@ -76,10 +81,47 @@ const RatingModal: React.FC<RatingModalProps> = (props) => {
 						}
 					}
 				}
+				.card-wrapper {
+					width: 90%;
+					.ant-card-body {
+						width: 100%;
+					}
+					.ant-card-meta-detail {
+						text-align: left;
+					}
+					.ant-rate {
+						font-size: 30px;
+						margin-left: 20px;
+						color: #faad14;
+					}
+					.ant-card-meta-title {
+						font-weight: 600;
+					}
+				}
 			`}
+			footer={null}
 		>
-			{defaultContent ? (
-				<div>defaultContent</div>
+			{!isEmpty(rated) ? (
+				<div className="card-wrapper">
+					<Card>
+						<Meta
+							avatar={
+								<Avatar
+									src={
+										rated?.user?.avatar || 'https://joeschmoe.io/api/v1/random'
+									}
+								/>
+							}
+							title={
+								<>
+									{rated?.user?.full_name}
+									<Rate disabled defaultValue={rated?.rating} />
+								</>
+							}
+							description={rated?.comment}
+						/>
+					</Card>
+				</div>
 			) : (
 				<>
 					<div className="title">Để lại đánh giá</div>
@@ -99,7 +141,9 @@ const RatingModal: React.FC<RatingModalProps> = (props) => {
 									maxLength={100}
 									showCount
 									rows={5}
-									onChange={(e) => onChangeFeedback(e.target.value)}
+									onChange={(e) =>
+										onChangeFeedback && onChangeFeedback(e.target.value)
+									}
 								/>
 								<AppButton
 									className="save-btn"

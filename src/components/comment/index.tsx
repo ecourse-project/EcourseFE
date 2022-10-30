@@ -1,8 +1,7 @@
 /** @jsxImportSource @emotion/react */
-
 import { css } from '@emotion/react';
-import { Avatar, Col, Comment, List, Popover, Progress, Row, Tabs } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { Avatar, Comment, List, Row } from 'antd';
+import { useEffect, useState } from 'react';
 import { useAppSelector } from 'src/apps/hooks';
 import { useQueryParam } from 'src/hooks/useQueryParam';
 import {
@@ -79,7 +78,13 @@ const CommentSection = () => {
 		reply && fetchComment(params.id, pagination.limit, pagination.page);
 	};
 	return (
-		<div>
+		<div
+			css={css`
+				.ant-tooltip-content {
+					min-width: 280px;
+				}
+			`}
+		>
 			<Row className="comment_group">
 				<div className="comment_list">
 					<Comment

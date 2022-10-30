@@ -12,6 +12,7 @@ import {
 	MoreOutlined,
 	PicCenterOutlined,
 	PlusCircleOutlined,
+	StarFilled,
 	SwapOutlined,
 	SyncOutlined,
 } from '@ant-design/icons';
@@ -29,6 +30,7 @@ import {
 	PageHeader,
 	Row,
 	Statistic,
+	Tabs,
 	Tag,
 	Tooltip,
 	Typography,
@@ -36,7 +38,14 @@ import {
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'src/apps/hooks';
 import { useQueryParam } from 'src/hooks/useQueryParam';
-import { Document, SaleStatusEnum } from 'src/models/backend_modal';
+import {
+	Document,
+	RateCourseArgs,
+	RateDocArgs,
+	Rating,
+	RatingEnum,
+	SaleStatusEnum,
+} from 'src/models/backend_modal';
 import { docActions } from 'src/reducers/document/documentSlice';
 import CourseService from 'src/services/course';
 import { formatCurrency } from 'src/utils/currency';
@@ -45,6 +54,9 @@ import RoutePaths from 'src/utils/routes';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { RootState } from 'src/reducers/model';
 import TextArea from 'antd/lib/input/TextArea';
+import RatingModal from '../modal/rating-modal';
+import { isEmpty } from 'lodash';
+import FeedbackSection from '../comment/feedbacks';
 const { Paragraph, Title } = Typography;
 const menu = (
 	<Menu
@@ -248,6 +260,11 @@ const DocDetail: React.FC = () => {
 	const [doc, setDoc] = useState<Document>({} as Document);
 	const [loading, setLoading] = useState(false);
 	const dispatch = useAppDispatch();
+	const [openRatingModal, setOpenRatingModal] = useState<boolean>(false);
+	const [myRate, setMyRate] = useState<Rating>({} as Rating);
+	const [star, setStar] = useState<number>(0);
+	const [feedback, setFeedback] = useState<string>('');
+
 	const listDoc = useAppSelector(
 		(state: RootState) => state.document.listDoc.results
 	);
@@ -263,11 +280,38 @@ const DocDetail: React.FC = () => {
 		fetchDocDetail(params.id);
 	}, []);
 
-	useEffect(() => {
-		const document = listDoc?.filter((v) => v.id === doc.id)[0];
-		document && setDoc(document);
-	}, [listDoc]);
+	// useEffect(() => {
+	// 	const document = listDoc?.filter((v) => v.id === doc.id)[0];
+	// 	document && setDoc(document);
+	// }, [listDoc]);
 
+	const rateCourse = async (
+		document_id: string,
+		rating: number,
+		comment: string
+	) => {
+		try {
+			if (rating === 1) rating = RatingEnum.ONE;
+			if (rating === 2) rating = RatingEnum.TWO;
+			if (rating === 3) rating = RatingEnum.THREE;
+			if (rating === 4) rating = RatingEnum.FOUR;
+			if (rating === 5) rating = RatingEnum.FIVE;
+
+			const rate = await CourseService.rateDocument({
+				document_id,
+				rating,
+				comment,
+			} as RateDocArgs);
+			setMyRate(rate);
+		} catch (error) {
+			console.log('error', error);
+		}
+	};
+
+	const handleSaveRating = () => {
+		rateCourse(params.id, star, feedback);
+		setOpenRatingModal(false);
+	};
 	const content = (
 		<div className="content-wrapper">
 			<div className="content-detail">
@@ -289,10 +333,23 @@ const DocDetail: React.FC = () => {
 			setLoading(true);
 			dispatch(docActions.updateCart(doc));
 			setTimeout(() => {
+				if (doc.sale_status === SaleStatusEnum.AVAILABLE) {
+					doc.sale_status = SaleStatusEnum.IN_CART;
+				} else if (doc.sale_status === SaleStatusEnum.IN_CART) {
+					doc.sale_status = SaleStatusEnum.AVAILABLE;
+				}
 				setLoading(false);
 			}, 1000);
 		}
 	};
+
+	const items = [
+		{
+			label: 'Nhận xét',
+			key: 'feedback',
+			children: <FeedbackSection rateList={doc?.rating_detail || []} />,
+		},
+	];
 
 	return (
 		<div
@@ -349,6 +406,20 @@ const DocDetail: React.FC = () => {
 				}
 				.ant-page-header {
 				}
+				.rating-btn {
+					display: flex;
+					align-item: baseline;
+					.anticon-star {
+						font-size: 18px;
+						color: #faad14;
+					}
+					&:hover,
+					&:active {
+						border: 3px solid #faad14;
+						color: #000;
+						font-weight: 700;
+					}
+				}
 			`}
 		>
 			<Divider orientation="left">
@@ -379,6 +450,14 @@ const DocDetail: React.FC = () => {
 				avatar={{
 					src: 'https://avatars1.githubusercontent.com/u/8186664?s=460&v=4',
 				}}
+				extra={
+					<Button
+						className="rating-btn"
+						onClick={() => setOpenRatingModal(true)}
+					>
+						Đánh giá <StarFilled />
+					</Button>
+				}
 			>
 				<Content
 					extraContent={
@@ -436,23 +515,17 @@ const DocDetail: React.FC = () => {
 					''
 				)}
 			</PageHeader>
-			<List
-				className="comment-list"
-				header={`${data.length} replies`}
-				itemLayout="horizontal"
-				dataSource={data}
-				renderItem={(item) => (
-					<li>
-						<Comment
-							actions={item.actions}
-							author={item.author}
-							avatar={item.avatar}
-							content={item.content}
-							datetime={item.datetime}
-						/>
-					</li>
-				)}
-			/>
+			<Tabs items={items} className="tab-section" />
+			<div className="rating-modal-1">
+				<RatingModal
+					visible={openRatingModal}
+					countStar={(value) => setStar(value)}
+					onChangeFeedback={(value) => setFeedback(value)}
+					onClose={() => setOpenRatingModal(false)}
+					onSave={handleSaveRating}
+					rated={isEmpty(myRate) ? doc.my_rating : myRate || undefined}
+				/>
+			</div>
 		</div>
 	);
 };

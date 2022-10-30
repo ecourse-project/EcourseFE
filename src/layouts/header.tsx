@@ -32,6 +32,7 @@ import { Image } from 'antd';
 const pages = [
 	{ name: 'Tài liệu', to: `${RoutePaths.DOCUMENT}` },
 	{ name: 'Khoá học', to: `${RoutePaths.COURSE}` },
+	{ name: 'Khoá của tôi', to: `${RoutePaths.MY_COURSES}` },
 ];
 const settings = [
 	{
