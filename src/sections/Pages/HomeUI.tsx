@@ -6,7 +6,7 @@ import {
 	BorderlessTableOutlined,
 } from '@ant-design/icons';
 import { css } from '@emotion/react';
-import { Col, Divider } from 'antd';
+import { Col, Divider, Row } from 'antd';
 import { useEffect, useReducer, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'src/apps/hooks';
 import ProductSimpleCard from 'src/components/document/doc-item';
@@ -134,46 +134,37 @@ const HomeUI = () => {
 					<AppstoreAddOutlined />
 					{' Tài liệu'}
 				</div>
-				<div className="doc">
+				<Row gutter={[8, 16]}>
 					{listDoc?.slice(0, LIMIT).map((e, i) => {
 						return (
-							<div
-								key={i}
-								css={css`
-									margin-top: 10px;
-									min-width: 25%;
-								`}
-							>
-								<Col>
-									<ProductSimpleCard document={e} />
-								</Col>
-							</div>
+							<Col lg={8} xl={6} md={12} sm={24} xs={24} key={i}>
+								<ProductSimpleCard document={e} />
+							</Col>
 						);
 					})}
-				</div>
+				</Row>
 			</div>
 			<div className="doc-wrapper">
 				<div className="doc-title">
 					<AppstoreAddOutlined />
 					{'Khoá học'}
 				</div>
-				<div className="doc">
+				<Row gutter={[8, 16]}>
 					{listCourse?.slice(0, LIMIT).map((e, i) => {
 						return (
-							<div
+							<Col
+								lg={8}
+								xl={listCourse.length > 4 ? 6 : 8}
+								md={12}
+								sm={24}
+								xs={24}
 								key={i}
-								css={css`
-									margin-top: 10px;
-									min-width: 25%;
-								`}
 							>
-								<Col>
-									<CourseItem course={e} />
-								</Col>
-							</div>
+								<CourseItem course={e} />
+							</Col>
 						);
 					})}
-				</div>
+				</Row>
 			</div>
 		</div>
 	);

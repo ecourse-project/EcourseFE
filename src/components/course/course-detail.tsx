@@ -54,7 +54,7 @@ import CourseService from 'src/services/course';
 import { formatCurrencySymbol } from 'src/utils/currency';
 import { formatDate } from 'src/utils/format';
 import RoutePaths from 'src/utils/routes';
-import CommentForm from '../comment';
+import CommentForm from '../comment/comment-form';
 import CommentItem from '../comment/comment-item';
 import LessonItem from './course-progress/lesson-item';
 const { Paragraph, Title } = Typography;
@@ -227,7 +227,7 @@ const CourseDetail: React.FC = () => {
 		try {
 			const cmt: Pagination<CourseComment> = await CourseService.listComments(
 				id,
-				10,
+				1000,
 				1
 			);
 			cmt && setComment(cmt.results);
@@ -240,11 +240,6 @@ const CourseDetail: React.FC = () => {
 		fetchDocDetail(params.id);
 		fetchComment(params.id);
 	}, []);
-
-	useEffect(() => {
-		const courseFinded = listCourse?.filter((v) => v.id === course.id)[0];
-		courseFinded && setCourse(courseFinded);
-	}, [listCourse]);
 
 	const content = (
 		<div className="content-wrapper">
@@ -268,6 +263,11 @@ const CourseDetail: React.FC = () => {
 			setLoading(true);
 			dispatch(courseAction.updateCart(course));
 			setTimeout(() => {
+				if (course.sale_status === SaleStatusEnum.AVAILABLE) {
+					course.sale_status = SaleStatusEnum.IN_CART;
+				} else if (course.sale_status === SaleStatusEnum.IN_CART) {
+					course.sale_status = SaleStatusEnum.AVAILABLE;
+				}
 				setLoading(false);
 			}, 1000);
 		} else {
@@ -389,6 +389,13 @@ const CourseDetail: React.FC = () => {
 					.thumbnail_wrapper {
 						display: none;
 					}
+				}
+				.comment-list {
+					max-height: 40vh;
+					overflow: auto;
+				}
+				.ant-tooltip-content {
+					min-width: 280px;
 				}
 			`}
 		>

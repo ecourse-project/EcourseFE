@@ -131,6 +131,8 @@ export interface Document {
 	rating: number;
 	num_of_rates: number;
 	is_favorite: boolean;
+	rating_detail?: Rating[];
+	my_rating?: Rating;
 }
 
 export interface IDocumentUpload {
@@ -173,14 +175,15 @@ export enum ProgressStatusEnum {
 	DONE = 'DONE',
 }
 
-export interface UpdateProgressOutput {
-	is_completed: boolean;
+export interface UpdateLessonArgs {
+	lesson_id: string;
+	completed_docs: string[];
+	completed_videos: string[];
 }
 
-export interface UpdateLessonArgs {
+export interface UpdateProgressArgs {
 	course_id: string;
-	documents: string[];
-	videos: string[];
+	lessons: UpdateLessonArgs[];
 }
 
 export interface CourseDocument {
@@ -204,7 +207,8 @@ export interface Lesson {
 	content: string;
 	videos: OFileUpload[];
 	documents: CourseDocument[];
-	progress: number;
+	docs_completed?: string[];
+	videos_completed?: string[];
 }
 
 export interface Course {
@@ -226,8 +230,9 @@ export interface Course {
 	mark: number;
 	is_done_quiz?: boolean;
 	is_favorite: boolean;
-	docs_completed?: string[];
-	videos_completed?: string[];
+	rating_detail?: Rating[];
+	my_rating?: Rating;
+	quiz_detail: QuizResult;
 }
 
 // ===========================================Comments===========================================
@@ -314,20 +319,69 @@ export enum RatingEnum {
 	FIVE = 5,
 }
 
+export interface UserRatingInfo {
+	full_name: string;
+	avatar: string;
+}
+
 export interface RateDocArgs {
 	document_id: string;
 	rating: RatingEnum;
+	comment: string;
 }
 
 export interface RateCourseArgs {
 	course_id: string;
 	rating: RatingEnum;
+	comment: string;
 }
 
 export interface Rating {
 	id: string;
 	created: string;
-	modified: string;
-	user: User;
+	user: UserRatingInfo;
 	rating: RatingEnum;
+	comment: string;
+}
+
+// ===========================================Quiz===========================================
+export enum AnswerChoiceEnum {
+	A = 'A',
+	B = 'B',
+	C = 'C',
+	D = 'D',
+	NO_CHOICE = '-1',
+}
+
+export interface Quiz {
+	id: string;
+	course: string;
+	question: string;
+	A: string;
+	B: string;
+	C: string;
+	D: string;
+}
+
+export interface UserAnswersArgs {
+	quiz_id: string;
+	answer_choice: AnswerChoiceEnum;
+	correct_answer?: AnswerChoiceEnum;
+}
+
+export interface QuizResultArgs {
+	course_id: string;
+	answers: UserAnswersArgs[];
+}
+
+export interface CorrectAnswer {
+	id: string;
+	correct_answer: AnswerChoiceEnum;
+}
+
+export interface QuizResult {
+	mark?: number;
+	correct_answers: number;
+	total_quiz: number;
+	quiz_answers: UserAnswersArgs[];
 }

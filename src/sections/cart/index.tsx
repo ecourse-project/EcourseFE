@@ -111,7 +111,7 @@ function CartUI() {
 				setTotalPrice(0);
 			}
 		},
-		1000
+		500
 	);
 	useEffect(() => {
 		debouncePrice(checkedList);
@@ -140,7 +140,25 @@ function CartUI() {
 						}
 					}
 				}
-
+				.title {
+					font-size: 20px;
+					font-weight: 600;
+					font-family: Montserrat;
+					color: #ffa900;
+				}
+				.choose-all {
+					font-size: 17px;
+					font-family: 'Montserrat';
+					margin: 0 8px;
+				}
+				.doc {
+					opacity: ${checkAllDoc ? '1' : '0.5'};
+					font-weight: ${checkAllDoc ? '700' : '400'};
+				}
+				.course {
+					opacity: ${checkAllCourse ? '1' : '0.5'};
+					font-weight: ${checkAllCourse ? '700' : '400'};
+				}
 				.checkbox-group {
 					max-height: 40%;
 					overflow: auto;
@@ -168,8 +186,11 @@ function CartUI() {
 					align-items: center;
 				}
 				.cart-list {
+					height: 85vh;
+				}
+				.cart-list-item {
 					overflow: auto;
-					max-height: 78vh;
+					max-height: 100vh;
 				}
 			`}
 		>
@@ -179,10 +200,10 @@ function CartUI() {
 					<Breadcrumb.Item href={''}>Giỏ hàng</Breadcrumb.Item>
 				</Breadcrumb>
 			</Divider>
-			<h2>Danh sách tài liệu trong giỏ</h2>
-			<Row gutter={[16, 16]}>
-				<Col span={18} className="cart-list">
-					{cartData?.documents?.length && (
+			<p className="title">Danh sách tài liệu trong giỏ</p>
+			<Row gutter={[16, 16]} className="cart-list">
+				<Col span={18} className="cart-list-item">
+					{cartData?.documents?.length ? (
 						<>
 							<Checkbox
 								className="check-all"
@@ -190,7 +211,7 @@ function CartUI() {
 								onChange={onCheckAllChangeDoc}
 								checked={checkAllDoc}
 							>
-								<h3>Chọn tất cả tài liệu</h3>
+								<p className="choose-all doc">Chọn tất cả tài liệu</p>
 							</Checkbox>
 							<Divider />
 							<CheckboxGroup
@@ -204,8 +225,10 @@ function CartUI() {
 								}))}
 							/>
 						</>
+					) : (
+						<></>
 					)}
-					{cartData?.courses?.length && (
+					{cartData?.courses?.length ? (
 						<>
 							<Checkbox
 								className="check-all"
@@ -213,7 +236,7 @@ function CartUI() {
 								onChange={onCheckAllChangeCourse}
 								checked={checkAllCourse}
 							>
-								<h3>Chọn tất cả khoá học</h3>
+								<p className="choose-all course">Chọn tất cả khoá học</p>
 							</Checkbox>
 							<Divider />
 							<CheckboxGroup
@@ -227,6 +250,8 @@ function CartUI() {
 								}))}
 							/>
 						</>
+					) : (
+						<></>
 					)}
 					{cartData?.documents?.length === 0 &&
 						cartData?.courses?.length === 0 && (

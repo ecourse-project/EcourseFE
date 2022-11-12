@@ -18,21 +18,25 @@ import { StorageKeys } from './utils/enum';
 import RoutePaths from './utils/routes';
 import CourseDetail from './pages/course-detail';
 import CourseProgress from './pages/course-progress';
+import MyCourse from './pages/my-course';
 const App = () => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {
-		dispatch({
-			type: AppAction.FETCH_ALL_DATA,
-			payload: {
-				page: 1,
-				limit: 10,
-			},
-		});
-		if (!localStorage.getItem(StorageKeys.SESSION_KEY))
+		if (!localStorage.getItem(StorageKeys.SESSION_KEY)) {
+			console.log('vao ');
 			navigate(RoutePaths.LOGIN);
-		// navigate('/home');
+		} else {
+			dispatch({
+				type: AppAction.FETCH_ALL_DATA,
+				payload: {
+					page: 1,
+					limit: 10,
+				},
+			});
+		}
+		// navigate(RoutePaths.HOME);
 	}, []);
 	return (
 		<div className="App">
@@ -40,6 +44,7 @@ const App = () => {
 				<Route path={RoutePaths.HOME} element={<Home />} />
 				<Route path={RoutePaths.DOCUMENT} element={<Document />} />
 				<Route path={RoutePaths.COURSE} element={<Course />} />
+				<Route path={RoutePaths.MY_COURSES} element={<MyCourse />} />
 
 				<Route path={RoutePaths.CART} element={<Cart />} />
 				<Route path={RoutePaths.ORDER_CART} element={<OrderCart />} />

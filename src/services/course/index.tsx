@@ -21,12 +21,15 @@ import {
 	OVerifyToken,
 	Pagination,
 	PaginationParams,
+	Quiz,
+	QuizResult,
+	QuizResultArgs,
 	RateCourseArgs,
 	RateDocArgs,
 	Rating,
 	TotalPrice,
 	UpdateLessonArgs,
-	UpdateProgressOutput,
+	UpdateProgressArgs,
 	User,
 } from 'src/models/backend_modal';
 
@@ -72,6 +75,9 @@ const apiURL = {
 
 	rateDocument: () => `api/rating/document/rate/`,
 	rateCourse: () => `api/rating/course/rate/`,
+
+	listQuiz: (id) => `api/quiz/?course_id=${id}`,
+	getQuizResult: () => `api/quiz/result/`,
 };
 
 class CourseService {
@@ -203,9 +209,7 @@ class CourseService {
 		return apiClient.get(apiURL.getCourseDetail(id));
 	}
 
-	static updateLessonProgress(
-		params: UpdateLessonArgs
-	): Promise<UpdateLessonArgs> {
+	static updateLessonProgress(params: UpdateProgressArgs): Promise<any> {
 		return apiClient.post(apiURL.updateLessonProgress(), params);
 	}
 
@@ -237,6 +241,14 @@ class CourseService {
 
 	static rateCourse(params: RateCourseArgs): Promise<Rating> {
 		return apiClient.post(apiURL.rateCourse(), params);
+	}
+
+	static listQuiz(id: string): Promise<Quiz[]> {
+		return apiClient.get(apiURL.listQuiz(id));
+	}
+
+	static getQuizResult(params: QuizResultArgs): Promise<QuizResult> {
+		return apiClient.post(apiURL.getQuizResult(), params);
 	}
 }
 export default CourseService;

@@ -1,131 +1,133 @@
+/** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import TextArea from 'antd/lib/input/TextArea';
-import { useFormik } from 'formik';
-import React, { useState } from 'react';
-import AppButton from 'src/components/button';
-import AppInput from 'src/components/input';
-import { CreateNewPasswordFormFieldData } from 'src/models';
-import { User } from 'src/models/backend_modal';
-// import AuthService from 'src/services/auth';
-import regex from 'src/utils/regularExpression';
-import validation from 'src/utils/validation';
-import * as Yup from 'yup';
-import ErrorMessage from '../error-message';
+import { Avatar, Comment, List, Row } from 'antd';
+import { useEffect, useState } from 'react';
+import { useAppSelector } from 'src/apps/hooks';
+import { useQueryParam } from 'src/hooks/useQueryParam';
+import {
+	CourseComment,
+	Pagination,
+	PaginationParams,
+} from 'src/models/backend_modal';
+import { RootState } from 'src/reducers/model';
+import CourseService from 'src/services/course';
+import { CourseParams } from '../course/course-progress/course-progress';
+import CustomPagination from '../pagination';
+import CommentForm from './comment-form';
+import CommentItem from './comment-item';
 
-interface CommentFormProps {
-	onAddComment: (value) => void;
-}
+// interface CommentProps {
+// 	onAddComment: (value) => void;
+// 	handleReply: (value, item) => void;
+// 	totalCmnt: number;
+// }
 
-interface CommentProps {
-	content: string;
-}
-const CommentForm: React.FC<CommentFormProps> = ({ onAddComment }) => {
-	const [isLoading, setIsLoading] = React.useState<boolean>(false);
-	const [submitting, setSubmitting] = useState<boolean>(false);
-	const validationSchema = React.useRef(
-		Yup.object().shape({
-			password: Yup.string()
-				.required(validation.password.required)
-				.matches(regex.password, {
-					message: validation.password.invalidPwdRegex,
-				}),
-			confirmPassword: Yup.string()
-				.required(validation.password.required)
-				.oneOf(
-					[Yup.ref('password'), null],
-					validation.confirmPassword.doesNotMatch
-				),
-		})
-	);
-	const formik = useFormik<CommentProps>({
-		initialValues: {
-			content: '',
-		},
-		validateOnChange: true,
-		validateOnBlur: true,
-		onSubmit: (values) => {
-			// if (!values.content.length) {
-			// 	return;
-			// }
-			setSubmitting(true);
-			setTimeout(() => {
-				formik.setFieldValue('content', '');
-				onAddComment(values?.content);
-				setSubmitting(false);
-			}, 800);
-		},
+const CommentSection = () => {
+	// const {  onAddComment, handleReply, totalCmnt } = props;
+	const [comment, setComment] = useState<CourseComment[]>([]);
+	const [totalCmt, setTotalCmt] = useState<number>(0);
+	const params: CourseParams = useQueryParam();
+	const userProfile = useAppSelector((state: RootState) => state.app.user);
+
+	const [pagination, setPagination] = useState<PaginationParams>({
+		page: 1,
+		limit: 5,
 	});
+	const fetchComment = async (id: string, limit, page) => {
+		try {
+			const cmt: Pagination<CourseComment> = await CourseService.listComments(
+				id,
+				limit,
+				page
+			);
+			cmt && setComment(cmt.results);
+			setTotalCmt(cmt.count);
+		} catch (error) {
+			console.log('error get cmt', error);
+		}
+	};
 
-	const hasError = (key: string) => {
-		return (
-			Object.keys(formik.errors).length > 0 &&
-			!!formik.errors[key] &&
-			formik.touched[key]
+	useEffect(() => {
+		fetchComment(params.id, pagination.limit, pagination.page);
+	}, [pagination]);
+	const onChangePage = (page: number) => {
+		setPagination({ ...pagination, page });
+	};
+
+	const onAddComment = async (value) => {
+		console.log(value);
+		if (!value) return;
+		const cmt = await CourseService.createComment(
+			'',
+			params.id || '',
+			userProfile.id,
+			value
 		);
+		setPagination({ ...pagination, page: 1 });
+		cmt && fetchComment(params.id, pagination.limit, pagination.page);
+	};
+
+	const handleReply = async (content: string, item: CourseComment) => {
+		const reply = await CourseService.createComment(
+			item.id,
+			params.id || '',
+			userProfile.id,
+			content
+		);
+		// setPagination({ ...pagination, page: 1 });
+		reply && fetchComment(params.id, pagination.limit, pagination.page);
 	};
 	return (
-		<form
+		<div
 			css={css`
-				display: grid;
-				margin-top: 30px;
-				grid-auto-columns: 1fr;
-				grid-column-gap: 40px;
-				grid-row-gap: 20px;
-				grid-template-columns: 1fr;
-				grid-template-rows: auto;
+				.ant-tooltip-content {
+					min-width: 280px;
+				}
 			`}
-			className="form-wrapper"
-			onSubmit={formik.handleSubmit}
 		>
-			<div className="form-item">
-				{/* <AppInput
-					className="field password-field"
-					label=""
-					name="content"
-					type="content"
-					disabled={isLoading}
-					placeholder="content"
-					handleChange={formik.handleChange}
-					handleBlur={formik.handleBlur}
-					value={formik.values.content}
-					hasError={hasError('content')}
-				/> */}
-				<TextArea
-					className=""
-					name="content"
-					onChange={formik.handleChange}
-					value={formik.values?.content}
-					placeholder="Bình luận điều gì đó..."
-					rows={4}
-					maxLength={500}
-					showCount={true}
-					allowClear={true}
-					// onPressEnter={(e) => {
-					// 	e.preventDefault();
-					// 	formik.handleSubmit();
-					// }}
-				/>
-				{/* {hasError('content') ? (
-					<ErrorMessage>{formik.errors?.content}</ErrorMessage>
-				) : null} */}
-			</div>
-
-			<div className="form-item">
-				<AppButton
-					btnTextColor="black"
-					btnSize="large"
-					btnStyle="solid"
-					btnWidth="full-w"
-					className="btn-cmt"
-					type="primary"
-					htmlType="submit"
-					loading={submitting}
+			<Row className="comment_group">
+				<div className="comment_list">
+					<Comment
+						avatar={
+							<Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />
+						}
+						content={<CommentForm onAddComment={onAddComment} />}
+					/>
+					{comment?.length ? (
+						<List
+							className="comment-list"
+							header={`${comment.length} replies`}
+							itemLayout="horizontal"
+							dataSource={comment}
+							renderItem={(item) => (
+								<li>
+									<CommentItem
+										item={item}
+										onAddReply={(value) => handleReply(value, item)}
+									/>
+								</li>
+							)}
+						/>
+					) : (
+						<div></div>
+					)}
+				</div>
+				<div
+					css={css`
+						text-align: center;
+					`}
 				>
-					Thêm bình luận
-				</AppButton>
-			</div>
-		</form>
+					<CustomPagination
+						current={pagination.page}
+						pageSize={pagination.limit}
+						total={totalCmt}
+						showSizeChanger={false}
+						onChange={onChangePage}
+					/>
+				</div>
+			</Row>
+		</div>
 	);
 };
 
-export default CommentForm;
+export default CommentSection;
