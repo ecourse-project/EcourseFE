@@ -647,6 +647,7 @@ const CourseProgress = () => {
 								</div>
 							) : isShowQuiz ? (
 								<CourseProgressContext.Provider value={{ state, dispatch }}>
+									{/* if user unchecked a video while doing quiz, show modal to warn that the quiz will hide if they continue unchecking that video */}
 									<QuizSection
 										listQuiz={listQuiz}
 										onSubmit={onSubmitQuiz}

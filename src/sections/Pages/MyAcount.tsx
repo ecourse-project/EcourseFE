@@ -11,7 +11,7 @@ export type TypeTabPanel = {
 	content: ReactNode | string;
 	key: string;
 };
-export enum TabsKey {
+enum TabsKey {
 	CAMPAIGNS_FORM = 'CAMPAIGNS_FORM',
 	PAST_ORDERS = 'PAST_ORDERS',
 }
@@ -37,7 +37,7 @@ const MyAcount: React.FC = () => {
 	];
 	return (
 		<div
-			className="account-tab .page-container"
+			className="account-tab page-container"
 			css={css`
 				padding: 20px;
 			`}

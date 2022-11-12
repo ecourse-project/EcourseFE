@@ -74,9 +74,9 @@ const PricingCard: React.FC<ChildProps> = ({
 			className=""
 			css={css`
 				.ant-btn {
-					letter-spacing: 1px;
+					letter-spacing: 0px;
 					&:hover {
-						letter-spacing: 2px;
+						letter-spacing: 1px;
 					}
 				}
 				a.ant-btn {
@@ -142,9 +142,7 @@ const PricingCard: React.FC<ChildProps> = ({
 				btnSize={'small'}
 				btnWidth={'full-w'}
 				onClick={showModal}
-				// disabled={
-				// 	checkedDoc.documents.length === 0 && checkedDoc.courses.length === 0
-				// }
+				disabled={checkoutList.total_price === 0}
 				href={docNum === 0 ? RoutePaths.DOCUMENT : undefined}
 			>
 				{btnText}

@@ -127,7 +127,7 @@ const CartItemRow: React.FC<ChildProps> = ({ document, course }) => {
 					</div>
 					<div className="price-group">
 						<p className="price">
-							<TagOutlined />
+							{/* <TagOutlined /> */}
 							{formatCurrency(document?.price, true)}
 						</p>
 						{deleteLoading ? (

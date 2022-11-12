@@ -239,7 +239,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
 											<div className="">{`${i + 1}. ${v.file_name}`}</div>
 											<div className="video_duration">
 												<PlayCircleFilled />
-												{`${DisplayDurationTime(500)}`}
+												{`${DisplayDurationTime(v.duration)}`}
 											</div>
 										</div>
 									</div>

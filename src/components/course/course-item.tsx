@@ -102,6 +102,7 @@ const CourseItem: React.FC<ChildProps> = (props) => {
 				flex-direction: column;
 				justify-content: space-between;
 				min-height: 100%;
+				min-height: 515px;
 				.title,
 				p {
 					color: black;
