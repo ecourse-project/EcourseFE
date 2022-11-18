@@ -152,11 +152,11 @@ function CartUI() {
 					margin: 0 8px;
 				}
 				.doc {
-					opacity: ${checkAllDoc ? '1' : '0.5'};
+					opacity: ${checkAllDoc ? '1' : '0.7'};
 					font-weight: ${checkAllDoc ? '700' : '400'};
 				}
 				.course {
-					opacity: ${checkAllCourse ? '1' : '0.5'};
+					opacity: ${checkAllCourse ? '1' : '0.7'};
 					font-weight: ${checkAllCourse ? '700' : '400'};
 				}
 				.checkbox-group {
@@ -164,6 +164,9 @@ function CartUI() {
 					overflow: auto;
 					.ant-checkbox-wrapper {
 						align-item: start;
+					}
+					.ant-checkbox-group-item {
+						margin: 0;
 					}
 				}
 				.ant-checkbox-indeterminate .ant-checkbox-inner:after {
@@ -253,10 +256,10 @@ function CartUI() {
 					) : (
 						<></>
 					)}
-					{cartData?.documents?.length === 0 &&
+					{/* {cartData?.documents?.length === 0 &&
 						cartData?.courses?.length === 0 && (
 							<Image src={EmptyImg} preview={false} className="empty-img" />
-						)}
+						)} */}
 				</Col>
 				<Col span={6}>
 					<div className="">

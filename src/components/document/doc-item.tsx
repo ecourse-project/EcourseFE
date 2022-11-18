@@ -42,7 +42,7 @@ enum Color {
 	BOUGHT = '#23c501',
 }
 
-const DocItemCard: React.FC<ChildProps> = (props) => {
+const DocItem: React.FC<ChildProps> = (props) => {
 	const { document } = props;
 	const [added, setAdded] = useState(false);
 	const [btnString, setBtnString] = useState<string>(BtnString.AVAILABLE);
@@ -99,7 +99,7 @@ const DocItemCard: React.FC<ChildProps> = (props) => {
 			css={css`
 				display: flex;
 				flex-direction: column;
-				justify-content: space-between;
+				justify-content: space-evenly;
 				min-height: 100%;
 				.title,
 				p {
@@ -116,8 +116,9 @@ const DocItemCard: React.FC<ChildProps> = (props) => {
 					margin: 0.5rem 0;
 					font-family: 'Montserrat';
 					text-align: left;
-\					font-size: 17px;
+					font-size: 17px;
 					font-weight: 600;
+					height: 40px;
 				}
 				.description {
 					text-align: left;
@@ -140,18 +141,30 @@ const DocItemCard: React.FC<ChildProps> = (props) => {
 					}
 				}
 				.download {
-					font-weight: 600;
+					font-weight: 400;
 				}
 
+				// .doc--image {
+				// 	width: 240px;
+				// 	height: 240px;
+				// 	max-width: 100%;
+				// 	margin-bottom: 10px;
+				// 	.doc-img {
+				// 		width: 100%;
+				// 		height: 100%;
+				// 		object-fit: scale-down;
+				// 	}
+				// }
 				.doc--image {
-					width: 240px;
-					height: 240px;
+					// width: 240px;
+					// height: 240px;
 					max-width: 100%;
 					margin-bottom: 10px;
+
 					.doc-img {
+						// width: 200px;
+						height: 210px;
 						width: 100%;
-						height: 100%;
-						object-fit: scale-down;
 					}
 				}
 				.doc_info {
@@ -169,13 +182,13 @@ const DocItemCard: React.FC<ChildProps> = (props) => {
 					color: #000;
 					border-color: #000;
 					&:hover {
-						border-color: ${
-							btnString === BtnString.AVAILABLE
-								? Color.AVAILABLE
-								: Color.IN_CART
-						};
+						border-color: ${btnString === BtnString.AVAILABLE
+							? Color.AVAILABLE
+							: Color.IN_CART};
 
-						color: ${btnString === BtnString.AVAILABLE ? Color.AVAILABLE : Color.IN_CART};
+						color: ${btnString === BtnString.AVAILABLE
+							? Color.AVAILABLE
+							: Color.IN_CART};
 						letter-spacing: 8px;
 					}
 				}
@@ -185,7 +198,9 @@ const DocItemCard: React.FC<ChildProps> = (props) => {
 					top: -7px !important;
 					left: -32px !important;
 					font-size: 18px;
-					color: ${btnString === BtnString.AVAILABLE ? Color.AVAILABLE : Color.IN_CART};
+					color: ${btnString === BtnString.AVAILABLE
+						? Color.AVAILABLE
+						: Color.IN_CART};
 				}
 				.price-tag {
 					display: flex;
@@ -194,7 +209,6 @@ const DocItemCard: React.FC<ChildProps> = (props) => {
 					font-size: 22px;
 					margin-left: 10px;
 					align-items: center;
-
 				}
 				.doc-info {
 					margin-left: 10px;
@@ -310,4 +324,4 @@ const DocItemCard: React.FC<ChildProps> = (props) => {
 	);
 };
 
-export default DocItemCard;
+export default DocItem;

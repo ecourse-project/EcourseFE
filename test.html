@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<input
+			type="text"
+			id="form-element-01"
+			class="slds-input"
+			maxlength="19"
+			data-id="ANS"
+			onkeyup="formatSearchTerm(event)"
+		/>
+	</body>
+	<script type="text/javascript">
+		function formatSearchTerm(event) {
+			console.log('Formatting Input');
+
+			// this.cardSearchTerm = event.target.value;
+			// console.log('Search Term: ', this.cardSearchTerm);
+
+			// Goal to reformat card search func to look like CC format xxxx-xxxx-xxxx-xxxx
+			let value = event.target.value;
+			let oldLength = value.length;
+			console.log('oldLength :>> ', oldLength);
+			let selectionStart3 = event.target.selectionStart;
+			console.log('selectionStart3 :>> ', selectionStart3);
+			value = value.replace(/\D/g, '');
+			let selectionStart = event.target.selectionStart;
+			console.log('selectionStart :>> ', selectionStart);
+			var v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+			var matches = v.match(/\d{4,16}/g);
+			var match = (matches && matches[0]) || '';
+			var parts = [];
+			var i;
+			for (i = 0; i < match.length; i += 4) {
+				parts.push(match.substring(i, i + 4));
+			}
+
+			if (parts.length) {
+				value = parts.join('-');
+			} else {
+				value = value;
+			}
+
+			this.cardNumberFormating = value;
+			let selectionStart2 = event.target.selectionStart;
+			console.log('selectionStart2 :>> ', selectionStart2);
+			if (oldLength == selectionStart) {
+				selectionStart = value.length;
+			}
+			event.target.value = value;
+			event.target.selectionStart = selectionStart;
+			event.target.selectionEnd = selectionStart;
+		}
+	</script>
+</html>

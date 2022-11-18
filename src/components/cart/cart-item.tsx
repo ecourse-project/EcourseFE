@@ -46,17 +46,11 @@ const CartItemRow: React.FC<ChildProps> = ({ document, course }) => {
 		<div
 			className="container"
 			css={css`
-				.price-group {
-					display: flex;
-					align-items: center;
-					justify-content: center;
-					width: 18%;
-				}
 				.document-item {
 					display: flex;
-					flex-direction: row;
 					align-items: flex-end;
 					justify-content: space-between;
+					flex-direction: column;
 					.document-content {
 						display: flex;
 					}
@@ -84,7 +78,12 @@ const CartItemRow: React.FC<ChildProps> = ({ document, course }) => {
 					margin: 10px;
 					border-radius: 5px;
 				}
+
 				.price-group {
+					display: flex;
+					align-items: center;
+					justify-content: end;
+					min-width: fit-content;
 					position: relative;
 					font-size: 20px;
 					margin-bottom: 10px;
@@ -165,7 +164,7 @@ const CartItemRow: React.FC<ChildProps> = ({ document, course }) => {
 					</div>
 					<div className="price-group">
 						<p className="price">
-							<TagOutlined />
+							{/* <TagOutlined /> */}
 							{formatCurrency(course.price, true)}
 						</p>
 						{deleteLoading ? (

@@ -126,7 +126,7 @@ const PricingCard: React.FC<ChildProps> = ({
 					)}`}</strong>
 				</p>
 			</Modal>
-			<Image src={Img} />
+			{/* <Image src={Img} /> */}
 			<div className="total-price">Tổng đơn:</div>
 			<Divider />
 			<div className="current-price">

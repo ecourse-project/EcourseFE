@@ -105,9 +105,19 @@ const CourseProgress = () => {
 	const [state, dispatch] = useReducer(reducer, initialState);
 	const isInitialMount = useRef(true);
 
-	// useEffect(() => {
-	// 	console.log('State: ', state);
-	// }, [state]);
+	const items = [
+		{
+			label: 'Bình luận',
+			key: 'comment',
+			children: <CommentSection />,
+		}, // remember to pass the key prop
+		{
+			label: 'Nhận xét',
+			key: 'feedback',
+			children: <FeedbackSection rateList={course?.rating_detail || []} />,
+		},
+	];
+
 	useEffect(() => {
 		const updateParams: UpdateProgressArgs = {
 			course_id: params.id || '',
@@ -233,6 +243,7 @@ const CourseProgress = () => {
 				comment,
 			} as RateCourseArgs);
 			setMyRate(rate);
+			course?.rating_detail?.push(rate);
 		} catch (error) {
 			console.log('error', error);
 		}
@@ -292,18 +303,6 @@ const CourseProgress = () => {
 		}
 	}, [course]);
 
-	const items = [
-		{
-			label: 'Bình luận',
-			key: 'comment',
-			children: <CommentSection />,
-		}, // remember to pass the key prop
-		{
-			label: 'Nhận xét',
-			key: 'feedback',
-			children: <FeedbackSection rateList={course?.rating_detail || []} />,
-		},
-	];
 	const calculateProgress = () => {
 		const doneDoc = state.updateParams.reduce(
 			(p, c) => p + c.completed_docs.length,
@@ -586,7 +585,7 @@ const CourseProgress = () => {
 								'0%': '#108ee9',
 								'100%': '#87d068',
 							}}
-							percent={calculateProgress().progress_num}
+							percent={Math.round(calculateProgress().progress_num)}
 						/>
 						<span className="progress_label">
 							<Popover

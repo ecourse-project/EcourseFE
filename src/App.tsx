@@ -18,7 +18,7 @@ import { StorageKeys } from './utils/enum';
 import RoutePaths from './utils/routes';
 import CourseDetail from './pages/course-detail';
 import CourseProgress from './pages/course-progress';
-import MyCourse from './pages/my-course';
+import MyCourse from './pages/my-learning';
 const App = () => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
@@ -26,7 +26,7 @@ const App = () => {
 	useEffect(() => {
 		if (!localStorage.getItem(StorageKeys.SESSION_KEY)) {
 			console.log('vao ');
-			navigate(RoutePaths.LOGIN);
+			// navigate(RoutePaths.LOGIN);
 		} else {
 			dispatch({
 				type: AppAction.FETCH_ALL_DATA,
