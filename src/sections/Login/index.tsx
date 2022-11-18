@@ -130,9 +130,9 @@ const LoginUI: React.FC = () => {
 							Register Here
 						</Link>
 					</h5>
-					<Link className="resend-here" to="/verify/?resend=true">
+					{/* <Link className="resend-here" to="/verify/?resend=true">
 						Resend Email
-					</Link>
+					</Link> */}
 				</div>
 			</div>
 		</div>

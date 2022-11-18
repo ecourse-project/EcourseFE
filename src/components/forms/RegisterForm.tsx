@@ -77,10 +77,10 @@ const RegisterForm: React.FC = () => {
 	// const userAsset = useSelector((state: RootState) => state.user.userAssets);
 	const formik = useFormik({
 		initialValues: {
-			full_name: 'NHTC',
-			email: 'test@gmail.com',
-			password1: 'tuancuong123',
-			password2: 'tuancuong123',
+			full_name: '',
+			email: '',
+			password1: '',
+			password2: '',
 			phone: '',
 		},
 		validationSchema: validationSchema.current,

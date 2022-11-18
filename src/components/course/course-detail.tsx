@@ -506,16 +506,18 @@ const CourseDetail: React.FC = () => {
 								''
 							)}
 						</Button>,
-						<Button
-							key={2}
-							type="primary"
-							// className="rating-btn"
-							className="add-btn"
-							onClick={() => setOpenRatingModal(true)}
-							style={{ backgroundColor: '#fff', color: '#000' }}
-						>
-							Đánh giá <StarFilled />
-						</Button>,
+						course.sale_status === SaleStatusEnum.BOUGHT && (
+							<Button
+								key={2}
+								type="primary"
+								// className="rating-btn"
+								className="add-btn"
+								onClick={() => setOpenRatingModal(true)}
+								style={{ backgroundColor: '#fff', color: '#000' }}
+							>
+								Đánh giá <StarFilled />
+							</Button>
+						),
 					]
 				}
 			>
