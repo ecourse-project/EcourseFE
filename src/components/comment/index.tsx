@@ -79,6 +79,9 @@ const CommentSection = () => {
 	return (
 		<div
 			css={css`
+				.comment_list {
+					width: 100%;
+				}
 				.ant-tooltip-content {
 					min-width: 280px;
 				}

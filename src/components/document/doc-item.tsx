@@ -50,40 +50,46 @@ const DocItem: React.FC<ChildProps> = (props) => {
 	const [btnString, setBtnString] = useState<string>(BtnString.AVAILABLE);
 	const cartData = useAppSelector((state: RootState) => state.document);
 	const [loading, setLoading] = useState<boolean>(false);
+	const [currentDoc, setCurrentDoc] = useState<Document>(document);
+
 	const dispatch = useAppDispatch();
 	useEffect(() => {
-		if (document.sale_status === SaleStatusEnum.AVAILABLE) {
+		if (currentDoc.sale_status === SaleStatusEnum.AVAILABLE) {
 			setBtnString(BtnString.AVAILABLE);
-		} else if (document.sale_status === SaleStatusEnum.IN_CART) {
+		} else if (currentDoc.sale_status === SaleStatusEnum.IN_CART) {
 			setBtnString(BtnString.IN_CART);
-		} else if (document.sale_status === SaleStatusEnum.PENDING) {
+		} else if (currentDoc.sale_status === SaleStatusEnum.PENDING) {
 			setBtnString(BtnString.PENDING);
-		} else if (document.sale_status === SaleStatusEnum.BOUGHT) {
+		} else if (currentDoc.sale_status === SaleStatusEnum.BOUGHT) {
 			setBtnString(BtnString.BOUGHT);
 		}
-	}, [document]);
+	}, [currentDoc]);
 
 	const handleClick = () => {
 		setLoading(true);
-		if (document.sale_status === SaleStatusEnum.AVAILABLE) {
-			dispatch(docActions.updateCart(document));
-		} else if (document.sale_status === SaleStatusEnum.IN_CART) {
-			dispatch(docActions.updateCart(document));
+		if (currentDoc.sale_status === SaleStatusEnum.AVAILABLE) {
+			dispatch(docActions.updateCart(currentDoc));
+		} else if (currentDoc.sale_status === SaleStatusEnum.IN_CART) {
+			dispatch(docActions.updateCart(currentDoc));
 		}
 		setTimeout(() => {
 			setLoading(false);
 		}, 300);
 	};
+	useEffect(() => {
+		setCurrentDoc(document);
+	}, [document]);
 	const handleAddFav = async (id) => {
 		setLoading(true);
 		setTimeout(async () => {
-			if (document.is_favorite) {
+			if (currentDoc.is_favorite) {
 				const removeFromFav: Document = await CourseService.moveDoc(
 					id,
 					MoveEnum.FAVORITE,
 					MoveEnum.LIST
 				);
 				dispatch(docActions.setIsFavourite(removeFromFav));
+				setCurrentDoc(removeFromFav);
 			} else {
 				const addToFav: Document = await CourseService.moveDoc(
 					id,
@@ -91,6 +97,7 @@ const DocItem: React.FC<ChildProps> = (props) => {
 					MoveEnum.FAVORITE
 				);
 				dispatch(docActions.setIsFavourite(addToFav));
+				setCurrentDoc(addToFav);
 			}
 			setLoading(false);
 		}, 300);
@@ -258,53 +265,53 @@ const DocItem: React.FC<ChildProps> = (props) => {
 								}
 							`}
 						>
-							<p className="title">{document.name}</p>
+							<p className="title">{currentDoc.name}</p>
 
 							<Tag color="geekblue">Best Seller</Tag>
-							<p>Cập nhật: {formatDate(document.created)}</p>
-							<p>Loại tệp: {document?.file?.file_type}</p>
+							<p>Cập nhật: {formatDate(currentDoc.created)}</p>
+							{/* <p>Loại tệp: {currentDoc?.file?.file_type}</p> */}
 							<p>
 								Dung lượng:{' '}
-								{(Number(document?.file?.file_size) / 1024000).toFixed(1)} MB
+								{(Number(currentDoc?.file?.file_size) / 1024000).toFixed(1)} MB
 							</p>
 
-							<p>{document.description}</p>
-							<p className="heart" onClick={() => handleAddFav(document.id)}>
-								{document.is_favorite ? <HeartFilled /> : <HeartOutlined />}
+							<p>{currentDoc.description}</p>
+							<p className="heart" onClick={() => handleAddFav(currentDoc.id)}>
+								{currentDoc.is_favorite ? <HeartFilled /> : <HeartOutlined />}
 							</p>
 						</div>
 					}
 					trigger="hover"
 				>
-					<Link to={`${RoutePaths.DOCUMENT_DETAIL}?id=${document.id}`}>
+					<Link to={`${RoutePaths.DOCUMENT_DETAIL}?id=${currentDoc.id}`}>
 						<div className="doc--image">
 							<img
 								className="doc-img"
-								src={`${document.thumbnail.image_path}`}
-								alt="document image."
+								src={`${currentDoc.thumbnail.image_path}`}
+								alt="doc image."
 							/>
 						</div>
 
 						<div className="doc_info">
 							{' '}
-							<div className="title">{document.name}</div>
-							{/* <p className="description">{document.description}</p> */}
+							<div className="title">{currentDoc.name}</div>
+							{/* <p className="description">{currentDoc.description}</p> */}
 							<p className="download">
 								<VerticalAlignBottomOutlined />
-								Số lượt tải: {document.sold}
+								Số lượt tải: {currentDoc.sold}
 							</p>
 							<p className="download">
-								<EyeFilled /> Số lượt xem: {document.views}
+								<EyeFilled /> Số lượt xem: {currentDoc.views}
 							</p>
 							<p className="download">
 								<LikeFilled /> Đánh giá:
 								<Rate
-									defaultValue={Number(Number(document.rating).toFixed(1))}
+									defaultValue={Number(Number(currentDoc.rating).toFixed(1))}
 									allowHalf
 									disabled
 								/>
 								<br />
-								{`(${document.num_of_rates} lượt đánh gía)`}
+								{`(${currentDoc.num_of_rates} lượt đánh gía)`}
 							</p>
 						</div>
 					</Link>
@@ -315,10 +322,10 @@ const DocItem: React.FC<ChildProps> = (props) => {
 				<div className="price-tag">
 					<span>
 						<WalletOutlined />
-						{formatCurrencySymbol(document.price, 'VND')}
+						{formatCurrencySymbol(currentDoc.price, 'VND')}
 					</span>
 
-					{document.sale_status === SaleStatusEnum.BOUGHT && (
+					{currentDoc.sale_status === SaleStatusEnum.BOUGHT && (
 						<TaskAltIcon sx={{ color: `${Color.BOUGHT}` }} />
 					)}
 				</div>
@@ -331,8 +338,8 @@ const DocItem: React.FC<ChildProps> = (props) => {
 						btnWidth={'full-w'}
 						loading={loading}
 						disabled={
-							document.sale_status === SaleStatusEnum.PENDING ||
-							document.sale_status === SaleStatusEnum.BOUGHT ||
+							currentDoc.sale_status === SaleStatusEnum.PENDING ||
+							currentDoc.sale_status === SaleStatusEnum.BOUGHT ||
 							loading
 						}
 						onClick={(e) => {

@@ -19,6 +19,7 @@ import RoutePaths from './utils/routes';
 import CourseDetail from './pages/course-detail';
 import CourseProgress from './pages/course-progress';
 import MyCourse from './pages/my-learning';
+import SettingPage from './pages/settings';
 const App = () => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
@@ -58,6 +59,8 @@ const App = () => {
 
 				<Route path={RoutePaths.REGISTER} element={<Register />} />
 				<Route path={RoutePaths.FORGOT_PASSWORD} element={<ResetPassword />} />
+				<Route path={RoutePaths.SETTINGS} element={<SettingPage />} />
+
 				<Route path={RoutePaths.MY_ACCOUNT} element={<MyAccount />} />
 			</Routes>
 		</div>

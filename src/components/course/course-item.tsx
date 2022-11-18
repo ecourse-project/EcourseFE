@@ -66,6 +66,9 @@ const CourseItem: React.FC<ChildProps> = (props) => {
 		}
 	}, [currentCourse]);
 
+	useEffect(() => {
+		setCurrentCourse(course);
+	}, [course]);
 	const handleClick = () => {
 		setLoading(true);
 		if (currentCourse.sale_status === SaleStatusEnum.AVAILABLE) {
@@ -300,7 +303,6 @@ const CourseItem: React.FC<ChildProps> = (props) => {
 								defaultValue={Number(Number(currentCourse.rating).toFixed(1))}
 								// defaultValue={2.5}
 							/>
-							<p>{Number(Number(currentCourse.rating).toFixed(1))}</p>
 							<br />
 							{`(${currentCourse.num_of_rates} lượt đánh gía)`}
 						</p>

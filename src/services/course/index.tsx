@@ -112,7 +112,7 @@ class CourseService {
 		password1: string,
 		password2: string
 	): Promise<OPasswordChange> {
-		return apiClient.post(apiURL.changePwd(), {
+		return apiClient.patch(apiURL.changePwd(), {
 			old_password: old_password,
 			password1: password1,
 			password2: password2,

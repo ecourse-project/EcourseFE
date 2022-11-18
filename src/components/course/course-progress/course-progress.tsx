@@ -687,9 +687,9 @@ const CourseProgress = () => {
 						<List
 							itemLayout="horizontal"
 							dataSource={course?.lessons}
-							renderItem={(item) => (
+							renderItem={(item, i) => (
 								<CourseProgressContext.Provider value={{ state, dispatch }}>
-									<LessonItem lesson={item} />
+									<LessonItem lesson={item} index={i} />
 								</CourseProgressContext.Provider>
 							)}
 						/>

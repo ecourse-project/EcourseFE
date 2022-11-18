@@ -8,6 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { Rating } from 'src/models/backend_modal';
 import BaseModal from '.';
 import AppButton from '../button';
+import ErrorMessage from '../error-message';
 import AppInput from '../input';
 interface RatingModalProps {
 	visible: boolean;
@@ -29,6 +30,8 @@ const RatingModal: React.FC<RatingModalProps> = (props) => {
 		defaultStar,
 	} = props;
 	const [star, setStar] = useState<number>(defaultStar || 0);
+	const [msg, setMsg] = useState<string>('');
+	const [msgError, setMsgError] = useState<string>('');
 	useEffect(() => {
 		countStar(star);
 	}, [visible]);
@@ -144,17 +147,26 @@ const RatingModal: React.FC<RatingModalProps> = (props) => {
 									maxLength={100}
 									showCount
 									rows={5}
-									onChange={(e) =>
-										onChangeFeedback && onChangeFeedback(e.target.value)
-									}
+									onChange={(e) => {
+										setMsg(e.target.value);
+										onChangeFeedback && onChangeFeedback(e.target.value);
+									}}
 								/>
+								{msgError.length ? (
+									<ErrorMessage className="error">{msgError}</ErrorMessage>
+								) : null}
 								<AppButton
 									className="save-btn"
 									btnTextColor={'white'}
 									btnStyle={'solid'}
 									btnSize={'small'}
 									btnWidth={'fix-content'}
-									onClick={onSave}
+									onClick={() => {
+										if (!msg.length)
+											return setMsgError('Xin hãy để lại nhận xét');
+										onChangeFeedback && onChangeFeedback(msg);
+										onSave();
+									}}
 								>
 									Lưu
 								</AppButton>

@@ -14,6 +14,7 @@ const { Panel } = Collapse;
 interface LessonItemProps {
 	lesson: Lesson;
 	isCourseDetail?: boolean;
+	index?: number;
 }
 
 const DisplayDurationTime = (duration) => {
@@ -47,7 +48,7 @@ const DisplayDurationTime = (duration) => {
 };
 
 const LessonItem: React.FC<LessonItemProps> = (props) => {
-	const { lesson, isCourseDetail = false } = props;
+	const { lesson, isCourseDetail = false, index } = props;
 	const { state, dispatch } = useContext(CourseProgressContext);
 
 	const [checkedVideo, setCheckedVideo] = useState<string[]>(
@@ -181,10 +182,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
 					destroyInactivePanel
 					className="course_lesson"
 				>
-					<Panel
-						header={`Bài ${lesson.lesson_number}: ${lesson?.name}`}
-						key="1"
-					>
+					<Panel header={`Bài ${index}: ${lesson?.name}`} key="1">
 						<Collapse defaultActiveKey={['1']}>
 							{/* <Collapse> */}
 							<Panel

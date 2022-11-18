@@ -285,7 +285,7 @@ const DocDetail: React.FC = () => {
 	// 	document && setDoc(document);
 	// }, [listDoc]);
 
-	const rateCourse = async (
+	const rateDoc = async (
 		document_id: string,
 		rating: number,
 		comment: string
@@ -310,7 +310,7 @@ const DocDetail: React.FC = () => {
 	};
 
 	const handleSaveRating = () => {
-		rateCourse(params.id, star, feedback);
+		rateDoc(params.id, star, feedback);
 		setOpenRatingModal(false);
 	};
 	const content = (
