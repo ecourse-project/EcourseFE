@@ -454,12 +454,14 @@ const DocDetail: React.FC = () => {
 					src: 'https://avatars1.githubusercontent.com/u/8186664?s=460&v=4',
 				}}
 				extra={
-					<Button
-						className="rating-btn"
-						onClick={() => setOpenRatingModal(true)}
-					>
-						Đánh giá <StarFilled />
-					</Button>
+					doc.sale_status === SaleStatusEnum.BOUGHT && (
+						<Button
+							className="rating-btn"
+							onClick={() => setOpenRatingModal(true)}
+						>
+							Đánh giá <StarFilled />
+						</Button>
+					)
 				}
 			>
 				<Content

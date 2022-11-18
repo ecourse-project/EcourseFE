@@ -48,8 +48,9 @@ const ResetPasswordForm: React.FC<ResetPasswordProps> = ({ setEmailSent }) => {
 					setEmailSent && setEmailSent(email);
 				})
 				.catch((error) => {
+					console.log('error', error.response.data.detail);
 					formik.setErrors({
-						email: error.message,
+						email: error.response.data.detail,
 					});
 				})
 				.finally(() => {

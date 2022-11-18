@@ -42,7 +42,7 @@ const LoginForm: React.FC = () => {
 	const formik = useFormik<LoginFormData>({
 		initialValues: {
 			email: registerEmail || '',
-			password: 'tuancuong123',
+			password: '',
 		},
 		validationSchema: validationSchema.current,
 		validateOnChange: true,
@@ -171,11 +171,11 @@ const LoginForm: React.FC = () => {
 				</AppButton>
 			</div>
 			<div className="form-item-bot">
-				<div className="form-item-checkbox">
+				{/* <div className="form-item-checkbox">
 					<Checkbox checked={rememberMe} onChange={onRememberMeChange}>
 						Remember me
 					</Checkbox>
-				</div>
+				</div> */}
 				<Link className="forgot-pwd" to={RoutePaths.FORGOT_PASSWORD}>
 					Forgot password?
 				</Link>
