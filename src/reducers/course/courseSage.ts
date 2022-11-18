@@ -36,12 +36,9 @@ function* watchUpdateCart(action: PayloadAction<Course>) {
 				MoveEnum.LIST,
 				MoveEnum.CART
 			);
-			console.log('add succes: ');
 			yield put(courseAction.updateStatusAddCourse(addTo));
 			yield put(appActions.addCourseToCart(addTo));
 		} else if (action.payload.sale_status === SaleStatusEnum.IN_CART) {
-			console.log('remove succes');
-
 			const removeFrom: Course = yield CourseService.moveCourse(
 				action.payload.id,
 				MoveEnum.CART,

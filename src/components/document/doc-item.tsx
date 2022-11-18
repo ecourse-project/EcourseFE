@@ -14,7 +14,7 @@ import {
 	WalletOutlined,
 } from '@ant-design/icons';
 import { css } from '@emotion/react';
-import { Popover, Tag } from 'antd';
+import { Popover, Rate, Tag } from 'antd';
 import { useAppDispatch, useAppSelector } from 'src/apps/hooks';
 import { docActions } from 'src/reducers/document/documentSlice';
 import { RootState } from 'src/reducers/model';
@@ -25,9 +25,11 @@ import AppButton from '../button';
 
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import { formatDate } from 'src/utils/format';
+import RoutePaths from 'src/utils/routes';
 
 interface ChildProps {
 	document: Document; // try not to use any.
+	isMyLearn?: boolean;
 }
 enum BtnString {
 	AVAILABLE = 'THÊM',
@@ -43,7 +45,7 @@ enum Color {
 }
 
 const DocItem: React.FC<ChildProps> = (props) => {
-	const { document } = props;
+	const { document, isMyLearn } = props;
 	const [added, setAdded] = useState(false);
 	const [btnString, setBtnString] = useState<string>(BtnString.AVAILABLE);
 	const cartData = useAppSelector((state: RootState) => state.document);
@@ -101,9 +103,12 @@ const DocItem: React.FC<ChildProps> = (props) => {
 				flex-direction: column;
 				justify-content: space-evenly;
 				min-height: 100%;
+				max-width: 260px;
+
 				.title,
 				p {
 					color: black;
+					margin-bottom: 6px;
 				}
 				.title {
 					display: block !important;
@@ -174,8 +179,11 @@ const DocItem: React.FC<ChildProps> = (props) => {
 					position: relative;
 					bottom: 3px;
 					right: 6px;
-					font-size: 18px;
 					color: ${GlobalStyle.BROWN_YELLOW};
+				}
+				.anticon-star {
+					color: unset;
+					position: unset;
 				}
 				.card-btn {
 					width: 100%;
@@ -211,11 +219,18 @@ const DocItem: React.FC<ChildProps> = (props) => {
 					align-items: center;
 				}
 				.doc-info {
-					margin-left: 10px;
-					opacity: 0.7;
+					margin: 0 10px;
 				}
 				[ant-click-animating-without-extra-node='true']:after {
 					display: none;
+				}
+				.ant-rate {
+					font-size: 14px;
+					margin: 0 10px;
+					color: #ffa535;
+					.ant-rate-star {
+						margin: 0;
+					}
 				}
 			`}
 		>
@@ -261,7 +276,7 @@ const DocItem: React.FC<ChildProps> = (props) => {
 					}
 					trigger="hover"
 				>
-					<Link to={`/document/detail?id=${document.id}`}>
+					<Link to={`${RoutePaths.DOCUMENT_DETAIL}?id=${document.id}`}>
 						<div className="doc--image">
 							<img
 								className="doc-img"
@@ -271,6 +286,7 @@ const DocItem: React.FC<ChildProps> = (props) => {
 						</div>
 
 						<div className="doc_info">
+							{' '}
 							<div className="title">{document.name}</div>
 							{/* <p className="description">{document.description}</p> */}
 							<p className="download">
@@ -281,7 +297,12 @@ const DocItem: React.FC<ChildProps> = (props) => {
 								<EyeFilled /> Số lượt xem: {document.views}
 							</p>
 							<p className="download">
-								<LikeFilled /> Đánh giá: {document.rating}
+								<LikeFilled /> Đánh giá:
+								<Rate
+									defaultValue={Number(Number(document.rating).toFixed(1))}
+									allowHalf
+									disabled
+								/>
 								<br />
 								{`(${document.num_of_rates} lượt đánh gía)`}
 							</p>
@@ -289,6 +310,7 @@ const DocItem: React.FC<ChildProps> = (props) => {
 					</Link>
 				</Popover>
 			</div>
+
 			<div>
 				<div className="price-tag">
 					<span>
@@ -300,25 +322,27 @@ const DocItem: React.FC<ChildProps> = (props) => {
 						<TaskAltIcon sx={{ color: `${Color.BOUGHT}` }} />
 					)}
 				</div>
-				<AppButton
-					className="card-btn"
-					btnTextColor={'black'}
-					btnStyle={'outline'}
-					btnSize={'small'}
-					btnWidth={'full-w'}
-					loading={loading}
-					disabled={
-						document.sale_status === SaleStatusEnum.PENDING ||
-						document.sale_status === SaleStatusEnum.BOUGHT ||
-						loading
-					}
-					onClick={(e) => {
-						e.stopPropagation();
-						handleClick();
-					}}
-				>
-					{btnString}
-				</AppButton>
+				{!isMyLearn && (
+					<AppButton
+						className="card-btn"
+						btnTextColor={'black'}
+						btnStyle={'outline'}
+						btnSize={'small'}
+						btnWidth={'full-w'}
+						loading={loading}
+						disabled={
+							document.sale_status === SaleStatusEnum.PENDING ||
+							document.sale_status === SaleStatusEnum.BOUGHT ||
+							loading
+						}
+						onClick={(e) => {
+							e.stopPropagation();
+							handleClick();
+						}}
+					>
+						{btnString}
+					</AppButton>
+				)}
 			</div>
 		</div>
 	);

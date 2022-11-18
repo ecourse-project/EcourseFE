@@ -63,27 +63,9 @@ const DocumentUI: React.FC = () => {
 					display: flex;
 					flex-wrap: wrap;
 					text-align: left;
+					justify-content: space-evenly;
 					.ant-col {
 						padding: 0 5px 30px 5px;
-					}
-					@media only screen and (min-width: 768px) {
-						.ant-col {
-							max-width: 33% !important;
-						}
-					}
-					@media only screen and (min-width: 1200px) {
-						.ant-col {
-							max-width: 25% !important;
-							min-width: 25% !important;
-						}
-					}
-					@media only screen and (min-width: 1300px) {
-						.ant-col {
-							max-width: 20% !important;
-						}
-						.ant-btn[disabled] {
-							letter-spacing: 2px;
-						}
 					}
 				`}
 			>

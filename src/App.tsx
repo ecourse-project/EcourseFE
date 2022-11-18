@@ -24,18 +24,18 @@ const App = () => {
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {
-		if (!localStorage.getItem(StorageKeys.SESSION_KEY)) {
-			console.log('vao ');
-			// navigate(RoutePaths.LOGIN);
-		} else {
-			dispatch({
-				type: AppAction.FETCH_ALL_DATA,
-				payload: {
-					page: 1,
-					limit: 10,
-				},
-			});
-		}
+		// if (!localStorage.getItem(StorageKeys.SESSION_KEY)) {
+		// 	console.log('vao ');
+		// 	// navigate(RoutePaths.LOGIN);
+		// } else {
+		dispatch({
+			type: AppAction.FETCH_ALL_DATA,
+			payload: {
+				page: 1,
+				limit: 10,
+			},
+		});
+		// }
 		// navigate(RoutePaths.HOME);
 	}, []);
 	return (

@@ -36,7 +36,7 @@ const WishListUI: React.FC<WishListUIProps> = (props) => {
 					favourite.courses.map((v, i) => {
 						return (
 							<Col key={i}>
-								<CourseItem course={v} />
+								<CourseItem course={v} isMyLearn />
 							</Col>
 						);
 					})}
@@ -46,7 +46,7 @@ const WishListUI: React.FC<WishListUIProps> = (props) => {
 					favourite.documents.map((v, i) => {
 						return (
 							<Col key={i}>
-								<DocItem document={v} />
+								<DocItem document={v} isMyLearn />
 							</Col>
 						);
 					})}

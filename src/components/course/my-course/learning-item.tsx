@@ -184,7 +184,7 @@ export const LearningItem: React.FC<LearningItem> = (props) => {
 												defaultValue={course.rating}
 												disabled={true}
 												value={course.rating}
-											/>{' '}
+											/>
 										</>
 									)}
 								</div>
