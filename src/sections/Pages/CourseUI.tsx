@@ -71,7 +71,7 @@ const DocumentUI: React.FC = () => {
 							max-width: 33% !important;
 						}
 					}
-					@media only screen and (min-width: 992px) {
+					@media only screen and (min-width: 1200px) {
 						.ant-col {
 							max-width: 25% !important;
 							min-width: 25% !important;

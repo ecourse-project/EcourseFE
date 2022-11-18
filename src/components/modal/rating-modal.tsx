@@ -3,8 +3,8 @@ import { css } from '@emotion/react';
 import { Avatar, Card, Rate } from 'antd';
 import Meta from 'antd/lib/card/Meta';
 import TextArea from 'antd/lib/input/TextArea';
-import { isEmpty } from 'lodash';
-import React, { useState } from 'react';
+import { defaults, isEmpty } from 'lodash';
+import React, { useEffect, useState } from 'react';
 import { Rating } from 'src/models/backend_modal';
 import BaseModal from '.';
 import AppButton from '../button';
@@ -15,7 +15,7 @@ interface RatingModalProps {
 	onChangeFeedback?: (value) => void;
 	onClose: () => void;
 	onSave: () => void;
-	defaultContent?: string;
+	defaultStar?: number;
 	rated?: Rating;
 }
 const RatingModal: React.FC<RatingModalProps> = (props) => {
@@ -26,9 +26,14 @@ const RatingModal: React.FC<RatingModalProps> = (props) => {
 		onClose,
 		onSave,
 		rated,
-		defaultContent,
+		defaultStar,
 	} = props;
-	const [star, setStar] = useState<number>(0);
+	const [star, setStar] = useState<number>(defaultStar || 0);
+	useEffect(() => {
+		console.log('defaultStar :>> ', defaultStar);
+		console.log('star trong modal :>> ', star);
+		countStar(star);
+	}, [visible]);
 	return (
 		<BaseModal
 			visible={visible}
@@ -132,7 +137,7 @@ const RatingModal: React.FC<RatingModalProps> = (props) => {
 								setStar(value);
 								countStar(value);
 							}}
-							defaultValue={star}
+							defaultValue={star || defaultStar}
 							style={{ color: '#e59819', marginBottom: '20px' }}
 						/>
 						{star ? (

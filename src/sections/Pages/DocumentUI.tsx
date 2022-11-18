@@ -6,7 +6,7 @@ import { Breadcrumb, Col, Divider, Row } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'src/apps/hooks';
-import DocItemCard from 'src/components/document/doc-item';
+import DocItem from 'src/components/document/doc-item';
 import CustomPagination from 'src/components/pagination';
 import { useQueryParam } from 'src/hooks/useQueryParam';
 import {
@@ -87,7 +87,7 @@ const DocumentUI: React.FC = () => {
 					? listDoc?.results?.map((e, i) => {
 							return (
 								<Col key={i}>
-									<DocItemCard document={e} />
+									<DocItem document={e} />
 								</Col>
 							);
 					  })

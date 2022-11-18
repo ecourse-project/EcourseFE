@@ -100,7 +100,7 @@ const CourseItem: React.FC<ChildProps> = (props) => {
 			css={css`
 				display: flex;
 				flex-direction: column;
-				justify-content: space-between;
+				justify-content: space-evenly;
 				min-height: 100%;
 				min-height: 515px;
 				.title,
@@ -118,6 +118,7 @@ const CourseItem: React.FC<ChildProps> = (props) => {
 					text-align: left;
 					font-size: 17px;
 					font-weight: 600;
+					height: 40px;
 				}
 				.description {
 					text-align: left;
@@ -140,19 +141,19 @@ const CourseItem: React.FC<ChildProps> = (props) => {
 					}
 				}
 				.download {
-					font-weight: bold;
+					font-weight: 400;
 				}
 
 				.doc--image {
-					width: 240px;
-					height: 240px;
+					// width: 240px;
+					// height: 240px;
 					max-width: 100%;
 					margin-bottom: 10px;
 
 					.doc-img {
+						// width: 200px;
+						height: 210px;
 						width: 100%;
-						height: 100%;
-						object-fit: scale-down;
 					}
 				}
 				.course_info {

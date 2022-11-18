@@ -2,7 +2,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox/Checkbox';
-import { useFormik } from 'formik';
+import { setIn, useFormik } from 'formik';
 import React, { useEffect } from 'react';
 import AppButton from 'src/components/button';
 import ErrorMessage from 'src/components/error-message';
@@ -10,6 +10,7 @@ import AppInput from 'src/components/input';
 import regex from 'src/utils/regularExpression';
 import validation from 'src/utils/validation';
 import * as Yup from 'yup';
+import Autocomplete from 'react-google-autocomplete';
 
 import { useNavigate } from 'react-router-dom';
 import useDebouncedCallback from 'src/hooks/useDebouncedCallback';
@@ -17,6 +18,13 @@ import { IRegistration } from 'src/models/backend_modal';
 import UserService from 'src/services/user';
 import RoutePaths from 'src/utils/routes';
 import { debounce } from 'lodash';
+
+import { usePlacesWidget } from 'react-google-autocomplete';
+
+import FormList from 'antd/lib/form/FormList';
+
+export const YOUR_GOOGLE_MAPS_API_KEY =
+	'AIzaSyAALCd4-WUGx4qZ3Zi0eCmBv2dKKbXhzVo';
 
 const RegisterForm: React.FC = () => {
 	const navigate = useNavigate();
@@ -74,13 +82,15 @@ const RegisterForm: React.FC = () => {
 	const [isLoading, setIsLoading] = React.useState<boolean>(false);
 	const [isTickAgree, setIsTickAgree] = React.useState<boolean>(false);
 	const [generalError, setGeneralError] = React.useState<string>('');
+	const [inputphonePosition, setInputphonePosition] = React.useState<number>(0);
 	// const userAsset = useSelector((state: RootState) => state.user.userAssets);
-	const formik = useFormik<IRegistration>({
+	const formik = useFormik({
 		initialValues: {
 			full_name: 'NHTC',
 			email: 'test@gmail.com',
 			password1: 'tuancuong123',
 			password2: 'tuancuong123',
+			phone: '',
 		},
 		validationSchema: validationSchema.current,
 		validateOnChange: true,

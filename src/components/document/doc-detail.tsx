@@ -303,6 +303,7 @@ const DocDetail: React.FC = () => {
 				comment,
 			} as RateDocArgs);
 			setMyRate(rate);
+			doc.rating_detail?.push(rate);
 		} catch (error) {
 			console.log('error', error);
 		}
@@ -366,6 +367,8 @@ const DocDetail: React.FC = () => {
 					width: 160px;
 					height: 35px;
 					border-radius: 2px;
+					min-width: 175px;
+
 					background-color: ${doc.sale_status === SaleStatusEnum.AVAILABLE &&
 					'#17a2b8'};
 					background-color: ${doc.sale_status === SaleStatusEnum.IN_CART &&
@@ -488,7 +491,7 @@ const DocDetail: React.FC = () => {
 						onClick={handleUpdateBtn}
 						href={
 							doc.sale_status === SaleStatusEnum.BOUGHT
-								? doc.file.file_path
+								? doc?.file?.file_path
 								: undefined
 						}
 						target="blank"

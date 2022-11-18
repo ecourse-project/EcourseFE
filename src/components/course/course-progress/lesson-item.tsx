@@ -154,8 +154,11 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
 					.video_duration {
 						display: flex;
 						align-items: center;
-						justify-content: space-evenly;
-						min-width: 80px;
+						justify-content: space-between;
+						width: 50px;
+					}
+					.doc {
+						width: 75px;
 					}
 				}
 				.item_info {
@@ -304,7 +307,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
 										)}
 										<div className="item_info">
 											<div className="">{`${i + 1}. ${v.name}`}</div>
-											<div className="video_duration">
+											<div className="video_duration doc">
 												<FileTextOutlined />
 												{`${(v?.file?.file_size / 1000000).toFixed(2)} MB`}
 											</div>
