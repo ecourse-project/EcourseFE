@@ -9,6 +9,7 @@ import {
 	MinusCircleOutlined,
 	MoreOutlined,
 	PlusCircleOutlined,
+	StarFilled,
 	SwapOutlined,
 	SyncOutlined,
 	VerticalLeftOutlined,
@@ -30,12 +31,14 @@ import {
 	PageHeader,
 	Row,
 	Statistic,
+	Tabs,
 	Tag,
 	Tooltip,
 	Typography,
 } from 'antd';
 import 'antd/dist/antd.css';
 import TextArea from 'antd/lib/input/TextArea';
+import { isEmpty } from 'lodash';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -47,6 +50,10 @@ import {
 	SaleStatusEnum,
 	User,
 	Pagination,
+	RatingEnum,
+	RateDocArgs,
+	Rating,
+	RateCourseArgs,
 } from 'src/models/backend_modal';
 import { courseAction } from 'src/reducers/course/courseSlice';
 import { RootState } from 'src/reducers/model';
@@ -54,8 +61,11 @@ import CourseService from 'src/services/course';
 import { formatCurrencySymbol } from 'src/utils/currency';
 import { formatDate } from 'src/utils/format';
 import RoutePaths from 'src/utils/routes';
+import CommentSection from '../comment';
 import CommentForm from '../comment/comment-form';
 import CommentItem from '../comment/comment-item';
+import FeedbackSection from '../comment/feedbacks';
+import RatingModal from '../modal/rating-modal';
 import LessonItem from './course-progress/lesson-item';
 const { Paragraph, Title } = Typography;
 
@@ -207,6 +217,10 @@ const CourseDetail: React.FC = () => {
 	const [loading, setLoading] = useState(false);
 	const [comment, setComment] = useState<CourseComment[]>([]);
 	const dispatch = useAppDispatch();
+	const [openRatingModal, setOpenRatingModal] = useState<boolean>(false);
+	const [myRate, setMyRate] = useState<Rating>({} as Rating);
+	const [star, setStar] = useState<number>(0);
+	const [feedback, setFeedback] = useState<string>('');
 	const listCourse = useAppSelector(
 		(state: RootState) => state.course.listCourse.results
 	);
@@ -294,6 +308,47 @@ const CourseDetail: React.FC = () => {
 		);
 		reply && fetchComment(params.id);
 	};
+
+	const rateCourse = async (
+		course_id: string,
+		rating: number,
+		comment: string
+	) => {
+		try {
+			if (rating === 1) rating = RatingEnum.ONE;
+			if (rating === 2) rating = RatingEnum.TWO;
+			if (rating === 3) rating = RatingEnum.THREE;
+			if (rating === 4) rating = RatingEnum.FOUR;
+			if (rating === 5) rating = RatingEnum.FIVE;
+
+			const rate = await CourseService.rateCourse({
+				course_id,
+				rating,
+				comment,
+			} as RateCourseArgs);
+			setMyRate(rate);
+			course.rating_detail?.push(rate);
+		} catch (error) {
+			console.log('error', error);
+		}
+	};
+	const handleSaveRating = () => {
+		rateCourse(params.id, star, feedback);
+		setOpenRatingModal(false);
+	};
+
+	const items = [
+		{
+			label: 'Bình luận',
+			key: 'comment',
+			children: <CommentSection />,
+		}, // remember to pass the key prop
+		{
+			label: 'Nhận xét',
+			key: 'feedback',
+			children: <FeedbackSection rateList={course?.rating_detail || []} />,
+		},
+	];
 	return (
 		<div
 			className="page-container"
@@ -386,10 +441,10 @@ const CourseDetail: React.FC = () => {
 						display: none;
 					}
 				}
-				.comment-list {
-					max-height: 40vh;
-					overflow: auto;
-				}
+				// .comment-list {
+				// 	max-height: 40vh;
+				// 	overflow: auto;
+				// }
 				.ant-tooltip-content {
 					min-width: 280px;
 				}
@@ -451,6 +506,16 @@ const CourseDetail: React.FC = () => {
 								''
 							)}
 						</Button>,
+						<Button
+							key={2}
+							type="primary"
+							// className="rating-btn"
+							className="add-btn"
+							onClick={() => setOpenRatingModal(true)}
+							style={{ backgroundColor: '#fff', color: '#000' }}
+						>
+							Đánh giá <StarFilled />
+						</Button>,
 					]
 				}
 			>
@@ -484,7 +549,9 @@ const CourseDetail: React.FC = () => {
 					}}
 				/>
 			</PageHeader>
-			{course.sale_status === SaleStatusEnum.BOUGHT && (
+			<Tabs items={items} className="tab-section" />
+
+			{/* {course.sale_status === SaleStatusEnum.BOUGHT && (
 				<div>
 					{comment?.length ? (
 						<List
@@ -511,7 +578,17 @@ const CourseDetail: React.FC = () => {
 						content={<CommentForm onAddComment={onAddComment} />}
 					/>
 				</div>
-			)}
+			)} */}
+			<div className="rating-modal-1">
+				<RatingModal
+					visible={openRatingModal}
+					countStar={(value) => setStar(value)}
+					onChangeFeedback={(value) => setFeedback(value)}
+					onClose={() => setOpenRatingModal(false)}
+					onSave={handleSaveRating}
+					rated={isEmpty(myRate) ? course?.my_rating : myRate}
+				/>
+			</div>
 		</div>
 	);
 };

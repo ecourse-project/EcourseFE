@@ -46,7 +46,7 @@ const DocumentUI: React.FC = () => {
 	const onChangePage = (page: number) => {
 		console.log('pagenum', page);
 		setPagination({ ...pagination, page });
-		navigate(`${RoutePaths.DOCUMENT}/?page=${page}`);
+		navigate(`${RoutePaths.COURSE}/?page=${page}`);
 	};
 	return (
 		<div className="page-container">

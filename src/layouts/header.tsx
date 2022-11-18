@@ -37,7 +37,7 @@ const pages = [
 const settings = [
 	{
 		name: 'Trang cá nhân',
-		to: `${RoutePaths.MY_ACCOUNT}`,
+		to: `${RoutePaths.SETTINGS}`,
 		icon: <ManageAccountsIcon />,
 	},
 	{ name: 'Đăng xuất', to: `${RoutePaths.LOGIN}`, icon: <LogoutIcon /> },
