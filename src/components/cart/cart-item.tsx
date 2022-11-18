@@ -39,9 +39,7 @@ const CartItemRow: React.FC<ChildProps> = ({ document, course }) => {
 			setDeletetLoading(false);
 		}, 300);
 	};
-	useEffect(() => {
-		console.log('course', course);
-	}, []);
+
 	return (
 		<div
 			className="container"

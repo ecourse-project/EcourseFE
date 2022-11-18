@@ -42,15 +42,12 @@ const QuizSection: React.FC<QuizProps> = (props) => {
 		if (choice === 2) choice = AnswerChoiceEnum.B;
 		if (choice === 3) choice = AnswerChoiceEnum.C;
 		if (choice === 4) choice = AnswerChoiceEnum.D;
-		console.log('change and dispach');
 		dispatch({
 			type: CourseProgressAction.UPDATE_CHECKED_ANSWER,
 			payload: { quiz_id: id, answer_choice: choice } as UserAnswersArgs,
 		});
-		console.log('change and dispach 2');
 
 		const idx = listAnswer.indexOf(id);
-		console.log('idx', idx);
 		if (idx < 0) {
 			setListAnswer([...listAnswer, id]);
 		}
@@ -58,7 +55,6 @@ const QuizSection: React.FC<QuizProps> = (props) => {
 	useEffect(() => {
 		const obj = {};
 		const newResult = result?.quiz_answers.forEach((v) => {
-			console.log('v.id', v.quiz_id);
 			const { quiz_id, correct_answer, answer_choice } = v;
 			obj[quiz_id] = {
 				correct: correct_answer,
@@ -68,9 +64,6 @@ const QuizSection: React.FC<QuizProps> = (props) => {
 		setCustomResult(obj);
 	}, [result]);
 
-	useEffect(() => {
-		console.log('result after ákdjflkasjf', customResult);
-	}, [customResult]);
 	// useEffect(() => {
 	// 	console.log('listAnse', listAnswer);
 	// 	console.log('state answer', state.answerSheet);

@@ -22,14 +22,16 @@ import {
 } from '@ant-design/icons';
 import { SaleStatusEnum, GlobalStyle } from 'src/utils/enum';
 import { isObject } from 'formik';
-import { Button, Popover, Tag } from 'antd';
+import { Button, Popover, Rate, Tag } from 'antd';
 import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
 
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import { courseAction } from 'src/reducers/course/courseSlice';
 import { formatDate } from 'src/utils/format';
+import RoutePaths from 'src/utils/routes';
 interface ChildProps {
 	course: Course;
+	isMyLearn?: boolean;
 }
 enum BtnString {
 	AVAILABLE = 'THÊM',
@@ -44,30 +46,32 @@ enum Color {
 	BOUGHT = '#23c501',
 }
 const CourseItem: React.FC<ChildProps> = (props) => {
-	const { course } = props;
+	// eslint-disable-next-line prefer-const
+	const { course, isMyLearn } = props;
 	const [added, setAdded] = useState(false);
 	const [btnString, setBtnString] = useState<string>(BtnString.AVAILABLE);
 	const cartData = useAppSelector((state: RootState) => state.course);
 	const [loading, setLoading] = useState<boolean>(false);
+	const [currentCourse, setCurrentCourse] = useState<Course>(course);
 	const dispatch = useAppDispatch();
 	useEffect(() => {
-		if (course.sale_status === SaleStatusEnum.AVAILABLE) {
+		if (currentCourse.sale_status === SaleStatusEnum.AVAILABLE) {
 			setBtnString(BtnString.AVAILABLE);
-		} else if (course.sale_status === SaleStatusEnum.IN_CART) {
+		} else if (currentCourse.sale_status === SaleStatusEnum.IN_CART) {
 			setBtnString(BtnString.IN_CART);
-		} else if (course.sale_status === SaleStatusEnum.PENDING) {
+		} else if (currentCourse.sale_status === SaleStatusEnum.PENDING) {
 			setBtnString(BtnString.PENDING);
-		} else if (course.sale_status === SaleStatusEnum.BOUGHT) {
+		} else if (currentCourse.sale_status === SaleStatusEnum.BOUGHT) {
 			setBtnString(BtnString.BOUGHT);
 		}
-	}, [course]);
+	}, [currentCourse]);
 
 	const handleClick = () => {
 		setLoading(true);
-		if (course.sale_status === SaleStatusEnum.AVAILABLE) {
-			dispatch(courseAction.updateCart(course));
-		} else if (course.sale_status === SaleStatusEnum.IN_CART) {
-			dispatch(courseAction.updateCart(course));
+		if (currentCourse.sale_status === SaleStatusEnum.AVAILABLE) {
+			dispatch(courseAction.updateCart(currentCourse));
+		} else if (currentCourse.sale_status === SaleStatusEnum.IN_CART) {
+			dispatch(courseAction.updateCart(currentCourse));
 		}
 		setTimeout(() => {
 			setLoading(false);
@@ -76,13 +80,14 @@ const CourseItem: React.FC<ChildProps> = (props) => {
 	const handleAddFav = async (id) => {
 		setLoading(true);
 		setTimeout(async () => {
-			if (course.is_favorite) {
+			if (currentCourse.is_favorite) {
 				const removeFromFav: Course = await CourseService.moveCourse(
 					id,
 					MoveEnum.FAVORITE,
 					MoveEnum.LIST
 				);
 				dispatch(courseAction.setIsFavourite(removeFromFav));
+				setCurrentCourse(removeFromFav);
 			} else {
 				const addToFav: Course = await CourseService.moveCourse(
 					id,
@@ -90,6 +95,7 @@ const CourseItem: React.FC<ChildProps> = (props) => {
 					MoveEnum.FAVORITE
 				);
 				dispatch(courseAction.setIsFavourite(addToFav));
+				setCurrentCourse(addToFav);
 			}
 			setLoading(false);
 		}, 300);
@@ -100,12 +106,16 @@ const CourseItem: React.FC<ChildProps> = (props) => {
 			css={css`
 				display: flex;
 				flex-direction: column;
-				justify-content: space-evenly;
+				justify-content: space-between;
 				min-height: 100%;
-				min-height: 515px;
+				min-height: 435px;
+				padding: 0;
+				max-width: 260px;
+				// min-width: 350px;
 				.title,
 				p {
 					color: black;
+					margin-bottom: 6px;
 				}
 				.title {
 					display: block !important;
@@ -156,6 +166,13 @@ const CourseItem: React.FC<ChildProps> = (props) => {
 						width: 100%;
 					}
 				}
+				.heart-icon {
+					position: absolute;
+					top: 0;
+					font-size: 25px;
+					right: 0;
+					color: #fff;
+				}
 				.course_info {
 					margin: 0 10px;
 				}
@@ -164,6 +181,10 @@ const CourseItem: React.FC<ChildProps> = (props) => {
 					bottom: 3px;
 					right: 6px;
 					color: ${GlobalStyle.BROWN_YELLOW};
+				}
+				.anticon-star {
+					color: unset;
+					position: unset;
 				}
 				.card-btn {
 					width: 100%;
@@ -201,6 +222,14 @@ const CourseItem: React.FC<ChildProps> = (props) => {
 				[ant-click-animating-without-extra-node='true']:after {
 					display: none;
 				}
+				.ant-rate {
+					font-size: 14px;
+					margin: 0 10px;
+					color: #ffa535;
+					.ant-rate-star {
+						margin: 0 1px;
+					}
+				}
 			`}
 		>
 			<Popover
@@ -208,7 +237,7 @@ const CourseItem: React.FC<ChildProps> = (props) => {
 				content={
 					<div
 						css={css`
-							max-width: 250px;
+							max-width: 300px;
 							.title-popup {
 								font-weight: 700;
 								font-size: 15px;
@@ -217,7 +246,7 @@ const CourseItem: React.FC<ChildProps> = (props) => {
 								font-size: 40px;
 								margin-left: 10px;
 								.anticon {
-									color: ${course.is_favorite ? 'red' : ''};
+									color: ${currentCourse.is_favorite ? 'red' : ''};
 								}
 								.anticon:hover {
 									color: red;
@@ -226,47 +255,54 @@ const CourseItem: React.FC<ChildProps> = (props) => {
 							}
 						`}
 					>
-						<p className="title-popup">{course.name}</p>
+						<p className="title-popup">{currentCourse.name}</p>
 
 						<Tag color="geekblue">Best Seller</Tag>
-						<p>Cập nhật: {formatDate(course?.modified)}</p>
-						<p>Số bài học: {course?.lessons?.length}</p>
+						<p>Cập nhật: {formatDate(currentCourse?.modified)}</p>
+						<p>Số bài học: {currentCourse?.lessons?.length}</p>
 						{/* <p>
-							Dung lượng: {(Number(course.) / 1024000).toFixed(1)}{' '}
+							Dung lượng: {(Number(currentCourse.) / 1024000).toFixed(1)}{' '}
 						MB
 						</p> */}
 
-						<p>{course.description}</p>
-						<p className="heart" onClick={() => handleAddFav(course.id)}>
-							{course.is_favorite ? <HeartFilled /> : <HeartOutlined />}
+						<p>{currentCourse.description}</p>
+						<p className="heart" onClick={() => handleAddFav(currentCourse.id)}>
+							{currentCourse.is_favorite ? <HeartFilled /> : <HeartOutlined />}
 						</p>
 					</div>
 				}
 				trigger="hover"
 			>
-				<Link to={`/course/detail?id=${course.id}`}>
+				<Link to={`${RoutePaths.COURSE_DETAIL}?id=${currentCourse.id}`}>
 					<div className="doc--image">
 						<img
 							className="doc-img"
-							src={`${course?.thumbnail?.image_path}`}
+							src={`${currentCourse?.thumbnail?.image_path}`}
 							alt="document image."
 						/>
 					</div>
 					<div className="course_info">
 						<div>
-							<h4 className="title">{course.name}</h4>
+							<h4 className="title">{currentCourse.name}</h4>
 						</div>
 						<p className="download">
 							<VerticalAlignBottomOutlined />
-							Số lượt tải: {course.sold}
+							Số lượt tải: {currentCourse.sold}
 						</p>
 						<p className="download">
-							<EyeOutlined /> Số lượt xem: {course.views}
+							<EyeOutlined /> Số lượt xem: {currentCourse.views}
 						</p>
 						<p className="download">
-							<LikeOutlined /> Đánh giá: {course.rating}
+							<LikeOutlined /> Đánh giá:{' '}
+							<Rate
+								allowHalf
+								disabled
+								defaultValue={Number(Number(currentCourse.rating).toFixed(1))}
+								// defaultValue={2.5}
+							/>
+							<p>{Number(Number(currentCourse.rating).toFixed(1))}</p>
 							<br />
-							{`(${course.num_of_rates} lượt đánh gía)`}
+							{`(${currentCourse.num_of_rates} lượt đánh gía)`}
 						</p>
 					</div>
 				</Link>
@@ -275,29 +311,31 @@ const CourseItem: React.FC<ChildProps> = (props) => {
 				<div className="price-tag">
 					<span>
 						<WalletOutlined />
-						{formatCurrency(course.price)}
+						{formatCurrency(currentCourse.price)}
 					</span>
 
-					{course.sale_status === SaleStatusEnum.BOUGHT && (
+					{currentCourse.sale_status === SaleStatusEnum.BOUGHT && (
 						<TaskAltIcon sx={{ color: `${Color.BOUGHT}` }} />
 					)}
 				</div>
-				<AppButton
-					className="card-btn"
-					btnTextColor={'black'}
-					btnStyle={'outline'}
-					btnSize={'small'}
-					btnWidth={'full-w'}
-					loading={loading}
-					disabled={
-						loading ||
-						course.sale_status === SaleStatusEnum.PENDING ||
-						course.sale_status === SaleStatusEnum.BOUGHT
-					}
-					onClick={handleClick}
-				>
-					{btnString}
-				</AppButton>
+				{!isMyLearn && (
+					<AppButton
+						className="card-btn"
+						btnTextColor={'black'}
+						btnStyle={'outline'}
+						btnSize={'small'}
+						btnWidth={'full-w'}
+						loading={loading}
+						disabled={
+							loading ||
+							currentCourse.sale_status === SaleStatusEnum.PENDING ||
+							currentCourse.sale_status === SaleStatusEnum.BOUGHT
+						}
+						onClick={handleClick}
+					>
+						{btnString}
+					</AppButton>
+				)}
 			</div>
 		</div>
 	);

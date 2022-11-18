@@ -55,7 +55,6 @@ const CommentSection = () => {
 	};
 
 	const onAddComment = async (value) => {
-		console.log(value);
 		if (!value) return;
 		const cmt = await CourseService.createComment(
 			'',

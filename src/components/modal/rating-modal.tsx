@@ -30,8 +30,6 @@ const RatingModal: React.FC<RatingModalProps> = (props) => {
 	} = props;
 	const [star, setStar] = useState<number>(defaultStar || 0);
 	useEffect(() => {
-		console.log('defaultStar :>> ', defaultStar);
-		console.log('star trong modal :>> ', star);
 		countStar(star);
 	}, [visible]);
 	return (

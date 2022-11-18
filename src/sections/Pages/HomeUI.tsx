@@ -19,6 +19,7 @@ import CourseService from 'src/services/course';
 import { SaleStatusEnum } from 'src/models/backend_modal';
 import { courseAction } from 'src/reducers/course/courseSlice';
 import CourseItem from 'src/components/course/course-item';
+import DocItem from 'src/components/document/doc-item';
 const LIMIT = 4;
 
 interface InitialState {
@@ -138,7 +139,7 @@ const HomeUI = () => {
 					{listDoc?.slice(0, LIMIT).map((e, i) => {
 						return (
 							<Col lg={8} xl={6} md={12} sm={24} xs={24} key={i}>
-								<ProductSimpleCard document={e} />
+								<DocItem document={e} />
 							</Col>
 						);
 					})}

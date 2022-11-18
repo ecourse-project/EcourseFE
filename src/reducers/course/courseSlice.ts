@@ -32,8 +32,6 @@ export const courseSlice = createSlice({
 			console.log('curernte', current(state));
 		},
 		updateStatusAddCourse: (state, action: PayloadAction<Course>) => {
-			console.log('add doc to cart', action.payload);
-			console.log('current state add ', current(state));
 			const idx = state.listCourse.results?.findIndex(
 				(v) => v.id === action.payload.id
 			);
@@ -44,10 +42,8 @@ export const courseSlice = createSlice({
 			const mostIdx = state.mostDownCourse?.findIndex(
 				(v) => v.id === action.payload.id
 			);
-			console.log('idx of most doc', mostIdx);
 			if (mostIdx < 0) return;
 			state.mostDownCourse.splice(mostIdx, 1, action.payload);
-			console.log('current state after add ', current(state));
 		},
 		updateStatusRemoveCourse: (state, action: PayloadAction<any>) => {
 			const idx = state.listCourse.results?.findIndex(
@@ -73,7 +69,6 @@ export const courseSlice = createSlice({
 			const mostIdx = state.mostDownCourse?.findIndex(
 				(v) => v.id === action.payload.id
 			);
-			console.log('idx of most doc', mostIdx);
 			if (mostIdx >= 0) {
 				state.mostDownCourse.splice(mostIdx, 1, action.payload);
 			}

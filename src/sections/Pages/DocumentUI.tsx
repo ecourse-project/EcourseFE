@@ -61,26 +61,26 @@ const DocumentUI: React.FC = () => {
 					.ant-col {
 						padding: 0 5px 30px 5px;
 					}
-					@media only screen and (min-width: 768px) {
-						.ant-col {
-							max-width: 33% !important;
-						}
-					}
-					@media only screen and (min-width: 992px) {
-						.ant-col {
-							max-width: 25% !important;
-							min-width: 25% !important;
-						}
-					}
-					@media only screen and (min-width: 1350px) {
-						.ant-col {
-							max-width: 20% !important;
-							min-width: 20% !important;
-						}
-						.ant-btn[disabled] {
-							letter-spacing: 2px;
-						}
-					}
+					// @media only screen and (min-width: 768px) {
+					// 	.ant-col {
+					// 		max-width: 33% !important;
+					// 	}
+					// }
+					// @media only screen and (min-width: 992px) {
+					// 	.ant-col {
+					// 		max-width: 25% !important;
+					// 		min-width: 25% !important;
+					// 	}
+					// }
+					// @media only screen and (min-width: 1350px) {
+					// 	.ant-col {
+					// 		max-width: 20% !important;
+					// 		min-width: 20% !important;
+					// 	}
+					// 	.ant-btn[disabled] {
+					// 		letter-spacing: 2px;
+					// 	}
+					// }
 				`}
 			>
 				{listDoc?.results?.length

@@ -271,13 +271,11 @@ const CourseDetail: React.FC = () => {
 				setLoading(false);
 			}, 1000);
 		} else {
-			console.log('click to progress');
 			navigate(`${RoutePaths.COURSE_PROGRESS}?id=${course.id}`);
 		}
 	};
 
 	const onAddComment = async (value) => {
-		console.log(value);
 		if (!value) return;
 		const cmt = await CourseService.createComment(
 			'',
@@ -288,8 +286,6 @@ const CourseDetail: React.FC = () => {
 		cmt && fetchComment(params.id);
 	};
 	const handleReply = async (content: string, item: CourseComment) => {
-		console.log('reply', item);
-		console.log('reply content', content);
 		const reply = await CourseService.createComment(
 			item.id,
 			course.id,

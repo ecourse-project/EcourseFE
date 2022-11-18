@@ -2,7 +2,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox/Checkbox';
-import { setIn, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import React, { useEffect } from 'react';
 import AppButton from 'src/components/button';
 import ErrorMessage from 'src/components/error-message';
@@ -10,18 +10,11 @@ import AppInput from 'src/components/input';
 import regex from 'src/utils/regularExpression';
 import validation from 'src/utils/validation';
 import * as Yup from 'yup';
-import Autocomplete from 'react-google-autocomplete';
 
+import { debounce } from 'lodash';
 import { useNavigate } from 'react-router-dom';
-import useDebouncedCallback from 'src/hooks/useDebouncedCallback';
-import { IRegistration } from 'src/models/backend_modal';
 import UserService from 'src/services/user';
 import RoutePaths from 'src/utils/routes';
-import { debounce } from 'lodash';
-
-import { usePlacesWidget } from 'react-google-autocomplete';
-
-import FormList from 'antd/lib/form/FormList';
 
 export const YOUR_GOOGLE_MAPS_API_KEY =
 	'AIzaSyAALCd4-WUGx4qZ3Zi0eCmBv2dKKbXhzVo';
@@ -49,12 +42,10 @@ const RegisterForm: React.FC = () => {
 					'existingEmail',
 					validation.email.format,
 					async (value?: string) => {
-						console.log('value', value);
 						try {
 							if (!value) return false;
 							// const x = await debounceCheckExist(value);
 							const x = await debouncedApi(value);
-							console.log('x', x);
 
 							return !x?.exists || true;
 						} catch (error) {
@@ -104,7 +95,6 @@ const RegisterForm: React.FC = () => {
 					password2,
 					full_name
 				);
-				console.log('user:  ', user);
 				localStorage.setItem('email_register', values?.email);
 				navigate(RoutePaths.LOGIN);
 			} catch (error) {
@@ -316,7 +306,6 @@ const RegisterForm: React.FC = () => {
 					htmlType="submit"
 					// disabled={!isTickAgree || formik.isSubmitting}
 					onClick={() => {
-						console.log('click');
 						setTimeout(() => {
 							const errElement = document.querySelector('.error');
 							if (errElement) {
