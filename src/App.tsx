@@ -9,7 +9,7 @@ import Cart from './pages/cart';
 import Course from './pages/courses';
 import Document from './pages/documents';
 import DocumentDetail from './pages/document-detail';
-import Home from './pages/home';
+import Home from './pages/Home';
 import Logout from './pages/logout';
 import MyAccount from './pages/my-account';
 import OrderCart from './pages/order';
