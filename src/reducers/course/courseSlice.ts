@@ -29,7 +29,18 @@ export const courseSlice = createSlice({
 			state.mostDownCourse = action.payload;
 		},
 		updateCart: (state, action: PayloadAction<Course>) => {
-			console.log('curernte', current(state));
+			const idx = state.listCourse.results?.findIndex(
+				(v) => v.id === action.payload.id
+			);
+			if (idx >= 0) {
+				state.listCourse.results.splice(idx, 1, action.payload);
+			}
+
+			const mostIdx = state.mostDownCourse?.findIndex(
+				(v) => v.id === action.payload.id
+			);
+			if (mostIdx < 0) return;
+			state.mostDownCourse.splice(mostIdx, 1, action.payload);
 		},
 		updateStatusAddCourse: (state, action: PayloadAction<Course>) => {
 			const idx = state.listCourse.results?.findIndex(

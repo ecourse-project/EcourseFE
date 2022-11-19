@@ -54,6 +54,7 @@ import {
 	RateDocArgs,
 	Rating,
 	RateCourseArgs,
+	MoveEnum,
 } from 'src/models/backend_modal';
 import { courseAction } from 'src/reducers/course/courseSlice';
 import { RootState } from 'src/reducers/model';
@@ -275,20 +276,33 @@ const CourseDetail: React.FC = () => {
 	const handleUpdateBtn = () => {
 		if (course.sale_status !== SaleStatusEnum.BOUGHT) {
 			setLoading(true);
-			dispatch(courseAction.updateCart(course));
 			setTimeout(() => {
-				if (course.sale_status === SaleStatusEnum.AVAILABLE) {
-					course.sale_status = SaleStatusEnum.IN_CART;
-				} else if (course.sale_status === SaleStatusEnum.IN_CART) {
-					course.sale_status = SaleStatusEnum.AVAILABLE;
-				}
+				moveCourse(course);
 				setLoading(false);
 			}, 1000);
 		} else {
 			navigate(`${RoutePaths.COURSE_PROGRESS}?id=${course.id}`);
 		}
 	};
-
+	const moveCourse = async (course: Course) => {
+		if (course.sale_status === SaleStatusEnum.AVAILABLE) {
+			const newCourse = await CourseService.moveCourse(
+				course.id,
+				MoveEnum.LIST,
+				MoveEnum.CART
+			);
+			dispatch(courseAction.updateCart(newCourse));
+			setCourse(newCourse);
+		} else if (course.sale_status === SaleStatusEnum.IN_CART) {
+			const newCourse = await CourseService.moveCourse(
+				course.id,
+				MoveEnum.CART,
+				MoveEnum.LIST
+			);
+			setCourse(newCourse);
+			dispatch(courseAction.updateCart(newCourse));
+		}
+	};
 	const onAddComment = async (value) => {
 		if (!value) return;
 		const cmt = await CourseService.createComment(

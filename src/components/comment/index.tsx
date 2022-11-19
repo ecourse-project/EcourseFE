@@ -115,8 +115,11 @@ const CommentSection = () => {
 					)}
 				</div>
 				<div
+					className="pagination"
 					css={css`
 						text-align: center;
+						margin: auto;
+						padding: 20px;
 					`}
 				>
 					<CustomPagination

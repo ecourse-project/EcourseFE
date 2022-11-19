@@ -57,7 +57,6 @@ function* watchUpdateCart(action: PayloadAction<Course>) {
 function* documentSaga(): Generator<ForkEffect<never>, void, unknown> {
 	console.log('run COURSE saga');
 	yield takeLatest(AppAction.FETCH_COURSE, fetchCourse);
-	yield takeLatest(courseAction.updateCart.type, watchUpdateCart);
 }
 
 export default documentSaga;

@@ -40,7 +40,17 @@ export const documentSlice = createSlice({
 			state.mostDownDoc = action.payload;
 		},
 		updateCart: (state, action: PayloadAction<Document>) => {
-			console.log('curernte', current(state));
+			const idx = state.listDoc.results?.findIndex(
+				(v) => v.id === action.payload.id
+			);
+			if (idx >= 0) {
+				state.listDoc.results.splice(idx, 1, action.payload);
+			}
+			const mostIdx = state.mostDownDoc?.findIndex(
+				(v) => v.id === action.payload.id
+			);
+			if (mostIdx < 0) return;
+			state.mostDownDoc.splice(mostIdx, 1, action.payload);
 		},
 		updateLoading: (state, action) => {
 			state.updateLoading =

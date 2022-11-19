@@ -67,11 +67,7 @@ const DocItem: React.FC<ChildProps> = (props) => {
 
 	const handleClick = () => {
 		setLoading(true);
-		if (currentDoc.sale_status === SaleStatusEnum.AVAILABLE) {
-			dispatch(docActions.updateCart(currentDoc));
-		} else if (currentDoc.sale_status === SaleStatusEnum.IN_CART) {
-			dispatch(docActions.updateCart(currentDoc));
-		}
+		moveDocument(currentDoc);
 		setTimeout(() => {
 			setLoading(false);
 		}, 300);
@@ -79,6 +75,23 @@ const DocItem: React.FC<ChildProps> = (props) => {
 	useEffect(() => {
 		setCurrentDoc(document);
 	}, [document]);
+	const moveDocument = async (document: Document) => {
+		if (document.sale_status === SaleStatusEnum.AVAILABLE) {
+			const newDoc = await CourseService.moveDoc(
+				document.id,
+				MoveEnum.LIST,
+				MoveEnum.CART
+			);
+			dispatch(docActions.updateCart(newDoc));
+		} else if (document.sale_status === SaleStatusEnum.IN_CART) {
+			const newDoc = await CourseService.moveDoc(
+				document.id,
+				MoveEnum.CART,
+				MoveEnum.LIST
+			);
+			dispatch(docActions.updateCart(newDoc));
+		}
+	};
 	const handleAddFav = async (id) => {
 		setLoading(true);
 		setTimeout(async () => {
@@ -102,6 +115,7 @@ const DocItem: React.FC<ChildProps> = (props) => {
 			setLoading(false);
 		}, 300);
 	};
+
 	return (
 		<div
 			className="container"

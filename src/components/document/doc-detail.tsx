@@ -40,6 +40,7 @@ import { useAppDispatch, useAppSelector } from 'src/apps/hooks';
 import { useQueryParam } from 'src/hooks/useQueryParam';
 import {
 	Document,
+	MoveEnum,
 	RateCourseArgs,
 	RateDocArgs,
 	Rating,
@@ -332,15 +333,30 @@ const DocDetail: React.FC = () => {
 	const handleUpdateBtn = () => {
 		if (doc.sale_status !== SaleStatusEnum.BOUGHT) {
 			setLoading(true);
-			dispatch(docActions.updateCart(doc));
 			setTimeout(() => {
-				if (doc.sale_status === SaleStatusEnum.AVAILABLE) {
-					doc.sale_status = SaleStatusEnum.IN_CART;
-				} else if (doc.sale_status === SaleStatusEnum.IN_CART) {
-					doc.sale_status = SaleStatusEnum.AVAILABLE;
-				}
+				moveDocument(doc);
 				setLoading(false);
 			}, 1000);
+		}
+	};
+
+	const moveDocument = async (document: Document) => {
+		if (document.sale_status === SaleStatusEnum.AVAILABLE) {
+			const newDoc = await CourseService.moveDoc(
+				document.id,
+				MoveEnum.LIST,
+				MoveEnum.CART
+			);
+			setDoc(newDoc);
+			dispatch(docActions.updateCart(newDoc));
+		} else if (document.sale_status === SaleStatusEnum.IN_CART) {
+			const newDoc = await CourseService.moveDoc(
+				document.id,
+				MoveEnum.CART,
+				MoveEnum.LIST
+			);
+			setDoc(newDoc);
+			dispatch(docActions.updateCart(newDoc));
 		}
 	};
 

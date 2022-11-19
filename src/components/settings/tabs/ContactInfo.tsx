@@ -1,4 +1,5 @@
 /* eslint-disable react/display-name */
+/** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import { message, Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
@@ -8,9 +9,10 @@ import { useSelector } from 'react-redux';
 import { useAppDispatch } from 'src/apps/hooks';
 // import UserAvatar from 'src/components/avatar/LetteredAvatar';
 import ChangePasswordForm from 'src/components/forms/ChangePasswordForm';
-// import ContactSettingForm from 'src/components/forms/ContactSettingForm';
+import ContactSettingForm from 'src/components/forms/ContactSettingForm';
 import { RootState } from 'src/reducers/model';
 import theme from 'src/styles/theme';
+import { RiImageEditLine } from 'react-icons/ri';
 interface AvatarUploadType {
 	loading: boolean;
 	imageUrl: string;
@@ -168,75 +170,85 @@ const ContactInfo: React.FC = React.memo(() => {
 						}
 					}
 				}
+				.info-detail {
+					font-weight: 700;
+					font-size: 17px;
+				}
 			`}
 		>
 			<div className="contact-info">
 				<div className="contact-container">
 					<h2>Thay đổi thông tin cá nhân</h2>
 					<div className="contact-wrapper">
-						<div className="refresh-wrapper">
-							<div className="upload-container">
-								<div className="edit-wrapper">
-									<ImgCrop>
-										<Upload
-											name="avatar"
-											listType="picture-card"
-											showUploadList={false}
-											accept="image/png, image/jpeg, image/jpg"
-											// customRequest={handleChange}
-											// onPreview={onPreview}
-											beforeUpload={(file) => {
-												const isPNG = acceptType.includes(file.type);
-												if (!isPNG) {
-													message.error({
-														content: `${file.name} is not valid. Supported extension file:  jpg | png | jpeg`,
-														className: 'error-msg',
-														style: {
-															display: 'flex',
-															justifyContent: 'flex-end',
-														},
-													});
-												}
-												return isPNG || Upload.LIST_IGNORE;
-											}}
-											className="upload-wrapper"
-										>
-											<div className="edit-icon"></div>
-										</Upload>
-									</ImgCrop>
-								</div>
-								{state.imageUrl ? (
-									<img
-										src={state.imageUrl}
-										alt="avatar"
-										className="upload-image"
-									/>
-								) : myProfile?.avatar ? (
-									<img
-										src={myProfile?.avatar}
-										alt="avatar"
-										className="edit-image"
-									/>
-								) : (
-									// <UserAvatar
-									// 	name={[myProfile?.full_name, myProfile?.full_name].join(
-									// 		' '
-									// 	)}
-									// 	color="#031f2d"
-									// 	size={180}
-									// 	radius={1000}
-									// 	className="edit-image"
-									// 	backgroundColor="#e1e1df"
-									// />
-									<div></div>
-								)}
+						<div className="upload-container">
+							<div className="edit-wrapper">
+								<ImgCrop>
+									<Upload
+										name="avatar"
+										listType="picture-card"
+										showUploadList={false}
+										accept="image/png, image/jpeg, image/jpg"
+										// customRequest={handleChange}
+										// onPreview={onPreview}
+										beforeUpload={(file) => {
+											const isPNG = acceptType.includes(file.type);
+											if (!isPNG) {
+												message.error({
+													content: `${file.name} is not valid. Supported extension file:  jpg | png | jpeg`,
+													className: 'error-msg',
+													style: {
+														display: 'flex',
+														justifyContent: 'flex-end',
+													},
+												});
+											}
+											return isPNG || Upload.LIST_IGNORE;
+										}}
+										className="upload-wrapper"
+									>
+										<div className="edit-icon">
+											<RiImageEditLine />
+										</div>
+									</Upload>
+								</ImgCrop>
+							</div>
+							{state.imageUrl ? (
+								<img
+									src={state.imageUrl}
+									alt="avatar"
+									className="upload-image"
+								/>
+							) : myProfile?.avatar ? (
+								<img
+									src={myProfile?.avatar}
+									alt="avatar"
+									className="edit-image"
+								/>
+							) : (
+								// <UserAvatar
+								// 	name={[myProfile?.full_name, myProfile?.full_name].join(
+								// 		' '
+								// 	)}
+								// 	color="#031f2d"
+								// 	size={180}
+								// 	radius={1000}
+								// 	className="edit-image"
+								// 	backgroundColor="#e1e1df"
+								// />
+								<div></div>
+							)}
+							<h3>Thông tin cá nhân</h3>
+							<div className="info-detail">Tên: {myProfile.full_name}</div>
+							<div className="info-detail">Email: {myProfile.email}</div>
+							<div className="info-detail">
+								Số điện thoại: {myProfile.phone}
 							</div>
 						</div>
 					</div>
 
-					{/* <div className="form-wrapper">
+					<div className="form-wrapper">
 						<ContactSettingForm myProfile={myProfile} avatar={avatar} />
-					</div> */}
+					</div>
 					<div className="form-wrapper">
 						<ChangePasswordForm />
 					</div>

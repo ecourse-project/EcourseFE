@@ -71,15 +71,30 @@ const CourseItem: React.FC<ChildProps> = (props) => {
 	}, [course]);
 	const handleClick = () => {
 		setLoading(true);
-		if (currentCourse.sale_status === SaleStatusEnum.AVAILABLE) {
-			dispatch(courseAction.updateCart(currentCourse));
-		} else if (currentCourse.sale_status === SaleStatusEnum.IN_CART) {
-			dispatch(courseAction.updateCart(currentCourse));
-		}
+		moveCourse(currentCourse);
 		setTimeout(() => {
 			setLoading(false);
 		}, 500);
 	};
+
+	const moveCourse = async (course: Course) => {
+		if (course.sale_status === SaleStatusEnum.AVAILABLE) {
+			const newCourse = await CourseService.moveCourse(
+				course.id,
+				MoveEnum.LIST,
+				MoveEnum.CART
+			);
+			dispatch(courseAction.updateCart(newCourse));
+		} else if (course.sale_status === SaleStatusEnum.IN_CART) {
+			const newCourse = await CourseService.moveCourse(
+				course.id,
+				MoveEnum.CART,
+				MoveEnum.LIST
+			);
+			dispatch(courseAction.updateCart(newCourse));
+		}
+	};
+
 	const handleAddFav = async (id) => {
 		setLoading(true);
 		setTimeout(async () => {
