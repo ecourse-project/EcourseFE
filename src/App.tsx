@@ -11,7 +11,7 @@ import CourseProgress from './pages/course-progress';
 import Course from './pages/courses';
 import DocumentDetail from './pages/document-detail';
 import Document from './pages/documents';
-import Home from './pages/home';
+import Home from './pages/Home';
 import Logout from './pages/logout';
 import MyAccount from './pages/my-account';
 import MyCourse from './pages/my-learning';
