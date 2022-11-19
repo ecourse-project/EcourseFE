@@ -1,35 +1,26 @@
 /* eslint-disable prettier/prettier */
 
 /** @jsxImportSource @emotion/react */
-import {
-	AppstoreAddOutlined,
-	BorderlessTableOutlined,
-} from '@ant-design/icons';
+import { AppstoreAddOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 import { Col, Divider, Row } from 'antd';
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from 'src/apps/hooks';
-import ProductSimpleCard from 'src/components/document/doc-item';
-import { Course, Document, Pagination } from 'src/models/backend_modal';
-import Home from 'src/pages/home';
-import AppAction from 'src/reducers/actions';
+import CourseItem from 'src/components/course/course-item';
+import DocItem from 'src/components/document/doc-item';
+import { Course, Document, SaleStatusEnum } from 'src/models/backend_modal';
+import { courseAction } from 'src/reducers/course/courseSlice';
 import { docActions } from 'src/reducers/document/documentSlice';
 import { RootState } from 'src/reducers/model';
 import CourseService from 'src/services/course';
-import { SaleStatusEnum } from 'src/models/backend_modal';
-import { courseAction } from 'src/reducers/course/courseSlice';
-import CourseItem from 'src/components/course/course-item';
-import DocItem from 'src/components/document/doc-item';
 const LIMIT = 4;
 
 interface InitialState {
 	listDoc: Document[];
 	listCourse: Course[];
+	O;
 }
-const initialState: InitialState = {
-	listDoc: [],
-	listCourse: [],
-};
+
 enum HomeActionKind {
 	LIST_DOC = 'LIST_DOC',
 	LIST_COURSE = 'LIST_COURSE',
