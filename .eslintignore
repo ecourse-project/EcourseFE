@@ -1,0 +1,12 @@
+/.storybook
+/.jest
+/public
+/storybook-static
+gatsby-node.js
+gatsby-config.js
+gatsby-browser.js
+gatsby-ssr.js
+main-app.js
+jest.config.js
+dummy.ts
+/dummy.ts

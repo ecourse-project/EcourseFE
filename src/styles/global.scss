@@ -1,0 +1,428 @@
+@font-face {
+    font-family: "Fa brands 400";
+    font-weight: 400;
+    font-style: normal;
+
+    src: url("../assets/fonts/fa-brands-400.ttf") format("truetype");
+    font-display: swap;
+}
+@font-face {
+    font-family: "Fa 400";
+    font-weight: 400;
+    font-style: normal;
+
+    src: url("../assets/fonts/fa-regular-400.ttf") format("truetype");
+    font-display: swap;
+}
+@font-face {
+    font-family: "Fa solid 900";
+    font-weight: 400;
+    font-style: normal;
+
+    src: url("../assets/fonts/fa-solid-900.ttf") format("truetype");
+    font-display: swap;
+}
+@font-face {
+    font-family: "Fa duotone 900";
+    font-weight: 400;
+    font-style: normal;
+
+    src: url("../assets/fonts/fa-duotone-900.ttf") format("truetype");
+    font-display: swap;
+}
+@font-face {
+    font-family: "Fa 300";
+    font-weight: 300;
+    font-style: normal;
+
+    src: url("../assets/fonts/fa-light-300.ttf") format("truetype");
+    font-display: swap;
+}
+
+/// font Montserrat
+@font-face {
+    font-family: Montserrat;
+    font-weight: 900;
+    font-style: normal;
+
+    src: url("../assets/fonts/Montserrat-Black.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: Montserrat;
+    font-weight: 900;
+    font-style: italic;
+
+    src: url("../assets/fonts/Montserrat-BlackItalic.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: Montserrat;
+    font-weight: 700;
+    font-style: normal;
+
+    src: url("../assets/fonts/Montserrat-Bold.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: Montserrat;
+    font-weight: 700;
+    font-style: italic;
+
+    src: url("../assets/fonts/Montserrat-BoldItalic.ttf") format("truetype");
+}
+@font-face {
+    font-family: Montserrat;
+    font-weight: 600;
+    font-style: normal;
+
+    src: url("../assets/fonts/Montserrat-SemiBold.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: Montserrat;
+    font-weight: 600;
+    font-style: italic;
+
+    src: url("../assets/fonts/Montserrat-SemiBoldItalic.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: Montserrat;
+    font-weight: 500;
+    font-style: normal;
+
+    src: url("../assets/fonts/Montserrat-Medium.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: Montserrat;
+    font-weight: 500;
+    font-style: italic;
+
+    src: url("../assets/fonts/Montserrat-MediumItalic.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: Montserrat;
+    font-weight: 400;
+    font-style: normal;
+
+    src: url("../assets/fonts/Montserrat-Regular.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: Montserrat;
+    font-weight: 400;
+    font-style: italic;
+
+    src: url("../assets/fonts/Montserrat-Italic.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: Montserrat;
+    font-weight: 300;
+    font-style: normal;
+
+    src: url("../assets/fonts/Montserrat-Light.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: Montserrat;
+    font-weight: 300;
+    font-style: italic;
+
+    src: url("../assets/fonts/Montserrat-LightItalic.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: Montserrat;
+    font-weight: 100;
+    font-style: normal;
+
+    src: url("../assets/fonts/Montserrat-Thin.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: Montserrat;
+    font-weight: 100;
+    font-style: italic;
+
+    src: url("../assets/fonts/Montserrat-ThinItalic.ttf") format("truetype");
+}
+/// end font Montserrat
+/// font FiraSans
+@font-face {
+    font-family: FiraSans;
+    font-weight: 900;
+    font-style: normal;
+
+    src: url("../assets/fonts/FiraSans-Black.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: FiraSans;
+    font-weight: 900;
+    font-style: italic;
+
+    src: url("../assets/fonts/FiraSans-BlackItalic.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: FiraSans;
+    font-weight: 700;
+    font-style: normal;
+
+    src: url("../assets/fonts/FiraSans-Bold.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: FiraSans;
+    font-weight: 700;
+    font-style: italic;
+
+    src: url("../assets/fonts/FiraSans-BoldItalic.ttf") format("truetype");
+}
+@font-face {
+    font-family: FiraSans;
+    font-weight: 600;
+    font-style: normal;
+
+    src: url("../assets/fonts/FiraSans-SemiBold.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: FiraSans;
+    font-weight: 600;
+    font-style: italic;
+
+    src: url("../assets/fonts/FiraSans-SemiBoldItalic.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: FiraSans;
+    font-weight: 500;
+    font-style: normal;
+
+    src: url("../assets/fonts/FiraSans-Medium.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: FiraSans;
+    font-weight: 500;
+    font-style: italic;
+
+    src: url("../assets/fonts/FiraSans-MediumItalic.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: FiraSans;
+    font-weight: 400;
+    font-style: normal;
+
+    src: url("../assets/fonts/FiraSans-Regular.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: FiraSans;
+    font-weight: 400;
+    font-style: italic;
+
+    src: url("../assets/fonts/FiraSans-Italic.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: FiraSans;
+    font-weight: 300;
+    font-style: normal;
+
+    src: url("../assets/fonts/FiraSans-Light.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: FiraSans;
+    font-weight: 300;
+    font-style: italic;
+
+    src: url("../assets/fonts/FiraSans-LightItalic.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: FiraSans;
+    font-weight: 100;
+    font-style: normal;
+
+    src: url("../assets/fonts/FiraSans-Thin.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: FiraSans;
+    font-weight: 100;
+    font-style: italic;
+
+    src: url("../assets/fonts/FiraSans-ThinItalic.ttf") format("truetype");
+}
+// / end font FiraSans
+@font-face {
+    font-family: Roboto;
+    font-weight: 400;
+    font-style: normal;
+
+    src: url("../assets/fonts/Roboto-Black.ttf") format("truetype");
+}
+
+font-face {
+    font-family: Abyssinica SIL;
+    font-weight: 400;
+    font-style: normal;
+
+    src: url("../assets/fonts/AbyssinicaSIL-Regular.ttf") format("truetype");
+}
+
+
+
+:root {
+    --color: #fafafa;
+
+    --button: #b3b3b3;
+    --button-color: #0a0a0a;
+    --shadow: #000;
+    --bg: #737373;
+    --header: #7a7a7a;
+    --lit-header: #e6e6e6;
+    --speed: 2s;
+    --page-header: 30px;
+    --subject: 27px;
+}
+
+
+html {
+    scroll-behavior: smooth;
+}
+body {
+    font-family: Montserrat, Roboto, sans-serif;
+    font-size: 16px;
+
+    color: #333;
+}
+.link-white {
+    display: inline-block;
+
+    -webkit-transition: color 400ms ease;
+            transition: color 400ms ease;
+    text-decoration: none;
+
+    color: #fff;
+}
+h5 {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 20px;
+
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+h3 {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.2;
+
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+input {
+    color: #000;
+    outline: none;
+}
+
+.cmp-toast {
+    z-index: var(--cmp-toast-zIndex);
+}
+
+.rotating {
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background: #a8b0c4;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #9ba2b6;
+}
+.page-container {
+    max-width: 1200px;
+    min-height: 80vh;
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: calc(var(--bs-gutter-x) * .5);
+    padding-left: calc(var(--bs-gutter-x) * .5);
+
+    border-radius: 5px;
+    box-shadow: rgb(0 0 0 / 24%) 0 3px 8px;
+
+    --bs-gutter-x: 5rem;
+    --bs-gutter-y: 0;
+}
+@media screen and (min-width: 2000px) {
+    .page-container {
+        max-width: 50%;
+    }
+}
+.ant-divider {
+    margin: 0;
+    padding: 16px;
+}
+.ant-breadcrumb {
+    font-size: 20px;
+    font-weight: 600;
+}
+.ant-divider-with-text-left {
+    &::before {
+        border-top: 1px solid #000 !important;
+    }
+
+    &::after {
+        border-top: 1px solid #000 !important;
+    }
+}
+.ant-divider-with-text-center {
+    &::before {
+        border-top: 1px solid #000 !important;
+    }
+
+    &::after {
+        border-top: 1px solid #000 !important;
+    }
+}
+.ant-divider-inner-text {
+    font-size: var(--page-header) !important;
+    font-weight: 700;
+
+    min-width: -moz-fit-content;
+    min-width:      fit-content;
+}
+.ant-pagination {
+    padding: 25px 0;
+}

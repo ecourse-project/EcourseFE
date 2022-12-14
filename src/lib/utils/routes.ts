@@ -1,0 +1,26 @@
+const RoutePaths = {
+  LOGIN: '/login',
+  DASHBOARD: '/',
+  VERIFY_ACCOUNT: '/verify',
+  LOGOUT: '/auth/logout',
+  SETTINGS: '/settings',
+  NOT_FOUND: '/404',
+  TERMS_AND_CONDITIONS: '/terms-and-conditions',
+  PRIVACY_POLICY: '/privacy-policy',
+  REGISTER: '/register',
+  SETUP_MANAGER: '/setup-manager',
+
+  HOME: '/',
+  DOCUMENT: '/documents',
+  COURSE: '/courses',
+  CLASS_ROOM: '/class-room',
+  MY_COURSES: '/my-learning',
+  CART: '/cart',
+  ORDER_CART: '/order-cart',
+  FORGOT_PASSWORD: '/forgot-password',
+  DOCUMENT_DETAIL: '/document-detail',
+  COURSE_DETAIL: '/course-detail',
+  COURSE_PROGRESS: '/course-progress',
+  MY_ACCOUNT: '/me',
+};
+export default RoutePaths;
