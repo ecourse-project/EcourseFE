@@ -1,7 +1,6 @@
 /* eslint-disable react/no-children-prop */
 import { Breadcrumb, Checkbox, Col, Divider, Image, Row } from 'antd';
 import { useEffect, useState } from 'react';
-import EmptyImg from 'src/assets/images/empty-cart-man.jpg';
 import PricingCard from 'src/components/cart/cart-price';
 import { CalculatePriceArgs, Course, CreateOrderArg, OCart } from 'src/lib/types/backend_modal';
 import { RootState } from 'src/lib/reducers/model';
