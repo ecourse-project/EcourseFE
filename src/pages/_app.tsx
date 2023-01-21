@@ -13,8 +13,6 @@ const MyApp = ({ Component, pageProps }) => (
     <Head>
       <title>E-Course</title>
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
-      {/* <link rel="icon" sizes="16x16" href="../assets/images/bill.jpg" /> */}
-      <link rel="icon" type="image/x-icon" href="src/assets/images/bill.jpg" />
     </Head>
     <Provider store={store}>
       <ContextProvider>

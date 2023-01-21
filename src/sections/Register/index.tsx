@@ -17,24 +17,30 @@ const RegisterSection: React.FC = () => {
         justify-content: center;
         align-items: center;
         border-radius: 0px;
-        background-color: #e7edf3;
         background-image: none;
+        background: rgb(66, 103, 212);
+        background: linear-gradient(
+          207deg,
+          rgba(66, 103, 212, 1) 20%,
+          rgba(66, 146, 212, 1) 53%,
+          rgba(0, 212, 255, 1) 100%
+        );
         .section-register {
           max-width: 580px;
-          color: #fff;
+          color: #000;
           width: 100%;
           font-weight: 300;
 
           .wrapper-register {
             padding: 40px;
             border-radius: 15px;
-            background-color: #051d29;
+            background-color: #fff;
             position: relative;
             max-width: 100%;
             margin-right: auto;
             margin-left: auto;
             .user-avatar {
-              margin-top: -80px;
+              /* margin-top: -80px; */
               .user-wrapper {
                 display: flex;
                 width: 80px;
@@ -55,7 +61,7 @@ const RegisterSection: React.FC = () => {
               font-family: FiraSans;
               margin-top: 20px;
               border-radius: 5px;
-              color: #fff;
+              color: #000;
               text-align: center;
               margin-bottom: 10px;
               font-size: 34px;
@@ -95,23 +101,14 @@ const RegisterSection: React.FC = () => {
       <div className="section-register">
         <div className="wrapper-register">
           <div className="user-avatar">
-            <div className="user-wrapper">
+            {/* <div className="user-wrapper">
               <h2>
                 <FaRegUser />
               </h2>
-            </div>
+            </div> */}
           </div>
-          <h2 className="register-header">Create Account</h2>
+          {/* <h2 className="register-header">Create Account</h2> */}
           <RegisterForm />
-        </div>
-        <div className="divider"></div>
-        <div className="register-text">
-          <h5>
-            Already have an account?{' '}
-            <Link className="login-here" href={RoutePaths.LOGIN}>
-              LOGIN HERE
-            </Link>
-          </h5>
         </div>
       </div>
     </div>

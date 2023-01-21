@@ -14,7 +14,7 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean) =>
   return css`
     position: relative;
     z-index: 1;
-    width: 100%;
+
     .s-label {
       top: ${isLabelAffected ? '7px' : '-30px'};
       font-size: ${isLabelAffected ? '17px' : '17px'};
@@ -42,7 +42,7 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean) =>
       background-color: transparent;
       border-color: ${hasError ? theme.text.errorColor : theme.text.grayColor}!important;
       height: 100%;
-      min-height: 38px;
+      min-height: 58px;
       border-radius: 3px;
       &:hover {
         border-color: ${theme.text.blackColor};
@@ -80,6 +80,61 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean) =>
       letter-spacing: 0.01em;
       color: #fff;
       opacity: 0.7;
+    }
+    &.login-field {
+      width: 100%;
+      .s-label {
+        margin: 0 0 0 10px;
+        color: #000;
+      }
+      /* text-align: center; */
+      border-bottom: 4px solid transparent;
+      /* border-image: linear-gradient(0.25turn, rgba(255, 249, 34), rgba(255, 0, 128), rgba(56, 2, 155, 0)); */
+      border-image: linear-gradient(
+        207deg,
+        rgba(66, 103, 212, 1) 20%,
+        rgba(66, 146, 212, 1) 53%,
+        rgba(197, 22, 240, 1) 84%,
+        rgba(0, 212, 255, 1) 100%
+      );
+      border-image-slice: 1;
+      min-height: 58px !important;
+      input {
+        border: none;
+        &:-webkit-autofill,
+        &:-webkit-autofill:hover,
+        &:-webkit-autofill:focus,
+        &:-webkit-autofill:active {
+          -webkit-box-shadow: 0 0 0 30px white inset !important;
+        }
+      }
+    }
+    &.register-field {
+      .s-label {
+        margin: 0 0 0 10px;
+      }
+      width: 100%;
+      /* text-align: center; */
+      border-bottom: 4px solid transparent;
+      /* border-image: linear-gradient(0.25turn, rgba(255, 249, 34), rgba(255, 0, 128), rgba(56, 2, 155, 0)); */
+      border-image: linear-gradient(
+        207deg,
+        rgba(66, 103, 212, 1) 20%,
+        rgba(66, 146, 212, 1) 53%,
+        rgba(197, 22, 240, 1) 84%,
+        rgba(0, 212, 255, 1) 100%
+      );
+      border-image-slice: 1;
+      min-height: 58px !important;
+      input {
+        border: none;
+        &:-webkit-autofill,
+        &:-webkit-autofill:hover,
+        &:-webkit-autofill:focus,
+        &:-webkit-autofill:active {
+          -webkit-box-shadow: 0 0 0 30px white inset !important;
+        }
+      }
     }
     &.company-field {
       input {
@@ -165,7 +220,7 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean) =>
         vertical-align: middle;
         background-color: #ffffff;
         border: 1px solid #cccccc;
-        border-radius: 0;
+        border-radius: 5px;
         &:focus {
           border: 1px solid ${theme.text.blueColor};
           box-shadow: none;
@@ -185,6 +240,7 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean) =>
 const CustomInput = styled(Input)`
   height: 45px;
   width: 100%;
+  border-radius: 5px;
 `;
 
 export interface AppInputProps extends InputProps {

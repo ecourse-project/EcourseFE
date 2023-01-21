@@ -19,14 +19,22 @@ const LoginUI: React.FC = () => {
         position: relative;
         width: 100%;
         padding: 30px 20px 30px;
+        background: rgb(66, 103, 212);
+        background: linear-gradient(
+          207deg,
+          rgba(66, 103, 212, 1) 20%,
+          rgba(66, 146, 212, 1) 53%,
+          rgba(197, 22, 240, 1) 84%,
+          rgba(0, 212, 255, 1) 100%
+        );
         .section-login {
           max-width: 480px;
           width: 100%;
           font-weight: 300;
           .wrapper-login {
-            padding: 50px;
+            padding: 30px 50px;
             border-radius: 20px;
-            background-color: #051d29;
+            background-color: #fff;
             background-image: none;
             backdrop-filter: blur(14px);
             color: #fff;
@@ -54,8 +62,8 @@ const LoginUI: React.FC = () => {
               font-family: FiraSans;
               margin-top: 20px;
               border-radius: 5px;
-              color: #fff;
-              text-align: center;
+              color: #000;
+              /* text-align: center; */
               margin-bottom: 10px;
               font-size: 34px;
               line-height: 36px;
@@ -64,7 +72,7 @@ const LoginUI: React.FC = () => {
             .login-form {
               .form-item {
                 .eyes {
-                  top: 18px;
+                  top: 48px;
                 }
               }
             }
@@ -109,28 +117,8 @@ const LoginUI: React.FC = () => {
     >
       <div className="section-login">
         <div className="wrapper-login">
-          <div className="user-avatar">
-            <div className="user-wrapper">
-              <h2>
-                <FaRegUser />
-              </h2>
-            </div>
-          </div>
           <h2 className="login-header">Sign in</h2>
           <LoginForm />
-        </div>
-
-        <div className="divider"></div>
-        <div className="login-text">
-          <h5>
-            Don&apos;t have an account?{' '}
-            <Link className="register-here" href="/register/">
-              Register Here
-            </Link>
-          </h5>
-          {/* <Link className="resend-here" to="/verify/?resend=true">
-						Resend Email
-					</Link> */}
         </div>
       </div>
     </div>

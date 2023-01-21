@@ -70,105 +70,115 @@ const LoginForm: React.FC = () => {
     setRememberMe(e.target.checked);
   };
   return (
-    <form
-      css={css`
-        display: grid;
-        margin-top: 40px;
-        grid-auto-columns: 1fr;
-        grid-column-gap: 40px;
-        grid-row-gap: 20px;
-        grid-template-columns: 1fr;
-        grid-template-rows: auto;
-        .form-item {
-          width: 100%;
-          .ant-btn {
-            font-weight: 700;
+    <>
+      <form
+        css={css`
+          display: grid;
+          margin-top: 40px;
+          grid-auto-columns: 1fr;
+          grid-column-gap: 40px;
+          grid-row-gap: 20px;
+          grid-template-columns: 1fr;
+          grid-template-rows: auto;
+          .form-item {
+            width: 100%;
+            .ant-btn {
+              font-weight: 700;
+            }
           }
-        }
-        .form-item-bot {
-          width: 100%;
-          display: flex;
-          .form-item-checkbox {
-            width: 50%;
-            margin-right: 20px;
-            .ant-checkbox + span {
+          .form-item-bot {
+            width: 100%;
+            display: flex;
+            .form-item-checkbox {
+              width: 50%;
+              margin-right: 20px;
+              .ant-checkbox + span {
+                color: #fff;
+                font-size: 18px;
+                font-weight: 300;
+              }
+            }
+            .forgot-pwd {
+              width: 50%;
               color: #fff;
               font-size: 18px;
-              font-weight: 300;
+              &:hover {
+                text-decoration: underline;
+              }
             }
           }
-          .forgot-pwd {
-            width: 50%;
-            color: #fff;
-            font-size: 18px;
-            &:hover {
-              text-decoration: underline;
-            }
-          }
-        }
-      `}
-      className="login-form"
-      onSubmit={formik.handleSubmit}
-    >
-      <div className="form-item">
-        <AppInput
-          className="field email-field"
-          label=""
-          name="email"
-          disabled={isLoading}
-          placeholder="Email"
-          handleChange={formik.handleChange}
-          handleBlur={formik.handleBlur}
-          value={formik.values.email}
-          hasError={hasError('email')}
-        />
-        {hasError('email') ? <ErrorMessage>{formik.errors.email}</ErrorMessage> : null}
-      </div>
-      <div className="form-item">
-        <AppInput
-          className="field password-field"
-          label=""
-          type="password"
-          name="password"
-          placeholder="Password"
-          showEye
-          disabled={isLoading}
-          handleChange={formik.handleChange}
-          handleBlur={formik.handleBlur}
-          value={formik.values.password}
-          hasError={hasError('password')}
-        />
-        {hasError('password') ? <ErrorMessage>{formik.errors.password}</ErrorMessage> : null}
-        {loginError && loginError.length > 0 && !hasError('password') && !hasError('email') && (
-          <ErrorMessage>{loginError}</ErrorMessage>
-        )}
-      </div>
+        `}
+        className="login-form"
+        onSubmit={formik.handleSubmit}
+      >
+        <div className="form-item">
+          <AppInput
+            className="field login-field"
+            label="Email"
+            name="email"
+            disabled={isLoading}
+            placeholder="Email"
+            handleChange={formik.handleChange}
+            handleBlur={formik.handleBlur}
+            value={formik.values.email}
+            hasError={hasError('email')}
+          />
+          {hasError('email') ? <ErrorMessage>{formik.errors.email}</ErrorMessage> : null}
+        </div>
+        <div className="form-item">
+          <AppInput
+            className="field login-field"
+            label="Password"
+            type="password"
+            name="password"
+            placeholder="Password"
+            showEye
+            disabled={isLoading}
+            handleChange={formik.handleChange}
+            handleBlur={formik.handleBlur}
+            value={formik.values.password}
+            hasError={hasError('password')}
+          />
+          {hasError('password') ? <ErrorMessage>{formik.errors.password}</ErrorMessage> : null}
+          {loginError && loginError.length > 0 && !hasError('password') && !hasError('email') && (
+            <ErrorMessage>{loginError}</ErrorMessage>
+          )}
+        </div>
 
-      <div className="form-item">
-        <AppButton
-          btnTextColor="black"
-          btnSize="large"
-          btnStyle="solid"
-          btnWidth="full-w"
-          className="btn-login"
-          type="primary"
-          htmlType="submit"
-          disabled={formik.isSubmitting}
-        >
-          Login
-        </AppButton>
+        <div className="form-item">
+          <AppButton
+            btnTextColor="black"
+            btnSize="large"
+            btnStyle="solid"
+            btnWidth="full-w"
+            className="btn-login"
+            type="primary"
+            htmlType="submit"
+            disabled={formik.isSubmitting}
+          >
+            Login
+          </AppButton>
+        </div>
+        <div className="form-item-bot">
+          {/* <div className="form-item-checkbox">
+                <Checkbox checked={rememberMe} onChange={onRememberMeChange}>
+                    Remember me
+                </Checkbox>
+            </div> */}
+          <Link className="forgot-pwd" href={RoutePaths.FORGOT_PASSWORD}>
+            Forgot password?
+          </Link>
+        </div>
+      </form>
+      <div className="login-text">
+        <h5>
+          Don&apos;t have an account?{' '}
+          <Link className="register-here" href="/register/">
+            Register Here
+          </Link>
+        </h5>
       </div>
-      <div className="form-item-bot">
-        {/* <div className="form-item-checkbox">
-					<Checkbox checked={rememberMe} onChange={onRememberMeChange}>
-						Remember me
-					</Checkbox>
-				</div> */}
-        <Link className="forgot-pwd" href={RoutePaths.FORGOT_PASSWORD}>
-          Forgot password?
-        </Link>
-      </div>
-    </form>
+    </>
   );
 };
 export default LoginForm;
