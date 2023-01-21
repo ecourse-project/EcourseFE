@@ -50,7 +50,7 @@ const PrivateProvider: React.FC<{ children?: ReactNode }> = ({ children }) => {
     if (!token) {
       setIsLoading(false);
       // router.push(RoutePaths.LOGIN);
-      // forceLogout();
+      forceLogout();
     } else {
       getUserProfile();
     }

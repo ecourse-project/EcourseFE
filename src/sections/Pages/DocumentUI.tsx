@@ -2,7 +2,7 @@
 
 import { SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
-import { Breadcrumb, Col, Divider, Row } from 'antd';
+import { Breadcrumb, Col, Divider, Pagination as BasicPagination, Row } from 'antd';
 import React, { useEffect, useState } from 'react';
 
 import DocItem from 'src/components/document/doc-item';
@@ -41,7 +41,7 @@ const DocumentUI: React.FC = () => {
     router.push(`${RoutePaths.DOCUMENT}/?page=${page}`);
   };
   return (
-    <div className="page-container">
+    <div>
       <Divider orientation="left">
         <Breadcrumb separator={<SwapOutlined />}>
           <Breadcrumb.Item href={RoutePaths.HOME}>Trang chính</Breadcrumb.Item>
@@ -90,12 +90,25 @@ const DocumentUI: React.FC = () => {
             })
           : `There is no doc`}
       </div>
-      <div
+      {/* <div
         css={css`
           text-align: center;
         `}
       >
         <CustomPagination
+          current={pagination.page}
+          pageSize={pagination.limit}
+          total={listDoc?.count || 10}
+          showSizeChanger={false}
+          onChange={onChangePage}
+        />
+      </div> */}
+      <div
+        css={css`
+          text-align: center;
+        `}
+      >
+        <BasicPagination
           current={pagination.page}
           pageSize={pagination.limit}
           total={listDoc?.count || 10}

@@ -1,3 +1,4 @@
+import Router from 'next/router';
 import RoutePaths from './routes';
 export interface User {
   name: string;
@@ -7,7 +8,7 @@ export interface User {
 export const forceLogout = (): void => {
   localStorage.clear();
   if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
-    router.push({ to: RoutePaths.LOGIN });
+    Router.push(RoutePaths.LOGIN);
   }
 };
 

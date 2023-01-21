@@ -13,6 +13,9 @@ import { RootState } from 'src/lib/reducers/model';
 import CourseService from 'src/lib/api/course';
 import { useDispatch, useSelector } from 'react-redux';
 import Layout from 'src/components/common/Layout';
+import Chemistry from 'src/assets/images/ecourseLogo-removebg-preview.png';
+import Image, { StaticImageData } from 'next/image';
+
 const LIMIT = 4;
 
 interface InitialState {
@@ -57,6 +60,31 @@ function reducer(state: InitialState, action: ActionBase) {
       return state;
   }
 }
+
+export interface ICategory {
+  name: string;
+  img: StaticImageData;
+  url: string;
+}
+
+const category: ICategory[] = [
+  {
+    name: 'Toán',
+    img: Chemistry,
+    url: '',
+  },
+  {
+    name: 'Lý',
+    img: Chemistry,
+    url: '',
+  },
+  {
+    name: 'Hoá',
+    img: Chemistry,
+    url: '',
+  },
+];
+
 const HomeUI = () => {
   const dispatch = useDispatch();
   const fetchHomeData = async () => {
@@ -72,7 +100,7 @@ const HomeUI = () => {
   }, []);
   return (
     <div
-      className="page-container"
+      className="page-container2"
       css={css`
         .doc-wrapper {
           padding-bottom: 40px;
@@ -138,6 +166,47 @@ const HomeUI = () => {
             return (
               <Col lg={8} xl={listCourse.length > 4 ? 6 : 8} md={12} sm={24} xs={24} key={i}>
                 <CourseItem course={e} />
+              </Col>
+            );
+          })}
+        </Row>
+      </div>
+      <div className="doc-wrapper">
+        <div className="doc-title">
+          <AppstoreAddOutlined />
+          {'Chủ đề'}
+        </div>
+        <Row gutter={[8, 16]}>
+          {category?.map((e, i) => {
+            return (
+              <Col lg={8} xl={category.length > 4 ? 6 : 8} md={12} sm={24} xs={24} key={i}>
+                <div
+                  css={css`
+                    font-weight: 700;
+                    background-color: #f8f9fb;
+                    height: 230px;
+                    img {
+                      cursor: pointer;
+                      display: grid;
+                      place-items: center;
+
+                      &:hover {
+                        height: 220px;
+                        width: 270px;
+                        transition: all 0.5s linear;
+                      }
+                    }
+                  `}
+                >
+                  <Image src={e.img} alt={''} height={200} width={250} />
+                </div>
+                <div
+                  css={css`
+                    font-weight: 700;
+                  `}
+                >
+                  {e.name}
+                </div>
               </Col>
             );
           })}

@@ -43,6 +43,7 @@ class MyDocument extends Document {
           <link rel="apple-touch-icon" sizes="144x144" href="/images/apple-icon-144x144.png" />
           <link rel="apple-touch-icon" sizes="152x152" href="/images/apple-icon-152x152.png" />
           <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-icon-180x180.png" />
+
           {/* <link rel="icon" type="image/png" sizes="192x192" href="/images/android-icon-192x192.png" />
           <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png" />
           <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96x96.png" />
@@ -74,7 +75,15 @@ class MyDocument extends Document {
           <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
           {/* <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" /> */}
           <link rel="icon" type="image/png" sizes="16x16" href="../../public/favicon_io/favicon-16x16.png" />
+          <link rel="icon" href="http://example.com/favicon.png" />
           <link rel="manifest" href="/site.webmanifest" />
+          <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+          <link rel="icon" type="image/png" sizes="32x32" href="../../public/favicon-32x32.png" />
+          <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+          <link rel="manifest" href="/site.webmanifest" />
+          <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+          <meta name="msapplication-TileColor" content="#da532c" />
+          <meta name="theme-color" content="#ffffff"></meta>
         </Head>
         <body>
           <Main />

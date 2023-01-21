@@ -189,13 +189,16 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
           letter-spacing: 2px;
         }
         &.btn-login {
-          background-color: #ffa535 !important;
+          background-color: #ffa535;
           transition: all 400ms ease;
           color: #000;
+          border-color: #000;
           font-weight: 700;
-          letter-spacing: initial;
+          letter-spacing: unset;
+          border-radius: 5px;
           &:hover {
-            letter-spacing: 8px;
+            letter-spacing: 2px;
+            border-color: #000;
             color: #000;
           }
         }

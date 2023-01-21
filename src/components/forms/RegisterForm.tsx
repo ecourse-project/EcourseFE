@@ -14,6 +14,7 @@ import { debounce } from 'lodash';
 import UserService from 'src/lib/api/user';
 import RoutePaths from 'src/lib/utils/routes';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 export const YOUR_GOOGLE_MAPS_API_KEY = 'AIzaSyAALCd4-WUGx4qZ3Zi0eCmBv2dKKbXhzVo';
 
@@ -100,190 +101,211 @@ const RegisterForm: React.FC = () => {
   };
 
   return (
-    <form
-      css={css`
-        display: grid;
-        margin-top: 40px;
-        grid-auto-columns: 1fr;
-        grid-column-gap: 40px;
-        grid-row-gap: 30px;
-        grid-template-columns: 1fr;
-        grid-template-rows: auto;
-        .form-item {
-          > span {
-            text-decoration: underline;
-            cursor: pointer;
-          }
-          width: 100%;
-          .ant-checkbox + span {
-            color: #fff;
-            font-size: 16px;
-            font-weight: 300;
-          }
-          .ant-btn {
-            font-weight: 700;
-          }
-        }
-        .upload-avatar {
-          .avatar {
+    <>
+      <h2 className="register-header">Create Account</h2>
+      <form
+        css={css`
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+
+          .form-item {
+            > span {
+              text-decoration: underline;
+              cursor: pointer;
+            }
             width: 100%;
-            max-width: 152px;
-            height: 152px;
-            overflow: hidden;
-            margin: 0 auto;
-            border-radius: 50%;
-            .ant-upload-picture-card-wrapper {
-              height: 100%;
-              .ant-upload {
-                border: none;
-                .non-image {
-                  width: 100%;
-                  height: 100%;
-                  background-color: #ffa900;
-                  display: flex;
-                  align-items: center;
-                  justify-content: center;
-                  svg {
-                    width: 22px;
-                    height: 22px;
-                  }
-                  p {
-                    max-width: 110px;
-                    color: #fff;
-                    font-weight: 700;
+            .ant-checkbox + span {
+              color: #fff;
+              font-size: 16px;
+              font-weight: 300;
+            }
+            .ant-btn {
+              font-weight: 700;
+            }
+          }
+          .half {
+            width: fit-content;
+            > button {
+              width: 200px;
+            }
+          }
+          .upload-avatar {
+            .avatar {
+              width: 100%;
+              max-width: 152px;
+              height: 152px;
+              overflow: hidden;
+              margin: 0 auto;
+              border-radius: 50%;
+              .ant-upload-picture-card-wrapper {
+                height: 100%;
+                .ant-upload {
+                  border: none;
+                  .non-image {
+                    width: 100%;
+                    height: 100%;
+                    background-color: #ffa900;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    svg {
+                      width: 22px;
+                      height: 22px;
+                    }
+                    p {
+                      max-width: 110px;
+                      color: #fff;
+                      font-weight: 700;
+                    }
                   }
                 }
               }
             }
+            .avatar-error {
+              text-align: center;
+            }
           }
-          .avatar-error {
-            text-align: center;
+          .form-submit {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
           }
-        }
-      `}
-      className="register-form"
-      onSubmit={formik.handleSubmit}
-    >
-      <div className="upload-avatar">
-        {/* <div className="avatar">
-					<AvatarUpload
-						getImageFile={getImageFile}
-						errorUploadImg={errorUploadImg}
-					/>
-				</div> */}
-        {!hasError('avatar') && errorUploadImg && (
-          <ErrorMessage className="avatar-error error">Cannot upload file. Please, choose another file.</ErrorMessage>
-        )}
-      </div>
+        `}
+        className="register-form"
+        onSubmit={formik.handleSubmit}
+      >
+        <div className="upload-avatar">
+          {/* <div className="avatar">
+                <AvatarUpload
+                    getImageFile={getImageFile}
+                    errorUploadImg={errorUploadImg}
+                />
+            </div> */}
+          {!hasError('avatar') && errorUploadImg && (
+            <ErrorMessage className="avatar-error error">Cannot upload file. Please, choose another file.</ErrorMessage>
+          )}
+        </div>
 
-      <div className="form-item">
-        <AppInput
-          requiredMark
-          className="field firstName-field"
-          label="Full Name"
-          name="full_name"
-          type="string"
-          placeholder="Full Name"
-          value={formik.values.full_name}
-          handleChange={formik.handleChange}
-          handleBlur={formik.handleBlur}
-          hasError={hasError('full_name')}
-        />
-        {hasError('full_name') ? <ErrorMessage className="error">{formik.errors.full_name}</ErrorMessage> : null}
-      </div>
+        <div className="form-item">
+          <AppInput
+            requiredMark
+            className="field login-field"
+            label="Full Name"
+            name="full_name"
+            type="string"
+            placeholder="Full Name"
+            value={formik.values.full_name}
+            handleChange={formik.handleChange}
+            handleBlur={formik.handleBlur}
+            hasError={hasError('full_name')}
+          />
+          {hasError('full_name') ? <ErrorMessage className="error">{formik.errors.full_name}</ErrorMessage> : null}
+        </div>
 
-      <div className="form-item">
-        <AppInput
-          requiredMark
-          className="field email-field"
-          label="Email"
-          name="email"
-          type="email"
-          disabled={isLoading}
-          placeholder="Email"
-          handleChange={formik.handleChange}
-          handleBlur={formik.handleBlur}
-          value={formik.values.email}
-          hasError={hasError('email')}
-        />
-        {hasError('email') ? <ErrorMessage className="error">{formik.errors.email}</ErrorMessage> : null}
-      </div>
-      <div className="form-item">
-        <AppInput
-          className="field password-field"
-          requiredMark
-          label="Password"
-          type="password"
-          name="password1"
-          placeholder="Password"
-          showEye
-          disabled={isLoading}
-          handleChange={formik.handleChange}
-          handleBlur={formik.handleBlur}
-          value={formik.values.password1}
-          hasError={hasError('password1')}
-        />
-        {hasError('password1') ? <ErrorMessage className="error">{formik.errors.password1}</ErrorMessage> : null}
-      </div>
-      <div className="form-item">
-        <AppInput
-          className="field confirm-field"
-          label="Confirm Password"
-          requiredMark
-          type="password"
-          name="password2"
-          placeholder="Confirm Password"
-          showEye
-          disabled={isLoading}
-          handleChange={formik.handleChange}
-          handleBlur={formik.handleBlur}
-          value={formik.values.password2}
-          hasError={hasError('password2')}
-        />
-        {hasError('password2') ? <ErrorMessage className="error">{formik.errors.password2}</ErrorMessage> : null}
-      </div>
-      {/* <div className="form-item">
-				<Checkbox onChange={onChange}>I agree to all statements in</Checkbox>
-				<span
-					onClick={() => {
-						const url =
-							window.location.origin + RoutePaths.TERMS_AND_CONDITIONS;
-						window.open(url, '_blank');
-					}}
-				>
-					Terms of Service
-				</span>
-			</div> */}
-      {generalError && generalError.length > 0 && <ErrorMessage>{generalError}</ErrorMessage>}
-      <div className="form-item">
-        <AppButton
-          btnTextColor="black"
-          btnSize="large"
-          btnStyle="solid"
-          btnWidth="full-w"
-          className="btn-login"
-          borderRadius="5px"
-          type="primary"
-          htmlType="submit"
-          // disabled={!isTickAgree || formik.isSubmitting}
-          onClick={() => {
-            setTimeout(() => {
-              const errElement = document.querySelector('.error');
-              if (errElement) {
+        <div className="form-item">
+          <AppInput
+            requiredMark
+            className="field login-field"
+            label="Email"
+            name="email"
+            type="email"
+            disabled={isLoading}
+            placeholder="Email"
+            handleChange={formik.handleChange}
+            handleBlur={formik.handleBlur}
+            value={formik.values.email}
+            hasError={hasError('email')}
+          />
+          {hasError('email') ? <ErrorMessage className="error">{formik.errors.email}</ErrorMessage> : null}
+        </div>
+        <div className="form-item">
+          <AppInput
+            className="field login-field"
+            requiredMark
+            label="Password"
+            type="password"
+            name="password1"
+            placeholder="Password"
+            showEye
+            disabled={isLoading}
+            handleChange={formik.handleChange}
+            handleBlur={formik.handleBlur}
+            value={formik.values.password1}
+            hasError={hasError('password1')}
+          />
+          {hasError('password1') ? <ErrorMessage className="error">{formik.errors.password1}</ErrorMessage> : null}
+        </div>
+        <div className="form-item">
+          <AppInput
+            className="field login-field"
+            label="Confirm Password"
+            requiredMark
+            type="password"
+            name="password2"
+            placeholder="Confirm Password"
+            showEye
+            disabled={isLoading}
+            handleChange={formik.handleChange}
+            handleBlur={formik.handleBlur}
+            value={formik.values.password2}
+            hasError={hasError('password2')}
+          />
+          {hasError('password2') ? <ErrorMessage className="error">{formik.errors.password2}</ErrorMessage> : null}
+        </div>
+        {/* <div className="form-item">
+              <Checkbox onChange={onChange}>I agree to all statements in</Checkbox>
+              <span
+                  onClick={() => {
+                      const url =
+                          window.location.origin + RoutePaths.TERMS_AND_CONDITIONS;
+                      window.open(url, '_blank');
+                  }}
+              >
+                  Terms of Service
+              </span>
+          </div> */}
+        {generalError && generalError.length > 0 && <ErrorMessage>{generalError}</ErrorMessage>}
+        <div className="form-submit">
+          <div className="form-item half">
+            <AppButton
+              btnTextColor="black"
+              btnSize="large"
+              btnStyle="solid"
+              btnWidth="fix-content"
+              className="btn-login"
+              borderRadius="5px"
+              type="primary"
+              htmlType="submit"
+              // disabled={!isTickAgree || formik.isSubmitting}
+              onClick={() => {
                 setTimeout(() => {
-                  errElement.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'center',
-                  });
-                }, 500);
-              }
-            }, 2000);
-          }}
-        >
-          Create Account
-        </AppButton>
-      </div>
-    </form>
+                  const errElement = document.querySelector('.error');
+                  if (errElement) {
+                    setTimeout(() => {
+                      errElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center',
+                      });
+                    }, 500);
+                  }
+                }, 2000);
+              }}
+            >
+              Create Account
+            </AppButton>
+          </div>
+          <div className="register-text">
+            <h5>
+              Already have an account?{' '}
+              <Link className="login-here" href={RoutePaths.LOGIN}>
+                LOGIN HERE
+              </Link>
+            </h5>
+          </div>
+        </div>
+      </form>
+    </>
   );
 };
 export default RegisterForm;

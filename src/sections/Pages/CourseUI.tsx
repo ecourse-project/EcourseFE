@@ -5,7 +5,6 @@ import { css } from '@emotion/react';
 import { Breadcrumb, Col, Divider, Row } from 'antd';
 import React, { useEffect, useState } from 'react';
 import CourseItem from 'src/components/course/course-item';
-import DocItemCard from 'src/components/document/doc-item';
 import CustomPagination from 'src/components/pagination';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { Document, Pagination, PaginationParams } from 'src/lib/types/backend_modal';
@@ -14,7 +13,6 @@ import { RootState } from 'src/lib/reducers/model';
 import RoutePaths from 'src/lib/utils/routes';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-// import RoutePaths from 'src/lib/utils/routes';
 interface DocumentParams {
   page?: number;
 }
@@ -43,7 +41,7 @@ const DocumentUI: React.FC = () => {
     router.push(`${RoutePaths.COURSE}/?page=${page}`);
   };
   return (
-    <div className="page-container">
+    <div>
       <Divider orientation="left">
         <Breadcrumb separator={<SwapOutlined />}>
           <Breadcrumb.Item href={RoutePaths.HOME}>Trang chính</Breadcrumb.Item>

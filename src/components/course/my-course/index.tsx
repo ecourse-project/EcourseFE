@@ -1,5 +1,10 @@
+import { AppstoreAddOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
-import React from 'react';
+import { Divider, Empty } from 'antd';
+import { Typography } from 'antd';
+
+const { Title } = Typography;
+import React, { useEffect } from 'react';
 import { Course, Document } from 'src/lib/types/backend_modal';
 import { LearningItem } from './learning-item';
 interface MyCourseUIProps {
@@ -9,13 +14,15 @@ interface MyCourseUIProps {
 
 const MyCourseUI: React.FC<MyCourseUIProps> = (props) => {
   const { courses, docs } = props;
+  useEffect(() => {
+    console.log('courses', courses);
+  }, []);
 
   return (
     <div
       css={css`
-        width: fit-content;
-        margin: auto;
         .list_item {
+          margin: auto;
           display: flex;
           margin: auto;
           display: flex;
@@ -25,20 +32,44 @@ const MyCourseUI: React.FC<MyCourseUIProps> = (props) => {
           margin-right: -0.8rem;
           gap: 1.6rem 2rem;
           padding: 10px;
+          justify-content: center;
+        }
+        .doc-title {
+          font-size: 30px;
+          font-weight: 500;
+          text-decoration: overline;
+          .anticon {
+            vertical-align: baseline;
+          }
         }
       `}
     >
+      <div className="doc-title">
+        <AppstoreAddOutlined />
+        {'Tài liệu'}
+      </div>
       <div className="course_list list_item">
-        {courses &&
+        {courses.length ? (
           courses.map((v, i) => {
             return <LearningItem course={v} key={i} />;
-          })}
+          })
+        ) : (
+          <Empty />
+        )}
+      </div>
+      <Divider />
+      <div className="doc-title">
+        <AppstoreAddOutlined />
+        {'Khoá học'}
       </div>
       <div className="doc_list list_item">
-        {docs &&
+        {docs.length ? (
           docs.map((v, i) => {
             return <LearningItem doc={v} key={i} />;
-          })}
+          })
+        ) : (
+          <Empty />
+        )}
       </div>
     </div>
   );

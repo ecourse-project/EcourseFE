@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import NavItem from './nav-item';
 import RoutePaths from 'src/lib/utils/routes';
 import { LogoutOutlined, SettingOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
+import { useRouter } from 'next/router';
 
 const MENU_LIST = [
   { text: 'Tài liệu', href: `${RoutePaths.DOCUMENT}` },
@@ -20,9 +21,16 @@ const settings = [
   { name: 'Đăng xuất', to: `${RoutePaths.LOGIN}`, icon: <LogoutOutlined /> },
 ];
 const Navbar = () => {
+  const router = useRouter();
   const [navActive, setNavActive] = useState<boolean>(false);
-  const [activeIdx, setActiveIdx] = useState(-1);
-
+  const [activeIdx, setActiveIdx] = useState(MENU_LIST.findIndex((v) => v.href === router.pathname));
+  useEffect(() => {
+    console.log(
+      'MENU_LIST.findIndex((v) => v.href === router.pathname)',
+      MENU_LIST.findIndex((v) => v.href === router.pathname),
+    );
+    console.log('activeIdx :>> ', activeIdx);
+  }, [router.pathname, activeIdx]);
   return (
     <header
       css={css`
@@ -36,10 +44,10 @@ const Navbar = () => {
           top: 0;
         }
         nav {
-          max-width: 80%;
           margin: auto;
           display: flex;
           padding: 16px;
+          padding-bottom: 0;
           justify-content: space-between;
           align-items: center;
           // background-color: #f1f1f1;
@@ -134,6 +142,7 @@ const Navbar = () => {
             <div
               onClick={() => {
                 setActiveIdx(idx);
+                console.log('click ');
                 setNavActive(false);
               }}
               key={menu.text}
