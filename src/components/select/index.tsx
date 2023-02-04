@@ -4,8 +4,8 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Input, Select } from 'antd';
 import React, { useState, ReactNode } from 'react';
+import { typeSelect } from 'src/lib/utils/enum';
 import theme from 'src/styles/theme';
-import { typeSelect } from '../../utils/enum';
 const { Option } = Select;
 const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean, suffixIcon?: ReactNode) => {
   let isLabelAffected = isFocusing;

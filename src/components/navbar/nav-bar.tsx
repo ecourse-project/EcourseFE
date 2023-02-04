@@ -1,159 +1,144 @@
-import Link from 'next/link';
-import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
-import NavItem from './nav-item';
-import RoutePaths from 'src/lib/utils/routes';
-import { LogoutOutlined, SettingOutlined } from '@ant-design/icons';
+import { ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
-import { useRouter } from 'next/router';
+import { Divider, Menu } from 'antd';
+import type { MenuTheme } from 'antd/es/menu';
+import Link from 'next/link';
+import React, { useEffect, useState } from 'react';
+import { Nav, NavTypeEnum } from 'src/lib/types/backend_modal';
+import RoutePaths from 'src/lib/utils/routes';
+import { v4 as uuidv4 } from 'uuid';
+type MenuItem = Required<MenuProps>['items'][number];
 
-const MENU_LIST = [
-  { text: 'Tài liệu', href: `${RoutePaths.DOCUMENT}` },
-  { text: 'Khoá học', href: `${RoutePaths.COURSE}` },
-  { text: 'Khoá của tôi', href: `${RoutePaths.MY_COURSES}` },
-];
-const settings = [
-  {
-    name: 'Trang cá nhân',
-    to: `${RoutePaths.SETTINGS}`,
-    icon: <SettingOutlined />,
-  },
-  { name: 'Đăng xuất', to: `${RoutePaths.LOGIN}`, icon: <LogoutOutlined /> },
-];
-const Navbar = () => {
-  const router = useRouter();
-  const [navActive, setNavActive] = useState<boolean>(false);
-  const [activeIdx, setActiveIdx] = useState(MENU_LIST.findIndex((v) => v.href === router.pathname));
+import type { MenuProps } from 'antd';
+import { useSelector } from 'react-redux';
+import { RootState } from 'src/lib/reducers/model';
+
+function getItem(
+  label: React.ReactNode,
+  key?: React.Key | null,
+  icon?: React.ReactNode,
+  children?: MenuItem[],
+  danger?: true,
+): MenuItem {
+  return {
+    key,
+    icon,
+    children,
+    label,
+    danger,
+  } as MenuItem;
+}
+
+const Nav: React.FC = () => {
+  const header: Nav[] = useSelector((state: RootState) => state.app.header);
+  const [mode, setMode] = useState<'vertical' | 'inline'>('inline');
+  const [theme, setTheme] = useState<MenuTheme>('light');
+  const [listNav, setListNav] = useState<MenuItem[]>();
+  const getTargetUrl = (type: string, itemType) => {
+    if (type.toLocaleUpperCase() === NavTypeEnum.DOCUMENT) return `${RoutePaths.DOCUMENT}/?document=${itemType}`;
+    else if (type.toLocaleUpperCase() === NavTypeEnum.COURSE) return `${RoutePaths.COURSE}/?course=${itemType}`;
+  };
+  const getListHeader = async () => {
+    try {
+      const listItems = header.map((v, i) => {
+        return getItem(
+          v.header,
+          v.header + `id=${uuidv4()}`,
+          '',
+          v.detail.title?.map((u, n) => {
+            return getItem(<Link href={getTargetUrl(v.detail.type, u) || ''}>{u}</Link>, u + `id=${uuidv4()}`);
+          }),
+        );
+      });
+      console.log('listItems', listItems);
+      setListNav(listItems);
+    } catch (error) {
+      console.log('GetHeader', error);
+    }
+  };
+
   useEffect(() => {
-    console.log(
-      'MENU_LIST.findIndex((v) => v.href === router.pathname)',
-      MENU_LIST.findIndex((v) => v.href === router.pathname),
-    );
-    console.log('activeIdx :>> ', activeIdx);
-  }, [router.pathname, activeIdx]);
+    getListHeader();
+  }, []);
+
   return (
-    <header
+    <div
+      className="nav-bar"
       css={css`
-        a {
-          text-decoration: none;
-          color: inherit;
-        }
-        header {
-          position: sticky;
-          z-index: 30;
-          top: 0;
-        }
-        nav {
-          margin: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .left-box {
           display: flex;
-          padding: 16px;
-          padding-bottom: 0;
-          justify-content: space-between;
           align-items: center;
-          // background-color: #f1f1f1;
-          background-color: #fff;
         }
-        .nav__menu-bar {
+        .right-box {
+          margin-right: 40px;
           display: flex;
-          flex-direction: column;
-          row-gap: 6px;
+          justify-content: space-between;
+          gap: 10px;
+          & a {
+            width: 20px;
+          }
+        }
+        .logo {
+          width: 250px;
+        }
+        .ant-menu-overflow-item {
+          height: fit-content;
+        }
+        .anticon {
+          font-size: 20px;
+          width: 20px;
+          color: #000;
           cursor: pointer;
         }
-        .nav__menu-bar div {
-          width: 40px;
-          height: 4px;
-          background-color: black;
-          border-radius: 2px;
+        .ant-divider {
+          width: 2px;
+          height: 25px !important;
+          color: #000;
+          background: #000;
         }
-        .nav__menu-list {
-          display: flex;
-          flex-direction: column;
-          position: fixed;
-          top: 60px;
-          width: 288px;
-          row-gap: 24px;
-          right: -288px;
-          padding: 24px 16px;
-          transition: all 0.2s;
-          min-height: calc(100vh - 60px);
-          background-color: #fff;
-          // background-color: #f1f1f1;
+        .ant-menu-horizontal {
+          border: none;
         }
-        .nav__menu-list.active {
-          right: 0;
+        .ant-menu-submenu-arrow {
+          display: none;
         }
-        .nav__link {
-          font-size: 18px;
-          position: relative;
-          transition: all 0.2s;
-          font-weight: 600;
-        }
-
-        .nav__link:hover {
-          font-weight: bold;
-        }
-
-        .center {
-          min-height: 600px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-        @media screen and (min-width: 768px) {
-          .nav__menu-bar {
-            display: none;
+        .setting {
+          .ant-menu-vertical {
+            border-right: unset;
           }
-          .nav__menu-list {
-            position: unset;
-            flex-direction: row;
-            min-height: fit-content;
-            width: fit-content;
-            column-gap: 24px;
-            align-items: center;
-          }
-          .nav__link::before {
-            content: '';
-            position: absolute;
-            width: 0%;
-            height: 6px;
-            bottom: -16px;
-            left: 0;
-            background-color: black;
-            transition: all 0.2s;
-          }
-
-          .nav__link:hover:before {
-            width: 100%;
+          .ant-menu-submenu-title {
+            padding: 0;
+            line-height: unset !important;
+            height: unset !important;
           }
         }
       `}
     >
-      <nav className={`nav`}>
+      <div className="left-box">
         <Link href={'/'}>
           <h1 className="logo">E-Course</h1>
         </Link>
-        <div onClick={() => setNavActive(!navActive)} className={`nav__menu-bar`}>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-        <div className={`${navActive ? 'active' : ''} nav__menu-list`}>
-          {MENU_LIST.map((menu, idx) => (
-            <div
-              onClick={() => {
-                setActiveIdx(idx);
-                console.log('click ');
-                setNavActive(false);
-              }}
-              key={menu.text}
-            >
-              <NavItem active={activeIdx === idx} {...menu} />
-            </div>
-          ))}
-        </div>
-      </nav>
-    </header>
+        <Menu items={listNav} mode="horizontal" />
+      </div>
+      <div className="right-box">
+        <Link href={RoutePaths.CART}>
+          <ShoppingCartOutlined />
+        </Link>
+        <Divider type="vertical" style={{ height: '100%' }} />
+        {/* <div className="setting">
+          <Dropdown menu={{ items }}>
+            <UserOutlined />
+          </Dropdown>
+        </div> */}
+        <Link href={RoutePaths.SETTINGS}>
+          <UserOutlined />
+        </Link>
+      </div>
+    </div>
   );
 };
 
-export default Navbar;
+export default Nav;

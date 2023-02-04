@@ -1,13 +1,12 @@
 /* eslint-disable react/no-children-prop */
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { css } from '@emotion/react';
 import { Typography } from 'antd';
-import { useAppDispatch, useAppSelector } from 'src/apps/hooks';
+import { useDispatch, useSelector } from 'react-redux';
 import OrderItem from 'src/components/order/order-item';
-import { PaginationParams } from 'src/lib/types/backend_modal';
-import AppAction from 'src/lib/reducers/actions';
 import { RootState } from 'src/lib/reducers/model';
+import { PaginationParams } from 'src/lib/types/backend_modal';
 const { Title, Paragraph, Text, Link } = Typography;
 
 const OrderUI = () => {

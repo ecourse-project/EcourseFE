@@ -1,65 +1,54 @@
-// import { navigate } from '@reach/router';
-import React, { ReactNode, useState } from 'react';
+import { isEmpty } from 'lodash';
+import React, { ReactNode, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { LoadingPage } from 'src/components/loading/loadingBase';
-// import AuthAction from 'src/lib/reducers/auth/action';
-// import UserAction from 'src/lib/reducers/user/action';
-// import SettingsService from 'src/lib/api/settings';
+import CourseService from 'src/lib/api/course';
+import UserService from 'src/lib/api/user';
+import { appActions } from 'src/lib/reducers/app/appSlice';
+import { RootState } from 'src/lib/reducers/model';
+import { User } from 'src/lib/types/backend_modal';
 import { forceLogout } from 'src/lib/utils/auth';
 import { StorageKeys } from 'src/lib/utils/enum';
-import RoutePaths from 'src/lib/utils/routes';
-import { User } from 'src/lib/types/backend_modal';
-import { appActions } from 'src/lib/reducers/app/appSlice';
-import { useDispatch } from 'react-redux';
-import UserService from 'src/lib/api/user';
 
 const PrivateProvider: React.FC<{ children?: ReactNode }> = ({ children }) => {
   const dispatch = useDispatch();
+  const myProfile = useSelector((state: RootState) => state.app.user);
+  const header = useSelector((state: RootState) => state.app.header);
+
   const [isLoading, setIsLoading] = useState(true);
   const getUserProfile = async () => {
     try {
-      const profile: User = await UserService.myInfo();
-      dispatch(appActions.setMyProfile(profile));
+      if (isEmpty(myProfile)) {
+        const profile: User = await UserService.myInfo();
+        dispatch(appActions.setMyProfile(profile));
+      }
+      if (isEmpty(header)) {
+        const header = await CourseService.listHeaders();
+        dispatch(appActions.setAppHeader(header));
+      }
     } catch (error) {
-      console.log('abc');
       forceLogout();
     } finally {
       setIsLoading(false);
     }
   };
-  // const checkUserAssets = async () => {
-  // 	if (
-  // 		typeof window !== 'undefined' &&
-  // 		window.location.pathname.includes(RoutePaths.MAILING_LISTS)
-  // 	) {
-  // 		try {
-  // 			const assets = await SettingsService.getConstantValue();
-  // 			dispatch({
-  // 				type: UserAction.USER_ASSETS,
-  // 				payload: assets,
-  // 			});
-  // 		} catch (error) {
-  // 			console.log(error);
-  // 		}
-  // 	}
-  // };
 
-  const checkAccountPermission = () => {
-    // const router = useRouter()
-
+  const checkAccountPermission = async () => {
     const token = localStorage.getItem(StorageKeys.SESSION_KEY);
     if (!token) {
       setIsLoading(false);
-      // router.push(RoutePaths.LOGIN);
       forceLogout();
     } else {
       getUserProfile();
     }
   };
-
   React.useEffect(() => {
     // checkUserAssets();
     checkAccountPermission();
   }, []);
+  useEffect(() => {
+    console.log('private');
+  }, [isLoading]);
 
   return <React.Fragment>{!isLoading ? children : <LoadingPage isLoading={true} />}</React.Fragment>;
 };

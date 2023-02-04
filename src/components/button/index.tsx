@@ -15,6 +15,7 @@ interface AppButtonProps extends ButtonProps {
   nonBordered?: boolean;
   borderRadius?: '5px' | '3px';
   colorHover?: 'darkBlue' | 'white' | 'BRICK';
+  bgColor?: string;
 }
 const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
   const {
@@ -27,6 +28,7 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
     colorHover,
     borderRadius,
     btnWidth,
+    bgColor,
     ...rest
   } = props;
   const getSize = () => {
@@ -71,6 +73,7 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
   };
 
   const getBackgroundColor = () => {
+    if (bgColor) return bgColor;
     if (disabled) {
       switch (btnStyle) {
         case 'outline':
@@ -446,7 +449,7 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
           background-image: ${getBackgroundColor()};
           border: ${nonBordered ? 'none' : getBorderStyle()};
         }
-        }
+      }
         `}
       `}
       disabled={disabled}
