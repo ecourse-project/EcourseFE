@@ -1,7 +1,7 @@
 /* eslint-disable react/display-name */
 import { LogoutOutlined, SettingOutlined } from '@ant-design/icons';
 import { Card } from 'antd';
-import React from 'react';
+import React, { useEffect } from 'react';
 import isEqual from 'react-fast-compare';
 import { TypeTabPanel } from 'src/lib/types/commentType';
 import { v4 as uuidv4 } from 'uuid';
@@ -84,11 +84,14 @@ const SettingTabs: React.FC<{ className?: string }> = React.memo(
         setSwitchTabs(params.tab);
       }
     }, [params?.tab]);
+    useEffect(() => {
+      console.log('switchTabs', switchTabs);
+    }, [switchTabs]);
     return (
       <div className="">
         {/* <Card className={className ?? ''}> */}
         <SettingContext.Provider value={appContextValue}>
-          <TabPaneSettingsSection tabData={tabDataSetting} activeKey={switchTabs} />
+          <TabPaneSettingsSection tabData={tabDataSetting} activeKey={switchTabs || TabSettingKey.MY_LEARNING} />
         </SettingContext.Provider>
         {/* </Card> */}
       </div>

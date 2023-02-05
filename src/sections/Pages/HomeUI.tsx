@@ -64,47 +64,7 @@ const HomeUI = () => {
     console.log('listCourse', listCourse);
   }, [listDoc, listCourse]);
   return (
-    <div
-      className="page-container2"
-      css={css`
-        .doc-wrapper {
-          padding-bottom: 40px;
-          &:last-child {
-            padding-bottom: 60px;
-          }
-        }
-        .ant-col {
-          height: 100%;
-        }
-        .cover {
-          color: '#fff';
-          lineheight: '160px';
-          textalign: 'center';
-          background: '#fff';
-          margin: '0 auto';
-          .rounded {
-            margin: 0 auto;
-            height: 350px;
-          }
-        }
-        .doc {
-          display: flex;
-        }
-        .title {
-          font-weight: 700;
-          font-size: 20px;
-          text-align: center;
-        }
-        .doc-title {
-          font-size: 30px;
-          font-weight: 500;
-          text-decoration: overline;
-          .anticon {
-            vertical-align: baseline;
-          }
-        }
-      `}
-    >
+    <div className="page-container">
       {homeData.map((v, i) => {
         return <HomeData homeData={v} />;
       })}

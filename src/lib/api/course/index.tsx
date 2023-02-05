@@ -40,7 +40,7 @@ import {
 const parseParamsToUrL = (url: string, params: string[], paramsName: string) => {
   let newURL = url;
   const newParams = [...params];
-  newURL += `/?${paramsName}=${newParams.shift()}`;
+  newURL += `&${paramsName}=${newParams.shift()}`;
   for (const i of newParams) {
     newURL += `&${paramsName}=${i}`;
   }
@@ -63,7 +63,13 @@ export const apiURL = {
     }
     return url;
   },
-  getAllDocs: (limit, page) => `api/documents/?limit=${limit}&page=${page}`,
+  getAllDocs: (limit, page, title?, document_id?: string[]) => {
+    let url = `api/documents/?limit=${limit}&page=${page}&title=${title}`;
+    if (document_id) {
+      url = parseParamsToUrL(url, document_id, `document_id`);
+    }
+    return url;
+  },
   getMostDownloadDocs: () => `api/documents/most-download/`,
   getUDocs: (limit, page) => `api/documents/my-documents/?limit=${limit}&page=${page}`,
   getDocDetail: (id) => `api/documents/detail/?document_id=${id}`,
@@ -86,7 +92,13 @@ export const apiURL = {
     }
     return url;
   },
-  getAllCourses: (limit, page) => `api/courses/?limit=${limit}&page=${page}`,
+  getAllCourses: (limit, page, title?, course_id?: string[]) => {
+    let url = `api/courses/?limit=${limit}&page=${page}&title=${title}`;
+    if (course_id) {
+      url = parseParamsToUrL(url, course_id, `course_id`);
+    }
+    return url;
+  },
   getMostDownloadCourses: () => `api/courses/most-download/`,
   getUCourses: (limit, page) => `api/courses/my-courses/?limit=${limit}&page=${page}`,
   getCourseDetail: (id) => `api/courses/detail/?course_id=${id}`,
@@ -112,6 +124,13 @@ export const apiURL = {
 class CourseService {
   static myInfo(): Promise<User> {
     return apiClient.get(apiURL.me());
+  }
+
+  static updateMyInfo(phone?: string, full_name?: string): Promise<User> {
+    return apiClient.patch(apiURL.me(), {
+      phone: phone,
+      full_name: full_name,
+    });
   }
 
   static register(email: string, password1: string, password2: string, full_name: string): Promise<ORegistration> {
@@ -143,8 +162,8 @@ class CourseService {
     return apiClient.post(apiURL.verifyToken(), { token: token });
   }
 
-  static getAllDocs(params: PaginationParams): Promise<Pagination<Document>> {
-    return apiClient.get(apiURL.getAllDocs(params.limit, params.page));
+  static getAllDocs(params: PaginationParams, title?: string, document_id?: string[]): Promise<Pagination<Document>> {
+    return apiClient.get(apiURL.getAllDocs(params.limit, params.page, title, document_id));
   }
 
   static getHomeDocs(params: PaginationParams, title?: string, document_id?: string[]): Promise<Pagination<Document>> {
@@ -207,8 +226,8 @@ class CourseService {
     return apiClient.post(apiURL.calculatePrice(), params);
   }
 
-  static getAllCourses(params: PaginationParams): Promise<Pagination<Course>> {
-    return apiClient.get(apiURL.getAllCourses(params.limit, params.page));
+  static getAllCourses(params: PaginationParams, title?: string, course_id?: string[]): Promise<Pagination<Course>> {
+    return apiClient.get(apiURL.getAllCourses(params.limit, params.page, title, course_id));
   }
 
   static getHomeCourses(params: PaginationParams, title?: string, course_id?: string[]): Promise<Pagination<Course>> {

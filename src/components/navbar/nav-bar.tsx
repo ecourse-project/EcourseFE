@@ -1,4 +1,4 @@
-import { ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
+import { AppstoreOutlined, MailOutlined, SettingOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 import { Divider, Menu } from 'antd';
 import type { MenuTheme } from 'antd/es/menu';
@@ -12,6 +12,8 @@ type MenuItem = Required<MenuProps>['items'][number];
 import type { MenuProps } from 'antd';
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/lib/reducers/model';
+import { isEmpty } from 'lodash';
+import AppButton from '../button';
 
 function getItem(
   label: React.ReactNode,
@@ -31,16 +33,17 @@ function getItem(
 
 const Nav: React.FC = () => {
   const header: Nav[] = useSelector((state: RootState) => state.app.header);
-  const [mode, setMode] = useState<'vertical' | 'inline'>('inline');
-  const [theme, setTheme] = useState<MenuTheme>('light');
+
   const [listNav, setListNav] = useState<MenuItem[]>();
+  const myProfile = useSelector((state: RootState) => state.app.user);
   const getTargetUrl = (type: string, itemType) => {
     if (type.toLocaleUpperCase() === NavTypeEnum.DOCUMENT) return `${RoutePaths.DOCUMENT}/?document=${itemType}`;
     else if (type.toLocaleUpperCase() === NavTypeEnum.COURSE) return `${RoutePaths.COURSE}/?course=${itemType}`;
   };
   const getListHeader = async () => {
     try {
-      const listItems = header.map((v, i) => {
+      const header1 = header.concat(header.concat(header.concat(header)));
+      const listItems = header1.map((v, i) => {
         return getItem(
           v.header,
           v.header + `id=${uuidv4()}`,
@@ -60,7 +63,9 @@ const Nav: React.FC = () => {
   useEffect(() => {
     getListHeader();
   }, []);
-
+  useEffect(() => {
+    console.log('myProfile :>> ', myProfile);
+  }, [myProfile]);
   return (
     <div
       className="nav-bar"
@@ -71,6 +76,11 @@ const Nav: React.FC = () => {
         .left-box {
           display: flex;
           align-items: center;
+          width: 80%;
+          padding-right: 30px;
+          > .ant-menu {
+            width: 100%;
+          }
         }
         .right-box {
           margin-right: 40px;
@@ -115,13 +125,21 @@ const Nav: React.FC = () => {
             height: unset !important;
           }
         }
+        .login-btn {
+          font-weight: 700;
+          color: #000;
+          &:hover {
+            letter-spacing: 2px;
+            transition: all 0.5s ease-in-out;
+          }
+        }
       `}
     >
+      <Link href={'/'}>
+        <h1 className="logo">E-Course</h1>
+      </Link>
       <div className="left-box">
-        <Link href={'/'}>
-          <h1 className="logo">E-Course</h1>
-        </Link>
-        <Menu items={listNav} mode="horizontal" />
+        <Menu items={listNav} mode="horizontal" className="nav-menu" triggerSubMenuAction="hover" />
       </div>
       <div className="right-box">
         <Link href={RoutePaths.CART}>
@@ -133,9 +151,15 @@ const Nav: React.FC = () => {
             <UserOutlined />
           </Dropdown>
         </div> */}
-        <Link href={RoutePaths.SETTINGS}>
-          <UserOutlined />
-        </Link>
+        {!isEmpty(myProfile) ? (
+          <Link href={RoutePaths.SETTINGS}>
+            <UserOutlined />
+          </Link>
+        ) : (
+          <Link href={RoutePaths.LOGIN} className="login-btn">
+            Login
+          </Link>
+        )}
       </div>
     </div>
   );

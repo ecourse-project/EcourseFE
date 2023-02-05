@@ -1,7 +1,6 @@
 import { css } from '@emotion/react';
 import { Avatar, Comment, List, Row } from 'antd';
 import { useEffect, useState } from 'react';
-import { useAppSelector } from 'src/apps/hooks';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { CourseComment, Pagination, PaginationParams } from 'src/lib/types/backend_modal';
 import { RootState } from 'src/lib/reducers/model';
@@ -10,6 +9,7 @@ import { CourseParams } from '../course/course-progress/course-progress';
 import CustomPagination from '../pagination';
 import CommentForm from './comment-form';
 import CommentItem from './comment-item';
+import { useSelector } from 'react-redux';
 
 // interface CommentProps {
 // 	onAddComment: (value) => void;

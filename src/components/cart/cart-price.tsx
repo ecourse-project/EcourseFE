@@ -43,7 +43,7 @@ const PricingCard: React.FC<ChildProps> = ({ docNum, checkoutList, children }) =
         // dispatch(docActions.clearCart(checkoutList));
         // dispatch(docActions.createOrder(newOrder));
         dispatch({ type: AppAction.CREATE_ORDER, payload: checkoutList });
-        router.push(RoutePaths.ORDER_CART);
+        router.push(`${RoutePaths.SETTINGS}?tab=ORDER`);
       }, 1000);
     } catch (error) {
       console.log(error);
@@ -132,7 +132,6 @@ const PricingCard: React.FC<ChildProps> = ({ docNum, checkoutList, children }) =
         btnWidth={'full-w'}
         onClick={showModal}
         disabled={checkoutList.total_price === 0}
-        href={docNum === 0 ? RoutePaths.DOCUMENT : undefined}
       >
         {btnText}
       </AppButton>

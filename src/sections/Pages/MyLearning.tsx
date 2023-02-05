@@ -7,34 +7,35 @@ import CourseService from 'src/lib/api/course';
 import { v4 as uuidv4 } from 'uuid';
 import MyCourseUI from 'src/components/course/my-course';
 import RoutePaths from 'src/lib/utils/routes';
-import { TabPaneSection } from 'src/components/tab-pane-learning';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { useRouter } from 'next/router';
 import { TypeTabPanel } from 'src/lib/types/commentType';
+import TabPaneSection from 'src/components/tab-pane-learning';
 interface AppContextOptions {
-  switchTabs: string;
-  setSwitchTabs: (tabskey: string) => void;
+  switchTabsLearning: string;
+  setSwitchTabsLearning: (tabskey: string) => void;
 }
-export const AppContext = React.createContext<AppContextOptions>({} as AppContextOptions);
+export const LearningContext = React.createContext<AppContextOptions>({} as AppContextOptions);
 interface MyLearnParams {
   tab?: string;
+  subtab?: string;
 }
-export enum TabsKey {
+export enum LearningTabsKey {
   MY_COURSES = 'MY_COURSES',
   WISH_LIST = 'WISH_LIST',
 }
 const MyLearning: React.FC = () => {
   const router = useRouter();
   const params: MyLearnParams = useQueryParam();
-  const [switchTabs, setSwitchTabs] = React.useState<string>(TabsKey.MY_COURSES);
+  const [switchTabsLearning, setSwitchTabsLearning] = React.useState<string>(LearningTabsKey.MY_COURSES);
   useEffect(() => {
-    params.tab && setSwitchTabs(params?.tab);
+    params.subtab && setSwitchTabsLearning(params?.subtab);
   }, []);
   const appContextValue = {
-    switchTabs,
-    setSwitchTabs: (tabsKey: string) => {
-      router.push(`${RoutePaths.MY_COURSES}/?tab=${tabsKey}`);
-      setSwitchTabs(tabsKey);
+    switchTabsLearning,
+    setSwitchTabsLearning: (tabsKey: string) => {
+      router.push(`${RoutePaths.SETTINGS}/?tab=${params.tab}&subtab=${tabsKey}`);
+      setSwitchTabsLearning(tabsKey);
     },
   };
   const [myCourses, setMyCourses] = useState<Course[]>();
@@ -67,13 +68,13 @@ const MyLearning: React.FC = () => {
       id: uuidv4(),
       label: 'Khoá học của tôi',
       content: <MyCourseUI courses={myCourses || []} docs={myDocs || []} />,
-      key: TabsKey.MY_COURSES,
+      key: LearningTabsKey.MY_COURSES,
     },
     {
       id: uuidv4(),
       label: 'Danh sách thích',
       content: <WishListUI favourite={myFavor || ({} as FavoriteList)} />,
-      key: TabsKey.WISH_LIST,
+      key: LearningTabsKey.WISH_LIST,
     },
   ];
   return (
@@ -83,9 +84,9 @@ const MyLearning: React.FC = () => {
         padding: 20px;
       `}
     >
-      <AppContext.Provider value={appContextValue}>
-        <TabPaneSection tabData={tabDataLearning} title="Khoá học của tôi" activeKey={switchTabs} />
-      </AppContext.Provider>
+      <LearningContext.Provider value={appContextValue}>
+        <TabPaneSection tabData={tabDataLearning} title="Khoá học của tôi" activeKey={switchTabsLearning} />
+      </LearningContext.Provider>
     </div>
   );
 };

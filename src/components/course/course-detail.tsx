@@ -51,6 +51,7 @@ import {
   RateDocArgs,
   Rating,
   RateCourseArgs,
+  MoveEnum,
 } from 'src/lib/types/backend_modal';
 import { courseAction } from 'src/lib/reducers/course/courseSlice';
 import { RootState } from 'src/lib/reducers/model';
@@ -252,18 +253,29 @@ const CourseDetail: React.FC = () => {
     </div>
   );
 
-  const handleUpdateBtn = () => {
+  const handleUpdateBtn = async () => {
     if (course.sale_status !== SaleStatusEnum.BOUGHT) {
-      setLoading(true);
-      dispatch(courseAction.updateCart(course));
-      setTimeout(() => {
+      try {
+        setLoading(true);
         if (course.sale_status === SaleStatusEnum.AVAILABLE) {
-          course.sale_status = SaleStatusEnum.IN_CART;
+          const newCourse = await CourseService.moveCourse(course.id, MoveEnum.LIST, MoveEnum.CART);
+          setTimeout(() => {
+            setCourse(newCourse);
+          }, 1000);
         } else if (course.sale_status === SaleStatusEnum.IN_CART) {
-          course.sale_status = SaleStatusEnum.AVAILABLE;
+          const newCourse = await CourseService.moveCourse(course.id, MoveEnum.CART, MoveEnum.LIST);
+          setTimeout(() => {
+            setCourse(newCourse);
+          }, 1000);
         }
+      } catch (error) {
+        console.log('error', error);
         setLoading(false);
-      }, 1000);
+      } finally {
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
+      }
     } else {
       router.push(`${RoutePaths.COURSE_PROGRESS}?id=${course.id}`);
     }
@@ -411,7 +423,7 @@ const CourseDetail: React.FC = () => {
       <Divider orientation="left">
         <Breadcrumb separator={<SwapOutlined />}>
           <Breadcrumb.Item href={RoutePaths.HOME}>Trang chính</Breadcrumb.Item>
-          <Breadcrumb.Item href={RoutePaths.COURSE}>Khoá học</Breadcrumb.Item>
+          <Breadcrumb.Item href={''}>Khoá học</Breadcrumb.Item>
           <Breadcrumb.Item href="">{course?.topic?.name}</Breadcrumb.Item>
         </Breadcrumb>
       </Divider>
@@ -419,17 +431,17 @@ const CourseDetail: React.FC = () => {
         title={course?.topic?.name}
         className="site-page-header"
         // subTitle="This is a subtitle"
-        tags={
-          <>
-            {tags(TagState.SUCCESS, `${course.sold} lượt mua`)}
-            {tags(TagState.WAITING, 'Cập nhật gần đây')}
+        // tags={
+        //   <>
+        //     {tags(TagState.SUCCESS, `${course.sold} lượt mua`)}
+        //     {tags(TagState.WAITING, 'Cập nhật gần đây')}
 
-            {course.sale_status === SaleStatusEnum.PENDING && tags(TagState.PROCESSING, 'Chờ thanh toán')}
-            {course.sale_status === SaleStatusEnum.BOUGHT && tags(TagState.SUCCESS, 'Đã mua')}
-            {(course.sale_status === SaleStatusEnum.AVAILABLE || course.sale_status === SaleStatusEnum.IN_CART) &&
-              tags(TagState.ERROR, `Bán chạy của chủ đề ${course.topic}`)}
-          </>
-        }
+        //     {course.sale_status === SaleStatusEnum.PENDING && tags(TagState.PROCESSING, 'Chờ thanh toán')}
+        //     {course.sale_status === SaleStatusEnum.BOUGHT && tags(TagState.SUCCESS, 'Đã mua')}
+        //     {(course.sale_status === SaleStatusEnum.AVAILABLE || course.sale_status === SaleStatusEnum.IN_CART) &&
+        //       tags(TagState.ERROR, `Bán chạy của chủ đề ${course.topic}`)}
+        //   </>
+        // }
         avatar={{
           src: 'https://avatars1.githubusercontent.com/u/8186664?s=460&v=4',
         }}

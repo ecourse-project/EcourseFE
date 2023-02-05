@@ -36,7 +36,15 @@ import {
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
-import { Document, RateCourseArgs, RateDocArgs, Rating, RatingEnum, SaleStatusEnum } from 'src/lib/types/backend_modal';
+import {
+  Document,
+  MoveEnum,
+  RateCourseArgs,
+  RateDocArgs,
+  Rating,
+  RatingEnum,
+  SaleStatusEnum,
+} from 'src/lib/types/backend_modal';
 import { docActions } from 'src/lib/reducers/document/documentSlice';
 import CourseService from 'src/lib/api/course';
 import { formatCurrency } from 'src/lib/utils/currency';
@@ -231,6 +239,7 @@ const data = [
 
 interface DocDetailParams {
   id: string;
+  document: string;
 }
 
 const DocDetail: React.FC = () => {
@@ -252,6 +261,9 @@ const DocDetail: React.FC = () => {
       console.log('error get detail', error);
     }
   };
+  useEffect(() => {
+    console.log('params', params);
+  }, [params]);
   useEffect(() => {
     fetchDocDetail(params.id);
   }, []);
@@ -301,19 +313,40 @@ const DocDetail: React.FC = () => {
       </div>
     </div>
   );
-  const handleUpdateBtn = () => {
-    if (doc.sale_status !== SaleStatusEnum.BOUGHT) {
+  const handleUpdateBtn = async () => {
+    try {
       setLoading(true);
-      dispatch(docActions.updateCart(doc));
+      if (doc.sale_status === SaleStatusEnum.AVAILABLE) {
+        const newDoc = await CourseService.moveDoc(doc.id, MoveEnum.LIST, MoveEnum.CART);
+        setTimeout(() => {
+          setDoc(newDoc);
+        }, 1000);
+      } else if (doc.sale_status === SaleStatusEnum.IN_CART) {
+        const newDoc = await CourseService.moveDoc(doc.id, MoveEnum.CART, MoveEnum.LIST);
+        setTimeout(() => {
+          setDoc(newDoc);
+        }, 1000);
+      }
+    } catch (error) {
+      console.log('error', error);
+      setLoading(false);
+    } finally {
       setTimeout(() => {
-        if (doc.sale_status === SaleStatusEnum.AVAILABLE) {
-          doc.sale_status = SaleStatusEnum.IN_CART;
-        } else if (doc.sale_status === SaleStatusEnum.IN_CART) {
-          doc.sale_status = SaleStatusEnum.AVAILABLE;
-        }
         setLoading(false);
       }, 1000);
     }
+    // if (doc.sale_status !== SaleStatusEnum.BOUGHT) {
+    //   setLoading(true);
+    //   dispatch(docActions.updateCart(doc));
+    //   setTimeout(() => {
+    //     if (doc.sale_status === SaleStatusEnum.AVAILABLE) {
+    //       doc.sale_status = SaleStatusEnum.IN_CART;
+    //     } else if (doc.sale_status === SaleStatusEnum.IN_CART) {
+    //       doc.sale_status = SaleStatusEnum.AVAILABLE;
+    //     }
+    //     setLoading(false);
+    //   }, 1000);
+    // }
   };
 
   const items = [
@@ -396,7 +429,7 @@ const DocDetail: React.FC = () => {
       <Divider orientation="left">
         <Breadcrumb separator={<SwapOutlined />}>
           <Breadcrumb.Item href={RoutePaths.HOME}>Trang chính</Breadcrumb.Item>
-          <Breadcrumb.Item href={RoutePaths.DOCUMENT}>Tài liệu</Breadcrumb.Item>
+          <Breadcrumb.Item href={''}>Tài liệu</Breadcrumb.Item>
           <Breadcrumb.Item href="">{doc.title}</Breadcrumb.Item>
         </Breadcrumb>
       </Divider>
@@ -404,17 +437,17 @@ const DocDetail: React.FC = () => {
         title={doc?.title}
         className="site-page-header"
         // subTitle="This is a subtitle"
-        tags={
-          <>
-            {tags(TagState.SUCCESS, `${doc.sold} lượt mua`)}
-            {tags(TagState.WAITING, 'Cập nhật gần đây')}
+        // tags={
+        //   <>
+        //     {tags(TagState.SUCCESS, `${doc.sold} lượt mua`)}
+        //     {tags(TagState.WAITING, 'Cập nhật gần đây')}
 
-            {doc.sale_status === SaleStatusEnum.PENDING && tags(TagState.PROCESSING, 'Chờ thanh toán')}
-            {doc.sale_status === SaleStatusEnum.BOUGHT && tags(TagState.SUCCESS, 'Đã mua')}
-            {(doc.sale_status === SaleStatusEnum.AVAILABLE || doc.sale_status === SaleStatusEnum.IN_CART) &&
-              tags(TagState.ERROR, `Bán chạy của chủ đề ${doc.title}`)}
-          </>
-        }
+        //     {doc.sale_status === SaleStatusEnum.PENDING && tags(TagState.PROCESSING, 'Chờ thanh toán')}
+        //     {doc.sale_status === SaleStatusEnum.BOUGHT && tags(TagState.SUCCESS, 'Đã mua')}
+        //     {(doc.sale_status === SaleStatusEnum.AVAILABLE || doc.sale_status === SaleStatusEnum.IN_CART) &&
+        //       tags(TagState.ERROR, `Bán chạy của chủ đề ${doc.title}`)}
+        //   </>
+        // }
         avatar={{
           src: 'https://avatars1.githubusercontent.com/u/8186664?s=460&v=4',
         }}

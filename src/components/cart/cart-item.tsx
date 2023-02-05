@@ -6,11 +6,12 @@ import { css } from '@emotion/react';
 import { set } from 'immer/dist/internal';
 import { debounce } from 'lodash';
 import { Spin } from 'antd';
-import { Course, Document } from 'src/lib/types/backend_modal';
+import { Course, Document, MoveEnum } from 'src/lib/types/backend_modal';
 import { formatCurrency } from 'src/lib/utils/currency';
 import { useDispatch } from 'react-redux';
 import { docActions } from 'src/lib/reducers/document/documentSlice';
 import { courseAction } from 'src/lib/reducers/course/courseSlice';
+import CourseService from 'src/lib/api/course';
 
 interface ChildProps {
   document?: Document;
@@ -20,20 +21,25 @@ const CartItemRow: React.FC<ChildProps> = ({ document, course }) => {
   const [deleteLoading, setDeletetLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
 
-  const deleteDoc = () => {
-    setDeletetLoading(true);
-    document && dispatch(docActions.updateCart(document));
-    setTimeout(() => {
+  const deleteDoc = async () => {
+    try {
+      setDeletetLoading(true);
+      const remove = document && CourseService.moveDoc(document?.id, MoveEnum.CART, MoveEnum.LIST);
+    } catch (error) {
+      console.log('error', error);
+    } finally {
       setDeletetLoading(false);
-    }, 300);
+    }
   };
   const deleteCourse = () => {
-    setDeletetLoading(true);
-
-    course && dispatch(courseAction.updateCart(course));
-    setTimeout(() => {
+    try {
+      setDeletetLoading(true);
+      const remove = course && CourseService.moveCourse(course?.id, MoveEnum.CART, MoveEnum.LIST);
+    } catch (error) {
+      console.log('error', error);
+    } finally {
       setDeletetLoading(false);
-    }, 300);
+    }
   };
 
   return (

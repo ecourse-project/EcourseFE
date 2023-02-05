@@ -271,11 +271,9 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                         checked={checkedDoc.includes(v.id)}
                         onChange={(e) => {
                           if (checkedDoc.includes(e.target.value)) {
-                            console.log('vao if include', e.target.value);
                             const newChecked = checkedDoc.filter((v) => v !== e.target.value);
                             setCheckedDoc(newChecked);
                           } else {
-                            console.log('vao else include', e.target.value);
 
                             setCheckedDoc([...checkedDoc, e.target.value]);
                           }

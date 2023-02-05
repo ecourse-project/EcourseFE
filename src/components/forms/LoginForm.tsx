@@ -7,13 +7,18 @@ import { useFormik } from 'formik';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import AppButton from 'src/components/button';
 import ErrorMessage from 'src/components/error-message';
 import AppInput from 'src/components/input';
 import AuthService from 'src/lib/api/auth';
 import { LoginParams } from 'src/lib/api/auth/model';
+import CourseService from 'src/lib/api/course';
+import UserService from 'src/lib/api/user';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
+import { appActions } from 'src/lib/reducers/app/appSlice';
+import { User } from 'src/lib/types/backend_modal';
 import { LoginFormData, LoginQueryParams } from 'src/lib/types/commentType';
 import { StorageKeys } from 'src/lib/utils/enum';
 import RoutePaths from 'src/lib/utils/routes';
@@ -39,6 +44,7 @@ const LoginForm: React.FC = () => {
     localStorage.getItem(StorageKeys.REMEMBER_ME_KEY) === 'true' ? true : false,
   );
   const registerEmail = localStorage.getItem('email_register');
+  const dispatch = useDispatch();
   const formik = useFormik<LoginFormData>({
     initialValues: {
       email: registerEmail || '',
@@ -53,6 +59,8 @@ const LoginForm: React.FC = () => {
         const response = await AuthService.signIn(email, password);
         router.push('/');
         localStorage.setItem(StorageKeys.SESSION_KEY, response.access.toString());
+        const profile: User = await UserService.myInfo();
+        dispatch(appActions.setMyProfile(profile));
       } catch (error) {
         setLoginError((error as Error).message);
       } finally {

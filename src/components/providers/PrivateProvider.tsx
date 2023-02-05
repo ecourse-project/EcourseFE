@@ -42,6 +42,7 @@ const PrivateProvider: React.FC<{ children?: ReactNode }> = ({ children }) => {
       getUserProfile();
     }
   };
+
   React.useEffect(() => {
     // checkUserAssets();
     checkAccountPermission();

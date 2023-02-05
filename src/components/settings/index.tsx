@@ -19,7 +19,7 @@ interface TabPaneProps {
   onChangeSwitchTabs?: (v) => void;
 }
 
-export const TabPaneSettingsSection = React.memo((props: PropsWithChildren<TabPaneProps>) => {
+export const TabPaneSettingsSection: React.FC<TabPaneProps> = React.memo((props: PropsWithChildren<TabPaneProps>) => {
   const { children, className, tabData, title, activeKey, btnAddDripCampaign, onChangeSwitchTabs } = props;
 
   const { setSwitchTabs } = React.useContext(SettingContext);
@@ -60,8 +60,8 @@ export const TabPaneSettingsSection = React.memo((props: PropsWithChildren<TabPa
           }
           .ant-tabs-nav {
             /* border-bottom: 1px solid #00aaff; */
-            width: 200px;
             .ant-tabs-nav-list {
+              min-width: 200px;
               .ant-tabs-tab {
                 background-color: transparent !important;
                 border: none;

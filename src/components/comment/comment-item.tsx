@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
-import { Avatar, Comment, Tooltip } from 'antd';
+import { Avatar, Tooltip } from 'antd';
+import { Comment } from '@ant-design/compatible';
 import moment from 'moment';
 import React, { useState } from 'react';
 import { CourseComment } from 'src/lib/types/backend_modal';

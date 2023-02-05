@@ -15,7 +15,9 @@ import RoutePaths from 'src/lib/utils/routes';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import CourseService from 'src/lib/api/course';
-interface DocumentParams {
+import { UpperCaseFirstLetter } from 'src/lib/utils/format';
+import { StorageKeys } from 'src/lib/utils/enum';
+export interface DocumentParams {
   page?: number;
   document?: string;
 }
@@ -33,11 +35,16 @@ const DocumentUI: React.FC = () => {
   });
   const dispatch = useDispatch();
   const fetchDocument = async (pagination) => {
-    // dispatch({ type: AppAction.FETCH_DOCUMENT, payload: pagination });
+    const token = localStorage.getItem(StorageKeys.SESSION_KEY);
     try {
       setLoading(true);
-      const homeDoc = await CourseService.getHomeDocs(pagination, params?.document || '');
-      setListDoc(homeDoc);
+      if (!token) {
+        const homeDoc = await CourseService.getHomeDocs(pagination, params?.document || '');
+        setListDoc(homeDoc);
+      } else {
+        const homeDoc = await CourseService.getAllDocs(pagination, params?.document || '');
+        setListDoc(homeDoc);
+      }
     } catch (error) {
       setLoading(false);
       console.log('Fetch Doc Fail :>> ', error);
@@ -49,6 +56,7 @@ const DocumentUI: React.FC = () => {
   useEffect(() => {
     fetchDocument(pagination);
   }, [pagination, params.document]);
+
   const onChangePage = (page: number) => {
     setPagination({ ...pagination, page });
     router.push(`${RoutePaths.DOCUMENT}/?page=${page}`);
@@ -59,6 +67,7 @@ const DocumentUI: React.FC = () => {
         <Breadcrumb separator={<SwapOutlined />}>
           <Breadcrumb.Item href={RoutePaths.HOME}>Trang chính</Breadcrumb.Item>
           <Breadcrumb.Item>Tài liệu</Breadcrumb.Item>
+          <Breadcrumb.Item href={''}>{UpperCaseFirstLetter(params?.document || '')}</Breadcrumb.Item>
         </Breadcrumb>
       </Divider>
       {loading ? (
@@ -120,6 +129,7 @@ const DocumentUI: React.FC = () => {
               total={listDoc?.count || 10}
               showSizeChanger={false}
               onChange={onChangePage}
+              hideOnSinglePage
             />
           </div>
         </>

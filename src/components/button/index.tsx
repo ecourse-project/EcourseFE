@@ -180,8 +180,10 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
           position: relative;
           .anticon.anticon-loading.anticon-spin {
             position: absolute;
-            top: -15px;
-            left: -25px;
+            top: -5px;
+            left: -27px;
+            bottom: unset;
+            right: unset;
           }
         }
         &.btn-cmt {
