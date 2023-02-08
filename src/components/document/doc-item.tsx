@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons';
 import { css } from '@emotion/react';
 import { Popover, Rate, Tag } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import CourseService from 'src/lib/api/course';
 import { docActions } from 'src/lib/reducers/document/documentSlice';
 import { RootState } from 'src/lib/reducers/model';
@@ -25,6 +25,11 @@ import { formatDate } from 'src/lib/utils/format';
 import RoutePaths from 'src/lib/utils/routes';
 import Rating from '@mui/material/Rating';
 import StarIcon from '@mui/icons-material/Star';
+import { isEqual } from 'lodash';
+import { checkAccountPermission } from 'src/lib/utils/utils';
+import { useQueryParam } from 'src/lib/hooks/useQueryParam';
+import { DocumentParams } from 'src/sections/Pages/DocumentUI';
+import { LoadingEnum } from 'src/lib/reducers/app/appSlice';
 
 interface ChildProps {
   document: Document; // try not to use any.
@@ -43,15 +48,17 @@ enum Color {
   BOUGHT = '#23c501',
 }
 
-const DocItem: React.FC<ChildProps> = (props) => {
+const DocItem: React.FC<ChildProps> = memo((props) => {
   const { document, isMyLearn } = props;
   const [added, setAdded] = useState(false);
   const [btnString, setBtnString] = useState<string>(BtnString.AVAILABLE);
   const cartData = useSelector((state: RootState) => state.document);
   const [loading, setLoading] = useState<boolean>(false);
   const [currentDoc, setCurrentDoc] = useState<Document>(document);
-
+  const [isFav, setIsFav] = useState<boolean>(document?.is_favorite || false);
+  const params: DocumentParams = useQueryParam();
   const dispatch = useDispatch();
+
   useEffect(() => {
     if (currentDoc.sale_status === SaleStatusEnum.AVAILABLE) {
       setBtnString(BtnString.AVAILABLE);
@@ -64,35 +71,56 @@ const DocItem: React.FC<ChildProps> = (props) => {
     }
   }, [currentDoc]);
 
-  const handleClick = () => {
+  const handleUpdateDoc = async () => {
+    checkAccountPermission();
     setLoading(true);
-    if (currentDoc.sale_status === SaleStatusEnum.AVAILABLE) {
-      dispatch(docActions.updateCart(currentDoc));
-    } else if (currentDoc.sale_status === SaleStatusEnum.IN_CART) {
-      dispatch(docActions.updateCart(currentDoc));
+    try {
+      // console.log('currentDoc2 :>> ', currentDoc);
+      if (currentDoc.sale_status === SaleStatusEnum.AVAILABLE) {
+        const addTo: Document = await CourseService.moveDoc(currentDoc.id, MoveEnum.LIST, MoveEnum.CART);
+        setTimeout(() => {
+          setCurrentDoc(addTo);
+        }, 300);
+      } else if (currentDoc.sale_status === SaleStatusEnum.IN_CART) {
+        const removeFrom: Document = await CourseService.moveDoc(currentDoc.id, MoveEnum.CART, MoveEnum.LIST);
+        setTimeout(() => {
+          setCurrentDoc(removeFrom);
+        }, 300);
+      }
+    } catch (error) {
+      console.log('error update cart', error);
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 300);
     }
-    setTimeout(() => {
-      setLoading(false);
-    }, 300);
   };
   useEffect(() => {
     setCurrentDoc(document);
   }, [document]);
-  const handleAddFav = async (id) => {
+
+  const handleAddFav = async () => {
     setLoading(true);
     setTimeout(async () => {
-      if (currentDoc.is_favorite) {
-        const removeFromFav: Document = await CourseService.moveDoc(id, MoveEnum.FAVORITE, MoveEnum.LIST);
-        dispatch(docActions.setIsFavourite(removeFromFav));
-        setCurrentDoc(removeFromFav);
-      } else {
-        const addToFav: Document = await CourseService.moveDoc(id, MoveEnum.LIST, MoveEnum.FAVORITE);
-        dispatch(docActions.setIsFavourite(addToFav));
-        setCurrentDoc(addToFav);
+      try {
+        if (currentDoc.is_favorite) {
+          const removeFromFav: Document = await CourseService.moveDoc(currentDoc.id, MoveEnum.FAVORITE, MoveEnum.LIST);
+          dispatch(docActions.setIsFavourite(removeFromFav));
+          setCurrentDoc(removeFromFav);
+        } else {
+          const addToFav: Document = await CourseService.moveDoc(currentDoc.id, MoveEnum.LIST, MoveEnum.FAVORITE);
+          dispatch(docActions.setIsFavourite(addToFav));
+          setCurrentDoc(addToFav);
+        }
+      } catch (error) {
+        console.log('error', error);
+        setLoading(false);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
-    }, 300);
+    }, 500);
   };
+
   return (
     <div
       className="container"
@@ -187,9 +215,6 @@ const DocItem: React.FC<ChildProps> = (props) => {
         }
 
         .anticon-loading {
-          position: absolute;
-          top: -7px !important;
-          left: -32px !important;
           font-size: 18px;
           color: ${btnString === BtnString.AVAILABLE ? Color.AVAILABLE : Color.IN_CART};
         }
@@ -207,6 +232,9 @@ const DocItem: React.FC<ChildProps> = (props) => {
         [ant-click-animating-without-extra-node='true']:after {
           display: none;
         }
+        .ant-click-animating-node {
+          display: none;
+        }
         .ant-rate {
           font-size: 14px;
           margin: 0 10px;
@@ -214,6 +242,9 @@ const DocItem: React.FC<ChildProps> = (props) => {
           .ant-rate-star {
             margin: 0;
           }
+        }
+        button[disabled] {
+          cursor: not-allowed;
         }
       `}
     >
@@ -241,44 +272,44 @@ const DocItem: React.FC<ChildProps> = (props) => {
                 }
               `}
             >
-              <p className="title">{currentDoc.name}</p>
+              <p className="title">{document.name}</p>
 
               <Tag color="geekblue">Best Seller</Tag>
-              <p>Cập nhật: {formatDate(currentDoc.created)}</p>
-              <p>Dung lượng: {(Number(currentDoc?.file?.file_size) / 1024000).toFixed(1)} MB</p>
+              <p>Cập nhật: {formatDate(document.created)}</p>
+              <p>Dung lượng: {(Number(document?.file?.file_size) / 1024000).toFixed(1)} MB</p>
 
-              <p>{currentDoc.description}</p>
-              <p className="heart" onClick={() => handleAddFav(currentDoc.id)}>
+              <p>{document.description}</p>
+              <p className="heart" onClick={() => handleAddFav()}>
                 {currentDoc.is_favorite ? <HeartFilled /> : <HeartOutlined />}
               </p>
             </div>
           }
           trigger="hover"
         >
-          <Link href={`${RoutePaths.DOCUMENT_DETAIL}?id=${currentDoc.id}`}>
+          <Link href={`${RoutePaths.DOCUMENT_DETAIL}?document=${params?.document}&id=${document.id}`}>
             <div className="doc--image">
-              <img className="doc-img" src={`${currentDoc.thumbnail.image_path}`} alt="doc image." />
+              <img className="doc-img" src={`${document.thumbnail.image_path}`} alt="doc image." />
             </div>
 
             <div className="doc_info">
               {' '}
-              <div className="title">{currentDoc.name}</div>
+              <div className="title">{document.name}</div>
               <p className="download">
                 <VerticalAlignBottomOutlined />
-                Số lượt tải: {currentDoc.sold}
+                Số lượt tải: {document.sold}
               </p>
               <p className="download">
                 <EyeFilled />
-                Số lượt xem: {currentDoc.views}
+                Số lượt xem: {document.views}
               </p>
               <p className="download">
                 <LikeFilled />
-                <span className="rate-score">{Number(currentDoc?.rating).toFixed(1)}</span>
-                {/* <Rate defaultValue={Number(Number(currentDoc.rating).toFixed(1))} allowHalf disabled /> */}
+                <span className="rate-score">{Number(document?.rating).toFixed(1)}</span>
+                {/* <Rate defaultValue={Number(Number(document.rating).toFixed(1))} allowHalf disabled /> */}
                 <span>
                   <Rating
                     name="size-large"
-                    defaultValue={Number(Number(currentDoc.rating).toFixed(1))}
+                    defaultValue={Number(Number(document.rating).toFixed(1))}
                     size="small"
                     readOnly
                     style={{ padding: '0 5px' }}
@@ -286,17 +317,17 @@ const DocItem: React.FC<ChildProps> = (props) => {
                   />
                 </span>
 
-                {`(${currentDoc.num_of_rates})`}
+                {`(${document.num_of_rates})`}
               </p>
             </div>
           </Link>
           <div className="price-tag">
             <span>
               <WalletOutlined />
-              {formatCurrencySymbol(currentDoc.price, 'VND')}
+              {formatCurrencySymbol(document.price, 'VND')}
             </span>
 
-            {currentDoc.sale_status === SaleStatusEnum.BOUGHT && <TaskAltIcon sx={{ color: `${Color.BOUGHT}` }} />}
+            {document.sale_status === SaleStatusEnum.BOUGHT && <TaskAltIcon sx={{ color: `${Color.BOUGHT}` }} />}
           </div>
         </Popover>
       </div>
@@ -317,7 +348,7 @@ const DocItem: React.FC<ChildProps> = (props) => {
             }
             onClick={(e) => {
               e.stopPropagation();
-              handleClick();
+              handleUpdateDoc();
             }}
           >
             {btnString}
@@ -326,6 +357,6 @@ const DocItem: React.FC<ChildProps> = (props) => {
       </div>
     </div>
   );
-};
+}, isEqual);
 
 export default DocItem;

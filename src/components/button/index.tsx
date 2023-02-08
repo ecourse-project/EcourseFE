@@ -15,6 +15,7 @@ interface AppButtonProps extends ButtonProps {
   nonBordered?: boolean;
   borderRadius?: '5px' | '3px';
   colorHover?: 'darkBlue' | 'white' | 'BRICK';
+  bgColor?: string;
 }
 const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
   const {
@@ -27,6 +28,7 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
     colorHover,
     borderRadius,
     btnWidth,
+    bgColor,
     ...rest
   } = props;
   const getSize = () => {
@@ -71,6 +73,7 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
   };
 
   const getBackgroundColor = () => {
+    if (bgColor) return bgColor;
     if (disabled) {
       switch (btnStyle) {
         case 'outline':
@@ -177,8 +180,13 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
           position: relative;
           .anticon.anticon-loading.anticon-spin {
             position: absolute;
-            top: -15px;
-            left: -25px;
+            top: -7px;
+            left: -35px;
+            bottom: unset;
+            right: unset;
+            padding: 0;
+            margin: 0;
+            border: none;
           }
         }
         &.btn-cmt {
@@ -410,8 +418,9 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
             border: none;
           }
         }
-        ${colorHover
-          ? `
+        ${
+          colorHover
+            ? `
         &:hover,
         :active,
         :focus,
@@ -435,7 +444,7 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
           }!important;
           border: ${nonBordered ? 'none' : getBorderStyle()};
         `
-          : `
+            : `
         &:hover,
         :active,
         :focus,
@@ -446,8 +455,9 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
           background-image: ${getBackgroundColor()};
           border: ${nonBordered ? 'none' : getBorderStyle()};
         }
+      }
+        `
         }
-        `}
       `}
       disabled={disabled}
       {...rest}

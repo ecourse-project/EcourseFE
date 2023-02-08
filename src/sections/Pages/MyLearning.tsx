@@ -7,36 +7,25 @@ import CourseService from 'src/lib/api/course';
 import { v4 as uuidv4 } from 'uuid';
 import MyCourseUI from 'src/components/course/my-course';
 import RoutePaths from 'src/lib/utils/routes';
-import { TabPaneSection } from 'src/components/tab-pane-learning';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { useRouter } from 'next/router';
 import { TypeTabPanel } from 'src/lib/types/commentType';
-interface AppContextOptions {
-  switchTabs: string;
-  setSwitchTabs: (tabskey: string) => void;
-}
-export const AppContext = React.createContext<AppContextOptions>({} as AppContextOptions);
+import TabPaneSection from 'src/components/tab-pane-learning';
+import { SettingContext } from 'src/components/settings/tabs';
+
 interface MyLearnParams {
   tab?: string;
+  subtab?: string;
 }
-export enum TabsKey {
+export enum LearningTabsKey {
   MY_COURSES = 'MY_COURSES',
   WISH_LIST = 'WISH_LIST',
 }
 const MyLearning: React.FC = () => {
   const router = useRouter();
   const params: MyLearnParams = useQueryParam();
-  const [switchTabs, setSwitchTabs] = React.useState<string>(TabsKey.MY_COURSES);
-  useEffect(() => {
-    params.tab && setSwitchTabs(params?.tab);
-  }, []);
-  const appContextValue = {
-    switchTabs,
-    setSwitchTabs: (tabsKey: string) => {
-      router.push(`${RoutePaths.MY_COURSES}/?tab=${tabsKey}`);
-      setSwitchTabs(tabsKey);
-    },
-  };
+  const { switchSubTabs, setSwitchSubTabs } = React.useContext(SettingContext);
+  const [loading, setLoading] = useState<boolean>(false);
   const [myCourses, setMyCourses] = useState<Course[]>();
   const [myDocs, setMyDocs] = useState<Document[]>();
   const [myFavor, setMyFavor] = useState<FavoriteList>();
@@ -45,6 +34,7 @@ const MyLearning: React.FC = () => {
   }, []);
   const getMyCourse = async () => {
     try {
+      setLoading(true);
       const mc = await CourseService.getUserCourses({
         page: 1,
         limit: 20,
@@ -56,6 +46,8 @@ const MyLearning: React.FC = () => {
       setMyFavor(mw);
     } catch (error: any) {
       console.log('error.message :>> ', error.message);
+    } finally {
+      setLoading(false);
     }
   };
   const onChange = (key: string) => {
@@ -66,14 +58,14 @@ const MyLearning: React.FC = () => {
     {
       id: uuidv4(),
       label: 'Khoá học của tôi',
-      content: <MyCourseUI courses={myCourses || []} docs={myDocs || []} />,
-      key: TabsKey.MY_COURSES,
+      content: <MyCourseUI courses={myCourses || []} docs={myDocs || []} loading={loading} />,
+      key: LearningTabsKey.MY_COURSES,
     },
     {
       id: uuidv4(),
       label: 'Danh sách thích',
       content: <WishListUI favourite={myFavor || ({} as FavoriteList)} />,
-      key: TabsKey.WISH_LIST,
+      key: LearningTabsKey.WISH_LIST,
     },
   ];
   return (
@@ -83,9 +75,7 @@ const MyLearning: React.FC = () => {
         padding: 20px;
       `}
     >
-      <AppContext.Provider value={appContextValue}>
-        <TabPaneSection tabData={tabDataLearning} title="Khoá học của tôi" activeKey={switchTabs} />
-      </AppContext.Provider>
+      <TabPaneSection tabData={tabDataLearning} title="Khoá học của tôi" activeKey={switchSubTabs} />
     </div>
   );
 };

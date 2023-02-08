@@ -1,10 +1,12 @@
+import 'antd/dist/reset.css';
+
 import Head from 'next/head';
 import React from 'react';
 import Layout from 'src/components/common/Layout';
 import ContextProvider from 'src/lib/context';
 import { Provider } from 'react-redux';
 import { store } from 'src/lib/config/reduxStore';
-import 'antd/dist/antd.css';
+// import 'antd/dist/antd.css';
 import 'src/styles/global.scss';
 import Logo from 'public/images/ecourseLogo.png';
 

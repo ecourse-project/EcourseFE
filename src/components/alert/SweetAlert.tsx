@@ -31,12 +31,41 @@ export const AlertTextSuccess = (
     },
     icon: 'success',
     text: _body,
-    showCloseButton: true,
-    confirmButtonText: 'Okay',
-    confirmButtonColor: '#051d29',
+    showCloseButton: false,
+    confirmButtonText: 'Đóng',
+    confirmButtonColor: '#00aaff',
     focusConfirm: true,
   }).then(callBack);
 };
+
+export const AskForSave = (
+  title: string,
+  message: string,
+  confirmButtonText: string,
+  cancelButtonText: string,
+  denyButtonText: string,
+  callBack: (value: SweetAlertResult<unknown>) => void,
+) => {
+  return Swal.fire({
+    title: title,
+    showDenyButton: !!denyButtonText,
+    showCancelButton: true,
+    denyButtonText: denyButtonText,
+    html: message,
+    showCloseButton: false,
+    confirmButtonText: confirmButtonText,
+    cancelButtonText: cancelButtonText,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    focusConfirm: true,
+
+    customClass: {
+      popup: 'popup-add-cart',
+      title: 'text-center mr-0',
+    },
+  }).then(callBack);
+};
+
 export const AlertProspectError = (_title: string, _row: string, number: number) => {
   return MySwal.fire({
     title: _title,
@@ -59,7 +88,7 @@ export const AlertProspectError = (_title: string, _row: string, number: number)
         </p>
       </div>
     ),
-    showCloseButton: true,
+    showCloseButton: false,
     confirmButtonText: 'Okay',
     confirmButtonColor: '#051d29',
     focusConfirm: true,

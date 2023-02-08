@@ -54,16 +54,10 @@ export interface WebsiteFieldData {
   website: string;
 }
 export interface SettingFieldData {
-  firstName: string;
-  lastName: string;
-  title: string;
-  company: string;
+  full_name: string;
+  phone: string;
   email: string;
-  address: string;
-  city: string;
-  state: string;
-  zipcode: string;
-  country: string;
+  doB: string;
 }
 export interface LockFieldData {
   password: string;

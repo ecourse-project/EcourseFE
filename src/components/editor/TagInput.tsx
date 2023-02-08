@@ -1,7 +1,7 @@
-import React from "react";
+import React from 'react';
 
 const TagInput = ({ tagList, addTag, removeTag }) => {
-  const [tag, setTag] = React.useState("");
+  const [tag, setTag] = React.useState('');
 
   const changeTagInput = (e) => setTag(e.target.value);
 
@@ -19,9 +19,9 @@ const TagInput = ({ tagList, addTag, removeTag }) => {
   };
 
   const handleAddTag = () => {
-    if (!!tag) {
+    if (tag) {
       addTag(tag);
-      setTag("");
+      setTag('');
     }
   };
 
@@ -45,10 +45,7 @@ const TagInput = ({ tagList, addTag, removeTag }) => {
         <div className="tag-list">
           {tagList.map((tag, index) => (
             <span className="tag-default tag-pill" key={index}>
-              <i
-                className="ion-close-round"
-                onClick={() => handleRemoveTag(tag)}
-              />
+              <i className="ion-close-round" onClick={() => handleRemoveTag(tag)} />
               {tag}
             </span>
           ))}

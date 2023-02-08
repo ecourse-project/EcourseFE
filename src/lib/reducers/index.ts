@@ -18,21 +18,21 @@ import { RootState } from './model';
 /*** Importing sagas ***/
 
 export interface ActionBase {
-	type: string;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	payload?: any;
+  type: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  payload?: any;
 }
 
 const rootReducer = combineReducers<RootState, ActionBase>({
-	app,
-	document,
-	course,
+  app,
+  document,
+  course,
 });
 
 function* rootSaga(): Generator<ForkEffect<void>, void, unknown> {
-	yield fork(documentSaga);
-	yield fork(courseSaga);
-	yield fork(appSaga);
+  yield fork(documentSaga);
+  yield fork(courseSaga);
+  yield fork(appSaga);
 }
 
 export { rootReducer, rootSaga };

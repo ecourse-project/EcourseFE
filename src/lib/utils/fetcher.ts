@@ -1,7 +1,7 @@
-import axios from "axios";
+import axios from 'axios';
 
 const updateOptions = () => {
-  if (typeof window === "undefined") return {};
+  if (typeof window === 'undefined') return {};
 
   if (!window.localStorage.user) return {};
 
@@ -9,7 +9,7 @@ const updateOptions = () => {
 
   const user = JSON.parse(window.localStorage.user);
 
-  if (!!user.token) {
+  if (user.token) {
     return {
       headers: {
         Authorization: `Token ${user.token}`,

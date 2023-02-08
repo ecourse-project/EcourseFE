@@ -12,11 +12,11 @@ const CourseLoadable = Loadable({
 const Course: React.FC = () => {
   return (
     <React.Fragment>
-      <PrivateProvider>
+      <PublicProvider>
         <Layout>
           <CourseLoadable />
         </Layout>
-      </PrivateProvider>
+      </PublicProvider>
     </React.Fragment>
   );
 };

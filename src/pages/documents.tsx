@@ -13,11 +13,11 @@ const DocumentLoadable = Loadable({
 const Document: React.FC = () => {
   return (
     <React.Fragment>
-      <PrivateProvider>
+      <PublicProvider>
         <Layout>
           <DocumentLoadable />
         </Layout>
-      </PrivateProvider>
+      </PublicProvider>
     </React.Fragment>
   );
 };

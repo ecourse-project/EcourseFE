@@ -1,24 +1,35 @@
 /* eslint-disable react/no-children-prop */
-import { Breadcrumb, Checkbox, Col, Divider, Image, Row } from 'antd';
+import { Breadcrumb, Checkbox, Col, Divider, Image, Row, Spin } from 'antd';
 import { useEffect, useState } from 'react';
 import PricingCard from 'src/components/cart/cart-price';
-import { CalculatePriceArgs, Course, CreateOrderArg, OCart } from 'src/lib/types/backend_modal';
+import {
+  CalculatePriceArgs,
+  Course,
+  CreateOrderArg,
+  Document,
+  MoveEnum,
+  NavTypeEnum,
+  OCart,
+} from 'src/lib/types/backend_modal';
 import { RootState } from 'src/lib/reducers/model';
 import CartItemRow from '../../components/cart/cart-item';
 
-import { SwapOutlined } from '@ant-design/icons';
+import { Loading3QuartersOutlined, SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 import CourseService from 'src/lib/api/course';
 import RoutePaths from 'src/lib/utils/routes';
 import useDebouncedCallback from 'src/lib/hooks/useDebouncedCallback';
 import { useDispatch, useSelector } from 'react-redux';
-
+import { isEmpty } from 'lodash';
+const antIcon = <Loading3QuartersOutlined style={{ fontSize: 40 }} spin />;
 const CheckboxGroup = Checkbox.Group;
-function CartUI() {
-  const [cart, setCart] = useState<OCart>();
+const CartUI: React.FC = () => {
+  const [cartData, setCartData] = useState<OCart>();
+  const [docCart, setDocCart] = useState<Document[]>([]);
+  const [courseCart, setCourseCart] = useState<Course[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(true);
-
+  const [loading, setLoading] = useState<boolean>(false);
   const [checkedListDoc, setCheckedListDoc] = useState<string[]>([]);
   const [checkedListCourse, setCheckedListCourse] = useState<string[]>([]);
   const [indeterminateDoc, setIndeterminateDoc] = useState(false);
@@ -30,14 +41,22 @@ function CartUI() {
   const [checkedList, setCheckedList] = useState<CalculatePriceArgs>({} as CalculatePriceArgs);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const dispatch = useDispatch();
-  // const data = useSelector((state: RootState) => state.document.cartDoc);
-
-  const cartData = useSelector((state: RootState) => state.app.appCart);
+  const getCart = async () => {
+    try {
+      setLoading(true);
+      const cart = await CourseService.getCart();
+      setCartData(cart);
+      setDocCart(cart.documents);
+      setCourseCart(cart.courses);
+    } catch (error) {
+      console.log('error', error);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    console.log('cartdataa', cartData);
-  }, [cartData]);
-  const docCart = cartData?.documents;
-  const courseCart = cartData?.courses;
+    getCart();
+  }, []);
   const onChangeDoc = (list) => {
     // setCheckedListDoc(list.map((v) => v.id));
     setCheckedListDoc(list);
@@ -48,7 +67,7 @@ function CartUI() {
   const onCheckAllChangeDoc = (e: CheckboxChangeEvent) => {
     setCheckedListDoc(
       // e.target.checked ? Array.from(Array(docCart?.length).keys()) : []
-      e.target.checked ? cartData?.documents.map((v) => v.id) : [],
+      e.target.checked ? docCart.map((v) => v.id) : [],
     );
     setIndeterminateDoc(false);
     setCheckAllDoc(e.target.checked);
@@ -65,7 +84,7 @@ function CartUI() {
   const onCheckAllChangeCourse = (e: CheckboxChangeEvent) => {
     setCheckedListCourse(
       // e.target.checked ? Array.from(Array(courseCart?.length).keys()) : []
-      e.target.checked ? cartData?.courses.map((v) => v.id) : [],
+      e.target.checked ? courseCart.map((v) => v.id) : [],
     );
     setIndeterminateCourse(false);
     setCheckAllCourse(e.target.checked);
@@ -106,12 +125,41 @@ function CartUI() {
     debouncePrice(checkedList);
   }, [checkedList]);
 
+  const removeFromCart = async (id: string, type: NavTypeEnum) => {
+    try {
+      const newDoc = docCart.slice();
+      const newCourse = courseCart.slice();
+      if (type === NavTypeEnum.COURSE) {
+        const removeDoc = await CourseService.moveCourse(id, MoveEnum.CART, MoveEnum.LIST);
+        const idx = newCourse.findIndex((v) => v.id === removeDoc.id);
+
+        if (idx >= 0) {
+          console.log('idx', idx);
+          setCourseCart(newCourse.splice(idx, 1));
+        }
+      } else if (type === NavTypeEnum.DOCUMENT) {
+        const removeDoc = await CourseService.moveDoc(id, MoveEnum.CART, MoveEnum.LIST);
+        const idx = newDoc.findIndex((v) => v.id === removeDoc.id);
+        if (idx >= 0) {
+          console.log('idx', idx);
+          setDocCart(newDoc.splice(idx, 1));
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div
       className="page-container"
       css={css`
         .empty-img {
           opacity: 0.6;
+        }
+        .ant-checkbox-group {
+          display: flex;
+          flex-direction: column;
         }
         .ant-checkbox {
           width: 19px;
@@ -120,8 +168,8 @@ function CartUI() {
             width: 19px;
             height: 19px;
             &:after {
-              width: 6.714286px;
-              height: 15.142857px;
+              /* width: 6.714286px;
+              height: 15.142857px; */
 
               border: 3px solid #fff;
               border-top: 0;
@@ -142,17 +190,25 @@ function CartUI() {
         }
         .doc {
           opacity: ${checkAllDoc ? '1' : '0.7'};
-          font-weight: ${checkAllDoc ? '700' : '400'};
+          font-weight: ${checkAllDoc ? '700' : '500'};
+          &:hover {
+            opacity: 1;
+            font-weight: 600;
+          }
         }
         .course {
           opacity: ${checkAllCourse ? '1' : '0.7'};
-          font-weight: ${checkAllCourse ? '700' : '400'};
+          font-weight: ${checkAllCourse ? '700' : '500'};
+          &:hover {
+            opacity: 1;
+            font-weight: 600;
+          }
         }
         .checkbox-group {
           max-height: 40%;
           overflow: auto;
           .ant-checkbox-wrapper {
-            align-item: start;
+            align-items: start;
           }
           .ant-checkbox-group-item {
             margin: 0;
@@ -176,6 +232,7 @@ function CartUI() {
         .ant-checkbox-wrapper {
           display: flex;
           align-items: center;
+          margin-bottom: 10px;
         }
         .cart-list {
           height: 85vh;
@@ -193,80 +250,87 @@ function CartUI() {
         </Breadcrumb>
       </Divider>
       <p className="title">Danh sách tài liệu trong giỏ</p>
-      <Row gutter={[16, 16]} className="cart-list">
-        <Col span={18} className="cart-list-item">
-          {cartData?.documents?.length ? (
-            <>
-              <Checkbox
-                className="check-all"
-                indeterminate={indeterminateDoc}
-                onChange={onCheckAllChangeDoc}
-                checked={checkAllDoc}
-              >
-                <p className="choose-all doc">Chọn tất cả tài liệu</p>
-              </Checkbox>
-              <Divider />
-              <CheckboxGroup
-                onChange={onChangeDoc}
-                className="checkbox-group"
-                value={checkedListDoc}
-                options={cartData?.documents?.map((v) => ({
-                  label: <CartItemRow document={v} />,
-                  value: v.id,
-                  Properties: null,
-                }))}
-              />
-            </>
-          ) : (
-            <></>
-          )}
-          {cartData?.courses?.length ? (
-            <>
-              <Checkbox
-                className="check-all"
-                indeterminate={indeterminateCourse}
-                onChange={onCheckAllChangeCourse}
-                checked={checkAllCourse}
-              >
-                <p className="choose-all course">Chọn tất cả khoá học</p>
-              </Checkbox>
-              <Divider />
-              <CheckboxGroup
-                onChange={onChangeCourse}
-                className="checkbox-group"
-                value={checkedListCourse}
-                options={cartData?.courses.map((v) => ({
-                  label: <CartItemRow course={v} />,
-                  value: v.id,
-                  Properties: null,
-                }))}
-              />
-            </>
-          ) : (
-            <></>
-          )}
-          {/* {cartData?.documents?.length === 0 &&
+      {loading ? (
+        <div style={{ height: '72px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Spin indicator={antIcon} />
+        </div>
+      ) : (
+        <Row gutter={[16, 16]} className="cart-list">
+          <Col span={18} className="cart-list-item">
+            {docCart?.length ? (
+              <>
+                <Checkbox
+                  className="check-all"
+                  indeterminate={indeterminateDoc}
+                  onChange={onCheckAllChangeDoc}
+                  checked={checkAllDoc}
+                >
+                  <p className="choose-all doc">Chọn tất cả tài liệu</p>
+                </Checkbox>
+                <Divider />
+                <CheckboxGroup
+                  onChange={onChangeDoc}
+                  className="checkbox-group"
+                  value={checkedListDoc}
+                  options={docCart?.map((v) => ({
+                    label: <CartItemRow document={v} onDelete={removeFromCart} />,
+                    value: v.id,
+                    Properties: null,
+                  }))}
+                />
+              </>
+            ) : (
+              <></>
+            )}
+            {courseCart?.length ? (
+              <>
+                <Checkbox
+                  className="check-all"
+                  indeterminate={indeterminateCourse}
+                  onChange={onCheckAllChangeCourse}
+                  checked={checkAllCourse}
+                >
+                  <p className="choose-all course">Chọn tất cả khoá học</p>
+                </Checkbox>
+                <Divider />
+                <CheckboxGroup
+                  onChange={onChangeCourse}
+                  className="checkbox-group"
+                  value={checkedListCourse}
+                  options={courseCart.map((v) => ({
+                    label: <CartItemRow course={v} onDelete={removeFromCart} />,
+                    value: v.id,
+                    Properties: null,
+                  }))}
+                />
+              </>
+            ) : (
+              <></>
+            )}
+            {/* {cartData?.documents?.length === 0 &&
 						cartData?.courses?.length === 0 && (
 							<Image src={EmptyImg} preview={false} className="empty-img" />
 						)} */}
-        </Col>
-        <Col span={6}>
-          <div className="">
-            <PricingCard
-              docNum={cartData?.documents?.length + cartData?.courses?.length}
-              children={null}
-              checkoutList={
-                {
-                  ...checkedList,
-                  total_price: totalPrice,
-                } as CreateOrderArg
-              }
-            />
-          </div>
-        </Col>
-      </Row>
+          </Col>
+          <Col span={6}>
+            <div className="">
+              <PricingCard
+                docNum={docCart?.length || 0 + (courseCart?.length || 0)}
+                children={null}
+                checkoutList={
+                  {
+                    ...checkedList,
+                    total_price: totalPrice,
+                  } as CreateOrderArg
+                }
+                cartData={cartData || ({} as OCart)}
+              />
+            </div>
+          </Col>
+        </Row>
+      )}
     </div>
   );
-}
+};
 
 export default CartUI;

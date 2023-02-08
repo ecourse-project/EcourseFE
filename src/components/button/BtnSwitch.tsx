@@ -1,15 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import { css } from '@emotion/react';
 import AppButton from './index';
 // import { navigate } from 'gatsby';
-import { useLocation } from '@reach/router';
-import RoutePaths from 'src/lib/utils/routes';
 
 const BtnSwitch: React.FC = () => {
   const [isDashBoard, setIsDashBoard] = useState(false);
-
-  const location = useLocation();
 
   // useEffect(() => {
   // 	if (!location?.pathname) return;

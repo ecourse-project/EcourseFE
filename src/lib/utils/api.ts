@@ -1,3 +1,3 @@
 export const pagination = {
-	limit: 20,
+  limit: 20,
 };

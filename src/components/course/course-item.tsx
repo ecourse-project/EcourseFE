@@ -25,6 +25,7 @@ import RoutePaths from 'src/lib/utils/routes';
 import Link from 'next/link';
 import Rating from '@mui/material/Rating';
 import StarIcon from '@mui/icons-material/Star';
+import { checkAccountPermission } from 'src/lib/utils/utils';
 
 interface ChildProps {
   course: Course;
@@ -66,16 +67,28 @@ const CourseItem: React.FC<ChildProps> = (props) => {
   useEffect(() => {
     setCurrentCourse(course);
   }, [course]);
-  const handleClick = () => {
+  const handleClick = async () => {
+    checkAccountPermission();
     setLoading(true);
-    if (currentCourse.sale_status === SaleStatusEnum.AVAILABLE) {
-      dispatch(courseAction.updateCart(currentCourse));
-    } else if (currentCourse.sale_status === SaleStatusEnum.IN_CART) {
-      dispatch(courseAction.updateCart(currentCourse));
+    try {
+      if (currentCourse.sale_status === SaleStatusEnum.AVAILABLE) {
+        const addTo: Course = await CourseService.moveCourse(currentCourse.id, MoveEnum.LIST, MoveEnum.CART);
+        setTimeout(() => {
+          setCurrentCourse(addTo);
+        }, 300);
+      } else if (currentCourse.sale_status === SaleStatusEnum.IN_CART) {
+        const removeFrom: Course = await CourseService.moveCourse(currentCourse.id, MoveEnum.CART, MoveEnum.LIST);
+        setTimeout(() => {
+          setCurrentCourse(removeFrom);
+        }, 300);
+      }
+    } catch (error) {
+      console.log('error update cart', error);
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 300);
     }
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
   };
   const handleAddFav = async (id) => {
     setLoading(true);
@@ -192,9 +205,6 @@ const CourseItem: React.FC<ChildProps> = (props) => {
         }
 
         .anticon-loading {
-          position: absolute;
-          top: -7px !important;
-          left: -32px !important;
           font-size: 18px;
           color: ${btnString === BtnString.AVAILABLE ? Color.AVAILABLE : Color.IN_CART};
         }

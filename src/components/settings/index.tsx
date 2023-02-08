@@ -6,7 +6,7 @@ import React, { PropsWithChildren, ReactNode } from 'react';
 import isEqual from 'react-fast-compare';
 import { useDispatch } from 'react-redux';
 import { TypeTabPanel } from 'src/lib/types/commentType';
-import { AppContext } from 'src/sections/Pages/MyLearning';
+import { SettingContext } from './tabs';
 
 const { TabPane } = Tabs;
 
@@ -19,10 +19,10 @@ interface TabPaneProps {
   onChangeSwitchTabs?: (v) => void;
 }
 
-export const TabPaneSettingsSection = React.memo((props: PropsWithChildren<TabPaneProps>) => {
+export const TabPaneSettingsSection: React.FC<TabPaneProps> = React.memo((props: PropsWithChildren<TabPaneProps>) => {
   const { children, className, tabData, title, activeKey, btnAddDripCampaign, onChangeSwitchTabs } = props;
 
-  const { setSwitchTabs } = React.useContext(AppContext);
+  const { setSwitchTabs } = React.useContext(SettingContext);
 
   if (!tabData) return null;
   return (
@@ -59,8 +59,9 @@ export const TabPaneSettingsSection = React.memo((props: PropsWithChildren<TabPa
             margin-left: 4px !important;
           }
           .ant-tabs-nav {
-            border-bottom: 1px solid #051d29;
+            /* border-bottom: 1px solid #00aaff; */
             .ant-tabs-nav-list {
+              min-width: 200px;
               .ant-tabs-tab {
                 background-color: transparent !important;
                 border: none;
@@ -68,14 +69,16 @@ export const TabPaneSettingsSection = React.memo((props: PropsWithChildren<TabPa
                 border-radius: 0px;
                 border-top-left-radius: 3px;
                 border-top-right-radius: 3px;
+                display: flex;
+                justify-content: flex-end;
                 :hover {
-                  background-color: #051d29 !important;
+                  background-color: #00aaff !important;
                   .ant-tabs-tab-btn {
                     color: #fff;
                   }
                 }
                 &.ant-tabs-tab-active {
-                  background-color: #051d29 !important;
+                  background-color: #00aaff !important;
                   .ant-tabs-tab-btn {
                     color: #fff;
                   }
@@ -112,10 +115,20 @@ export const TabPaneSettingsSection = React.memo((props: PropsWithChildren<TabPa
           setSwitchTabs && setSwitchTabs(tabs);
         }}
         activeKey={activeKey}
+        tabPosition={'left'}
       >
         {tabData.map((v) => {
           return (
-            <TabPane tab={v.label} key={v.key} className={v.label === 'Pass Orders' ? 'past-orders-tab' : ''}>
+            <TabPane
+              // tab={
+              //   <span className="user-icon">
+              //     {v.label}
+              //     <span>{v.icon}</span>
+              //   </span>
+              // }
+              tab={v.label}
+              key={v.key}
+            >
               {v.content}
             </TabPane>
           );

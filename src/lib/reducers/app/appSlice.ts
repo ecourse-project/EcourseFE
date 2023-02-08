@@ -6,6 +6,7 @@ import {
   CreateOrderArg,
   Document,
   FavoriteList,
+  Nav,
   OCart,
   OutputOrder,
   Pagination,
@@ -18,6 +19,7 @@ export interface AppState {
   listFav: FavoriteList;
   loading: number;
   user: User;
+  header: Nav[];
 }
 
 export enum LoadingEnum {
@@ -31,6 +33,7 @@ const initialState: AppState = {
   listFav: {} as FavoriteList,
   loading: 0,
   user: {} as User,
+  header: [] as Nav[],
 };
 
 export const appSlice = createSlice({
@@ -39,6 +42,9 @@ export const appSlice = createSlice({
   reducers: {
     setMyProfile: (state, action: PayloadAction<User>) => {
       state.user = action.payload;
+    },
+    setAppHeader: (state, action: PayloadAction<Nav[]>) => {
+      state.header = action.payload;
     },
     addDocToCart: (state, action: PayloadAction<Document>) => {
       console.log('add doc to cart ');

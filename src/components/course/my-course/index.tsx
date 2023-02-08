@@ -1,19 +1,21 @@
 import { AppstoreAddOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
-import { Divider, Empty } from 'antd';
+import { Divider, Empty, Spin } from 'antd';
 import { Typography } from 'antd';
 
 const { Title } = Typography;
 import React, { useEffect } from 'react';
 import { Course, Document } from 'src/lib/types/backend_modal';
+import { antIcon } from 'src/lib/utils/animations';
 import { LearningItem } from './learning-item';
 interface MyCourseUIProps {
   courses: Course[];
   docs: Document[];
+  loading: boolean;
 }
 
 const MyCourseUI: React.FC<MyCourseUIProps> = (props) => {
-  const { courses, docs } = props;
+  const { courses, docs, loading } = props;
   useEffect(() => {
     console.log('courses', courses);
   }, []);
@@ -49,7 +51,11 @@ const MyCourseUI: React.FC<MyCourseUIProps> = (props) => {
         {'Tài liệu'}
       </div>
       <div className="course_list list_item">
-        {courses.length ? (
+        {loading ? (
+          <div style={{ height: '72px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Spin indicator={antIcon} />
+          </div>
+        ) : courses.length ? (
           courses.map((v, i) => {
             return <LearningItem course={v} key={i} />;
           })
@@ -63,7 +69,11 @@ const MyCourseUI: React.FC<MyCourseUIProps> = (props) => {
         {'Khoá học'}
       </div>
       <div className="doc_list list_item">
-        {docs.length ? (
+        {loading ? (
+          <div style={{ height: '72px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Spin indicator={antIcon} />
+          </div>
+        ) : docs.length ? (
           docs.map((v, i) => {
             return <LearningItem doc={v} key={i} />;
           })

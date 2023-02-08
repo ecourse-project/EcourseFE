@@ -26,7 +26,6 @@ import {
   Form,
   List,
   Menu,
-  PageHeader,
   Row,
   Statistic,
   Tabs,
@@ -36,7 +35,15 @@ import {
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
-import { Document, RateCourseArgs, RateDocArgs, Rating, RatingEnum, SaleStatusEnum } from 'src/lib/types/backend_modal';
+import {
+  Document,
+  MoveEnum,
+  RateCourseArgs,
+  RateDocArgs,
+  Rating,
+  RatingEnum,
+  SaleStatusEnum,
+} from 'src/lib/types/backend_modal';
 import { docActions } from 'src/lib/reducers/document/documentSlice';
 import CourseService from 'src/lib/api/course';
 import { formatCurrency } from 'src/lib/utils/currency';
@@ -49,6 +56,7 @@ import RatingModal from '../modal/rating-modal';
 import { isEmpty } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import FeedbackSection from '../comment/feedbacks';
+import { PageHeader } from '@ant-design/pro-layout/es/components/PageHeader';
 const { Paragraph, Title } = Typography;
 const menu = (
   <Menu
@@ -126,111 +134,9 @@ enum TagState {
   STOP = 'STOP',
 }
 
-const tags = (tagState: TagState, text: string) => {
-  switch (tagState) {
-    case TagState.SUCCESS:
-      return (
-        <Tag icon={<CheckCircleOutlined />} color="success">
-          {text}
-        </Tag>
-      );
-      break;
-    case TagState.PROCESSING:
-      return (
-        <Tag icon={<SyncOutlined spin />} color="processing">
-          {text}
-        </Tag>
-      );
-      break;
-    case TagState.ERROR:
-      return (
-        <Tag icon={<CloseCircleOutlined />} color="error">
-          {text}
-        </Tag>
-      );
-      break;
-    case TagState.WARNING:
-      return (
-        <Tag icon={<ExclamationCircleOutlined />} color="warning">
-          {text}
-        </Tag>
-      );
-      break;
-    case TagState.WAITING:
-      return (
-        <Tag icon={<ClockCircleOutlined />} color="default">
-          {text}
-        </Tag>
-      );
-      break;
-    case TagState.STOP:
-      return (
-        <Tag icon={<MinusCircleOutlined />} color="default">
-          {text}
-        </Tag>
-      );
-      break;
-
-    default:
-      break;
-  }
-};
-
-const data = [
-  {
-    actions: [<span key="comment-list-reply-to-0">Reply to</span>],
-    author: 'Han Solo',
-    avatar: 'https://joeschmoe.io/api/v1/random',
-    content: (
-      <p>
-        We supply a series of design principles, practical patterns and high quality design resources (Sketch and
-        Axure), to help people create their product prototypes beautifully and efficiently.
-      </p>
-    ),
-    datetime: (
-      <Tooltip title="2016-11-22 11:22:33">
-        <span>8 hours ago</span>
-      </Tooltip>
-    ),
-  },
-  {
-    actions: [<span key="comment-list-reply-to-0">Reply to</span>],
-    author: 'Han Solo',
-    avatar: 'https://joeschmoe.io/api/v1/random',
-    content: (
-      <p>
-        We supply a series of design principles, practical patterns and high quality design resources (Sketch and
-        Axure), to help people create their product prototypes beautifully and efficiently.
-      </p>
-    ),
-    datetime: (
-      <Tooltip title="2016-11-22 10:22:33">
-        <span>9 hours ago</span>
-      </Tooltip>
-    ),
-  },
-];
-
-// const Editor = ({ onChange, onSubmit, submitting, value }: EditorProps) => (
-// 	<>
-// 		<Form.Item>
-// 			<TextArea rows={4} onChange={onChange} value={value} />
-// 		</Form.Item>
-// 		<Form.Item>
-// 			<Button
-// 				htmlType="submit"
-// 				loading={submitting}
-// 				onClick={onSubmit}
-// 				type="primary"
-// 			>
-// 				Add Comment
-// 			</Button>
-// 		</Form.Item>
-// 	</>
-// );
-
 interface DocDetailParams {
   id: string;
+  document: string;
 }
 
 const DocDetail: React.FC = () => {
@@ -252,6 +158,9 @@ const DocDetail: React.FC = () => {
       console.log('error get detail', error);
     }
   };
+  useEffect(() => {
+    console.log('params', params);
+  }, [params]);
   useEffect(() => {
     fetchDocDetail(params.id);
   }, []);
@@ -301,19 +210,40 @@ const DocDetail: React.FC = () => {
       </div>
     </div>
   );
-  const handleUpdateBtn = () => {
-    if (doc.sale_status !== SaleStatusEnum.BOUGHT) {
+  const handleUpdateBtn = async () => {
+    try {
       setLoading(true);
-      dispatch(docActions.updateCart(doc));
+      if (doc.sale_status === SaleStatusEnum.AVAILABLE) {
+        const newDoc = await CourseService.moveDoc(doc.id, MoveEnum.LIST, MoveEnum.CART);
+        setTimeout(() => {
+          setDoc(newDoc);
+        }, 1000);
+      } else if (doc.sale_status === SaleStatusEnum.IN_CART) {
+        const newDoc = await CourseService.moveDoc(doc.id, MoveEnum.CART, MoveEnum.LIST);
+        setTimeout(() => {
+          setDoc(newDoc);
+        }, 1000);
+      }
+    } catch (error) {
+      console.log('error', error);
+      setLoading(false);
+    } finally {
       setTimeout(() => {
-        if (doc.sale_status === SaleStatusEnum.AVAILABLE) {
-          doc.sale_status = SaleStatusEnum.IN_CART;
-        } else if (doc.sale_status === SaleStatusEnum.IN_CART) {
-          doc.sale_status = SaleStatusEnum.AVAILABLE;
-        }
         setLoading(false);
       }, 1000);
     }
+    // if (doc.sale_status !== SaleStatusEnum.BOUGHT) {
+    //   setLoading(true);
+    //   dispatch(docActions.updateCart(doc));
+    //   setTimeout(() => {
+    //     if (doc.sale_status === SaleStatusEnum.AVAILABLE) {
+    //       doc.sale_status = SaleStatusEnum.IN_CART;
+    //     } else if (doc.sale_status === SaleStatusEnum.IN_CART) {
+    //       doc.sale_status = SaleStatusEnum.AVAILABLE;
+    //     }
+    //     setLoading(false);
+    //   }, 1000);
+    // }
   };
 
   const items = [
@@ -396,7 +326,7 @@ const DocDetail: React.FC = () => {
       <Divider orientation="left">
         <Breadcrumb separator={<SwapOutlined />}>
           <Breadcrumb.Item href={RoutePaths.HOME}>Trang chính</Breadcrumb.Item>
-          <Breadcrumb.Item href={RoutePaths.DOCUMENT}>Tài liệu</Breadcrumb.Item>
+          <Breadcrumb.Item href={''}>Tài liệu</Breadcrumb.Item>
           <Breadcrumb.Item href="">{doc.title}</Breadcrumb.Item>
         </Breadcrumb>
       </Divider>
@@ -404,17 +334,17 @@ const DocDetail: React.FC = () => {
         title={doc?.title}
         className="site-page-header"
         // subTitle="This is a subtitle"
-        tags={
-          <>
-            {tags(TagState.SUCCESS, `${doc.sold} lượt mua`)}
-            {tags(TagState.WAITING, 'Cập nhật gần đây')}
+        // tags={
+        //   <>
+        //     {tags(TagState.SUCCESS, `${doc.sold} lượt mua`)}
+        //     {tags(TagState.WAITING, 'Cập nhật gần đây')}
 
-            {doc.sale_status === SaleStatusEnum.PENDING && tags(TagState.PROCESSING, 'Chờ thanh toán')}
-            {doc.sale_status === SaleStatusEnum.BOUGHT && tags(TagState.SUCCESS, 'Đã mua')}
-            {(doc.sale_status === SaleStatusEnum.AVAILABLE || doc.sale_status === SaleStatusEnum.IN_CART) &&
-              tags(TagState.ERROR, `Bán chạy của chủ đề ${doc.title}`)}
-          </>
-        }
+        //     {doc.sale_status === SaleStatusEnum.PENDING && tags(TagState.PROCESSING, 'Chờ thanh toán')}
+        //     {doc.sale_status === SaleStatusEnum.BOUGHT && tags(TagState.SUCCESS, 'Đã mua')}
+        //     {(doc.sale_status === SaleStatusEnum.AVAILABLE || doc.sale_status === SaleStatusEnum.IN_CART) &&
+        //       tags(TagState.ERROR, `Bán chạy của chủ đề ${doc.title}`)}
+        //   </>
+        // }
         avatar={{
           src: 'https://avatars1.githubusercontent.com/u/8186664?s=460&v=4',
         }}
@@ -470,7 +400,17 @@ const DocDetail: React.FC = () => {
             )}
           </Button>
         ) : (
-          ''
+          <Button
+            key="2"
+            type="primary"
+            className="add-btn"
+            loading={loading}
+            onClick={handleUpdateBtn}
+            target="blank"
+            disabled={true}
+          >
+            Chờ xử lý
+          </Button>
         )}
       </PageHeader>
       <Tabs items={items} className="tab-section" />
