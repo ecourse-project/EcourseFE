@@ -1,19 +1,17 @@
-import { useLocation } from '@reach/router';
 import { useEffect, useState } from 'react';
 
 export const useScrollNav = () => {
-  const location = useLocation();
   const [hashUrl, setHashUrl] = useState<null | string>(null);
   useEffect(() => {
     if (!document.getElementById('id-active')) return;
     document.getElementById('id-active')?.scrollIntoView({ behavior: 'auto', block: 'end', inline: 'center' });
   }, [hashUrl]);
 
-  useEffect(() => {
-    if (!location?.pathname) return;
+  // useEffect(() => {
+  //   if (!location?.pathname) return;
 
-    setHashUrl(location.pathname);
-  }, [location.pathname]);
+  //   setHashUrl(location.pathname);
+  // }, [location.pathname]);
 
   const getIdActive = (path) => {
     let pathName = hashUrl;

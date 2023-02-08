@@ -114,6 +114,11 @@ export interface OImageUpload {
 }
 
 // ===========================================Documents===========================================
+export interface DocumentTitle {
+  id: string;
+  name: string;
+}
+
 export interface Document {
   id: string;
   created: string;
@@ -125,12 +130,12 @@ export interface Document {
   sold: number;
   thumbnail: OImageUpload;
   file: OFileUpload;
-  sale_status: SaleStatusEnum;
+  sale_status?: SaleStatusEnum;
   is_selling: boolean;
   views: number;
   rating: number;
   num_of_rates: number;
-  is_favorite: boolean;
+  is_favorite?: boolean;
   rating_detail?: Rating[];
   my_rating?: Rating;
 }
@@ -221,18 +226,20 @@ export interface Course {
   sold: number;
   lessons?: Lesson[];
   progress?: number;
-  status: ProgressStatusEnum;
-  thumbnail: OImageUpload;
-  sale_status: SaleStatusEnum;
+  status?: ProgressStatusEnum;
+  thumbnail?: OImageUpload;
+  sale_status?: SaleStatusEnum;
   views: number;
   rating: number;
   num_of_rates: number;
-  mark: number;
+  mark?: number;
   is_done_quiz?: boolean;
-  is_favorite: boolean;
+  is_favorite?: boolean;
   rating_detail?: Rating[];
   my_rating?: Rating;
-  quiz_detail: QuizResult;
+  quiz_detail?: QuizResult;
+  rating_stats?: RatingStats;
+  title: string;
 }
 
 // ===========================================Comments===========================================
@@ -344,6 +351,14 @@ export interface Rating {
   comment: string;
 }
 
+export interface RatingStats {
+  score_1: number;
+  score_2: number;
+  score_3: number;
+  score_4: number;
+  score_5: number;
+}
+
 // ===========================================Quiz===========================================
 export enum AnswerChoiceEnum {
   A = 'A',
@@ -384,4 +399,29 @@ export interface QuizResult {
   correct_answers: number;
   total_quiz: number;
   quiz_answers: UserAnswersArgs[];
+}
+
+// ===========================================Setting===========================================
+export enum NavTypeEnum {
+  DOCUMENT = 'DOCUMENT',
+  COURSE = 'COURSE',
+}
+export interface NavDetail {
+  type: NavTypeEnum;
+  title: string[];
+}
+
+export interface Nav {
+  header: string;
+  detail: NavDetail;
+}
+
+export interface HomepageDetail {
+  document_id: string[];
+  course_id: string[];
+}
+
+export interface Homepage {
+  title: string;
+  detail: HomepageDetail;
 }

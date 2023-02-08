@@ -16,10 +16,7 @@ export const getPageInfo = ({ limit, pageCount, total, page }) => {
 
   if (lastPage - firstPage + 1 < pageCount) {
     if (currentPage < totalPages / 2) {
-      lastPage = Math.min(
-        totalPages,
-        lastPage + (pageCount - (lastPage - firstPage))
-      );
+      lastPage = Math.min(totalPages, lastPage + (pageCount - (lastPage - firstPage)));
     } else {
       firstPage = Math.max(1, firstPage - (pageCount - (lastPage - firstPage)));
     }

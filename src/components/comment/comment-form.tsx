@@ -73,17 +73,27 @@ const CommentForm: React.FC<CommentFormProps> = ({ onAddComment }) => {
           border: none;
           margin: 10px 0;
           color: #000;
+          height: 40px !important;
+          box-shadow: none;
+
           &:hover {
             border: none;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            color: #000;
           }
         }
         .btn-cmt {
           background-color: #57a2e7 !important;
           border-color: #57a2e7 !important;
           color: #fff;
+          height: 40px !important;
+          width: 160px;
           &[disabled] {
             background-color: rgba(0, 0, 0, 0.05) !important;
             color: #000;
+          }
+          &:hover {
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
           }
         }
         [ant-click-animating-without-extra-node='true']:after {
@@ -120,6 +130,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ onAddComment }) => {
             inputRef.current = el;
           }}
           onFocus={() => setFocus(true)}
+          // onBlur={() => setFocus(false)}
           // onPressEnter={(e) => {
           // 	e.preventDefault();
           // 	formik.handleSubmit();

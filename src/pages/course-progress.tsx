@@ -13,7 +13,7 @@ const CourseProgress: React.FC = () => {
   return (
     <React.Fragment>
       <PrivateProvider>
-        <Layout isNonHeader>
+        <Layout isNoneHeader>
           <CourseProgressLoadable />
         </Layout>
       </PrivateProvider>

@@ -11,7 +11,7 @@ const Logout: React.FC = () => {
   React.useEffect(() => {
     localStorage.clear();
     localStorage.removeItem(StorageKeys.SESSION_KEY);
-    window.location.href = RoutePaths.LOGIN;
+    window.location.href = RoutePaths.HOME;
   }, []);
   return <LoadingPage isLoading={true} />;
 };

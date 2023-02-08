@@ -1,9 +1,13 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+import { configureStore, ThunkAction, Action, compose } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
+import { createStore, applyMiddleware, AnyAction, CombinedState, Store } from 'redux';
 import { rootReducer, rootSaga } from '../reducers';
 import { RootState } from '../reducers/model';
+import reduxReset from 'redux-reset';
+import AppAction from '../reducers/actions';
 
 const sagaMiddleware = createSagaMiddleware();
+const enhanceCreateStore = compose(reduxReset(AppAction.RESET_ROOT_STATE))(createStore);
 
 export const store = configureStore({
   reducer: rootReducer,
@@ -12,6 +16,7 @@ export const store = configureStore({
       thunk: true,
       serializableCheck: false,
     }).concat(sagaMiddleware),
+  enhancers: enhanceCreateStore(rootReducer),
 });
 sagaMiddleware.run(rootSaga);
 

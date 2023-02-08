@@ -1,10 +1,11 @@
 import { css } from '@emotion/react';
 import { useFormik } from 'formik';
+import { useRouter } from 'next/router';
 // import { navigate } from 'gatsby';
 import React from 'react';
 import AppButton from 'src/components/button';
 import AppInput from 'src/components/input';
-import { ResetPassword1FieldData } from 'src/models';
+import { ResetPassword1FieldData } from 'src/lib/types/commentType';
 // import AuthService from 'src/lib/api/auth';
 import RoutePaths from 'src/lib/utils/routes';
 import validation from 'src/lib/utils/validation';

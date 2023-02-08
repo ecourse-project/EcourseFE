@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
-import { Avatar, Comment, Tooltip } from 'antd';
+import { Avatar, Tooltip } from 'antd';
+import { Comment } from '@ant-design/compatible';
 import moment from 'moment';
 import React, { useState } from 'react';
 import { CourseComment } from 'src/lib/types/backend_modal';
@@ -32,7 +33,8 @@ const CommentItem: React.FC<CommentItemProps> = (props) => {
           </span>,
         ]}
         author={item?.user?.full_name}
-        avatar={item?.user?.avatar || <Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />}
+        // avatar={item?.user?.avatar || <Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />}
+        avatar={<Avatar src="https://i.pravatar.cc/300" alt="Han Solo" />}
         content={
           <div>
             {item.content}
@@ -58,7 +60,8 @@ const CommentItem: React.FC<CommentItemProps> = (props) => {
                 <Comment
                   key={i}
                   author={v?.user?.full_name}
-                  avatar={v?.user?.avatar || <Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />}
+                  // avatar={v?.user?.avatar || <Avatar src="https://i.pravatar.cc/300" alt="Han Solo" />}
+                  avatar={<Avatar src="https://i.pravatar.cc/300" alt="Han Solo" />}
                   content={<div>{v.content}</div>}
                   datetime={
                     <Tooltip title={moment(v.created).format('dddd, MMMM Do YYYY, h:mm:ss a')}>

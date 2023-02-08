@@ -71,7 +71,7 @@ export const LearningItem: React.FC<LearningItem> = (props) => {
             .ant-card {
               height: fit-content;
               width: 300px;
-              cursor: default;
+              cursor: pointer;
             }
             .ant-card-body {
               padding: 10px;
@@ -107,7 +107,7 @@ export const LearningItem: React.FC<LearningItem> = (props) => {
             }
             .status_text {
               font-weight: 500;
-              &: hover {
+              &:hover {
                 font-weight: 700;
                 color: #ffa900;
                 cursor: pointer;
@@ -181,7 +181,7 @@ export const LearningItem: React.FC<LearningItem> = (props) => {
               .ant-card {
                 height: fit-content;
                 width: 300px;
-                cursor: default;
+                cursor: pointer;
               }
               .ant-card-body {
                 padding: 10px;
@@ -217,7 +217,7 @@ export const LearningItem: React.FC<LearningItem> = (props) => {
               }
               .status_text {
                 font-weight: 500;
-                &: hover {
+                &:hover {
                   font-weight: 700;
                   color: #ffa900;
                   cursor: pointer;

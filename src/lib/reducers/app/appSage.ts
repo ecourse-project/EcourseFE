@@ -22,6 +22,7 @@ function* fetchListCart() {
     const listCarts: OCart = yield CourseService.getCart();
     yield put(appActions.fetchListCartSuccess(listCarts));
   } catch (err) {
+    console.log('error', err);
   } finally {
     yield put(appActions.setAppLoading(LoadingEnum.DESCREMENT));
   }

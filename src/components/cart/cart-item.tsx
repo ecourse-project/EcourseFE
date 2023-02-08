@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { ConsoleSqlOutlined, DeleteOutlined, TagOutlined } from '@ant-design/icons';
@@ -6,34 +7,28 @@ import { css } from '@emotion/react';
 import { set } from 'immer/dist/internal';
 import { debounce } from 'lodash';
 import { Spin } from 'antd';
-import { Course, Document } from 'src/lib/types/backend_modal';
+import { Course, Document, MoveEnum, NavTypeEnum } from 'src/lib/types/backend_modal';
 import { formatCurrency } from 'src/lib/utils/currency';
 import { useDispatch } from 'react-redux';
 import { docActions } from 'src/lib/reducers/document/documentSlice';
 import { courseAction } from 'src/lib/reducers/course/courseSlice';
+import CourseService from 'src/lib/api/course';
 
 interface ChildProps {
   document?: Document;
   course?: Course;
+  isDeleteBtn?: boolean;
+  onDelete: (id: string, type: NavTypeEnum) => void;
 }
-const CartItemRow: React.FC<ChildProps> = ({ document, course }) => {
+const CartItemRow: React.FC<ChildProps> = ({ document, course, isDeleteBtn = true, onDelete }) => {
   const [deleteLoading, setDeletetLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
 
-  const deleteDoc = () => {
-    setDeletetLoading(true);
-    document && dispatch(docActions.updateCart(document));
-    setTimeout(() => {
-      setDeletetLoading(false);
-    }, 300);
+  const deleteDoc = async () => {
+    document && onDelete(document?.id, NavTypeEnum.DOCUMENT);
   };
   const deleteCourse = () => {
-    setDeletetLoading(true);
-
-    course && dispatch(courseAction.updateCart(course));
-    setTimeout(() => {
-      setDeletetLoading(false);
-    }, 300);
+    course && onDelete(course?.id, NavTypeEnum.COURSE);
   };
 
   return (
@@ -123,17 +118,20 @@ const CartItemRow: React.FC<ChildProps> = ({ document, course }) => {
               {/* <TagOutlined /> */}
               {formatCurrency(document?.price, true)}
             </p>
+
             {deleteLoading ? (
               <Spin size="default" />
             ) : (
-              <DeleteOutlined
-                onClick={(e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  setDeletetLoading(true);
-                  deleteDoc();
-                }}
-              />
+              isDeleteBtn && (
+                <DeleteOutlined
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    setDeletetLoading(true);
+                    deleteDoc();
+                  }}
+                />
+              )
             )}
           </div>
         </div>
@@ -164,13 +162,15 @@ const CartItemRow: React.FC<ChildProps> = ({ document, course }) => {
             {deleteLoading ? (
               <Spin size="default" />
             ) : (
-              <DeleteOutlined
-                onClick={(e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  deleteCourse();
-                }}
-              />
+              isDeleteBtn && (
+                <DeleteOutlined
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    deleteCourse();
+                  }}
+                />
+              )
             )}
           </div>
         </div>

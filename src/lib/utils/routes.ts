@@ -2,7 +2,7 @@ const RoutePaths = {
   LOGIN: '/login',
   DASHBOARD: '/',
   VERIFY_ACCOUNT: '/verify',
-  LOGOUT: '/auth/logout',
+  LOGOUT: '/logout',
   SETTINGS: '/settings',
   NOT_FOUND: '/404',
   TERMS_AND_CONDITIONS: '/terms-and-conditions',

@@ -5,8 +5,8 @@ import { Tabs } from 'antd';
 import React, { PropsWithChildren, ReactNode } from 'react';
 import isEqual from 'react-fast-compare';
 import { useDispatch } from 'react-redux';
-import { AppContext } from 'src/sections/Pages/MyLearning';
 import { TypeTabPanel } from 'src/lib/types/commentType';
+import { SettingContext } from '../settings/tabs';
 
 const { TabPane } = Tabs;
 
@@ -19,10 +19,10 @@ interface TabPaneProps {
   onChangeSwitchTabs?: (v) => void;
 }
 
-export const TabPaneSection = React.memo((props: PropsWithChildren<TabPaneProps>) => {
-  const { children, className, tabData, title, activeKey, btnAddDripCampaign, onChangeSwitchTabs } = props;
+const TabPaneSection = React.memo((props: PropsWithChildren<TabPaneProps>) => {
+  const { children, className, tabData, title, activeKey, onChangeSwitchTabs } = props;
 
-  const { setSwitchTabs } = React.useContext(AppContext);
+  const { switchSubTabs, setSwitchSubTabs } = React.useContext(SettingContext);
 
   if (!tabData) return null;
   return (
@@ -60,6 +60,7 @@ export const TabPaneSection = React.memo((props: PropsWithChildren<TabPaneProps>
           }
           .ant-tabs-nav {
             border-bottom: 1px solid #051d29;
+            width: 100%;
             .ant-tabs-nav-list {
               .ant-tabs-tab {
                 background-color: transparent !important;
@@ -109,7 +110,7 @@ export const TabPaneSection = React.memo((props: PropsWithChildren<TabPaneProps>
             onChangeSwitchTabs(tabs);
             return;
           }
-          setSwitchTabs && setSwitchTabs(tabs);
+          setSwitchSubTabs && setSwitchSubTabs(tabs);
         }}
         activeKey={activeKey}
       >
@@ -125,3 +126,4 @@ export const TabPaneSection = React.memo((props: PropsWithChildren<TabPaneProps>
     </div>
   );
 }, isEqual);
+export default TabPaneSection;
