@@ -27,7 +27,6 @@ import {
   Image,
   List,
   Menu,
-  PageHeader,
   Row,
   Statistic,
   Tabs,
@@ -35,7 +34,6 @@ import {
   Tooltip,
   Typography,
 } from 'antd';
-import 'antd/dist/antd.css';
 import TextArea from 'antd/lib/input/TextArea';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
@@ -66,6 +64,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import CommentSection from '../comment';
 import FeedbackSection from '../comment/feedbacks';
+import { PageHeader } from '@ant-design/pro-layout';
 const { Paragraph, Title } = Typography;
 
 const menu = (
@@ -417,6 +416,11 @@ const CourseDetail: React.FC = () => {
         // }
         .ant-tooltip-content {
           min-width: 280px;
+        }
+        .add-btn {
+          display: flex;
+          align-items: center;
+          justify-content: space-evenly;
         }
       `}
     >

@@ -67,7 +67,6 @@ export default function HomeData(props: IHomeData) {
             css={css`
               margin: 20px 0;
               display: flex;
-              flex-wrap: wrap;
               text-align: left;
               .ant-col {
                 padding: 0 5px 30px 5px;

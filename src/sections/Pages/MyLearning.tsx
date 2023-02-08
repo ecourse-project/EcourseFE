@@ -11,11 +11,8 @@ import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { useRouter } from 'next/router';
 import { TypeTabPanel } from 'src/lib/types/commentType';
 import TabPaneSection from 'src/components/tab-pane-learning';
-interface AppContextOptions {
-  switchTabsLearning: string;
-  setSwitchTabsLearning: (tabskey: string) => void;
-}
-export const LearningContext = React.createContext<AppContextOptions>({} as AppContextOptions);
+import { SettingContext } from 'src/components/settings/tabs';
+
 interface MyLearnParams {
   tab?: string;
   subtab?: string;
@@ -27,17 +24,8 @@ export enum LearningTabsKey {
 const MyLearning: React.FC = () => {
   const router = useRouter();
   const params: MyLearnParams = useQueryParam();
-  const [switchTabsLearning, setSwitchTabsLearning] = React.useState<string>(LearningTabsKey.MY_COURSES);
-  useEffect(() => {
-    params.subtab && setSwitchTabsLearning(params?.subtab);
-  }, []);
-  const appContextValue = {
-    switchTabsLearning,
-    setSwitchTabsLearning: (tabsKey: string) => {
-      router.push(`${RoutePaths.SETTINGS}/?tab=${params.tab}&subtab=${tabsKey}`);
-      setSwitchTabsLearning(tabsKey);
-    },
-  };
+  const { switchSubTabs, setSwitchSubTabs } = React.useContext(SettingContext);
+  const [loading, setLoading] = useState<boolean>(false);
   const [myCourses, setMyCourses] = useState<Course[]>();
   const [myDocs, setMyDocs] = useState<Document[]>();
   const [myFavor, setMyFavor] = useState<FavoriteList>();
@@ -46,6 +34,7 @@ const MyLearning: React.FC = () => {
   }, []);
   const getMyCourse = async () => {
     try {
+      setLoading(true);
       const mc = await CourseService.getUserCourses({
         page: 1,
         limit: 20,
@@ -57,6 +46,8 @@ const MyLearning: React.FC = () => {
       setMyFavor(mw);
     } catch (error: any) {
       console.log('error.message :>> ', error.message);
+    } finally {
+      setLoading(false);
     }
   };
   const onChange = (key: string) => {
@@ -67,7 +58,7 @@ const MyLearning: React.FC = () => {
     {
       id: uuidv4(),
       label: 'Khoá học của tôi',
-      content: <MyCourseUI courses={myCourses || []} docs={myDocs || []} />,
+      content: <MyCourseUI courses={myCourses || []} docs={myDocs || []} loading={loading} />,
       key: LearningTabsKey.MY_COURSES,
     },
     {
@@ -84,9 +75,7 @@ const MyLearning: React.FC = () => {
         padding: 20px;
       `}
     >
-      <LearningContext.Provider value={appContextValue}>
-        <TabPaneSection tabData={tabDataLearning} title="Khoá học của tôi" activeKey={switchTabsLearning} />
-      </LearningContext.Provider>
+      <TabPaneSection tabData={tabDataLearning} title="Khoá học của tôi" activeKey={switchSubTabs} />
     </div>
   );
 };

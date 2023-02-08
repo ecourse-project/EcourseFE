@@ -42,8 +42,8 @@ const Nav: React.FC = () => {
   };
   const getListHeader = async () => {
     try {
-      const header1 = header.concat(header.concat(header.concat(header)));
-      const listItems = header1.map((v, i) => {
+      // const header1 = header.concat(header.concat(header.concat(header)));
+      const listItems = header.map((v, i) => {
         return getItem(
           v.header,
           v.header + `id=${uuidv4()}`,

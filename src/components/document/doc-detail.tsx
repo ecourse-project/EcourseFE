@@ -26,7 +26,6 @@ import {
   Form,
   List,
   Menu,
-  PageHeader,
   Row,
   Statistic,
   Tabs,
@@ -57,6 +56,7 @@ import RatingModal from '../modal/rating-modal';
 import { isEmpty } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import FeedbackSection from '../comment/feedbacks';
+import { PageHeader } from '@ant-design/pro-layout/es/components/PageHeader';
 const { Paragraph, Title } = Typography;
 const menu = (
   <Menu
@@ -133,109 +133,6 @@ enum TagState {
   WAITING = 'WAITING',
   STOP = 'STOP',
 }
-
-const tags = (tagState: TagState, text: string) => {
-  switch (tagState) {
-    case TagState.SUCCESS:
-      return (
-        <Tag icon={<CheckCircleOutlined />} color="success">
-          {text}
-        </Tag>
-      );
-      break;
-    case TagState.PROCESSING:
-      return (
-        <Tag icon={<SyncOutlined spin />} color="processing">
-          {text}
-        </Tag>
-      );
-      break;
-    case TagState.ERROR:
-      return (
-        <Tag icon={<CloseCircleOutlined />} color="error">
-          {text}
-        </Tag>
-      );
-      break;
-    case TagState.WARNING:
-      return (
-        <Tag icon={<ExclamationCircleOutlined />} color="warning">
-          {text}
-        </Tag>
-      );
-      break;
-    case TagState.WAITING:
-      return (
-        <Tag icon={<ClockCircleOutlined />} color="default">
-          {text}
-        </Tag>
-      );
-      break;
-    case TagState.STOP:
-      return (
-        <Tag icon={<MinusCircleOutlined />} color="default">
-          {text}
-        </Tag>
-      );
-      break;
-
-    default:
-      break;
-  }
-};
-
-const data = [
-  {
-    actions: [<span key="comment-list-reply-to-0">Reply to</span>],
-    author: 'Han Solo',
-    avatar: 'https://joeschmoe.io/api/v1/random',
-    content: (
-      <p>
-        We supply a series of design principles, practical patterns and high quality design resources (Sketch and
-        Axure), to help people create their product prototypes beautifully and efficiently.
-      </p>
-    ),
-    datetime: (
-      <Tooltip title="2016-11-22 11:22:33">
-        <span>8 hours ago</span>
-      </Tooltip>
-    ),
-  },
-  {
-    actions: [<span key="comment-list-reply-to-0">Reply to</span>],
-    author: 'Han Solo',
-    avatar: 'https://joeschmoe.io/api/v1/random',
-    content: (
-      <p>
-        We supply a series of design principles, practical patterns and high quality design resources (Sketch and
-        Axure), to help people create their product prototypes beautifully and efficiently.
-      </p>
-    ),
-    datetime: (
-      <Tooltip title="2016-11-22 10:22:33">
-        <span>9 hours ago</span>
-      </Tooltip>
-    ),
-  },
-];
-
-// const Editor = ({ onChange, onSubmit, submitting, value }: EditorProps) => (
-// 	<>
-// 		<Form.Item>
-// 			<TextArea rows={4} onChange={onChange} value={value} />
-// 		</Form.Item>
-// 		<Form.Item>
-// 			<Button
-// 				htmlType="submit"
-// 				loading={submitting}
-// 				onClick={onSubmit}
-// 				type="primary"
-// 			>
-// 				Add Comment
-// 			</Button>
-// 		</Form.Item>
-// 	</>
-// );
 
 interface DocDetailParams {
   id: string;
@@ -503,7 +400,17 @@ const DocDetail: React.FC = () => {
             )}
           </Button>
         ) : (
-          ''
+          <Button
+            key="2"
+            type="primary"
+            className="add-btn"
+            loading={loading}
+            onClick={handleUpdateBtn}
+            target="blank"
+            disabled={true}
+          >
+            Chờ xử lý
+          </Button>
         )}
       </PageHeader>
       <Tabs items={items} className="tab-section" />

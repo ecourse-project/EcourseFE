@@ -2,6 +2,6 @@
 import querystring from 'query-string';
 
 export function useQueryParam<T>(): T {
-	if (typeof window === 'undefined') return {} as T;
-	return querystring.parse(window.location.search) as any;
+  if (typeof window === 'undefined') return {} as T;
+  return querystring.parse(window.location.search) as any;
 }

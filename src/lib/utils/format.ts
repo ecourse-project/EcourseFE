@@ -60,7 +60,7 @@ export const UpperCaseFirstLetter = (s: string) => {
 
   const split = s.toLocaleLowerCase().split(' ');
   let newString = '';
-  for (let i of split) {
+  for (const i of split) {
     newString += i[0].toUpperCase() + i.slice(1) + ' ';
   }
   return newString.trim();

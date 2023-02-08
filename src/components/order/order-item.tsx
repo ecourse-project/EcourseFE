@@ -5,11 +5,13 @@ import React, { useState } from 'react';
 import { css } from '@emotion/react';
 import InfoIcon from '@mui/icons-material/Info';
 import moment from 'moment';
-import { useAppDispatch } from 'src/apps/hooks';
 import BaseModal from 'src/components/modal';
 import { OutputOrder } from 'src/lib/types/backend_modal';
 import AppAction from 'src/lib/reducers/actions';
 import { formatCurrency, formatCurrencySymbol } from 'src/lib/utils/currency';
+import { useDispatch } from 'react-redux';
+import RoutePaths from 'src/lib/utils/routes';
+import { AskForSave } from '../alert/SweetAlert';
 const { Panel } = Collapse;
 const { Option } = Select;
 const text = `
@@ -20,6 +22,7 @@ const text = `
 
 interface OrderItemPropType {
   orderItem: OutputOrder;
+  cancelOrder: (item: OutputOrder) => void;
 }
 
 export enum OrderStatus {
@@ -35,7 +38,7 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [modalText, setModalText] = useState('Content of the modal');
-  const { orderItem } = props;
+  const { orderItem, cancelOrder } = props;
   const onPositionChange = (newExpandIconPosition: ExpandIconPosition) => {
     setExpandIconPosition(newExpandIconPosition);
   };
@@ -54,29 +57,22 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
     />
   );
   const showModal = () => {
-    console.log(open);
-    setOpen(true);
+    AskForSave(`Xác nhân huỷ`, `Huỷ đơn mã #${orderItem.code.split('-')[0].slice(3, 10)}`, 'OK', 'Huỷ', '', (value) => {
+      if (value.isConfirmed) cancelOrder(orderItem);
+    });
   };
   const dispatch = useDispatch();
   const handleOk = () => {
-    setModalText('The modal will be closed after two seconds');
-    setConfirmLoading(true);
-    setTimeout(() => {
-      dispatch({ type: AppAction.CANCEL_ORDER, payload: orderItem });
-      genExtra();
-      setConfirmLoading(false);
-      setOpen(false);
-    }, 1000);
+    cancelOrder(orderItem);
   };
 
   const handleCancel = () => {
-    console.log('Clicked cancel button');
     setOpen(false);
   };
 
   return (
     <div className="modal-over" id="modal-over">
-      <BaseModal
+      {/* <BaseModal
         getContainer={() => document.getElementById('btn-cancel') || document.body}
         visible={open}
         title="Xác nhận huỷ đơn hàng"
@@ -88,7 +84,7 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
         confirmLoading={confirmLoading}
       >
         Xác nhận huỷ đơn hàng <strong>#{orderItem.code.split('-')[0].slice(3, 10)}</strong>
-      </BaseModal>
+      </BaseModal> */}
       <div className="container" id="order-detail">
         <Collapse
           onChange={onChange}
@@ -170,7 +166,7 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
                     <List.Item>
                       <Skeleton avatar title={false} active loading={false}>
                         <List.Item.Meta
-                          title={<a href="https://ant.design">{item.name}</a>}
+                          title={<a href={`${RoutePaths.DOCUMENT_DETAIL}/?id=${item.id}`}>{item.name}</a>}
                           description={item.description}
                           style={{ marginRight: '20px' }}
                         />
@@ -191,7 +187,7 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
                     <List.Item>
                       <Skeleton avatar title={false} active loading={false}>
                         <List.Item.Meta
-                          title={<a href="https://ant.design">{item.name}</a>}
+                          title={<a href={`${RoutePaths.COURSE_DETAIL}/?id=${item.id}`}>{item.name}</a>}
                           description={item.description}
                           style={{ marginRight: '20px' }}
                         />

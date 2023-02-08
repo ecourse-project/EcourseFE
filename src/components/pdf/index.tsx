@@ -1,7 +1,7 @@
 import { Worker } from '@react-pdf-viewer/core';
 import { Viewer, LoadError } from '@react-pdf-viewer/core';
 import { ProgressBar } from '@react-pdf-viewer/core';
-import packageJson from '../../../package.json';
+import packageJson from 'package.json';
 const pdfjsVersion = packageJson.dependencies['pdfjs-dist'];
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import renderError from './errorRender';

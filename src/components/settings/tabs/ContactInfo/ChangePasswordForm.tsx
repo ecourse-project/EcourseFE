@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { useFormik } from 'formik';
 import React, { useState } from 'react';
-import { AlertTextSuccess } from 'src/components/alert/SweetAlert';
+import { AlertTextSuccess, AskForSave } from 'src/components/alert/SweetAlert';
 import AppButton from 'src/components/button';
 import ErrorMessage from 'src/components/error-message';
 import AppInput from 'src/components/input';
@@ -38,12 +38,13 @@ const ChangePasswordForm: React.FC = () => {
     validateOnBlur: true,
     onSubmit: async (values) => {
       const { currentPassword, changePassword, confirmPassword } = values;
-      console.log('values :>> ', values);
       try {
-        setIsLoading(true);
-        await CourseService.changePwd(currentPassword, changePassword, confirmPassword);
+        AskForSave('Đổi mật khẩu', '', 'Lưu thay đổi', 'Huỷ', '', async (value) => {
+          setIsLoading(true);
+          await CourseService.changePwd(currentPassword, changePassword, confirmPassword);
+          AlertTextSuccess('Lưu Thành Công ', 'Mật khẩu đã được đổi');
+        });
         // AlertTextSuccess('Save Changes Succeeded', 'Password was changed successfully');
-        AlertTextSuccess('Lưu Thành Công ', 'Password was changed successfully');
 
         formik.resetForm();
       } catch (error: any) {

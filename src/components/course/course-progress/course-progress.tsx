@@ -43,6 +43,8 @@ import CommentSection from 'src/components/comment';
 import FeedbackSection from 'src/components/comment/feedbacks';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Document as DocumentPdf, Page as PagePdf } from 'react-pdf';
+
 const { Panel } = Collapse;
 export interface CourseParams {
   id: string;
@@ -290,6 +292,10 @@ const CourseProgress = () => {
     setResultQuiz(result);
   };
 
+  useEffect(() => {
+    console.log('state.selectedDoc.file.file_path}', state?.selectedDoc?.file?.file_path);
+  }, [state]);
+
   return (
     <div
       css={css`
@@ -480,34 +486,34 @@ const CourseProgress = () => {
             }
           }
         }
-        .page-container {
+        /* .page-container {
           width: 100%;
           max-width: 100%;
-          --bs-gutter-x: 0;
+          --bs-gutter-x: 0; */
 
-          .comment_group {
-            padding: 10px;
-            flex-direction: column;
-          }
-          .pdf_wrapper {
-            width: 100%;
-          }
-          @media (min-width: 1500px) {
-            max-width: 90%;
-            .video_wrapper {
-              visibility: ${videoLoading ? 'hidden' : ''};
-              height: 16.7%;
-              margin: auto;
-            }
-          }
-          .ant-collapse {
-            width: 100%;
-
-            .ant-collapse-content > .ant-collapse-content-box {
-              padding: 16px;
-            }
+        .comment_group {
+          padding: 10px;
+          flex-direction: column;
+        }
+        .pdf_wrapper {
+          width: 100%;
+        }
+        @media (min-width: 1500px) {
+          max-width: 90%;
+          .video_wrapper {
+            visibility: ${videoLoading ? 'hidden' : ''};
+            height: 16.7%;
+            margin: auto;
           }
         }
+        .ant-collapse {
+          width: 100%;
+
+          .ant-collapse-content > .ant-collapse-content-box {
+            padding: 16px;
+          }
+        }
+        /* } */
         .tab-section {
           padding: 50px;
         }
@@ -549,7 +555,7 @@ const CourseProgress = () => {
           </div>
         </Col>
       </Row>
-      <div className="page-container">
+      <div className="">
         <Row>
           <Col span={16} className="course_content">
             <Row>

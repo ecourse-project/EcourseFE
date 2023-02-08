@@ -274,7 +274,6 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                             const newChecked = checkedDoc.filter((v) => v !== e.target.value);
                             setCheckedDoc(newChecked);
                           } else {
-
                             setCheckedDoc([...checkedDoc, e.target.value]);
                           }
                         }}

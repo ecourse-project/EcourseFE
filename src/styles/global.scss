@@ -385,11 +385,11 @@ input {
     --bs-gutter-x: 5rem;
     --bs-gutter-y: 0;
 }
-@media screen and (min-width: 2000px) {
-    .page-container {
-        max-width: 50%;
-    }
-}
+// @media screen and (min-width: 2000px) {
+//     .page-container {
+//         max-width: 50%;
+//     }
+// }
 .ant-divider {
     margin: 0;
     // padding: 16px;

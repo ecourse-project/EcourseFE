@@ -2,7 +2,15 @@
 import { Breadcrumb, Checkbox, Col, Divider, Image, Row, Spin } from 'antd';
 import { useEffect, useState } from 'react';
 import PricingCard from 'src/components/cart/cart-price';
-import { CalculatePriceArgs, Course, CreateOrderArg, Document, OCart } from 'src/lib/types/backend_modal';
+import {
+  CalculatePriceArgs,
+  Course,
+  CreateOrderArg,
+  Document,
+  MoveEnum,
+  NavTypeEnum,
+  OCart,
+} from 'src/lib/types/backend_modal';
 import { RootState } from 'src/lib/reducers/model';
 import CartItemRow from '../../components/cart/cart-item';
 
@@ -117,6 +125,31 @@ const CartUI: React.FC = () => {
     debouncePrice(checkedList);
   }, [checkedList]);
 
+  const removeFromCart = async (id: string, type: NavTypeEnum) => {
+    try {
+      const newDoc = docCart.slice();
+      const newCourse = courseCart.slice();
+      if (type === NavTypeEnum.COURSE) {
+        const removeDoc = await CourseService.moveCourse(id, MoveEnum.CART, MoveEnum.LIST);
+        const idx = newCourse.findIndex((v) => v.id === removeDoc.id);
+
+        if (idx >= 0) {
+          console.log('idx', idx);
+          setCourseCart(newCourse.splice(idx, 1));
+        }
+      } else if (type === NavTypeEnum.DOCUMENT) {
+        const removeDoc = await CourseService.moveDoc(id, MoveEnum.CART, MoveEnum.LIST);
+        const idx = newDoc.findIndex((v) => v.id === removeDoc.id);
+        if (idx >= 0) {
+          console.log('idx', idx);
+          setDocCart(newDoc.splice(idx, 1));
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div
       className="page-container"
@@ -157,11 +190,19 @@ const CartUI: React.FC = () => {
         }
         .doc {
           opacity: ${checkAllDoc ? '1' : '0.7'};
-          font-weight: ${checkAllDoc ? '700' : '400'};
+          font-weight: ${checkAllDoc ? '700' : '500'};
+          &:hover {
+            opacity: 1;
+            font-weight: 600;
+          }
         }
         .course {
           opacity: ${checkAllCourse ? '1' : '0.7'};
-          font-weight: ${checkAllCourse ? '700' : '400'};
+          font-weight: ${checkAllCourse ? '700' : '500'};
+          &:hover {
+            opacity: 1;
+            font-weight: 600;
+          }
         }
         .checkbox-group {
           max-height: 40%;
@@ -191,6 +232,7 @@ const CartUI: React.FC = () => {
         .ant-checkbox-wrapper {
           display: flex;
           align-items: center;
+          margin-bottom: 10px;
         }
         .cart-list {
           height: 85vh;
@@ -215,7 +257,7 @@ const CartUI: React.FC = () => {
       ) : (
         <Row gutter={[16, 16]} className="cart-list">
           <Col span={18} className="cart-list-item">
-            {cartData?.documents?.length ? (
+            {docCart?.length ? (
               <>
                 <Checkbox
                   className="check-all"
@@ -230,8 +272,8 @@ const CartUI: React.FC = () => {
                   onChange={onChangeDoc}
                   className="checkbox-group"
                   value={checkedListDoc}
-                  options={cartData?.documents?.map((v) => ({
-                    label: <CartItemRow document={v} />,
+                  options={docCart?.map((v) => ({
+                    label: <CartItemRow document={v} onDelete={removeFromCart} />,
                     value: v.id,
                     Properties: null,
                   }))}
@@ -240,7 +282,7 @@ const CartUI: React.FC = () => {
             ) : (
               <></>
             )}
-            {cartData?.courses?.length ? (
+            {courseCart?.length ? (
               <>
                 <Checkbox
                   className="check-all"
@@ -255,8 +297,8 @@ const CartUI: React.FC = () => {
                   onChange={onChangeCourse}
                   className="checkbox-group"
                   value={checkedListCourse}
-                  options={cartData?.courses.map((v) => ({
-                    label: <CartItemRow course={v} />,
+                  options={courseCart.map((v) => ({
+                    label: <CartItemRow course={v} onDelete={removeFromCart} />,
                     value: v.id,
                     Properties: null,
                   }))}
@@ -273,7 +315,7 @@ const CartUI: React.FC = () => {
           <Col span={6}>
             <div className="">
               <PricingCard
-                docNum={cartData?.documents?.length || 0 + cartData?.courses?.length || 0}
+                docNum={docCart?.length || 0 + (courseCart?.length || 0)}
                 children={null}
                 checkoutList={
                   {
@@ -281,6 +323,7 @@ const CartUI: React.FC = () => {
                     total_price: totalPrice,
                   } as CreateOrderArg
                 }
+                cartData={cartData || ({} as OCart)}
               />
             </div>
           </Col>

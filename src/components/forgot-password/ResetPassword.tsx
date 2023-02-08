@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import RoutePaths from 'src/lib/utils/routes';
 import AppButton from '../button';
 import ResetPasswordForm from './ResetPassworForm';
+import { useRouter } from 'next/router';
 const ResetPassword: React.FC = () => {
   const router = useRouter();
   const [emailSent, setEmailSent] = useState<string>('');

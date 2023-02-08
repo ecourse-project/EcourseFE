@@ -6,7 +6,7 @@ import React, { PropsWithChildren, ReactNode } from 'react';
 import isEqual from 'react-fast-compare';
 import { useDispatch } from 'react-redux';
 import { TypeTabPanel } from 'src/lib/types/commentType';
-import { LearningContext } from 'src/sections/Pages/MyLearning';
+import { SettingContext } from '../settings/tabs';
 
 const { TabPane } = Tabs;
 
@@ -22,7 +22,7 @@ interface TabPaneProps {
 const TabPaneSection = React.memo((props: PropsWithChildren<TabPaneProps>) => {
   const { children, className, tabData, title, activeKey, onChangeSwitchTabs } = props;
 
-  const { setSwitchTabsLearning } = React.useContext(LearningContext);
+  const { switchSubTabs, setSwitchSubTabs } = React.useContext(SettingContext);
 
   if (!tabData) return null;
   return (
@@ -110,7 +110,7 @@ const TabPaneSection = React.memo((props: PropsWithChildren<TabPaneProps>) => {
             onChangeSwitchTabs(tabs);
             return;
           }
-          setSwitchTabsLearning && setSwitchTabsLearning(tabs);
+          setSwitchSubTabs && setSwitchSubTabs(tabs);
         }}
         activeKey={activeKey}
       >

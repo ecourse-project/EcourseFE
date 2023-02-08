@@ -180,10 +180,13 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
           position: relative;
           .anticon.anticon-loading.anticon-spin {
             position: absolute;
-            top: -5px;
-            left: -27px;
+            top: -7px;
+            left: -35px;
             bottom: unset;
             right: unset;
+            padding: 0;
+            margin: 0;
+            border: none;
           }
         }
         &.btn-cmt {
@@ -415,8 +418,9 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
             border: none;
           }
         }
-        ${colorHover
-          ? `
+        ${
+          colorHover
+            ? `
         &:hover,
         :active,
         :focus,
@@ -440,7 +444,7 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
           }!important;
           border: ${nonBordered ? 'none' : getBorderStyle()};
         `
-          : `
+            : `
         &:hover,
         :active,
         :focus,
@@ -452,7 +456,8 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
           border: ${nonBordered ? 'none' : getBorderStyle()};
         }
       }
-        `}
+        `
+        }
       `}
       disabled={disabled}
       {...rest}

@@ -125,7 +125,7 @@ const AppInputDate: React.FC<AppInputDateProps> = (props) => {
         placement={'bottomRight'}
         placeholder={placeholder}
         disabledDate={(current) => {
-          let customDate = moment().format(dateFormat);
+          const customDate = moment().format(dateFormat);
           if (isPast) return current && current > moment(customDate, dateFormat);
           else if (isFuture) return current && current < moment(customDate, dateFormat);
           return false;

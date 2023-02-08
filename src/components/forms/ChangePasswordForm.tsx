@@ -5,13 +5,13 @@ import { AlertTextSuccess } from 'src/components/alert/SweetAlert';
 import AppButton from 'src/components/button';
 import ErrorMessage from 'src/components/error-message';
 import AppInput from 'src/components/input';
-import { ChangePasswordFieldData } from 'src/models';
 import AuthService from 'src/lib/api/auth';
 import CourseService from 'src/lib/api/course';
 import theme from 'src/styles/theme';
 import regex from 'src/lib/utils/regularExpression';
 import validation from 'src/lib/utils/validation';
 import * as Yup from 'yup';
+import { ChangePasswordFieldData } from 'src/lib/types/commentType';
 
 const ChangePasswordForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);

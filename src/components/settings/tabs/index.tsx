@@ -10,7 +10,7 @@ import Router, { useRouter } from 'next/router';
 import RoutePaths from 'src/lib/utils/routes';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import ContactInfo from './ContactInfo';
-import MyLearning from 'src/sections/Pages/MyLearning';
+import MyLearning, { LearningTabsKey } from 'src/sections/Pages/MyLearning';
 import OrderUI from 'src/sections/order';
 import LoginPage from 'src/pages/login';
 
@@ -23,10 +23,13 @@ export enum TabSettingKey {
 interface AppContextOptions {
   switchTabs: string;
   setSwitchTabs: (tabskey: string) => void;
+  switchSubTabs: string;
+  setSwitchSubTabs: (tabskey: string) => void;
 }
 
 interface SettingParams {
   tab?: TabSettingKey;
+  subtab?: LearningTabsKey;
 }
 export const SettingContext = React.createContext<AppContextOptions>({} as AppContextOptions);
 
@@ -65,28 +68,26 @@ const SettingTabs: React.FC<{ className?: string }> = React.memo(
     ];
 
     const [switchTabs, setSwitchTabs] = React.useState<string>(TabSettingKey.INFORMATION);
+    const [switchSubTabs, setSwitchSubTabs] = React.useState<string>(LearningTabsKey.MY_COURSES);
     const params = useQueryParam<SettingParams>();
 
     const appContextValue = {
       switchTabs,
+      switchSubTabs,
+      setSwitchSubTabs: (tabsKey: string) => {
+        if (tabsKey === TabSettingKey.LOGOUT) return Router.push(`${RoutePaths.LOGOUT}`);
+        Router.push(`${RoutePaths.SETTINGS}/?tab=${params.tab}&subtab=${tabsKey}`);
+        setSwitchSubTabs(tabsKey);
+      },
       setSwitchTabs: (tabsKey: string) => {
         if (tabsKey === TabSettingKey.LOGOUT) return Router.push(`${RoutePaths.LOGOUT}`);
         Router.push(`${RoutePaths.SETTINGS}/?tab=${tabsKey}`);
         setSwitchTabs(tabsKey);
       },
     };
-
-    React.useEffect(() => {
-      if (params?.tab) {
-        scroll();
-      }
-      if (params?.tab) {
-        setSwitchTabs(params.tab);
-      }
-    }, [params?.tab]);
     useEffect(() => {
-      console.log('switchTabs', switchTabs);
-    }, [switchTabs]);
+      params?.tab && setSwitchTabs(params?.tab);
+    }, []);
     return (
       <div className="">
         {/* <Card className={className ?? ''}> */}
