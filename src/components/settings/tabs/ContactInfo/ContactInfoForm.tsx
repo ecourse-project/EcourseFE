@@ -1,12 +1,10 @@
-import { css } from '@emotion/react';
 import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AlertTextSuccess, AskForSave, showPopup } from 'src/components/alert/SweetAlert';
+import { AskForSave } from 'src/components/alert/SweetAlert';
 import AppButton from 'src/components/button';
 import ErrorMessage from 'src/components/error-message';
 import AppInput from 'src/components/input';
-import AppInputDate from 'src/components/input/input-date';
 import CourseService from 'src/lib/api/course';
 import { appActions } from 'src/lib/reducers/app/appSlice';
 import { RootState } from 'src/lib/reducers/model';
@@ -16,6 +14,9 @@ import validation from 'src/lib/utils/validation';
 import theme from 'src/styles/theme';
 import Swal from 'sweetalert2';
 import * as Yup from 'yup';
+
+import { css } from '@emotion/react';
+
 interface ContactSettingsFormProps {
   myProfile?: any;
   avatar?: string;

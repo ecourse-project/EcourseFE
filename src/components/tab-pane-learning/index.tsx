@@ -56,7 +56,7 @@ const TabPaneSection = React.memo((props: PropsWithChildren<TabPaneProps>) => {
         .ant-tabs {
           font-size: 16px;
           &.ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab + .ant-tabs-tab {
-            margin-left: 4px !important;
+            /* margin-left: 4px !important; */
           }
           .ant-tabs-nav {
             border-bottom: 1px solid #051d29;
@@ -69,24 +69,47 @@ const TabPaneSection = React.memo((props: PropsWithChildren<TabPaneProps>) => {
                 border-radius: 0px;
                 border-top-left-radius: 3px;
                 border-top-right-radius: 3px;
+                border-radius: 10px 10px 0 0;
+
                 :hover {
-                  background-color: #051d29 !important;
+                  background-color: transparent !important;
                   .ant-tabs-tab-btn {
-                    color: #fff;
+                    color: #000;
                   }
                 }
-                &.ant-tabs-tab-active {
-                  background-color: #051d29 !important;
-                  .ant-tabs-tab-btn {
-                    color: #fff;
-                  }
+              }
+              &.ant-tabs-tab-active {
+                background-color: #fff !important;
+                border-radius: 0.75em;
+                cursor: pointer;
+                /* height: 240px; */
+                position: relative;
+                /* background-color: #051d29 !important; */
+                &::before {
+                  background: linear-gradient(
+                    45deg,
+                    transparent 5%,
+                    rgb(255, 215, 137) 50%,
+                    transparent 99%
+                  ) !important;
+                  border-radius: inherit;
+                  content: '';
+                  inset: 0px;
+                  opacity: 1;
+                  position: absolute;
+                  transition: opacity 400ms;
+                  z-index: 0;
                 }
+
                 .ant-tabs-tab-btn {
-                  cursor: pointer;
-                  color: #222222;
-                  font-size: 16px;
-                  font-weight: 700;
+                  color: red;
                 }
+              }
+              .ant-tabs-tab-btn {
+                cursor: pointer;
+                color: #222222;
+                font-size: 16px;
+                font-weight: 700;
               }
             }
           }

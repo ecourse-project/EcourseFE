@@ -1,22 +1,20 @@
 /* eslint-disable prettier/prettier */
 
-import { Loading3QuartersOutlined, LoadingOutlined, SwapOutlined } from '@ant-design/icons';
-import { css } from '@emotion/react';
-import { Breadcrumb, Col, Divider, Pagination as BasicPagination, Row, Spin } from 'antd';
+import { Breadcrumb, Col, Divider, Pagination as BasicPagination, Spin } from 'antd';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-
+import { useDispatch } from 'react-redux';
 import DocItem from 'src/components/document/doc-item';
-import CustomPagination from 'src/components/pagination';
+import CourseService from 'src/lib/api/course';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { Document, Pagination, PaginationParams } from 'src/lib/types/backend_modal';
-import AppAction from 'src/lib/reducers/actions';
-import { RootState } from 'src/lib/reducers/model';
-import RoutePaths from 'src/lib/utils/routes';
-import { useDispatch, useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import CourseService from 'src/lib/api/course';
-import { UpperCaseFirstLetter } from 'src/lib/utils/format';
 import { StorageKeys } from 'src/lib/utils/enum';
+import { UpperCaseFirstLetter } from 'src/lib/utils/format';
+import RoutePaths from 'src/lib/utils/routes';
+
+import { Loading3QuartersOutlined, SwapOutlined } from '@ant-design/icons';
+import { css } from '@emotion/react';
+
 export interface DocumentParams {
   page?: number;
   document?: string;
@@ -83,8 +81,13 @@ const DocumentUI: React.FC = () => {
               display: flex;
               flex-wrap: wrap;
               text-align: left;
+
               .ant-col {
                 padding: 0 5px 30px 5px;
+              }
+
+              .ant-col {
+                margin: 0;
               }
               // @media only screen and (min-width: 768px) {
               // 	.ant-col {

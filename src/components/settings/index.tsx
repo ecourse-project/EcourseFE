@@ -1,11 +1,12 @@
 /* eslint-disable react/display-name */
 
-import { css } from '@emotion/react';
 import { Tabs } from 'antd';
-import React, { PropsWithChildren, ReactNode } from 'react';
+import React, { PropsWithChildren } from 'react';
 import isEqual from 'react-fast-compare';
-import { useDispatch } from 'react-redux';
 import { TypeTabPanel } from 'src/lib/types/commentType';
+
+import { css } from '@emotion/react';
+
 import { SettingContext } from './tabs';
 
 const { TabPane } = Tabs;

@@ -6,8 +6,10 @@ import { SettingFieldData } from 'src/lib/types/commentType';
 import regex from 'src/lib/utils/regularExpression';
 import validation from 'src/lib/utils/validation';
 import * as Yup from 'yup';
+
 import ChangePasswordForm from './ChangePasswordForm';
 import ContactSettingForm from './ContactInfoForm';
+
 interface ContactSettingsFormProps {
   myProfile?: any;
   avatar?: string;

@@ -1,3 +1,20 @@
+import { Popover, Tag } from 'antd';
+import { isEqual } from 'lodash';
+import Link from 'next/link';
+import React, { memo, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import CourseService from 'src/lib/api/course';
+import { useQueryParam } from 'src/lib/hooks/useQueryParam';
+import { docActions } from 'src/lib/reducers/document/documentSlice';
+import { RootState } from 'src/lib/reducers/model';
+import { Document, MoveEnum } from 'src/lib/types/backend_modal';
+import { formatCurrencySymbol } from 'src/lib/utils/currency';
+import { GlobalStyle, SaleStatusEnum } from 'src/lib/utils/enum';
+import { formatDate } from 'src/lib/utils/format';
+import RoutePaths from 'src/lib/utils/routes';
+import { checkAccountPermission } from 'src/lib/utils/utils';
+import { DocumentParams } from 'src/sections/Pages/DocumentUI';
+
 /* eslint-disable react/prop-types */
 import {
   EyeFilled,
@@ -8,28 +25,10 @@ import {
   WalletOutlined,
 } from '@ant-design/icons';
 import { css } from '@emotion/react';
-import { Popover, Rate, Tag } from 'antd';
-import React, { memo, useEffect, useMemo, useState } from 'react';
-import CourseService from 'src/lib/api/course';
-import { docActions } from 'src/lib/reducers/document/documentSlice';
-import { RootState } from 'src/lib/reducers/model';
-import { Document, MoveEnum } from 'src/lib/types/backend_modal';
-import { formatCurrencySymbol } from 'src/lib/utils/currency';
-import { GlobalStyle, SaleStatusEnum } from 'src/lib/utils/enum';
-import AppButton from '../button';
-
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
-import Link from 'next/link';
-import { useDispatch, useSelector } from 'react-redux';
-import { formatDate } from 'src/lib/utils/format';
-import RoutePaths from 'src/lib/utils/routes';
 import Rating from '@mui/material/Rating';
-import StarIcon from '@mui/icons-material/Star';
-import { isEqual } from 'lodash';
-import { checkAccountPermission } from 'src/lib/utils/utils';
-import { useQueryParam } from 'src/lib/hooks/useQueryParam';
-import { DocumentParams } from 'src/sections/Pages/DocumentUI';
-import { LoadingEnum } from 'src/lib/reducers/app/appSlice';
+
+import AppButton from '../button';
 
 interface ChildProps {
   document: Document; // try not to use any.
@@ -182,7 +181,6 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
         .doc--image {
           max-width: 100%;
           margin-bottom: 10px;
-
           .doc-img {
             width: 240px;
             height: 151px;
@@ -208,7 +206,6 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
           border-color: #000;
           &:hover {
             border-color: ${btnString === BtnString.AVAILABLE ? Color.AVAILABLE : Color.IN_CART};
-
             color: ${btnString === BtnString.AVAILABLE ? Color.AVAILABLE : Color.IN_CART};
             letter-spacing: 8px;
           }

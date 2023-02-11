@@ -1,20 +1,20 @@
-import { AppstoreOutlined, MailOutlined, SettingOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
-import { css } from '@emotion/react';
 import { Divider, Menu } from 'antd';
-import type { MenuTheme } from 'antd/es/menu';
+import { isEmpty } from 'lodash';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from 'src/lib/reducers/model';
 import { Nav, NavTypeEnum } from 'src/lib/types/backend_modal';
 import RoutePaths from 'src/lib/utils/routes';
 import { v4 as uuidv4 } from 'uuid';
+
+import { ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
+import { css } from '@emotion/react';
+
+import type { MenuTheme } from 'antd/es/menu';
 type MenuItem = Required<MenuProps>['items'][number];
 
 import type { MenuProps } from 'antd';
-import { useSelector } from 'react-redux';
-import { RootState } from 'src/lib/reducers/model';
-import { isEmpty } from 'lodash';
-import AppButton from '../button';
-
 function getItem(
   label: React.ReactNode,
   key?: React.Key | null,

@@ -1,18 +1,19 @@
-/* eslint-disable react/display-name */
-import { LogoutOutlined, SettingOutlined } from '@ant-design/icons';
-import { Card } from 'antd';
+import Router from 'next/router';
 import React, { useEffect } from 'react';
 import isEqual from 'react-fast-compare';
-import { TypeTabPanel } from 'src/lib/types/commentType';
-import { v4 as uuidv4 } from 'uuid';
-import { TabPaneSettingsSection } from '..';
-import Router, { useRouter } from 'next/router';
-import RoutePaths from 'src/lib/utils/routes';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
-import ContactInfo from './ContactInfo';
-import MyLearning, { LearningTabsKey } from 'src/sections/Pages/MyLearning';
-import OrderUI from 'src/sections/order';
+import { TypeTabPanel } from 'src/lib/types/commentType';
+import RoutePaths from 'src/lib/utils/routes';
 import LoginPage from 'src/pages/login';
+import OrderUI from 'src/sections/order';
+import MyLearning, { LearningTabsKey } from 'src/sections/Pages/MyLearning';
+import { v4 as uuidv4 } from 'uuid';
+
+/* eslint-disable react/display-name */
+import { LogoutOutlined, SettingOutlined } from '@ant-design/icons';
+
+import { TabPaneSettingsSection } from '../';
+import ContactInfo from './ContactInfo';
 
 export enum TabSettingKey {
   INFORMATION = 'INFORMATION',
