@@ -141,8 +141,8 @@ const CartUI: React.FC = () => {
         const removeDoc = await CourseService.moveDoc(id, MoveEnum.CART, MoveEnum.LIST);
         const idx = newDoc.findIndex((v) => v.id === removeDoc.id);
         if (idx >= 0) {
-          newCourse.splice(idx, 1);
-          setCourseCart(newCourse);
+          newDoc.splice(idx, 1);
+          setCourseCart(newDoc);
         }
       }
     } catch (error) {
