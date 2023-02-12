@@ -59,7 +59,7 @@ const ContactSettingForm: React.FC<ContactSettingsFormProps> = () => {
       AskForSave('Lưu Thay Đổi', '', 'Lưu', 'Huỷ', '', async (result) => {
         if (result.isConfirmed) {
           try {
-            const newInfo = await CourseService.updateMyInfo(phone, full_name);
+            const newInfo = await CourseService.updateInfo(phone, full_name);
             dispatch(appActions.setMyProfile(newInfo));
             Swal.fire('Đã lưu thay đổi!', '', 'success');
           } catch (error) {

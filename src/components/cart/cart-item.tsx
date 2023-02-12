@@ -1,34 +1,28 @@
-/* eslint-disable @next/next/no-img-element */
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-
-import { ConsoleSqlOutlined, DeleteOutlined, TagOutlined } from '@ant-design/icons';
-
-import { css } from '@emotion/react';
-import { set } from 'immer/dist/internal';
-import { debounce } from 'lodash';
 import { Spin } from 'antd';
-import { Course, Document, MoveEnum, NavTypeEnum } from 'src/lib/types/backend_modal';
-import { formatCurrency } from 'src/lib/utils/currency';
+/* eslint-disable @next/next/no-img-element */
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { docActions } from 'src/lib/reducers/document/documentSlice';
-import { courseAction } from 'src/lib/reducers/course/courseSlice';
-import CourseService from 'src/lib/api/course';
+import { Course, Document, NavTypeEnum } from 'src/lib/types/backend_modal';
+import { formatCurrency } from 'src/lib/utils/currency';
+
+import { DeleteOutlined } from '@ant-design/icons';
+import { css } from '@emotion/react';
 
 interface ChildProps {
   document?: Document;
   course?: Course;
   isDeleteBtn?: boolean;
-  onDelete: (id: string, type: NavTypeEnum) => void;
+  onDelete?: (id: string, type: NavTypeEnum) => void;
 }
 const CartItemRow: React.FC<ChildProps> = ({ document, course, isDeleteBtn = true, onDelete }) => {
   const [deleteLoading, setDeletetLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
 
   const deleteDoc = async () => {
-    document && onDelete(document?.id, NavTypeEnum.DOCUMENT);
+    document && onDelete && onDelete(document?.id, NavTypeEnum.DOCUMENT);
   };
   const deleteCourse = () => {
-    course && onDelete(course?.id, NavTypeEnum.COURSE);
+    course && onDelete && onDelete(course?.id, NavTypeEnum.COURSE);
   };
 
   return (
