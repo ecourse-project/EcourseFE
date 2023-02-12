@@ -1,13 +1,14 @@
-import { AppstoreAddOutlined } from '@ant-design/icons';
-import { css } from '@emotion/react';
-import { Divider, Empty, Spin } from 'antd';
-import { Typography } from 'antd';
-
-const { Title } = Typography;
+import { Divider, Empty, Spin, Typography } from 'antd';
 import React, { useEffect } from 'react';
 import { Course, Document } from 'src/lib/types/backend_modal';
 import { antIcon } from 'src/lib/utils/animations';
+
+import { AppstoreAddOutlined } from '@ant-design/icons';
+import { css } from '@emotion/react';
+
 import { LearningItem } from './learning-item';
+
+const { Title } = Typography;
 interface MyCourseUIProps {
   courses: Course[];
   docs: Document[];
@@ -55,9 +56,9 @@ const MyCourseUI: React.FC<MyCourseUIProps> = (props) => {
           <div style={{ height: '72px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <Spin indicator={antIcon} />
           </div>
-        ) : courses.length ? (
-          courses.map((v, i) => {
-            return <LearningItem course={v} key={i} />;
+        ) : docs.length ? (
+          docs.map((v, i) => {
+            return <LearningItem doc={v} key={i} />;
           })
         ) : (
           <Empty />
@@ -73,9 +74,9 @@ const MyCourseUI: React.FC<MyCourseUIProps> = (props) => {
           <div style={{ height: '72px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <Spin indicator={antIcon} />
           </div>
-        ) : docs.length ? (
-          docs.map((v, i) => {
-            return <LearningItem doc={v} key={i} />;
+        ) : courses.length ? (
+          courses.map((v, i) => {
+            return <LearningItem course={v} key={i} />;
           })
         ) : (
           <Empty />

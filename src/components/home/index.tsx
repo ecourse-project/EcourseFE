@@ -1,7 +1,7 @@
 import { Col, Spin } from 'antd';
 import * as React from 'react';
 import CourseService from 'src/lib/api/course';
-import { Document, Homepage, Pagination } from 'src/lib/types/backend_modal';
+import { Course, Document, Homepage, Pagination } from 'src/lib/types/backend_modal';
 import { StorageKeys } from 'src/lib/utils/enum';
 
 import { AppstoreAddOutlined, Loading3QuartersOutlined } from '@ant-design/icons';
@@ -19,6 +19,7 @@ export default function HomeData(props: IHomeData) {
   const { homeData } = props;
   const [loading, setLoading] = React.useState<boolean>(false);
   const [listDoc, setListDoc] = React.useState<Pagination<Document>>();
+  const [listCourse, setListCourse] = React.useState<Pagination<Course>>();
 
   const getDocumentList = async (idList: string[]) => {
     const token = localStorage.getItem(StorageKeys.SESSION_KEY);
@@ -39,8 +40,28 @@ export default function HomeData(props: IHomeData) {
       setLoading(false);
     }
   };
+  const getCourseList = async (idList: string[]) => {
+    const token = localStorage.getItem(StorageKeys.SESSION_KEY);
+    try {
+      setLoading(true);
+      if (!token) {
+        const docs = await CourseService.getHomeCourses({ page: 1, limit: 100 }, '', idList);
+        console.log('doc', docs);
+        setListCourse(docs);
+      } else {
+        const docs = await CourseService.getAllCourses({ page: 1, limit: 100 }, '', idList);
+        console.log('doc co token', docs);
+        setListCourse(docs);
+      }
+    } catch (error) {
+      console.log('error', error);
+    } finally {
+      setLoading(false);
+    }
+  };
   React.useEffect(() => {
-    getDocumentList(homeData?.detail?.document_id);
+    homeData?.detail?.document_id && getDocumentList(homeData?.detail?.document_id);
+    homeData?.detail?.course_id && getCourseList(homeData?.detail?.course_id);
     console.log('homeDatat', homeData);
   }, [homeData]);
   return (

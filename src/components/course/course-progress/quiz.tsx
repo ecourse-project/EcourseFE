@@ -1,7 +1,8 @@
-import { Collapse, Progress, Radio, RadioChangeEvent, Typography } from 'antd';
+import { Collapse, Progress, Radio, RadioChangeEvent, Spin, Typography } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 import AppButton from 'src/components/button';
 import { AnswerChoiceEnum, Quiz, QuizResult, UserAnswersArgs } from 'src/lib/types/backend_modal';
+import { antIcon } from 'src/lib/utils/animations';
 
 import { css } from '@emotion/react';
 
@@ -16,10 +17,11 @@ interface QuizProps {
   listQuiz: Quiz[];
   onSubmit: () => void;
   result: QuizResult | undefined;
+  loading: boolean;
 }
 
 const QuizSection: React.FC<QuizProps> = (props) => {
-  const { listQuiz, onSubmit, result } = props;
+  const { listQuiz, onSubmit, result, loading } = props;
   const { state, dispatch } = useContext(CourseProgressContext);
   const [isSubmit, setIsSubmit] = useState<boolean>(false);
   const [customResult, setCustomResult] = useState<any>([]);
@@ -84,7 +86,6 @@ const QuizSection: React.FC<QuizProps> = (props) => {
           font-weight: 600;
         }
         .done-btn {
-          margin-left: 100%;
           width: fit-content;
           background-color: #faad14 !important;
           font-weight: 700;
@@ -120,11 +121,27 @@ const QuizSection: React.FC<QuizProps> = (props) => {
         .ant-progress-text {
           font-weight: 600;
         }
+        .mark {
+          background-color: transparent;
+          & > .ant-progress-inner {
+            width: 70px !important;
+            height: 70px !important;
+            font-size: 20px !important;
+          }
+        }
       `}
     >
-      {result ? (
+      {loading ? (
+        <div style={{ height: '72px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Spin indicator={antIcon} />
+        </div>
+      ) : (
+        <></>
+      )}
+      {!loading && result ? (
         <Progress
           type="circle"
+          className="mark"
           percent={(result?.mark || 0) * 10}
           format={(percent) => `${percent && parseFloat(percent.toFixed(2)) / 10}/10`}
           status="exception"
@@ -202,7 +219,7 @@ const QuizSection: React.FC<QuizProps> = (props) => {
           </div>
         );
       })}
-      {listQuiz && (
+      {!loading && listQuiz && (
         <AppButton
           className="done-btn"
           btnTextColor={'black'}

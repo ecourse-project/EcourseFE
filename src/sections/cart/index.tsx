@@ -135,7 +135,9 @@ const CartUI: React.FC = () => {
 
         if (idx >= 0) {
           console.log('idx', idx);
-          setCourseCart(newCourse.splice(idx, 1));
+          const x = newCourse.splice(idx, 1);
+          console.log('x :>> ', x);
+          setCourseCart(x);
         }
       } else if (type === NavTypeEnum.DOCUMENT) {
         const removeDoc = await CourseService.moveDoc(id, MoveEnum.CART, MoveEnum.LIST);
