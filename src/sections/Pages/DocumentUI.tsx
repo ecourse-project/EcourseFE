@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import DocItem from 'src/components/document/doc-item';
+import { DocCourseWrapper } from 'src/components/document/style';
 import CourseService from 'src/lib/api/course';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { Document, Pagination, PaginationParams } from 'src/lib/types/backend_modal';
@@ -74,53 +75,17 @@ const DocumentUI: React.FC = () => {
         </div>
       ) : (
         <>
-          <div
-            className="document-wrapper"
-            css={css`
-              margin: 20px 0;
-              display: flex;
-              flex-wrap: wrap;
-              text-align: left;
-
-              .ant-col {
-                padding: 0 5px 30px 5px;
-              }
-
-              .ant-col {
-                margin: 0;
-              }
-              // @media only screen and (min-width: 768px) {
-              // 	.ant-col {
-              // 		max-width: 33% !important;
-              // 	}
-              // }
-              // @media only screen and (min-width: 992px) {
-              // 	.ant-col {
-              // 		max-width: 25% !important;
-              // 		min-width: 25% !important;
-              // 	}
-              // }
-              // @media only screen and (min-width: 1350px) {
-              // 	.ant-col {
-              // 		max-width: 20% !important;
-              // 		min-width: 20% !important;
-              // 	}
-              // 	.ant-btn[disabled] {
-              // 		letter-spacing: 2px;
-              // 	}
-              // }
-            `}
-          >
+          <DocCourseWrapper>
             {listDoc?.results?.length
               ? listDoc?.results?.map((e, i) => {
                   return (
-                    <Col key={i}>
+                    <Col key={i} className="item">
                       <DocItem document={e} />
                     </Col>
                   );
                 })
               : `There is no doc`}
-          </div>
+          </DocCourseWrapper>
           <div
             css={css`
               text-align: center;

@@ -53,7 +53,6 @@ const Nav: React.FC = () => {
           }),
         );
       });
-      console.log('listItems', listItems);
       setListNav(listItems);
     } catch (error) {
       console.log('GetHeader', error);
@@ -63,9 +62,7 @@ const Nav: React.FC = () => {
   useEffect(() => {
     getListHeader();
   }, []);
-  useEffect(() => {
-    console.log('myProfile :>> ', myProfile);
-  }, [myProfile]);
+
   return (
     <div
       className="nav-bar"
@@ -133,6 +130,22 @@ const Nav: React.FC = () => {
             transition: all 0.5s ease-in-out;
           }
         }
+        .setting-btn {
+          text-align: center;
+
+          .setting-icon:hover {
+            font-size: 25px;
+          }
+          transition: all 0.5s ease;
+        }
+        .cart-btn {
+          text-align: center;
+
+          .cart-icon:hover {
+            font-size: 25px;
+          }
+          transition: all 0.5s ease;
+        }
       `}
     >
       <Link href={'/'}>
@@ -142,18 +155,14 @@ const Nav: React.FC = () => {
         <Menu items={listNav} mode="horizontal" className="nav-menu" triggerSubMenuAction="hover" />
       </div>
       <div className="right-box">
-        <Link href={RoutePaths.CART}>
-          <ShoppingCartOutlined />
+        <Link href={RoutePaths.CART} className="cart-btn">
+          <ShoppingCartOutlined className="cart-icon" />
         </Link>
         <Divider type="vertical" style={{ height: '100%' }} />
-        {/* <div className="setting">
-          <Dropdown menu={{ items }}>
-            <UserOutlined />
-          </Dropdown>
-        </div> */}
+
         {!isEmpty(myProfile) ? (
-          <Link href={RoutePaths.SETTINGS}>
-            <UserOutlined />
+          <Link href={RoutePaths.SETTINGS} className="setting-btn">
+            <UserOutlined className="setting-icon" />
           </Link>
         ) : (
           <Link href={RoutePaths.LOGIN} className="login-btn">

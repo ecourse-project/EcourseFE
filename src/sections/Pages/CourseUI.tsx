@@ -1,21 +1,22 @@
 /* eslint-disable prettier/prettier */
 
+import { Breadcrumb, Col, Divider, Spin } from 'antd';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import CourseItem from 'src/components/course/course-item';
+import { DocCourseWrapper } from 'src/components/document/style';
+import CustomPagination from 'src/components/pagination';
+import CourseService from 'src/lib/api/course';
+import { useQueryParam } from 'src/lib/hooks/useQueryParam';
+import { Course, Pagination, PaginationParams } from 'src/lib/types/backend_modal';
+import { StorageKeys } from 'src/lib/utils/enum';
+import { UpperCaseFirstLetter } from 'src/lib/utils/format';
+import RoutePaths from 'src/lib/utils/routes';
+
 import { Loading3QuartersOutlined, SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
-import { Breadcrumb, Col, Divider, Row, Spin } from 'antd';
-import React, { useEffect, useState } from 'react';
-import CourseItem from 'src/components/course/course-item';
-import CustomPagination from 'src/components/pagination';
-import { useQueryParam } from 'src/lib/hooks/useQueryParam';
-import { Course, Document, Pagination, PaginationParams } from 'src/lib/types/backend_modal';
-import AppAction from 'src/lib/reducers/actions';
-import { RootState } from 'src/lib/reducers/model';
-import RoutePaths from 'src/lib/utils/routes';
-import { useDispatch, useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import CourseService from 'src/lib/api/course';
-import { UpperCaseFirstLetter } from 'src/lib/utils/format';
-import { StorageKeys } from 'src/lib/utils/enum';
+
 interface DocumentParams {
   page?: number;
   course?: string;
@@ -75,31 +76,17 @@ const CourseUI: React.FC = () => {
         </div>
       ) : (
         <>
-          <div
-            className="document-wrapper"
-            css={css`
-              margin: 20px 0;
-              display: flex;
-              flex-wrap: wrap;
-              text-align: left;
-              justify-content: space-evenly;
-              .ant-col {
-                padding: 0 5px 30px 5px;
-              }
-            `}
-          >
-            {/* <Row gutter={[16, 32]}> */}
+          <DocCourseWrapper>
             {listCourse?.results?.length
               ? listCourse?.results?.map((e, i) => {
                   return (
-                    <Col key={i}>
+                    <Col key={i} className="item">
                       <CourseItem course={e} />
                     </Col>
                   );
                 })
               : `There is no doc`}
-            {/* </Row> */}
-          </div>
+          </DocCourseWrapper>
           <div
             css={css`
               text-align: center;

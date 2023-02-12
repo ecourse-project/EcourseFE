@@ -1,12 +1,13 @@
-import { css } from '@emotion/react';
-import { Progress, RadioChangeEvent } from 'antd';
-import { Collapse, Radio, Typography } from 'antd';
-import { isElement, isEmpty } from 'lodash';
+import { Collapse, Progress, Radio, RadioChangeEvent, Typography } from 'antd';
 import React, { useContext, useEffect, useState } from 'react';
 import AppButton from 'src/components/button';
 import { AnswerChoiceEnum, Quiz, QuizResult, UserAnswersArgs } from 'src/lib/types/backend_modal';
+
+import { css } from '@emotion/react';
+
 import { CourseProgressAction } from './context/reducer';
 import { CourseProgressContext } from './course-progress';
+
 const { Panel } = Collapse;
 
 const { Text, Link } = Typography;
@@ -94,16 +95,19 @@ const QuizSection: React.FC<QuizProps> = (props) => {
             cursor: not-allowed;
           }
         }
-        .answer_a {
-        }
+
         .ant-radio-disabled .ant-radio-inner:after {
           color: #1890ff;
           background-color: #1890ff;
+        }
+        .choice {
+          margin-bottom: 0 !important;
         }
         .error {
           .choice {
             color: red;
             font-weight: 700;
+            margin-bottom: 0 !important;
           }
           .ant-radio-inner:after {
             color: red;
@@ -139,7 +143,7 @@ const QuizSection: React.FC<QuizProps> = (props) => {
 
             <Radio.Group onChange={(e) => onChange(e, quiz.id)} disabled={isSubmit}>
               <Radio
-                className={`answer_a ${
+                className={`answer ${
                   customResult
                     ? customResult[quiz.id]?.choice === customResult[quiz.id]?.correct
                       ? 'correct'
@@ -153,7 +157,7 @@ const QuizSection: React.FC<QuizProps> = (props) => {
                 <p className="choice">{quiz.A}</p>
               </Radio>
               <Radio
-                className={`answer_b ${
+                className={`answer ${
                   customResult
                     ? customResult[quiz.id]?.choice === customResult[quiz.id]?.correct
                       ? 'correct'
@@ -167,7 +171,7 @@ const QuizSection: React.FC<QuizProps> = (props) => {
                 <p className="choice">{quiz.B}</p>
               </Radio>
               <Radio
-                className={`answer_c ${
+                className={`answer ${
                   customResult
                     ? customResult[quiz.id]?.choice === customResult[quiz.id]?.correct
                       ? ''
@@ -181,7 +185,7 @@ const QuizSection: React.FC<QuizProps> = (props) => {
                 <p className="choice">{quiz.C}</p>
               </Radio>
               <Radio
-                className={`answer_d ${
+                className={`answer ${
                   customResult
                     ? customResult[quiz.id]?.choice === customResult[quiz.id]?.correct
                       ? ''

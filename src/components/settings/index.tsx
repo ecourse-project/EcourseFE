@@ -57,7 +57,7 @@ export const TabPaneSettingsSection: React.FC<TabPaneProps> = React.memo((props:
         .ant-tabs {
           font-size: 16px;
           &.ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab + .ant-tabs-tab {
-            margin-left: 4px !important;
+            margin-left: 2px !important;
           }
           .ant-tabs-nav {
             /* border-bottom: 1px solid #00aaff; */
@@ -92,9 +92,6 @@ export const TabPaneSettingsSection: React.FC<TabPaneProps> = React.memo((props:
                 }
               }
             }
-          }
-          .past-orders-tab {
-            overflow: inherit;
           }
         }
       `}

@@ -1,11 +1,14 @@
-import { AppstoreAddOutlined, Loading3QuartersOutlined } from '@ant-design/icons';
-import { css } from '@emotion/react';
 import { Col, Spin } from 'antd';
 import * as React from 'react';
 import CourseService from 'src/lib/api/course';
 import { Document, Homepage, Pagination } from 'src/lib/types/backend_modal';
 import { StorageKeys } from 'src/lib/utils/enum';
+
+import { AppstoreAddOutlined, Loading3QuartersOutlined } from '@ant-design/icons';
+import { css } from '@emotion/react';
+
 import DocItem from '../document/doc-item';
+import { DocCourseWrapper } from '../document/style';
 
 export interface IHomeData {
   homeData: Homepage;
@@ -62,37 +65,7 @@ export default function HomeData(props: IHomeData) {
         </div>
       ) : (
         <>
-          <div
-            className="document-wrapper"
-            css={css`
-              margin: 20px 0;
-              display: flex;
-              text-align: left;
-              .ant-col {
-                padding: 0 5px 30px 5px;
-              }
-              // @media only screen and (min-width: 768px) {
-              // 	.ant-col {
-              // 		max-width: 33% !important;
-              // 	}
-              // }
-              // @media only screen and (min-width: 992px) {
-              // 	.ant-col {
-              // 		max-width: 25% !important;
-              // 		min-width: 25% !important;
-              // 	}
-              // }
-              // @media only screen and (min-width: 1350px) {
-              // 	.ant-col {
-              // 		max-width: 20% !important;
-              // 		min-width: 20% !important;
-              // 	}
-              // 	.ant-btn[disabled] {
-              // 		letter-spacing: 2px;
-              // 	}
-              // }
-            `}
-          >
+          <DocCourseWrapper>
             {listDoc?.results?.length
               ? listDoc?.results?.map((e, i) => {
                   return (
@@ -102,7 +75,7 @@ export default function HomeData(props: IHomeData) {
                   );
                 })
               : `There is no doc`}
-          </div>
+          </DocCourseWrapper>
         </>
       )}
     </div>
