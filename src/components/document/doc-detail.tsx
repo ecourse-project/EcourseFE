@@ -1,62 +1,32 @@
-/* eslint-disable react/prop-types */
-import {
-  CalendarOutlined,
-  CheckCircleOutlined,
-  ClockCircleOutlined,
-  CloseCircleOutlined,
-  DownloadOutlined,
-  ExclamationCircleOutlined,
-  FileSearchOutlined,
-  MinusCircleOutlined,
-  MinusSquareOutlined,
-  MoreOutlined,
-  PicCenterOutlined,
-  PlusCircleOutlined,
-  StarFilled,
-  SwapOutlined,
-  SyncOutlined,
-} from '@ant-design/icons';
-
-import { css } from '@emotion/react';
-import {
-  Breadcrumb,
-  Button,
-  Divider,
-  Dropdown,
-  Form,
-  List,
-  Menu,
-  Row,
-  Statistic,
-  Tabs,
-  Tag,
-  Tooltip,
-  Typography,
-} from 'antd';
+import { Breadcrumb, Button, Divider, Dropdown, Menu, Row, Statistic, Tabs, Typography } from 'antd';
+import { isEmpty } from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { useQueryParam } from 'src/lib/hooks/useQueryParam';
-import {
-  Document,
-  MoveEnum,
-  RateCourseArgs,
-  RateDocArgs,
-  Rating,
-  RatingEnum,
-  SaleStatusEnum,
-} from 'src/lib/types/backend_modal';
-import { docActions } from 'src/lib/reducers/document/documentSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import CourseService from 'src/lib/api/course';
+import { useQueryParam } from 'src/lib/hooks/useQueryParam';
+import { RootState } from 'src/lib/reducers/model';
+import { Document, MoveEnum, RateDocArgs, Rating, RatingEnum, SaleStatusEnum } from 'src/lib/types/backend_modal';
 import { formatCurrency } from 'src/lib/utils/currency';
 import { formatDate } from 'src/lib/utils/format';
 import RoutePaths from 'src/lib/utils/routes';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { RootState } from 'src/lib/reducers/model';
-import TextArea from 'antd/lib/input/TextArea';
-import RatingModal from '../modal/rating-modal';
-import { isEmpty } from 'lodash';
-import { useDispatch, useSelector } from 'react-redux';
-import FeedbackSection from '../comment/feedbacks';
+
+/* eslint-disable react/prop-types */
+import {
+  CalendarOutlined,
+  DownloadOutlined,
+  FileSearchOutlined,
+  MinusCircleOutlined,
+  MoreOutlined,
+  PlusCircleOutlined,
+  StarFilled,
+  SwapOutlined,
+} from '@ant-design/icons';
 import { PageHeader } from '@ant-design/pro-layout/es/components/PageHeader';
+import { css } from '@emotion/react';
+
+import FeedbackSection from '../comment/feedbacks';
+import RatingModal from '../modal/rating-modal';
+
 const { Paragraph, Title } = Typography;
 const menu = (
   <Menu
@@ -263,6 +233,9 @@ const DocDetail: React.FC = () => {
         .ant-breadcrumb {
           font-size: 20px;
           font-weight: 600;
+          .ant-breadcrumb-link {
+            cursor: pointer;
+          }
         }
 
         .ant-btn-primary {
@@ -282,7 +255,9 @@ const DocDetail: React.FC = () => {
           height: 50px;
           border-radius: 4px;
           &:hover {
-            letter-spacing: 6px;
+            letter-spacing: 4px;
+            text-decoration: none;
+            font-weight: 700;
           }
           .anticon {
             vertical-align: inherit;
@@ -302,8 +277,13 @@ const DocDetail: React.FC = () => {
             padding: 20px 5px;
           }
         }
-        a.ant-btn {
+        /* a.ant-btn {
           padding-top: 8px !important;
+        } */
+        .add-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
         .ant-page-header {
         }
@@ -326,8 +306,8 @@ const DocDetail: React.FC = () => {
       <Divider orientation="left">
         <Breadcrumb separator={<SwapOutlined />}>
           <Breadcrumb.Item href={RoutePaths.HOME}>Trang chính</Breadcrumb.Item>
-          <Breadcrumb.Item href={''}>Tài liệu</Breadcrumb.Item>
-          <Breadcrumb.Item href="">{doc.title}</Breadcrumb.Item>
+          <Breadcrumb.Item>Tài liệu</Breadcrumb.Item>
+          <Breadcrumb.Item>{doc.title}</Breadcrumb.Item>
         </Breadcrumb>
       </Divider>
       <PageHeader

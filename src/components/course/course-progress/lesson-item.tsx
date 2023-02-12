@@ -1,12 +1,15 @@
-import { FileTextOutlined, PlayCircleFilled } from '@ant-design/icons';
-import { css } from '@emotion/react';
 import { Collapse, List } from 'antd';
 import { debounce } from 'lodash';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Lesson, UpdateLessonArgs } from 'src/lib/types/backend_modal';
 import { DurationTime, formatDurationTime } from 'src/lib/utils/utils';
+
+import { FileTextOutlined, PlayCircleFilled } from '@ant-design/icons';
+import { css } from '@emotion/react';
+
 import { CourseProgressAction } from './context/reducer';
 import { CourseProgressContext } from './course-progress';
+
 const { Panel } = Collapse;
 
 interface LessonItemProps {
@@ -41,7 +44,8 @@ const DisplayDurationTime = (duration) => {
 
   const hourString = `${time.hours > 0 ? time.hours + ':' : ''}`;
   const minuteString = `${time.minutes > 0 ? time.minutes + ':' : ''}`;
-  const secondString = `${time.seconds > 0 ? time.seconds : ''}`;
+  const secondString = `${time.seconds > 0 ? (time.seconds > 10 ? time.seconds : '0' + time.seconds) : ''}`;
+  console.log(time);
   return hourString + minuteString + secondString;
 };
 
@@ -150,7 +154,8 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            width: 50px;
+            width: 60px;
+            letter-spacing: 1px;
           }
           .doc {
             width: 75px;
@@ -172,7 +177,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
     >
       <List.Item>
         <Collapse defaultActiveKey={['1']} destroyInactivePanel className="course_lesson">
-          <Panel header={`Bài ${index}: ${lesson?.name}`} key="1">
+          <Panel header={`Bài ${index || 0 + 1}: ${lesson?.name}`} key="1">
             <Collapse defaultActiveKey={['1']}>
               {/* <Collapse> */}
               <Panel
@@ -226,7 +231,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                       <div className="">{`${i + 1}. ${v.file_name}`}</div>
                       <div className="video_duration">
                         <PlayCircleFilled />
-                        {`${DisplayDurationTime(v.duration)}`}
+                        {`${DisplayDurationTime(v.duration)}s`}
                       </div>
                     </div>
                   </div>

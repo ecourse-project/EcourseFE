@@ -1,5 +1,5 @@
 import { Breadcrumb, Button, Col, Divider, List, Row, Statistic, Tabs, Tag, Typography } from 'antd';
-import { debounce, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -184,25 +184,25 @@ const CourseDetail: React.FC = () => {
     </div>
   );
 
-  const debounceHandleUpdateBtn = () => {
+  const handleUpdateBtn = async () => {
     if (course.sale_status !== SaleStatusEnum.BOUGHT) {
-      debounce(async () => {
-        try {
-          setLoading(true);
-          if (course.sale_status === SaleStatusEnum.AVAILABLE) {
-            const newCourse = await CourseService.moveCourse(course.id, MoveEnum.LIST, MoveEnum.CART);
-            setCourse(newCourse);
-          } else if (course.sale_status === SaleStatusEnum.IN_CART) {
-            const newCourse = await CourseService.moveCourse(course.id, MoveEnum.CART, MoveEnum.LIST);
-            setCourse(newCourse);
-          }
-        } catch (error) {
-          console.log('error', error);
-          setLoading(false);
-        } finally {
-          setLoading(false);
+      setLoading(true);
+      try {
+        let newCourse = {} as Course;
+        if (course.sale_status === SaleStatusEnum.AVAILABLE) {
+          newCourse = await CourseService.moveCourse(course.id, MoveEnum.LIST, MoveEnum.CART);
+        } else if (course.sale_status === SaleStatusEnum.IN_CART) {
+          newCourse = await CourseService.moveCourse(course.id, MoveEnum.CART, MoveEnum.LIST);
         }
-      }, 1000);
+        setTimeout(() => {
+          setCourse(newCourse);
+        }, 500);
+      } catch (error) {
+        console.log('error', error);
+        setLoading(false);
+      } finally {
+        setLoading(false);
+      }
     } else {
       router.push(`${RoutePaths.COURSE_PROGRESS}?id=${course.id}`);
     }
@@ -384,7 +384,7 @@ const CourseDetail: React.FC = () => {
               type="primary"
               className="add-btn"
               loading={loading}
-              onClick={debounceHandleUpdateBtn}
+              onClick={handleUpdateBtn}
               target="_self"
               disabled={loading}
             >
@@ -423,7 +423,7 @@ const CourseDetail: React.FC = () => {
         <Content extraContent={undefined}>{content}</Content>
         <Row className="course_info">
           {/* <Col lg={12} md={0} className="thumbnail_wrapper">
-            <Image className="thumbnail" src={course?.thumbnail?.image_path} preview={false} />
+            <Image className="thumbnail" src={course?.thumbnail?.image_pat  h} preview={false} />
           </Col> */}
           <Col lg={24} md={24} className="lessons">
             <p className="list_lesson_header">Các bài học trong khoá</p>
@@ -431,7 +431,7 @@ const CourseDetail: React.FC = () => {
               className="list_lesson"
               itemLayout="horizontal"
               dataSource={course?.lessons}
-              renderItem={(item) => <LessonItem lesson={item} isCourseDetail={true} />}
+              renderItem={(item, index) => <LessonItem lesson={item} isCourseDetail={true} index={index} />}
             />
           </Col>
         </Row>

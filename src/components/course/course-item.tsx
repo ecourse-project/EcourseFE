@@ -1,4 +1,4 @@
-import { Popover, Tag } from 'antd';
+import { Popover } from 'antd';
 import Link from 'next/link';
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
@@ -148,7 +148,7 @@ const CourseItem: React.FC<ChildProps> = (props) => {
           >
             <p className="title-popup">{currentCourse.name}</p>
 
-            <Tag color="geekblue">Best Seller</Tag>
+            {/* <Tag color="geekblue">Best Seller</Tag> */}
             <p>Cập nhật: {formatDate(currentCourse?.modified)}</p>
             <p>Số bài học: {currentCourse?.lessons?.length}</p>
             {/* <p>

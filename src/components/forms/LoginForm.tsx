@@ -1,30 +1,23 @@
-import { css } from '@emotion/react';
-import { Router } from '@material-ui/icons';
-import { Checkbox } from 'antd';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox/Checkbox';
-import axios from 'axios';
 import { useFormik } from 'formik';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-
 import AppButton from 'src/components/button';
 import ErrorMessage from 'src/components/error-message';
 import AppInput from 'src/components/input';
 import AuthService from 'src/lib/api/auth';
 import { LoginParams } from 'src/lib/api/auth/model';
-import CourseService from 'src/lib/api/course';
 import UserService from 'src/lib/api/user';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { appActions } from 'src/lib/reducers/app/appSlice';
 import { User } from 'src/lib/types/backend_modal';
 import { LoginFormData, LoginQueryParams } from 'src/lib/types/commentType';
 import { StorageKeys } from 'src/lib/utils/enum';
-import RoutePaths from 'src/lib/utils/routes';
 import validation from 'src/lib/utils/validation';
-
 import * as Yup from 'yup';
+
+import { css } from '@emotion/react';
 
 const LoginForm: React.FC = () => {
   const router = useRouter();
@@ -94,27 +87,6 @@ const LoginForm: React.FC = () => {
               font-weight: 700;
             }
           }
-          .form-item-bot {
-            width: 100%;
-            display: flex;
-            .form-item-checkbox {
-              width: 50%;
-              margin-right: 20px;
-              .ant-checkbox + span {
-                color: #fff;
-                font-size: 18px;
-                font-weight: 300;
-              }
-            }
-            .forgot-pwd {
-              width: 50%;
-              color: #fff;
-              font-size: 18px;
-              &:hover {
-                text-decoration: underline;
-              }
-            }
-          }
         `}
         className="login-form"
         onSubmit={formik.handleSubmit}
@@ -136,7 +108,7 @@ const LoginForm: React.FC = () => {
         <div className="form-item">
           <AppInput
             className="field login-field"
-            label="Password"
+            label="Mật khẩu"
             type="password"
             name="password"
             placeholder="Password"
@@ -164,28 +136,10 @@ const LoginForm: React.FC = () => {
             htmlType="submit"
             disabled={formik.isSubmitting}
           >
-            Login
+            Đăng nhập
           </AppButton>
         </div>
-        <div className="form-item-bot">
-          {/* <div className="form-item-checkbox">
-                <Checkbox checked={rememberMe} onChange={onRememberMeChange}>
-                    Remember me
-                </Checkbox>
-            </div> */}
-          <Link className="forgot-pwd" href={RoutePaths.FORGOT_PASSWORD}>
-            Forgot password?
-          </Link>
-        </div>
       </form>
-      <div className="login-text">
-        <h5>
-          Don&apos;t have an account?{' '}
-          <Link className="register-here" href="/register/">
-            Register Here
-          </Link>
-        </h5>
-      </div>
     </>
   );
 };

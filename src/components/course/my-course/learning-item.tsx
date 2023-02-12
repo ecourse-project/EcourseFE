@@ -1,12 +1,14 @@
-import { css } from '@emotion/react';
 import { Card, Divider, Progress, Rate } from 'antd';
 import { isEmpty } from 'lodash';
-import React, { useEffect, useState } from 'react';
-import RatingModal from 'src/components/modal/rating-modal';
-import { Course, Document, RateCourseArgs, Rating, RatingEnum } from 'src/lib/types/backend_modal';
-import CourseService from 'src/lib/api/course';
-import RoutePaths from 'src/lib/utils/routes';
 import { useRouter } from 'next/router';
+import React, { useState } from 'react';
+import RatingModal from 'src/components/modal/rating-modal';
+import CourseService from 'src/lib/api/course';
+import { Course, Document, RateCourseArgs, Rating, RatingEnum } from 'src/lib/types/backend_modal';
+import RoutePaths from 'src/lib/utils/routes';
+
+import styled from '@emotion/styled';
+
 interface LearningItem {
   course?: Course;
   doc?: Document;
@@ -16,6 +18,60 @@ enum ItemType {
   COURESE = 'COURSE',
 }
 const { Meta } = Card;
+
+const ItemWrapper = styled.div`
+  .ant-card {
+    height: fit-content;
+    width: 260px;
+    cursor: pointer;
+  }
+  .ant-card-body {
+    padding: 10px;
+  }
+  .ant-card-meta {
+    height: 55px;
+  }
+  .ant-card-meta-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    white-space: unset;
+    font-size: 15px;
+  }
+  .ant-card-cover img {
+    border-radius: 3px;
+  }
+  .ant-progress-bg {
+    height: 5px !important;
+  }
+  img {
+    width: 99%;
+    height: 250px;
+    margin: auto;
+  }
+  .extra {
+    display: flex;
+    justify-content: space-between;
+    .ant-rate {
+      font-size: 14px;
+      color: #ffa900;
+    }
+  }
+  .status_text {
+    font-weight: 500;
+    &:hover {
+      font-weight: 700;
+      color: #ffa900;
+      cursor: pointer;
+    }
+  }
+  .rate {
+    cursor: pointer;
+    .anticon-star {
+      cursor: pointer;
+    }
+  }
+`;
 
 export const LearningItem: React.FC<LearningItem> = (props) => {
   const { course, doc } = props;
@@ -65,73 +121,19 @@ export const LearningItem: React.FC<LearningItem> = (props) => {
         defaultStar={star}
       />
       {course ? (
-        <div
-          className="course_item"
-          css={css`
-            .ant-card {
-              height: fit-content;
-              width: 300px;
-              cursor: pointer;
-            }
-            .ant-card-body {
-              padding: 10px;
-            }
-            .ant-card-meta {
-              height: 55px;
-            }
-            .ant-card-meta-title {
-              display: -webkit-box;
-              -webkit-line-clamp: 2;
-              -webkit-box-orient: vertical;
-              white-space: unset;
-              font-size: 15px;
-            }
-            .ant-card-cover img {
-              border-radius: 3px;
-            }
-            .ant-progress-bg {
-              height: 5px !important;
-            }
-            img {
-              width: 99%;
-              height: 250px;
-              margin: auto;
-            }
-            .extra {
-              display: flex;
-              justify-content: space-between;
-              .ant-rate {
-                font-size: 14px;
-                color: #ffa900;
-              }
-            }
-            .status_text {
-              font-weight: 500;
-              &:hover {
-                font-weight: 700;
-                color: #ffa900;
-                cursor: pointer;
-              }
-            }
-            .rate {
-              cursor: pointer;
-              .anticon-star {
-                cursor: pointer;
-              }
-            }
-          `}
-        >
-          <Card hoverable cover={<img alt="example" src={course?.thumbnail?.image_path} />}>
+        <ItemWrapper>
+          <Card
+            hoverable
+            cover={<img alt="example" src={course?.thumbnail?.image_path} />}
+            onClick={() => {
+              handleLearn(ItemType.COURESE);
+            }}
+          >
             <Meta title={course.name} />
             <div>Tên tác giả</div>
             <Progress percent={course.progress} showInfo={false} />
             <div className="extra">
-              <span
-                onClick={() => {
-                  handleLearn(ItemType.COURESE);
-                }}
-                className="status_text"
-              >
+              <span className="status_text">
                 {course.progress === 100
                   ? 'Đã hoàn thành'
                   : course.progress !== 0
@@ -168,120 +170,63 @@ export const LearningItem: React.FC<LearningItem> = (props) => {
               </span>
             </div>
           </Card>
-        </div>
+        </ItemWrapper>
       ) : (
         ''
       )}
       {doc ? (
-        <div>
-          {' '}
-          <div
-            className="course_item"
-            css={css`
-              .ant-card {
-                height: fit-content;
-                width: 300px;
-                cursor: pointer;
-              }
-              .ant-card-body {
-                padding: 10px;
-              }
-              .ant-card-meta {
-                height: 55px;
-              }
-              .ant-card-meta-title {
-                display: -webkit-box;
-                -webkit-line-clamp: 2;
-                -webkit-box-orient: vertical;
-                white-space: unset;
-                font-size: 15px;
-              }
-              .ant-card-cover img {
-                border-radius: 3px;
-              }
-              .ant-progress-bg {
-                height: 5px !important;
-              }
-              img {
-                width: 99%;
-                height: 250px;
-                margin: auto;
-              }
-              .extra {
-                display: flex;
-                justify-content: space-between;
-                .ant-rate {
-                  font-size: 14px;
-                  color: #ffa900;
-                }
-              }
-              .status_text {
-                font-weight: 500;
-                &:hover {
-                  font-weight: 700;
-                  color: #ffa900;
-                  cursor: pointer;
-                }
-              }
-              .rate {
-                cursor: pointer;
-                .anticon-star {
-                  cursor: pointer;
-                }
-              }
-            `}
+        <ItemWrapper>
+          <Card
+            hoverable
+            cover={<img alt="example" src={doc?.thumbnail?.image_path} />}
+            onClick={() => {
+              handleLearn(ItemType.DOC);
+            }}
           >
-            <Card hoverable cover={<img alt="example" src={doc?.thumbnail?.image_path} />}>
-              <Meta title={doc.name} />
-              <div>Tên tác giả</div>
-              <Divider />
-              {/* <Progress percent={course.progress} showInfo={false} /> */}
-              <div className="extra">
-                <span
-                  onClick={() => {
-                    handleLearn(ItemType.DOC);
-                  }}
-                  className="status_text"
-                >
-                  {/* {course.progress === 100
+            <Meta title={doc.name} />
+            <div>Tên tác giả</div>
+            <Divider />
+            {/* <Progress percent={course.progress} showInfo={false} /> */}
+            <div className="extra">
+              <span className="status_text">
+                {/* {course.progress === 100
 										? 'Đã hoàn thành'
 										: course.progress !== 0
 										? `${course.progress}% đã hoàn thành`
 										: 'Bắt đầu học'} */}
-                  Đọc tài liệu
-                </span>
-                <span>
-                  <div>
-                    {Number(doc?.my_rating?.rating) ? (
-                      <div
-                        className="rate"
-                        onClick={() => {
+                Đọc tài liệu
+              </span>
+              <span>
+                <div>
+                  {Number(doc?.my_rating?.rating) ? (
+                    <div
+                      className="rate"
+                      onClick={() => {
+                        setOpenRatingModal(true);
+                      }}
+                    >
+                      <div style={{ fontSize: '11px' }}>Đánh giá của bạn</div>
+                      <Rate
+                        defaultValue={doc.my_rating?.rating || star}
+                        disabled={!!Number(doc.rating)}
+                        onChange={(value) => {
+                          setStar(value);
                           setOpenRatingModal(true);
                         }}
-                      >
-                        <div style={{ fontSize: '11px' }}>Đánh giá của bạn</div>
-                        <Rate
-                          defaultValue={doc.my_rating?.rating || star}
-                          disabled={!!Number(doc.rating)}
-                          onChange={(value) => {
-                            setStar(value);
-                            setOpenRatingModal(true);
-                          }}
-                          value={doc.my_rating?.rating || star}
-                        />
-                      </div>
-                    ) : (
-                      <>
-                        <div style={{ fontSize: '11px' }}>Đánh giá trung bình </div>
-                        <Rate defaultValue={doc.rating} disabled={true} value={doc.rating} />{' '}
-                      </>
-                    )}
-                  </div>
-                </span>
-              </div>
-            </Card>
-          </div>
-        </div>
+                        value={doc.my_rating?.rating || star}
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      <div style={{ fontSize: '11px' }}>Đánh giá trung bình </div>
+                      <Rate defaultValue={doc.rating} disabled={true} value={doc.rating} />{' '}
+                    </>
+                  )}
+                </div>
+              </span>
+            </div>
+          </Card>
+        </ItemWrapper>
       ) : (
         ''
       )}

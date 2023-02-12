@@ -1,8 +1,10 @@
-import { FaRegUser } from 'react-icons/fa';
-import { css } from '@emotion/react';
-import React, { useEffect } from 'react';
+import { Divider } from 'antd';
 import Link from 'next/link';
+import React from 'react';
 import LoginForm from 'src/components/forms/LoginForm';
+import RoutePaths from 'src/lib/utils/routes';
+
+import { css } from '@emotion/react';
 
 const LoginUI: React.FC = () => {
   return (
@@ -81,35 +83,39 @@ const LoginUI: React.FC = () => {
             height: 2px;
             margin-top: 20px;
             margin-bottom: 20px;
-            background-color: #031f2d;
+            background-color: #2e0249;
           }
-          .login-text {
-            text-align: center;
-            font-family: FiraSans;
-            h5 {
-              margin: 0;
-              margin-bottom: 10px;
-              font-size: 14px;
-              line-height: 1.2;
-              font-weight: 400;
-            }
-            .register-here {
-              transition: all 400ms ease;
-              color: #333;
-              font-weight: 700;
-              text-decoration: none;
-              text-transform: uppercase;
+
+          .form-item-bot {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 10px;
+            .forgot-pwd {
+              width: 100%;
+              color: #000;
+              font-size: 18px;
+              text-align: center;
+
               &:hover {
                 text-decoration: underline;
               }
             }
-            .resend-here {
-              font-size: 14px;
-              line-height: 1.2;
-              transition: all 400ms ease;
-              color: #333;
-              font-weight: 700;
-              text-decoration: underline;
+
+            .login-text {
+              color: #000;
+              font-family: FiraSans;
+              display: flex;
+              justify-content: center;
+              gap: 10px;
+              .register-here {
+                color: #000;
+                font-weight: 600;
+                &:hover {
+                  font-weight: 700;
+                }
+              }
             }
           }
         }
@@ -117,8 +123,20 @@ const LoginUI: React.FC = () => {
     >
       <div className="section-login">
         <div className="wrapper-login">
-          <h2 className="login-header">Sign in</h2>
+          <h2 className="login-header">Đăng nhập</h2>
           <LoginForm />
+          <Divider className="divider" />
+          <div className="form-item-bot">
+            <Link className="forgot-pwd" href={RoutePaths.FORGOT_PASSWORD}>
+              Quên mật khẩu?
+            </Link>
+            <div className="login-text">
+              <p>Chưa có tài khoản?</p>
+              <Link className="register-here" href={RoutePaths.REGISTER}>
+                Đăng ký
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </div>

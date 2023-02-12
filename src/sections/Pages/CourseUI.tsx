@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 
-import { Breadcrumb, Col, Divider, Spin } from 'antd';
+import { Breadcrumb, Col, Divider, Empty, Spin } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -77,15 +77,17 @@ const CourseUI: React.FC = () => {
       ) : (
         <>
           <DocCourseWrapper>
-            {listCourse?.results?.length
-              ? listCourse?.results?.map((e, i) => {
-                  return (
-                    <Col key={i} className="item">
-                      <CourseItem course={e} />
-                    </Col>
-                  );
-                })
-              : `There is no doc`}
+            {listCourse?.results?.length ? (
+              listCourse?.results?.map((e, i) => {
+                return (
+                  <Col key={i} className="item">
+                    <CourseItem course={e} />
+                  </Col>
+                );
+              })
+            ) : (
+              <Empty />
+            )}
           </DocCourseWrapper>
           <div
             css={css`

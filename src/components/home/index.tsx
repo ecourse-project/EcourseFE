@@ -7,6 +7,7 @@ import { StorageKeys } from 'src/lib/utils/enum';
 import { AppstoreAddOutlined, Loading3QuartersOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 
+import CourseItem from '../course/course-item';
 import DocItem from '../document/doc-item';
 import { DocCourseWrapper } from '../document/style';
 
@@ -87,15 +88,30 @@ export default function HomeData(props: IHomeData) {
       ) : (
         <>
           <DocCourseWrapper>
-            {listDoc?.results?.length
-              ? listDoc?.results?.map((e, i) => {
-                  return (
-                    <Col key={i}>
-                      <DocItem document={e} />
-                    </Col>
-                  );
-                })
-              : `There is no doc`}
+            {listDoc?.results?.length ? (
+              listDoc?.results?.map((e, i) => {
+                return (
+                  <Col key={i}>
+                    <DocItem document={e} />
+                  </Col>
+                );
+              })
+            ) : (
+              <></>
+            )}
+          </DocCourseWrapper>
+          <DocCourseWrapper>
+            {listCourse?.results?.length ? (
+              listCourse?.results?.map((e, i) => {
+                return (
+                  <Col key={i}>
+                    <CourseItem course={e} />
+                  </Col>
+                );
+              })
+            ) : (
+              <></>
+            )}
           </DocCourseWrapper>
         </>
       )}

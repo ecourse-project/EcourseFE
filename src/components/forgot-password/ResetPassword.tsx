@@ -1,13 +1,15 @@
-import ArrowLeft from 'src/assets/images/arrow-left.svg';
 import { Image } from 'antd';
-
-import { css } from '@emotion/react';
+import { useRouter } from 'next/router';
 // import { navigate } from 'gatsby';
 import React, { useState } from 'react';
+import ArrowLeft from 'src/assets/images/arrow-left.svg';
 import RoutePaths from 'src/lib/utils/routes';
+
+import { css } from '@emotion/react';
+
 import AppButton from '../button';
 import ResetPasswordForm from './ResetPassworForm';
-import { useRouter } from 'next/router';
+
 const ResetPassword: React.FC = () => {
   const router = useRouter();
   const [emailSent, setEmailSent] = useState<string>('');
@@ -16,7 +18,6 @@ const ResetPassword: React.FC = () => {
       css={css`
         min-height: 100vh;
         padding-top: 30px;
-        padding-bottom: 0px;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -24,6 +25,22 @@ const ResetPassword: React.FC = () => {
         background-color: #e7edf3;
         width: 100%;
         padding: 30px 20px 30px;
+        display: flex;
+        min-height: 100vh;
+        padding-top: 30px;
+        padding-bottom: 0px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border-radius: 0px;
+        background-image: none;
+        background: rgb(66, 103, 212);
+        background: linear-gradient(
+          207deg,
+          rgba(66, 103, 212, 1) 20%,
+          rgba(66, 146, 212, 1) 53%,
+          rgba(0, 212, 255, 1) 100%
+        );
         .wrapper {
           max-width: 522px;
           width: 100%;
@@ -81,10 +98,10 @@ const ResetPassword: React.FC = () => {
         </div>
 
         <div className="container">
-          <h2>Reset Password</h2>
+          <h2>Quên mật khẩu</h2>
           {!emailSent ? (
             <>
-              <p>Enter your email address to reset your password.</p>
+              <p>Nhập Email để nhận mật khẩu mới.</p>
               <ResetPasswordForm setEmailSent={setEmailSent} />
             </>
           ) : (
