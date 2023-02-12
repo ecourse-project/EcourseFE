@@ -1,3 +1,25 @@
+import { Breadcrumb, Button, Col, Divider, List, Row, Statistic, Tabs, Tag, Typography } from 'antd';
+import { debounce, isEmpty } from 'lodash';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import CourseService from 'src/lib/api/course';
+import { useQueryParam } from 'src/lib/hooks/useQueryParam';
+import { RootState } from 'src/lib/reducers/model';
+import {
+  Course,
+  CourseComment,
+  MoveEnum,
+  Pagination,
+  RateCourseArgs,
+  Rating,
+  RatingEnum,
+  SaleStatusEnum,
+} from 'src/lib/types/backend_modal';
+import { formatCurrencySymbol } from 'src/lib/utils/currency';
+import { formatDate } from 'src/lib/utils/format';
+import RoutePaths from 'src/lib/utils/routes';
+
 /* eslint-disable react/prop-types */
 import {
   CalendarOutlined,
@@ -7,111 +29,21 @@ import {
   ExclamationCircleOutlined,
   FileSearchOutlined,
   MinusCircleOutlined,
-  MoreOutlined,
   PlusCircleOutlined,
   StarFilled,
   SwapOutlined,
   SyncOutlined,
   VerticalLeftOutlined,
 } from '@ant-design/icons';
-
+import { PageHeader } from '@ant-design/pro-layout';
 import { css } from '@emotion/react';
-import {
-  Avatar,
-  Breadcrumb,
-  Button,
-  Col,
-  Divider,
-  Dropdown,
-  Form,
-  Image,
-  List,
-  Menu,
-  Row,
-  Statistic,
-  Tabs,
-  Tag,
-  Tooltip,
-  Typography,
-} from 'antd';
-import TextArea from 'antd/lib/input/TextArea';
-import { isEmpty } from 'lodash';
-import moment from 'moment';
-import React, { useEffect, useState } from 'react';
-import { useQueryParam } from 'src/lib/hooks/useQueryParam';
-import {
-  CourseComment,
-  Course,
-  SaleStatusEnum,
-  User,
-  Pagination,
-  RatingEnum,
-  RateDocArgs,
-  Rating,
-  RateCourseArgs,
-  MoveEnum,
-} from 'src/lib/types/backend_modal';
-import { courseAction } from 'src/lib/reducers/course/courseSlice';
-import { RootState } from 'src/lib/reducers/model';
-import CourseService from 'src/lib/api/course';
-import { formatCurrencySymbol } from 'src/lib/utils/currency';
-import { formatDate } from 'src/lib/utils/format';
-import RoutePaths from 'src/lib/utils/routes';
 
-import RatingModal from '../modal/rating-modal';
-import LessonItem from './course-progress/lesson-item';
-import { useDispatch, useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
 import CommentSection from '../comment';
 import FeedbackSection from '../comment/feedbacks';
-import { PageHeader } from '@ant-design/pro-layout';
+import RatingModal from '../modal/rating-modal';
+import LessonItem from './course-progress/lesson-item';
+
 const { Paragraph, Title } = Typography;
-
-const menu = (
-  <Menu
-    items={[
-      {
-        key: '1',
-        label: (
-          <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
-            1st menu item
-          </a>
-        ),
-      },
-      {
-        key: '2',
-        label: (
-          <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
-            2nd menu item
-          </a>
-        ),
-      },
-      {
-        key: '3',
-        label: (
-          <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
-            3rd menu item
-          </a>
-        ),
-      },
-    ]}
-  />
-);
-
-const DropdownMenu = () => (
-  <Dropdown key="more" overlay={menu} placement="bottomRight">
-    <Button
-      type="text"
-      icon={
-        <MoreOutlined
-          style={{
-            fontSize: 20,
-          }}
-        />
-      }
-    />
-  </Dropdown>
-);
 
 const separator = <SwapOutlined />;
 const IconLink = ({ src, text }) => (
@@ -252,29 +184,25 @@ const CourseDetail: React.FC = () => {
     </div>
   );
 
-  const handleUpdateBtn = async () => {
+  const debounceHandleUpdateBtn = () => {
     if (course.sale_status !== SaleStatusEnum.BOUGHT) {
-      try {
-        setLoading(true);
-        if (course.sale_status === SaleStatusEnum.AVAILABLE) {
-          const newCourse = await CourseService.moveCourse(course.id, MoveEnum.LIST, MoveEnum.CART);
-          setTimeout(() => {
+      debounce(async () => {
+        try {
+          setLoading(true);
+          if (course.sale_status === SaleStatusEnum.AVAILABLE) {
+            const newCourse = await CourseService.moveCourse(course.id, MoveEnum.LIST, MoveEnum.CART);
             setCourse(newCourse);
-          }, 1000);
-        } else if (course.sale_status === SaleStatusEnum.IN_CART) {
-          const newCourse = await CourseService.moveCourse(course.id, MoveEnum.CART, MoveEnum.LIST);
-          setTimeout(() => {
+          } else if (course.sale_status === SaleStatusEnum.IN_CART) {
+            const newCourse = await CourseService.moveCourse(course.id, MoveEnum.CART, MoveEnum.LIST);
             setCourse(newCourse);
-          }, 1000);
-        }
-      } catch (error) {
-        console.log('error', error);
-        setLoading(false);
-      } finally {
-        setTimeout(() => {
+          }
+        } catch (error) {
+          console.log('error', error);
           setLoading(false);
-        }, 1000);
-      }
+        } finally {
+          setLoading(false);
+        }
+      }, 1000);
     } else {
       router.push(`${RoutePaths.COURSE_PROGRESS}?id=${course.id}`);
     }
@@ -456,7 +384,7 @@ const CourseDetail: React.FC = () => {
               type="primary"
               className="add-btn"
               loading={loading}
-              onClick={handleUpdateBtn}
+              onClick={debounceHandleUpdateBtn}
               target="_self"
               disabled={loading}
             >
@@ -494,10 +422,10 @@ const CourseDetail: React.FC = () => {
       >
         <Content extraContent={undefined}>{content}</Content>
         <Row className="course_info">
-          <Col lg={12} md={0} className="thumbnail_wrapper">
+          {/* <Col lg={12} md={0} className="thumbnail_wrapper">
             <Image className="thumbnail" src={course?.thumbnail?.image_path} preview={false} />
-          </Col>
-          <Col lg={12} md={24} className="lessons">
+          </Col> */}
+          <Col lg={24} md={24} className="lessons">
             <p className="list_lesson_header">Các bài học trong khoá</p>
             <List
               className="list_lesson"

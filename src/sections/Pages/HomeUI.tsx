@@ -1,13 +1,8 @@
 /* eslint-disable prettier/prettier */
 
-import { AppstoreAddOutlined } from '@ant-design/icons';
-import { css } from '@emotion/react';
-import { Col, Divider, Row } from 'antd';
 import { StaticImageData } from 'next/image';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import CourseItem from 'src/components/course/course-item';
-import DocItem from 'src/components/document/doc-item';
 import HomeData from 'src/components/home';
 import CourseService from 'src/lib/api/course';
 import { RootState } from 'src/lib/reducers/model';
@@ -55,14 +50,8 @@ const HomeUI = () => {
   const listDoc = useSelector((state: RootState) => state.document.mostDownDoc);
   const listCourse = useSelector((state: RootState) => state.course.mostDownCourse);
   useEffect(() => {
-    console.log('home');
-
     fetchHomeData();
   }, []);
-  useEffect(() => {
-    console.log('listDoc', listDoc);
-    console.log('listCourse', listCourse);
-  }, [listDoc, listCourse]);
   return (
     <div className="page-container">
       {homeData.map((v, i) => {

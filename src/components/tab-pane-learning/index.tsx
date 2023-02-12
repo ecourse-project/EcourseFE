@@ -1,11 +1,12 @@
 /* eslint-disable react/display-name */
 
-import { css } from '@emotion/react';
 import { Tabs } from 'antd';
-import React, { PropsWithChildren, ReactNode } from 'react';
+import React, { PropsWithChildren } from 'react';
 import isEqual from 'react-fast-compare';
-import { useDispatch } from 'react-redux';
 import { TypeTabPanel } from 'src/lib/types/commentType';
+
+import { css } from '@emotion/react';
+
 import { SettingContext } from '../settings/tabs';
 
 const { TabPane } = Tabs;
@@ -56,42 +57,45 @@ const TabPaneSection = React.memo((props: PropsWithChildren<TabPaneProps>) => {
         .ant-tabs {
           font-size: 16px;
           &.ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab + .ant-tabs-tab {
-            margin-left: 4px !important;
+            /* margin-left: 4px !important; */
           }
           .ant-tabs-nav {
             border-bottom: 1px solid #051d29;
             width: 100%;
-            .ant-tabs-nav-list {
-              .ant-tabs-tab {
-                background-color: transparent !important;
-                border: none;
-                padding: 10px 30px;
-                border-radius: 0px;
-                border-top-left-radius: 3px;
-                border-top-right-radius: 3px;
-                :hover {
-                  background-color: #051d29 !important;
-                  .ant-tabs-tab-btn {
-                    color: #fff;
+            .ant-tabs-nav {
+              /* border-bottom: 1px solid #00aaff; */
+              .ant-tabs-nav-list {
+                min-width: 200px;
+                .ant-tabs-tab {
+                  background-color: transparent !important;
+                  border: none;
+                  padding: 10px 30px;
+                  border-radius: 0px;
+                  border-top-left-radius: 3px;
+                  border-top-right-radius: 3px;
+                  display: flex;
+                  justify-content: flex-end;
+                  :hover {
+                    background-color: #00aaff !important;
+                    .ant-tabs-tab-btn {
+                      color: #fff;
+                    }
                   }
-                }
-                &.ant-tabs-tab-active {
-                  background-color: #051d29 !important;
-                  .ant-tabs-tab-btn {
-                    color: #fff;
+                  &.ant-tabs-tab-active {
+                    background-color: #00aaff !important;
+                    .ant-tabs-tab-btn {
+                      color: #fff;
+                    }
                   }
-                }
-                .ant-tabs-tab-btn {
-                  cursor: pointer;
-                  color: #222222;
-                  font-size: 16px;
-                  font-weight: 700;
+                  .ant-tabs-tab-btn {
+                    cursor: pointer;
+                    color: #222222;
+                    font-size: 16px;
+                    font-weight: 700;
+                  }
                 }
               }
             }
-          }
-          .past-orders-tab {
-            overflow: inherit;
           }
         }
       `}

@@ -1,6 +1,5 @@
-import Document, { Html, Head, Main, NextScript } from 'next/document';
-import React from 'react';
-import Logo from 'public/images/ecourseLogo.png';
+import Document, { Head, Html, Main, NextScript } from 'next/document';
+
 class MyDocument extends Document {
   static async getInitialProps(ctx) {
     const initialProps = await Document.getInitialProps(ctx);
@@ -44,10 +43,10 @@ class MyDocument extends Document {
           <link rel="apple-touch-icon" sizes="152x152" href="/images/apple-icon-152x152.png" />
           <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-icon-180x180.png" />
 
-          {/* <link rel="icon" type="image/png" sizes="192x192" href="/images/android-icon-192x192.png" />
+          <link rel="icon" type="image/png" sizes="192x192" href="/images/android-icon-192x192.png" />
           <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png" />
           <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96x96.png" />
-          <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png" /> */}
+          <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png" />
 
           <script
             type="application/ld+json"
@@ -74,12 +73,12 @@ class MyDocument extends Document {
 
           <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
           {/* <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" /> */}
-          <link rel="icon" type="image/png" sizes="16x16" href="../../public/favicon_io/favicon-16x16.png" />
           <link rel="icon" href="http://example.com/favicon.png" />
           <link rel="manifest" href="/site.webmanifest" />
           <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-          <link rel="icon" type="image/png" sizes="32x32" href="../../public/favicon-32x32.png" />
-          <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+          <link rel="shortcut icon" href="/static/favicon.ico" />
+          <link rel="icon" type="image/png" sizes="16x16" href="../../static/favicon-16x16.png" />
+          <link rel="icon" type="image/png" sizes="32x32" href="../../static/favicon-32x32.png" />
           <link rel="manifest" href="/site.webmanifest" />
           <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
           <meta name="msapplication-TileColor" content="#da532c" />

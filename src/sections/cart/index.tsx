@@ -1,7 +1,10 @@
 /* eslint-disable react/no-children-prop */
-import { Breadcrumb, Checkbox, Col, Divider, Image, Row, Spin } from 'antd';
+import { Breadcrumb, Checkbox, Col, Divider, Row, Spin } from 'antd';
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import PricingCard from 'src/components/cart/cart-price';
+import CourseService from 'src/lib/api/course';
+import useDebouncedCallback from 'src/lib/hooks/useDebouncedCallback';
 import {
   CalculatePriceArgs,
   Course,
@@ -11,17 +14,14 @@ import {
   NavTypeEnum,
   OCart,
 } from 'src/lib/types/backend_modal';
-import { RootState } from 'src/lib/reducers/model';
-import CartItemRow from '../../components/cart/cart-item';
+import RoutePaths from 'src/lib/utils/routes';
 
 import { Loading3QuartersOutlined, SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
+
+import CartItemRow from '../../components/cart/cart-item';
+
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
-import CourseService from 'src/lib/api/course';
-import RoutePaths from 'src/lib/utils/routes';
-import useDebouncedCallback from 'src/lib/hooks/useDebouncedCallback';
-import { useDispatch, useSelector } from 'react-redux';
-import { isEmpty } from 'lodash';
 const antIcon = <Loading3QuartersOutlined style={{ fontSize: 40 }} spin />;
 const CheckboxGroup = Checkbox.Group;
 const CartUI: React.FC = () => {
@@ -198,6 +198,7 @@ const CartUI: React.FC = () => {
         }
         .course {
           opacity: ${checkAllCourse ? '1' : '0.7'};
+
           font-weight: ${checkAllCourse ? '700' : '500'};
           &:hover {
             opacity: 1;

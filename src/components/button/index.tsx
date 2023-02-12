@@ -418,9 +418,8 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
             border: none;
           }
         }
-        ${
-          colorHover
-            ? `
+        ${colorHover
+          ? `
         &:hover,
         :active,
         :focus,
@@ -444,7 +443,7 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
           }!important;
           border: ${nonBordered ? 'none' : getBorderStyle()};
         `
-            : `
+          : `
         &:hover,
         :active,
         :focus,
@@ -456,8 +455,7 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
           border: ${nonBordered ? 'none' : getBorderStyle()};
         }
       }
-        `
-        }
+        `}
       `}
       disabled={disabled}
       {...rest}

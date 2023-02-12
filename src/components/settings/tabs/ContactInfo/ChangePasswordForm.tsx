@@ -1,17 +1,17 @@
-import { css } from '@emotion/react';
 import { useFormik } from 'formik';
 import React, { useState } from 'react';
 import { AlertTextSuccess, AskForSave } from 'src/components/alert/SweetAlert';
 import AppButton from 'src/components/button';
 import ErrorMessage from 'src/components/error-message';
 import AppInput from 'src/components/input';
-import AuthService from 'src/lib/api/auth';
 import CourseService from 'src/lib/api/course';
-import theme from 'src/styles/theme';
+import { ChangePasswordFieldData } from 'src/lib/types/commentType';
 import regex from 'src/lib/utils/regularExpression';
 import validation from 'src/lib/utils/validation';
+import theme from 'src/styles/theme';
 import * as Yup from 'yup';
-import { ChangePasswordFieldData } from 'src/lib/types/commentType';
+
+import { css } from '@emotion/react';
 
 const ChangePasswordForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -85,42 +85,40 @@ const ChangePasswordForm: React.FC = () => {
             grid-row-gap: 12px;
             grid-template-columns: 1fr 1fr;
             grid-template-rows: auto;
-            .form-item-half {
-              grid-row-start: span 1;
-              grid-row-end: span 1;
-              grid-column-start: span 1;
-              grid-column-end: span 1;
-              align-self: end;
-              margin-bottom: 10px;
-              position: relative;
-              height: 100%;
-              /* .form-item-error {
+            grid-row-start: span 1;
+            grid-row-end: span 1;
+            grid-column-start: span 1;
+            grid-column-end: span 1;
+            align-self: end;
+            margin-bottom: 10px;
+            position: relative;
+            height: 100%;
+            /* .form-item-error {
                 position: absolute;
               } */
-              @media (max-width: ${theme.media.tablets}px) {
-                grid-column-start: span 2;
-                grid-column-end: span 2;
-              }
-            }
-            .form-item-full {
-              grid-row-start: span 1;
-              grid-row-end: span 1;
+            @media (max-width: ${theme.media.tablets}px) {
               grid-column-start: span 2;
               grid-column-end: span 2;
-              margin-bottom: 10px;
-              position: relative;
-              height: 100%;
-              /* .form-item-error {
+            }
+          }
+          .form-item-full {
+            grid-row-start: span 1;
+            grid-row-end: span 1;
+            grid-column-start: span 2;
+            grid-column-end: span 2;
+            margin-bottom: 10px;
+            position: relative;
+            height: 100%;
+            /* .form-item-error {
                 position: absolute;
               } */
-            }
-            .form-item-button {
-              grid-row-start: span 1;
-              grid-row-end: span 1;
-              grid-column-start: span 2;
-              grid-column-end: span 2;
-              justify-self: stretch;
-            }
+          }
+          .form-item-button {
+            grid-row-start: span 1;
+            grid-row-end: span 1;
+            grid-column-start: span 2;
+            grid-column-end: span 2;
+            justify-self: stretch;
           }
         }
       `}

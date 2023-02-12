@@ -1,11 +1,12 @@
 /* eslint-disable react/display-name */
 
-import { css } from '@emotion/react';
 import { Tabs } from 'antd';
-import React, { PropsWithChildren, ReactNode } from 'react';
+import React, { PropsWithChildren } from 'react';
 import isEqual from 'react-fast-compare';
-import { useDispatch } from 'react-redux';
 import { TypeTabPanel } from 'src/lib/types/commentType';
+
+import { css } from '@emotion/react';
+
 import { SettingContext } from './tabs';
 
 const { TabPane } = Tabs;
@@ -56,7 +57,7 @@ export const TabPaneSettingsSection: React.FC<TabPaneProps> = React.memo((props:
         .ant-tabs {
           font-size: 16px;
           &.ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab + .ant-tabs-tab {
-            margin-left: 4px !important;
+            margin-left: 2px !important;
           }
           .ant-tabs-nav {
             /* border-bottom: 1px solid #00aaff; */
@@ -91,9 +92,6 @@ export const TabPaneSettingsSection: React.FC<TabPaneProps> = React.memo((props:
                 }
               }
             }
-          }
-          .past-orders-tab {
-            overflow: inherit;
           }
         }
       `}
