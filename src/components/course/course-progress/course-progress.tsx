@@ -1,13 +1,21 @@
-import { Button, Col, List, Popover, Progress, Row, Tabs } from 'antd';
-import React, { createContext, useEffect, useReducer, useRef, useState } from 'react';
-
-import { DownOutlined, PlayCircleOutlined, StarFilled } from '@ant-design/icons';
-import { css } from '@emotion/react';
-import { Collapse } from 'antd';
-import _, { isEmpty } from 'lodash';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
+import '@react-pdf-viewer/core/lib/styles/index.css';
+
+import { Button, Col, Collapse, List, Popover, Progress, Row, Tabs } from 'antd';
+import _, { isEmpty } from 'lodash';
+import Image from 'next/image';
+import Link from 'next/link';
+import React, { createContext, useEffect, useReducer, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
+import { useSelector } from 'react-redux';
+import ExamImg from 'src/assets/images/exam.png';
+import CommentSection from 'src/components/comment';
+import FeedbackSection from 'src/components/comment/feedbacks';
+import RatingModal from 'src/components/modal/rating-modal';
+import CourseService from 'src/lib/api/course';
+import useDebouncedCallback from 'src/lib/hooks/useDebouncedCallback';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
+import { RootState } from 'src/lib/reducers/model';
 import {
   AnswerChoiceEnum,
   Course,
@@ -24,26 +32,15 @@ import {
   UpdateProgressArgs,
   UserAnswersArgs,
 } from 'src/lib/types/backend_modal';
-import CourseService from 'src/lib/api/course';
 import RoutePaths from 'src/lib/utils/routes';
 
-import '@react-pdf-viewer/core/lib/styles/index.css';
-import { RootState } from 'src/lib/reducers/model';
+import { DownOutlined, PlayCircleOutlined, StarFilled } from '@ant-design/icons';
+import { css } from '@emotion/react';
+
 import PdfViewer from '../../pdf';
 import reducer, { CourseProgressAction, CourseProgressContextType } from './context/reducer';
 import LessonItem from './lesson-item';
-
-import ExamImg from 'src/assets/images/exam.png';
-
-import RatingModal from 'src/components/modal/rating-modal';
-import useDebouncedCallback from 'src/lib/hooks/useDebouncedCallback';
 import QuizSection from './quiz';
-import { useSelector } from 'react-redux';
-import CommentSection from 'src/components/comment';
-import FeedbackSection from 'src/components/comment/feedbacks';
-import Link from 'next/link';
-import Image from 'next/image';
-import { Document as DocumentPdf, Page as PagePdf } from 'react-pdf';
 
 const { Panel } = Collapse;
 export interface CourseParams {
@@ -85,6 +82,7 @@ const CourseProgress = () => {
   const [listQuiz, setListQuiz] = useState<Quiz[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [resultQuiz, setResultQuiz] = useState<QuizResult>();
+  const [quizLoading, setQuizLoading] = useState<boolean>(false);
   const initialState: CourseProgressContextType = {
     selectedDoc: {} as CourseDocument,
     selectedVideo: {} as OFileUpload,
@@ -285,11 +283,16 @@ const CourseProgress = () => {
   };
 
   const onSubmitQuiz = async () => {
-    const result = await CourseService.getQuizResult({
-      course_id: course?.id,
-      answers: state.answerSheet,
-    } as QuizResultArgs);
-    setResultQuiz(result);
+    try {
+      const result = await CourseService.getQuizResult({
+        course_id: course?.id,
+        answers: state.answerSheet,
+      } as QuizResultArgs);
+      setResultQuiz(result);
+      // await CourseSer
+    } catch (error) {
+      console.log('error', error);
+    }
   };
 
   useEffect(() => {
@@ -600,7 +603,12 @@ const CourseProgress = () => {
               ) : isShowQuiz ? (
                 <CourseProgressContext.Provider value={{ state, dispatch }}>
                   {/* if user unchecked a video while doing quiz, show modal to warn that the quiz will hide if they continue unchecking that video */}
-                  <QuizSection listQuiz={listQuiz} onSubmit={onSubmitQuiz} result={resultQuiz || course?.quiz_detail} />
+                  <QuizSection
+                    listQuiz={listQuiz}
+                    onSubmit={onSubmitQuiz}
+                    result={resultQuiz || course?.quiz_detail}
+                    loading={loading}
+                  />
                 </CourseProgressContext.Provider>
               ) : (
                 <>{isShowQuiz}</>
