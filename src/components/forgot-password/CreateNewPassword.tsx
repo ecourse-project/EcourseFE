@@ -1,10 +1,12 @@
-import { css } from '@emotion/react';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import AppButton from 'src/components/button';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
-import RoutePaths from 'src/lib/utils/routes';
+
+import { css } from '@emotion/react';
+
 import CreateNewPasswordForm from './CreateNewPasswordForm';
+
 interface ForgotPasswordParams {
   uid: string;
   token: string;
@@ -13,11 +15,11 @@ const CreateNewPassword: React.FC = () => {
   const router = useRouter();
   const [isRequestSent, setStateRequest] = useState<boolean>(false);
   const { uid, token } = useQueryParam<ForgotPasswordParams>();
-  React.useEffect(() => {
-    if (!token || !uid) {
-      router.push(RoutePaths.LOGIN);
-    }
-  }, []);
+  // React.useEffect(() => {
+  //   if (!token || !uid) {
+  //     router.push(RoutePaths.LOGIN);
+  //   }
+  // }, []);
 
   return (
     <div

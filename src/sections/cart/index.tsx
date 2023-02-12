@@ -134,17 +134,15 @@ const CartUI: React.FC = () => {
         const idx = newCourse.findIndex((v) => v.id === removeDoc.id);
 
         if (idx >= 0) {
-          console.log('idx', idx);
-          const x = newCourse.splice(idx, 1);
-          console.log('x :>> ', x);
-          setCourseCart(x);
+          newCourse.splice(idx, 1);
+          setCourseCart(newCourse);
         }
       } else if (type === NavTypeEnum.DOCUMENT) {
         const removeDoc = await CourseService.moveDoc(id, MoveEnum.CART, MoveEnum.LIST);
         const idx = newDoc.findIndex((v) => v.id === removeDoc.id);
         if (idx >= 0) {
-          console.log('idx', idx);
-          setDocCart(newDoc.splice(idx, 1));
+          newCourse.splice(idx, 1);
+          setCourseCart(newCourse);
         }
       }
     } catch (error) {

@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 
-import { Breadcrumb, Col, Divider, Pagination as BasicPagination, Spin } from 'antd';
+import { Breadcrumb, Col, Divider, Empty, Pagination as BasicPagination, Spin } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -76,15 +76,17 @@ const DocumentUI: React.FC = () => {
       ) : (
         <>
           <DocCourseWrapper>
-            {listDoc?.results?.length
-              ? listDoc?.results?.map((e, i) => {
-                  return (
-                    <Col key={i} className="item">
-                      <DocItem document={e} />
-                    </Col>
-                  );
-                })
-              : `There is no doc`}
+            {listDoc?.results?.length ? (
+              listDoc?.results?.map((e, i) => {
+                return (
+                  <Col key={i} className="item">
+                    <DocItem document={e} />
+                  </Col>
+                );
+              })
+            ) : (
+              <Empty />
+            )}
           </DocCourseWrapper>
           <div
             css={css`

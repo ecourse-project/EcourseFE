@@ -1,11 +1,12 @@
-import { css } from '@emotion/react';
-import TextArea, { TextAreaRef } from 'antd/lib/input/TextArea';
+import TextArea from 'antd/lib/input/TextArea';
 import { useFormik } from 'formik';
 import React, { useRef, useState } from 'react';
 import AppButton from 'src/components/button';
 import regex from 'src/lib/utils/regularExpression';
 import validation from 'src/lib/utils/validation';
 import * as Yup from 'yup';
+
+import { css } from '@emotion/react';
 
 interface CommentFormProps {
   onAddComment: (value) => void;
@@ -87,13 +88,15 @@ const CommentForm: React.FC<CommentFormProps> = ({ onAddComment }) => {
           border-color: #57a2e7 !important;
           color: #fff;
           height: 40px !important;
-          width: 160px;
+          width: 170px;
           &[disabled] {
             background-color: rgba(0, 0, 0, 0.05) !important;
             color: #000;
           }
           &:hover {
             box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            color: #000;
+            font-weight: 700;
           }
         }
         [ant-click-animating-without-extra-node='true']:after {
@@ -148,7 +151,6 @@ const CommentForm: React.FC<CommentFormProps> = ({ onAddComment }) => {
             btnStyle="solid"
             btnWidth="fix-content"
             className="btn-cancel"
-            type="primary"
             onClick={() => setFocus(false)}
           >
             Huỷ
@@ -159,7 +161,6 @@ const CommentForm: React.FC<CommentFormProps> = ({ onAddComment }) => {
             btnStyle="solid"
             btnWidth="fix-content"
             className="btn-cmt"
-            type="primary"
             htmlType="submit"
             loading={submitting}
             disabled={formik.values.content === ''}

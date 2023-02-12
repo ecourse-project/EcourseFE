@@ -1,9 +1,7 @@
-import { FaRegUser } from 'react-icons/fa';
-import { css } from '@emotion/react';
 import React from 'react';
 import RegisterForm from 'src/components/forms/RegisterForm';
-import RoutePaths from 'src/lib/utils/routes';
-import Link from 'next/link';
+
+import { css } from '@emotion/react';
 
 const RegisterSection: React.FC = () => {
   return (
@@ -74,26 +72,6 @@ const RegisterSection: React.FC = () => {
             margin-top: 20px;
             margin-bottom: 20px;
             background-color: #051d29;
-          }
-          .register-text {
-            text-align: center;
-            margin-bottom: 10px;
-            font-family: FiraSans;
-            h5 {
-              color: #000;
-              font-weight: 400;
-            }
-            .login-here {
-              transition: all 400ms ease;
-              color: #333;
-              font-weight: 700;
-              text-decoration: none;
-              text-transform: uppercase;
-
-              &:hover {
-                text-decoration: underline;
-              }
-            }
           }
         }
       `}

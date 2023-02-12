@@ -1,4 +1,3 @@
-import { css } from '@emotion/react';
 import { useFormik } from 'formik';
 import React from 'react';
 import AppButton from 'src/components/button';
@@ -8,7 +7,11 @@ import { ResetPassword1FieldData } from 'src/lib/types/commentType';
 // import UserService from 'src/lib/api/user';
 import validation from 'src/lib/utils/validation';
 import * as Yup from 'yup';
+
+import { css } from '@emotion/react';
+
 import ErrorMessage from '../error-message';
+
 interface ResetPasswordProps {
   setEmailSent?: (email: string) => void;
 }
@@ -100,7 +103,7 @@ const ResetPasswordForm: React.FC<ResetPasswordProps> = ({ setEmailSent }) => {
           htmlType="submit"
           disabled={formik.isSubmitting}
         >
-          Submit
+          Xác nhận
         </AppButton>
       </div>
     </form>

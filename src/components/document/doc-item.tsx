@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { Popover, Tag } from 'antd';
+import { Popover } from 'antd';
 import { isEqual } from 'lodash';
 import Link from 'next/link';
 import React, { memo, useEffect, useState } from 'react';
@@ -163,7 +163,7 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
             >
               <p className="title">{document.name}</p>
 
-              <Tag color="geekblue">Best Seller</Tag>
+              {/* <Tag color="geekblue">Best Seller</Tag> */}
               <p>Cập nhật: {formatDate(document.created)}</p>
               <p>Dung lượng: {(Number(document?.file?.file_size) / 1024000).toFixed(1)} MB</p>
 

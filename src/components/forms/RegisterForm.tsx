@@ -1,20 +1,20 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { css } from '@emotion/react';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox/Checkbox';
 import { useFormik } from 'formik';
+import { debounce } from 'lodash';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import AppButton from 'src/components/button';
 import ErrorMessage from 'src/components/error-message';
 import AppInput from 'src/components/input';
+import UserService from 'src/lib/api/user';
 import regex from 'src/lib/utils/regularExpression';
+import RoutePaths from 'src/lib/utils/routes';
 import validation from 'src/lib/utils/validation';
 import * as Yup from 'yup';
 
-import { debounce } from 'lodash';
-import UserService from 'src/lib/api/user';
-import RoutePaths from 'src/lib/utils/routes';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { css } from '@emotion/react';
 
 export const YOUR_GOOGLE_MAPS_API_KEY = 'AIzaSyAALCd4-WUGx4qZ3Zi0eCmBv2dKKbXhzVo';
 
@@ -102,7 +102,7 @@ const RegisterForm: React.FC = () => {
 
   return (
     <>
-      <h2 className="register-header">Create Account</h2>
+      <h2 className="register-header">Tạo tài khoản</h2>
       <form
         css={css`
           display: flex;
@@ -171,6 +171,25 @@ const RegisterForm: React.FC = () => {
             justify-content: space-between;
             align-items: baseline;
           }
+          .register-text {
+            text-align: center;
+            margin-bottom: 10px;
+            font-family: FiraSans;
+            color: #000;
+            display: flex;
+            gap: 15px;
+            .login-here {
+              transition: all 400ms ease;
+              color: #333;
+              font-weight: 700;
+              text-decoration: none;
+              text-transform: uppercase;
+
+              &:hover {
+                text-decoration: underline;
+              }
+            }
+          }
         `}
         className="register-form"
         onSubmit={formik.handleSubmit}
@@ -191,7 +210,7 @@ const RegisterForm: React.FC = () => {
           <AppInput
             requiredMark
             className="field login-field"
-            label="Full Name"
+            label="Họ và Tên"
             name="full_name"
             type="string"
             placeholder="Full Name"
@@ -223,7 +242,7 @@ const RegisterForm: React.FC = () => {
           <AppInput
             className="field login-field"
             requiredMark
-            label="Password"
+            label="Mật khẩu"
             type="password"
             name="password1"
             placeholder="Password"
@@ -239,7 +258,7 @@ const RegisterForm: React.FC = () => {
         <div className="form-item">
           <AppInput
             className="field login-field"
-            label="Confirm Password"
+            label="Nhập lại mật khẩu"
             requiredMark
             type="password"
             name="password2"
@@ -292,16 +311,14 @@ const RegisterForm: React.FC = () => {
                 }, 2000);
               }}
             >
-              Create Account
+              Tạo tài khoản
             </AppButton>
           </div>
           <div className="register-text">
-            <h5>
-              Already have an account?{' '}
-              <Link className="login-here" href={RoutePaths.LOGIN}>
-                LOGIN HERE
-              </Link>
-            </h5>
+            <p>Đã có tài khoản?{'   '}</p>
+            <Link className="login-here" href={RoutePaths.LOGIN}>
+              Đăng nhập
+            </Link>
           </div>
         </div>
       </form>
