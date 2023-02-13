@@ -142,7 +142,7 @@ const CartUI: React.FC = () => {
         const idx = newDoc.findIndex((v) => v.id === removeDoc.id);
         if (idx >= 0) {
           newDoc.splice(idx, 1);
-          setCourseCart(newDoc);
+          setDocCart(newDoc);
         }
       }
     } catch (error) {
