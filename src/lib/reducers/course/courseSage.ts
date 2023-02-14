@@ -1,10 +1,11 @@
-import { PayloadAction } from '@reduxjs/toolkit';
 import { ForkEffect, put, takeLatest } from 'redux-saga/effects';
-import { Course, MoveEnum, Pagination, PaginationParams, SaleStatusEnum } from 'src/lib/types/backend_modal';
 import CourseService from 'src/lib/api/course';
+import { Course, MoveEnum, Pagination, PaginationParams, SaleStatusEnum } from 'src/lib/types/backend_modal';
+
+import { PayloadAction } from '@reduxjs/toolkit';
+
 import AppAction from '../actions';
 import { appActions } from '../app/appSlice';
-
 import { courseAction } from './courseSlice';
 
 function* fetchCourse(action: PayloadAction<PaginationParams>) {
@@ -39,7 +40,6 @@ function* watchUpdateCart(action: PayloadAction<Course>) {
 }
 
 function* documentSaga(): Generator<ForkEffect<never>, void, unknown> {
-  console.log('run COURSE saga');
   yield takeLatest(AppAction.FETCH_COURSE, fetchCourse);
   yield takeLatest(courseAction.updateCart.type, watchUpdateCart);
 }
