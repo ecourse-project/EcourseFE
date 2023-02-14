@@ -127,9 +127,9 @@ const LoginUI: React.FC = () => {
           <LoginForm />
           <Divider className="divider" />
           <div className="form-item-bot">
-            <Link className="forgot-pwd" href={RoutePaths.FORGOT_PASSWORD}>
+            {/* <Link className="forgot-pwd" href={RoutePaths.FORGOT_PASSWORD}>
               Quên mật khẩu?
-            </Link>
+            </Link> */}
             <div className="login-text">
               <p>Chưa có tài khoản?</p>
               <Link className="register-here" href={RoutePaths.REGISTER}>

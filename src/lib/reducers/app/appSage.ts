@@ -1,5 +1,5 @@
-import { PayloadAction } from '@reduxjs/toolkit';
-import { all, call, delay, ForkEffect, put, takeLatest } from 'redux-saga/effects';
+import { all, call, ForkEffect, put, takeLatest } from 'redux-saga/effects';
+import CourseService from 'src/lib/api/course';
 import {
   CreateOrderArg,
   OCart,
@@ -8,9 +8,10 @@ import {
   Pagination,
   PaginationParams,
 } from 'src/lib/types/backend_modal';
-import CourseService from 'src/lib/api/course';
+
+import { PayloadAction } from '@reduxjs/toolkit';
+
 import AppAction from '../actions';
-import { docActions } from '../document/documentSlice';
 import { appActions, LoadingEnum } from './appSlice';
 
 function* fetchListCart() {
@@ -75,8 +76,6 @@ function* fetchAllData(action: PayloadAction<PaginationParams>) {
 }
 
 function* appSaga(): Generator<ForkEffect<never>, void, unknown> {
-  console.log('run document saga');
-
   yield takeLatest(AppAction.FETCH_ALL_DATA, fetchAllData);
   yield takeLatest(AppAction.FETCH_LIST_CART, fetchListCart);
   yield takeLatest(AppAction.FETCH_ORDER, fetchOrder);

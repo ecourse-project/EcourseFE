@@ -40,14 +40,25 @@ const RegisterForm: React.FC = () => {
         .test('existingEmail', validation.email.format, async (value?: string) => {
           try {
             if (!value) return false;
-            // const x = await debounceCheckExist(value);
-            const x = await debouncedApi(value);
+            const isExist = await debouncedApi(value);
 
-            return !x?.exists || true;
+            return !isExist?.exists;
           } catch (error) {
             return false;
           }
         }),
+      // email: Yup.string()
+      //   .required(validation.email.required)
+      //   .email(validation.email.invalid)
+      //   .matches(/^[\w.-]+@([\w-]+\.)+[\w-]{1,4}$/, validation.email.invalid)
+      //   .test('email', validation.email.format, async (value: any) => {
+      //     try {
+      //       const emailExist = await UserService.existEmail(value);
+      //       return !emailExist.exists;
+      //     } catch (error) {
+      //       return false;
+      //     }
+      //   }),
       password1: Yup.string().required(validation.password.required).matches(regex.password, {
         message: validation.password.invalidPwdRegex,
       }),
@@ -87,10 +98,10 @@ const RegisterForm: React.FC = () => {
     },
   });
   useEffect(() => {
-    console.log('eroirr', formik.errors);
+    console.log('error', formik.errors);
   }, [formik.errors]);
   // const debounceCheckExist = debounce(UserService.existEmail, 1000);
-  const debouncedApi = debounce(UserService.existEmail, 300, {
+  const debouncedApi = debounce(UserService.existEmail, 500, {
     trailing: true,
   });
   const hasError = (key: string) => {
