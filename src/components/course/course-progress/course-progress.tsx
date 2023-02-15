@@ -34,13 +34,14 @@ import {
 } from 'src/lib/types/backend_modal';
 import RoutePaths from 'src/lib/utils/routes';
 
-import { DownOutlined, PlayCircleOutlined, StarFilled } from '@ant-design/icons';
+import { DownOutlined, PlayCircleOutlined, StarFilled, SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 
 import PdfViewer from '../../pdf';
 import reducer, { CourseProgressAction, CourseProgressContextType } from './context/reducer';
 import LessonItem from './lesson-item';
 import QuizSection from './quiz';
+import globalVariable from 'src/lib/config/env';
 
 const { Panel } = Collapse;
 export interface CourseParams {
@@ -284,12 +285,18 @@ const CourseProgress = () => {
 
   const onSubmitQuiz = async () => {
     try {
-      const result = await CourseService.getQuizResult({
-        course_id: course?.id,
-        answers: state.answerSheet,
-      } as QuizResultArgs);
-      setResultQuiz(result);
-      // await CourseSer
+      if (course?.is_done_quiz) {
+        console.log('chung chi');
+        await CourseService.downloadCerti(params.id);
+        window.open(`${globalVariable.API_URL}api/quiz/certi/?course_id=${params.id}`, '_blank');
+      } else {
+        const result = await CourseService.getQuizResult({
+          course_id: course?.id,
+          answers: state.answerSheet,
+        } as QuizResultArgs);
+        setResultQuiz(result);
+        await getCourseDetail(params.id);
+      }
     } catch (error) {
       console.log('error', error);
     }
@@ -338,7 +345,6 @@ const CourseProgress = () => {
           .course_header {
             color: #fff !important;
             font-weight: 600;
-            margin-left: 20px;
             line-height: 50px;
             font-size: 18px;
           }
@@ -367,6 +373,18 @@ const CourseProgress = () => {
               .anticon-down {
                 vertical-align: baseline;
               }
+            }
+          }
+          .header-group {
+            width: fit-content;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: baseline;
+            gap: 10px;
+            .home_header {
+              color: #fff !important;
+              font-size: 26px;
+              font-weight: 600;
             }
           }
         }
@@ -520,9 +538,15 @@ const CourseProgress = () => {
     >
       <Row className="course_header_wrapper">
         <Col span={12}>
-          <Link href={`${RoutePaths.COURSE_DETAIL}?id=${course?.id}`} className="course_header">
-            {course?.name}
-          </Link>
+          <div className="header-group">
+            <Link href={`${RoutePaths.HOME}`} className="home_header">
+              {`ECourse`}
+            </Link>
+            <SwapOutlined />
+            <Link href={`${RoutePaths.COURSE_DETAIL}?id=${course?.id}`} className="course_header">
+              {course?.name}
+            </Link>
+          </div>
         </Col>
         <Col span={12} className="right_box">
           <div className="rating">
@@ -602,8 +626,11 @@ const CourseProgress = () => {
                   <QuizSection
                     listQuiz={listQuiz}
                     onSubmit={onSubmitQuiz}
-                    result={resultQuiz || course?.quiz_detail}
+                    result={course?.quiz_detail}
+                    isDone={course?.is_done_quiz || false}
                     loading={loading}
+                    courseId={course?.id || params.id}
+                    mark={course?.mark || 0} //remove later
                   />
                 </CourseProgressContext.Provider>
               ) : (

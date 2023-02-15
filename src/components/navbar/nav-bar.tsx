@@ -20,6 +20,7 @@ function getItem(
   key?: React.Key | null,
   icon?: React.ReactNode,
   children?: MenuItem[],
+  disabled?: boolean,
   danger?: true,
 ): MenuItem {
   return {
@@ -28,6 +29,7 @@ function getItem(
     children,
     label,
     danger,
+    disabled,
   } as MenuItem;
 }
 
@@ -37,16 +39,30 @@ const Nav: React.FC = () => {
   const [listNav, setListNav] = useState<MenuItem[]>();
   const myProfile = useSelector((state: RootState) => state.app.user);
   const getTargetUrl = (type: string, itemType) => {
-    if (!type) return;
+    if (!type) return null;
     if (type.toLocaleUpperCase() === NavTypeEnum.DOCUMENT) return `${RoutePaths.DOCUMENT}?document=${itemType}&page=1`;
     else if (type.toLocaleUpperCase() === NavTypeEnum.COURSE) return `${RoutePaths.COURSE}?course=${itemType}&page=1`;
   };
+
+  const checkTypeHeader = (navItem: Nav) => {
+    return Object.values(NavTypeEnum).includes(navItem.detail?.type?.toLocaleUpperCase() as unknown as NavTypeEnum) ? (
+      <Link href={getTargetUrl(navItem.detail.type, 'ALL') || ''}>{navItem.header.toLocaleUpperCase()}</Link>
+    ) : (
+      <Link href={'/'} legacyBehavior>
+        <a className="disabled-nav">{navItem.header.toLocaleUpperCase()}</a>
+      </Link>
+    );
+  };
+  useEffect(() => {
+    for (let i = 0; i < 4; i++) {
+      console.log('target:', getTargetUrl(header[i].detail.type, 'ALL'));
+    }
+  }, [header]);
   const getListHeader = async () => {
     try {
-      // const header1 = header.concat(header.concat(header.concat(header)));
       const listItems = header.map((v, i) => {
         return getItem(
-          <Link href={getTargetUrl(v.detail.type, 'ALL') || ''}>{v.header}</Link>,
+          <Link href={getTargetUrl(v.detail.type, 'ALL') || ''}>{v.header.toLocaleUpperCase()}</Link>,
           v.header + `id=${uuidv4()}`,
           '',
           v.detail.title?.map((u, n) => {
@@ -70,6 +86,7 @@ const Nav: React.FC = () => {
               u + `id=${uuidv4()}`,
             );
           }),
+          !Object.values(NavTypeEnum).includes(v.detail?.type?.toLocaleUpperCase() as unknown as NavTypeEnum),
         );
       });
       setListNav(listItems);
@@ -178,6 +195,15 @@ const Nav: React.FC = () => {
               color: #000;
             }
           }
+        }
+        /* .ant-menu-item:has(a.disabled-nav) {
+          &:hover {
+            pointer-events: none;
+            cursor: not-allowed;
+          }
+        } */
+        .ant-menu-item-disabled {
+          pointer-events: none;
         }
       `}
     >

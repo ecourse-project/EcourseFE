@@ -9,6 +9,7 @@ import { css } from '@emotion/react';
 
 import { CourseProgressAction } from './context/reducer';
 import { CourseProgressContext } from './course-progress';
+import CourseService, { apiURL } from 'src/lib/api/course';
 
 const { Panel } = Collapse;
 
@@ -18,11 +19,14 @@ interface QuizProps {
   listQuiz: Quiz[];
   onSubmit: () => void;
   result: QuizResult | undefined;
+  isDone: boolean;
   loading: boolean;
+  courseId: string;
+  mark: number;
 }
 
 const QuizSection: React.FC<QuizProps> = (props) => {
-  const { listQuiz, onSubmit, result, loading } = props;
+  const { listQuiz, onSubmit, result, loading, isDone, courseId, mark } = props;
   const { state, dispatch } = useContext(CourseProgressContext);
   const [isSubmit, setIsSubmit] = useState<boolean>(false);
   const [customResult, setCustomResult] = useState<any>([]);
@@ -164,11 +168,11 @@ const QuizSection: React.FC<QuizProps> = (props) => {
       ) : (
         <></>
       )}
-      {!loading && !isEmpty(listQuiz) ? (
+      {!loading && isDone ? (
         <Progress
           type="circle"
           className="mark"
-          percent={(result?.mark || 0) * 10}
+          percent={(mark || 0) * 10}
           format={(percent) => `${percent && parseFloat(percent.toFixed(2)) / 10}/10`}
           status="exception"
           strokeColor={{
@@ -184,7 +188,7 @@ const QuizSection: React.FC<QuizProps> = (props) => {
           <div key={i} className="question-list">
             <Text className="question">{`${i + 1}/ ${quiz.question}`}</Text>
 
-            <Radio.Group onChange={(e) => onChange(e, quiz.id)} disabled={isSubmit}>
+            <Radio.Group onChange={(e) => onChange(e, quiz.id)} disabled={isDone || isSubmit}>
               <Radio
                 className={`answer ${
                   customResult
@@ -260,13 +264,13 @@ const QuizSection: React.FC<QuizProps> = (props) => {
           btnStyle={'solid'}
           btnSize={'small'}
           btnWidth={'full-w'}
-          disabled={listAnswer.length < listQuiz.length}
+          disabled={!isDone ? (listAnswer.length < listQuiz.length ? true : false) : false}
           onClick={() => {
             setIsSubmit(true);
             onSubmit();
           }}
         >
-          {}
+          {!isDone ? 'NỘP BÀI' : 'CHỨNG CHỈ'}
         </AppButton>
       )}
     </div>
