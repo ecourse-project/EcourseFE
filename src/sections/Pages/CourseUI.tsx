@@ -30,8 +30,8 @@ const CourseUI: React.FC = () => {
   const router = useRouter();
   const params: DocumentParams = useQueryParam();
   const [pagination, setPagination] = useState<PaginationParams>({
-    page: params.page || 1,
-    limit: 2,
+    page: 1,
+    limit: 10,
   });
   const dispatch = useDispatch();
   const fetCourse = async (pagination) => {
@@ -60,22 +60,25 @@ const CourseUI: React.FC = () => {
     }
   };
 
+  // useEffect(() => {
+  //   if (params?.page) {
+  //     if (Number(pagination.page) !== Number(params.page)) {
+  //       console.log('pagination :>> ', pagination);
+  //       setPagination({ ...pagination, page: params?.page });
+  //     }
+  //   }
+  // }, [params.page]);
   useEffect(() => {
-    if (params?.page) {
-      if (Number(pagination.page) !== Number(params.page)) {
-        console.log('pagination :>> ', pagination);
-        setPagination({ ...pagination, page: params?.page });
-      }
-    }
-  }, [params.page]);
-
+    setPagination({ ...pagination, page: 1 });
+  }, [params.course]);
   useEffect(() => {
     fetCourse(pagination);
-  }, [pagination, params.course]);
+  }, [pagination]);
 
   const onChangePage = (page: number) => {
     setPagination({ ...pagination, page });
-    router.push(`${RoutePaths.COURSE}?course=${params.course}&page=${page}`);
+    // router.push(`${RoutePaths.COURSE}?course=${params.course}&page=${page}`);
+    router.push(`${RoutePaths.COURSE}?course=${params.course}`);
   };
 
   return (

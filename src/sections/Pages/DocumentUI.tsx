@@ -29,7 +29,7 @@ const DocumentUI: React.FC = () => {
   const router = useRouter();
   const params: DocumentParams = useQueryParam();
   const [pagination, setPagination] = useState<PaginationParams>({
-    page: params.page || 1,
+    page: 1,
     limit: 10,
   });
   const dispatch = useDispatch();
@@ -59,15 +59,16 @@ const DocumentUI: React.FC = () => {
       setLoading(false);
     }
   };
-
   useEffect(() => {
-    if (!params?.page) setPagination({ ...pagination, page: 1 });
+    setPagination({ ...pagination, page: 1 });
+  }, [params.document]);
+  useEffect(() => {
     fetchDocument(pagination);
-  }, [params.page, params.document]);
+  }, [pagination]);
 
   const onChangePage = (page: number) => {
     setPagination({ ...pagination, page });
-    router.push(`${RoutePaths.DOCUMENT}?document=${params.document}&page=${page}`);
+    router.push(`${RoutePaths.DOCUMENT}?document=${params.document}`);
   };
   return (
     <div>
