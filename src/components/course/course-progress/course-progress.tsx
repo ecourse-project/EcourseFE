@@ -295,10 +295,6 @@ const CourseProgress = () => {
     }
   };
 
-  useEffect(() => {
-    console.log('state.selectedDoc.file.file_path}', state?.selectedDoc?.file?.file_path);
-  }, [state]);
-
   return (
     <div
       css={css`
@@ -340,7 +336,7 @@ const CourseProgress = () => {
             }
           }
           .course_header {
-            color: #fff;
+            color: #fff !important;
             font-weight: 600;
             margin-left: 20px;
             line-height: 50px;

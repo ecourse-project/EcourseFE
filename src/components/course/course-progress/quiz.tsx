@@ -1,4 +1,5 @@
 import { Collapse, Progress, Radio, RadioChangeEvent, Spin, Typography } from 'antd';
+import { isEmpty } from 'lodash';
 import React, { useContext, useEffect, useState } from 'react';
 import AppButton from 'src/components/button';
 import { AnswerChoiceEnum, Quiz, QuizResult, UserAnswersArgs } from 'src/lib/types/backend_modal';
@@ -57,6 +58,8 @@ const QuizSection: React.FC<QuizProps> = (props) => {
       };
     });
     setCustomResult(obj);
+    console.log('obj :>> ', obj);
+    console.log('result :>> ', result);
   }, [result]);
 
   // useEffect(() => {
@@ -118,6 +121,29 @@ const QuizSection: React.FC<QuizProps> = (props) => {
             transition: all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
           }
         }
+        .correct {
+          .choice {
+            color: #1890ff;
+            font-weight: 700;
+            margin-bottom: 0 !important;
+          }
+          .ant-radio-inner:after {
+            color: #1890ff;
+            background-color: #1890ff;
+            transform: scale(0.5);
+            opacity: 1;
+            transition: all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+          }
+        }
+        .user_choice {
+          .ant-radio-inner:after {
+            color: #1890ff;
+            background-color: #1890ff;
+            transform: scale(0.5);
+            opacity: 1;
+            transition: all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+          }
+        }
         .ant-progress-text {
           font-weight: 600;
         }
@@ -138,7 +164,7 @@ const QuizSection: React.FC<QuizProps> = (props) => {
       ) : (
         <></>
       )}
-      {!loading && result ? (
+      {!loading && !isEmpty(listQuiz) ? (
         <Progress
           type="circle"
           className="mark"
@@ -162,10 +188,12 @@ const QuizSection: React.FC<QuizProps> = (props) => {
               <Radio
                 className={`answer ${
                   customResult
-                    ? customResult[quiz.id]?.choice === customResult[quiz.id]?.correct
-                      ? 'correct'
-                      : customResult[quiz.id]?.correct === AnswerChoiceEnum.A
-                      ? 'error'
+                    ? customResult[quiz.id]?.correct === AnswerChoiceEnum.A
+                      ? customResult[quiz.id]?.choice === customResult[quiz.id]?.correct
+                        ? 'correct'
+                        : 'error'
+                      : customResult[quiz.id]?.choice === AnswerChoiceEnum.A
+                      ? 'user_choice'
                       : ''
                     : ''
                 } `}
@@ -176,10 +204,12 @@ const QuizSection: React.FC<QuizProps> = (props) => {
               <Radio
                 className={`answer ${
                   customResult
-                    ? customResult[quiz.id]?.choice === customResult[quiz.id]?.correct
-                      ? 'correct'
-                      : customResult[quiz.id]?.correct === AnswerChoiceEnum.B
-                      ? 'error'
+                    ? customResult[quiz.id]?.correct === AnswerChoiceEnum.B
+                      ? customResult[quiz.id]?.choice === customResult[quiz.id]?.correct
+                        ? 'correct'
+                        : 'error'
+                      : customResult[quiz.id]?.choice === AnswerChoiceEnum.B
+                      ? 'user_choice'
                       : ''
                     : ''
                 } `}
@@ -190,10 +220,12 @@ const QuizSection: React.FC<QuizProps> = (props) => {
               <Radio
                 className={`answer ${
                   customResult
-                    ? customResult[quiz.id]?.choice === customResult[quiz.id]?.correct
-                      ? ''
-                      : customResult[quiz.id]?.correct === AnswerChoiceEnum.C
-                      ? 'error'
+                    ? customResult[quiz.id]?.correct === AnswerChoiceEnum.C
+                      ? customResult[quiz.id]?.choice === customResult[quiz.id]?.correct
+                        ? 'correct'
+                        : 'error'
+                      : customResult[quiz.id]?.choice === AnswerChoiceEnum.C
+                      ? 'user_choice'
                       : ''
                     : ''
                 } `}
@@ -204,10 +236,12 @@ const QuizSection: React.FC<QuizProps> = (props) => {
               <Radio
                 className={`answer ${
                   customResult
-                    ? customResult[quiz.id]?.choice === customResult[quiz.id]?.correct
-                      ? ''
-                      : customResult[quiz.id]?.correct === AnswerChoiceEnum.D
-                      ? 'error'
+                    ? customResult[quiz.id]?.correct === AnswerChoiceEnum.D
+                      ? customResult[quiz.id]?.choice === customResult[quiz.id]?.correct
+                        ? 'correct'
+                        : 'error'
+                      : customResult[quiz.id]?.choice === AnswerChoiceEnum.D
+                      ? 'user_choice'
                       : ''
                     : ''
                 } `}
@@ -219,7 +253,7 @@ const QuizSection: React.FC<QuizProps> = (props) => {
           </div>
         );
       })}
-      {!loading && listQuiz && (
+      {!loading && !isEmpty(listQuiz) && (
         <AppButton
           className="done-btn"
           btnTextColor={'black'}
@@ -232,7 +266,7 @@ const QuizSection: React.FC<QuizProps> = (props) => {
             onSubmit();
           }}
         >
-          Nộp bài
+          {}
         </AppButton>
       )}
     </div>

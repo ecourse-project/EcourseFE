@@ -1,8 +1,8 @@
 const validation = {
   email: {
-    required: 'Email is missing.',
-    invalid: 'Enter a valid email address.',
-    format: 'Email is already associated with an existing account.',
+    required: 'Vui lòng điền Email.',
+    invalid: 'Định dạng Email không hợp lệ.',
+    format: 'Email này đã được đăng ký.',
     exist: 'Email does not exist/Email has not been registered.',
   },
   username: {
@@ -11,23 +11,23 @@ const validation = {
     exist: 'Username does not exist/Email has not been registered.',
   },
   password: {
-    required: 'Password is missing.',
+    required: 'Vui lòng điền mật khẩu.',
     invalidPwdRegex: 'The password must have a min. of eight characters, at least one letter and one number.',
   },
   target: {
-    required: 'Please fill in this case.',
+    required: 'Vui lòng điền thông tin.',
   },
   homes: {
-    required: 'Please fill in this case.',
+    required: 'Vui lòng điền thông tin.',
   },
   farm: {
-    required: 'Please fill in this case.',
+    required: 'Vui lòng điền thông tin.',
   },
   interaction: {
-    required: 'Please fill in this case.',
+    required: 'Vui lòng điền thông tin.',
   },
   ratio: {
-    required: 'Please fill in this case.',
+    required: 'Vui lòng điền thông tin.',
   },
   events: {
     required: 'Please select',
@@ -39,10 +39,10 @@ const validation = {
     required: 'Please upload a profile photo',
   },
   frequency: {
-    required: 'Please fill in this case.',
+    required: 'Vui lòng điền thông tin.',
   },
   company: {
-    required: 'Please fill in this case.',
+    required: 'Vui lòng điền thông tin.',
   },
   mailing: {
     required: 'Please enter a mailing list.',
@@ -51,22 +51,22 @@ const validation = {
     required: 'Please select a role',
   },
   fullName: {
-    required: 'This field is required.',
+    required: 'Vui lòng điền thông tin',
     trim: 'Full Name cannot include leading and trailing spaces.',
     format: 'Full Name cannot include numeric and special characters.',
   },
   firstName: {
-    required: 'This field is required.',
+    required: 'Vui lòng điền thông tin',
     trim: 'First Name cannot include leading and trailing spaces.',
     format: 'First name cannot include numeric and special characters.',
   },
   lastName: {
-    required: 'This field is required.',
+    required: 'Vui lòng điền thông tin',
     trim: 'Last Name cannot include leading and trailing spaces.',
     format: 'Last name cannot include numeric and special characters.',
   },
   confirm: {
-    required: 'Password is missing.',
+    required: 'Vui lòng điền mật khẩu.',
     invalidPwdRegex: 'Your account info was entered incorrectly.',
   },
   name: {
@@ -75,7 +75,7 @@ const validation = {
     ExistingName: 'Mailing list name already exists.',
   },
   dre: {
-    required: 'This field is required.',
+    required: 'Vui lòng điền thông tin',
     trim: 'DRE cannot include leading and trailing spaces.',
     format: 'DRE number is already associated with an existing account.',
   },
@@ -87,38 +87,38 @@ const validation = {
     regWeb:
       /^((http|https):\/\/)?(www.)?(?!.*(http|https|www.))[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+(\/)?.([\w?[a-zA-Z-_%/@?]+)*([^/\w?[a-zA-Z0-9_-]+=\w+(&[a-zA-Z0-9_]+=\w+)*)?$/,
     url: 'Your URL is invalid.',
-    required: 'This field is required.',
+    required: 'Vui lòng điền thông tin',
   },
   title: {
-    required: 'Please fill in this case.',
+    required: 'Vui lòng điền thông tin.',
   },
   changePassword: {
-    required: 'Please fill in this case.',
+    required: 'Vui lòng điền thông tin.',
   },
   confirmPassword: {
-    required: 'This field is required.',
+    required: 'Vui lòng điền thông tin',
     doesNotMatch: 'Passwords do not match.',
   },
   address: {
-    required: 'Please fill in this case.',
+    required: 'Vui lòng điền thông tin.',
   },
   city: {
-    required: 'Please fill in this case.',
+    required: 'Vui lòng điền thông tin.',
   },
   state: {
-    required: 'Please fill in this case.',
+    required: 'Vui lòng điền thông tin.',
   },
   zipcode: {
-    required: 'Please fill in this case.',
+    required: 'Vui lòng điền thông tin.',
   },
   country: {
-    required: 'Please fill in this case.',
+    required: 'Vui lòng điền thông tin.',
   },
   payment: {
-    required: 'This field is required.',
+    required: 'Vui lòng điền thông tin',
   },
   phone: {
-    required: 'This field is required.',
+    required: 'Vui lòng điền thông tin',
     invalid: 'Invalid phone number format',
   },
   campaign_target: {

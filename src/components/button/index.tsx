@@ -1,11 +1,11 @@
 /* eslint-disable react/prop-types */
-/* eslint-disable react/display-name */
-import React, { useEffect } from 'react';
 import { Button } from 'antd';
 import { ButtonProps } from 'antd/lib/button';
-
-import { css, useTheme } from '@emotion/react';
+/* eslint-disable react/display-name */
+import React from 'react';
 import theme from 'src/styles/theme';
+
+import { css } from '@emotion/react';
 
 interface AppButtonProps extends ButtonProps {
   btnTextColor: 'black' | 'white' | 'green';
@@ -296,7 +296,7 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
           justify-content: center;
           align-items: center;
           border-style: none;
-          background-color: #000;
+          background-color: #666666 !important;
           background-image: none;
           transition: box-shadow 600ms ease, border-color 600ms ease, color 600ms ease, background-color 600ms ease;
           color: #fff;
@@ -304,11 +304,12 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
           line-height: 20px;
           font-weight: 400;
           text-align: center;
-          letter-spacing: 4px;
+          letter-spacing: 2px;
           text-decoration: none;
           text-transform: uppercase;
+          font-weight: 500;
           &:hover {
-            background-color: #ffa535 !important;
+            letter-spacing: 4px;
           }
         }
         &.btn-protected {

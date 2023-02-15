@@ -13,7 +13,7 @@ import { StorageKeys } from 'src/lib/utils/enum';
 import { UpperCaseFirstLetter } from 'src/lib/utils/format';
 import RoutePaths from 'src/lib/utils/routes';
 
-import { Loading3QuartersOutlined, SwapOutlined } from '@ant-design/icons';
+import { HomeOutlined, Loading3QuartersOutlined, SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 
 export interface DocumentParams {
@@ -37,11 +37,19 @@ const DocumentUI: React.FC = () => {
     const token = localStorage.getItem(StorageKeys.SESSION_KEY);
     try {
       setLoading(true);
+      const newPagination = { ...pagination };
+      if (!params.page) pagination.page = 1;
       if (!token) {
-        const homeDoc = await CourseService.getHomeDocs(pagination, params?.document || '');
+        const homeDoc = await CourseService.getHomeDocs(
+          newPagination,
+          params.document === 'ALL' ? '' : params.document || '',
+        );
         setListDoc(homeDoc);
       } else {
-        const homeDoc = await CourseService.getAllDocs(pagination, params?.document || '');
+        const homeDoc = await CourseService.getAllDocs(
+          newPagination,
+          params.document === 'ALL' ? '' : params.document || '',
+        );
         setListDoc(homeDoc);
       }
     } catch (error) {
@@ -53,20 +61,29 @@ const DocumentUI: React.FC = () => {
   };
 
   useEffect(() => {
+    if (!params?.page) setPagination({ ...pagination, page: 1 });
     fetchDocument(pagination);
-  }, [pagination, params.document]);
+  }, [params.page, params.document]);
 
   const onChangePage = (page: number) => {
     setPagination({ ...pagination, page });
-    router.push(`${RoutePaths.DOCUMENT}/?page=${page}`);
+    router.push(`${RoutePaths.DOCUMENT}?document=${params.document}&page=${page}`);
   };
   return (
     <div>
       <Divider orientation="left">
         <Breadcrumb separator={<SwapOutlined />}>
-          <Breadcrumb.Item href={RoutePaths.HOME}>Trang chính</Breadcrumb.Item>
-          <Breadcrumb.Item>Tài liệu</Breadcrumb.Item>
-          <Breadcrumb.Item href={''}>{UpperCaseFirstLetter(params?.document || '')}</Breadcrumb.Item>
+          <Breadcrumb.Item href={RoutePaths.HOME}>
+            <HomeOutlined
+              css={css`
+                font-size: 30px !important;
+              `}
+            />
+          </Breadcrumb.Item>
+          <Breadcrumb.Item href={`${RoutePaths.DOCUMENT}?document=ALL`}>Tài liệu</Breadcrumb.Item>
+          <Breadcrumb.Item href={''}>
+            {UpperCaseFirstLetter(params.document === 'ALL' ? '' : params.document || '')}
+          </Breadcrumb.Item>
         </Breadcrumb>
       </Divider>
       {loading ? (

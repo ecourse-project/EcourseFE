@@ -28,11 +28,9 @@ export default function HomeData(props: IHomeData) {
       setLoading(true);
       if (!token) {
         const docs = await CourseService.getHomeDocs({ page: 1, limit: 100 }, '', idList);
-        console.log('doc', docs);
         setListDoc(docs);
       } else {
         const docs = await CourseService.getAllDocs({ page: 1, limit: 100 }, '', idList);
-        console.log('doc co token', docs);
         setListDoc(docs);
       }
     } catch (error) {
@@ -47,11 +45,9 @@ export default function HomeData(props: IHomeData) {
       setLoading(true);
       if (!token) {
         const docs = await CourseService.getHomeCourses({ page: 1, limit: 100 }, '', idList);
-        console.log('doc', docs);
         setListCourse(docs);
       } else {
         const docs = await CourseService.getAllCourses({ page: 1, limit: 100 }, '', idList);
-        console.log('doc co token', docs);
         setListCourse(docs);
       }
     } catch (error) {
@@ -63,7 +59,6 @@ export default function HomeData(props: IHomeData) {
   React.useEffect(() => {
     homeData?.detail?.document_id && getDocumentList(homeData?.detail?.document_id);
     homeData?.detail?.course_id && getCourseList(homeData?.detail?.course_id);
-    console.log('homeDatat', homeData);
   }, [homeData]);
   return (
     <div

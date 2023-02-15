@@ -1,9 +1,9 @@
-import { LoadingOutlined } from '@ant-design/icons';
+import { Spin } from 'antd';
+import React, { ReactNode } from 'react';
 
+import { LoadingOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { Spin } from 'antd';
-import React, { ReactNode, useEffect } from 'react';
 
 export interface ILoadingPageProps {
   isLoading: boolean;
@@ -12,9 +12,7 @@ export interface ILoadingPageProps {
 
 export const LoadingPage: React.FC<ILoadingPageProps> = (props: ILoadingPageProps) => {
   const { cssName, isLoading } = props;
-  useEffect(() => {
-    console.log('isLoading in loading comp', isLoading);
-  }, [isLoading]);
+
   if (!isLoading) {
     return null;
   }

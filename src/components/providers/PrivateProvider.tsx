@@ -44,12 +44,8 @@ const PrivateProvider: React.FC<{ children?: ReactNode }> = ({ children }) => {
   };
 
   React.useEffect(() => {
-    // checkUserAssets();
     checkAccountPermission();
   }, []);
-  useEffect(() => {
-    console.log('private');
-  }, [isLoading]);
 
   return <React.Fragment>{!isLoading ? children : <LoadingPage isLoading={true} />}</React.Fragment>;
 };
