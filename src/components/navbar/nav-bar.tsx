@@ -37,19 +37,38 @@ const Nav: React.FC = () => {
   const [listNav, setListNav] = useState<MenuItem[]>();
   const myProfile = useSelector((state: RootState) => state.app.user);
   const getTargetUrl = (type: string, itemType) => {
-    if (type.toLocaleUpperCase() === NavTypeEnum.DOCUMENT) return `${RoutePaths.DOCUMENT}/?document=${itemType}`;
-    else if (type.toLocaleUpperCase() === NavTypeEnum.COURSE) return `${RoutePaths.COURSE}/?course=${itemType}`;
+    if (!type) return;
+    if (type.toLocaleUpperCase() === NavTypeEnum.DOCUMENT) return `${RoutePaths.DOCUMENT}?document=${itemType}&page=1`;
+    else if (type.toLocaleUpperCase() === NavTypeEnum.COURSE) return `${RoutePaths.COURSE}?course=${itemType}&page=1`;
   };
   const getListHeader = async () => {
     try {
       // const header1 = header.concat(header.concat(header.concat(header)));
       const listItems = header.map((v, i) => {
         return getItem(
-          v.header,
+          <Link href={getTargetUrl(v.detail.type, 'ALL') || ''}>{v.header}</Link>,
           v.header + `id=${uuidv4()}`,
           '',
           v.detail.title?.map((u, n) => {
-            return getItem(<Link href={getTargetUrl(v.detail.type, u) || ''}>{u}</Link>, u + `id=${uuidv4()}`);
+            return getItem(
+              <Link
+                href={getTargetUrl(v.detail.type, u) || ''}
+                css={css`
+                  a {
+                    font-size: 50px;
+                    color: #000 !important;
+                    &:hover,
+                    &:foucs {
+                      text-decoration: none !important;
+                      color: #000 !important;
+                    }
+                  }
+                `}
+              >
+                {u}
+              </Link>,
+              u + `id=${uuidv4()}`,
+            );
           }),
         );
       });
@@ -145,6 +164,20 @@ const Nav: React.FC = () => {
             font-size: 25px;
           }
           transition: all 0.5s ease;
+        }
+        .ant-menu,
+        .ant-menu-submenu {
+          a {
+            text-decoration: none;
+            color: #000;
+            font-weight: 700;
+            font-size: 18px;
+            &:hover,
+            &:focus {
+              text-decoration: none;
+              color: #000;
+            }
+          }
         }
       `}
     >

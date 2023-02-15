@@ -1,5 +1,5 @@
 import { useFormik } from 'formik';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AskForSave } from 'src/components/alert/SweetAlert';
 import AppButton from 'src/components/button';
@@ -26,9 +26,7 @@ const ContactSettingForm: React.FC<ContactSettingsFormProps> = () => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const myProfile = useSelector((state: RootState) => state.app.user);
-  useEffect(() => {
-    console.log('myProfile :>> ', myProfile);
-  }, []);
+
   const validationSchema = React.useRef(
     Yup.object().shape({
       full_name: Yup.string().required(validation.firstName.required).matches(regex.alphabet, {

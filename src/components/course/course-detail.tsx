@@ -355,8 +355,8 @@ const CourseDetail: React.FC = () => {
       <Divider orientation="left">
         <Breadcrumb separator={<SwapOutlined />}>
           <Breadcrumb.Item href={RoutePaths.HOME}>Trang chính</Breadcrumb.Item>
-          <Breadcrumb.Item href={''}>Khoá học</Breadcrumb.Item>
-          <Breadcrumb.Item href="">{course?.topic?.name}</Breadcrumb.Item>
+          <Breadcrumb.Item href={`${RoutePaths.COURSE}?course=ALL`}>Khoá học</Breadcrumb.Item>
+          <Breadcrumb.Item>{course?.topic?.name}</Breadcrumb.Item>
         </Breadcrumb>
       </Divider>
       <PageHeader

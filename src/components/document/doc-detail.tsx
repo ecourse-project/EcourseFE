@@ -367,7 +367,7 @@ const DocDetail: React.FC = () => {
               : doc.sale_status === SaleStatusEnum.IN_CART
               ? 'XOÁ'
               : doc.sale_status === SaleStatusEnum.BOUGHT
-              ? 'Tải xuống'
+              ? 'ĐỌC'
               : ''}
             {doc.sale_status === SaleStatusEnum.AVAILABLE ? (
               <PlusCircleOutlined />

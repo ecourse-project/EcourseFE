@@ -18,6 +18,7 @@ import validation from 'src/lib/utils/validation';
 import * as Yup from 'yup';
 
 import { css } from '@emotion/react';
+import CourseService from 'src/lib/api/course';
 
 const LoginForm: React.FC = () => {
   const router = useRouter();
@@ -50,10 +51,10 @@ const LoginForm: React.FC = () => {
       const { email, password } = values;
       try {
         const response = await AuthService.signIn(email, password);
-        router.push('/');
         localStorage.setItem(StorageKeys.SESSION_KEY, response.access.toString());
-        const profile: User = await UserService.myInfo();
+        const [profile, init] = await Promise.all([UserService.myInfo(), CourseService.initData()]);
         dispatch(appActions.setMyProfile(profile));
+        router.push('/');
       } catch (error) {
         setLoginError((error as Error).message);
       } finally {

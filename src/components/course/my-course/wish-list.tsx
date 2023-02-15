@@ -1,9 +1,11 @@
-import { AppstoreAddOutlined } from '@ant-design/icons';
-import { css } from '@emotion/react';
 import { Col, Divider, Empty } from 'antd';
 import React from 'react';
 import DocItem from 'src/components/document/doc-item';
 import { FavoriteList } from 'src/lib/types/backend_modal';
+
+import { AppstoreAddOutlined } from '@ant-design/icons';
+import { css } from '@emotion/react';
+
 import CourseItem from '../course-item';
 
 interface WishListUIProps {
@@ -42,11 +44,11 @@ const WishListUI: React.FC<WishListUIProps> = (props) => {
         {'Tài liệu'}
       </div>
       <div className="course_list list_item">
-        {favourite?.courses?.length ? (
-          favourite?.courses.map((v, i) => {
+        {favourite?.documents?.length ? (
+          favourite?.documents.map((v, i) => {
             return (
               <Col key={i}>
-                <CourseItem course={v} isMyLearn />
+                <DocItem document={v} isMyLearn />
               </Col>
             );
           })
@@ -60,11 +62,11 @@ const WishListUI: React.FC<WishListUIProps> = (props) => {
         {'Khoá học'}
       </div>
       <div className="doc_list list_item">
-        {favourite?.documents?.length ? (
-          favourite?.documents.map((v, i) => {
+        {favourite?.courses?.length ? (
+          favourite?.courses.map((v, i) => {
             return (
               <Col key={i}>
-                <DocItem document={v} isMyLearn />
+                <CourseItem course={v} isMyLearn />
               </Col>
             );
           })

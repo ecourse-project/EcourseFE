@@ -14,7 +14,7 @@ import { StorageKeys } from 'src/lib/utils/enum';
 import { UpperCaseFirstLetter } from 'src/lib/utils/format';
 import RoutePaths from 'src/lib/utils/routes';
 
-import { Loading3QuartersOutlined, SwapOutlined } from '@ant-design/icons';
+import { HomeOutlined, Loading3QuartersOutlined, SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 
 interface DocumentParams {
@@ -31,18 +31,25 @@ const CourseUI: React.FC = () => {
   const params: DocumentParams = useQueryParam();
   const [pagination, setPagination] = useState<PaginationParams>({
     page: params.page || 1,
-    limit: 10,
+    limit: 2,
   });
   const dispatch = useDispatch();
   const fetCourse = async (pagination) => {
     const token = localStorage.getItem(StorageKeys.SESSION_KEY);
     setLoading(true);
+    console.log('call :>> ');
     try {
       if (!token) {
-        const homeCourse = await CourseService.getHomeCourses(pagination, params.course);
+        const homeCourse = await CourseService.getHomeCourses(
+          pagination,
+          params.course === 'ALL' ? '' : params.course || '',
+        );
         setListCourse(homeCourse);
       } else {
-        const homeCourse = await CourseService.getAllCourses(pagination, params.course);
+        const homeCourse = await CourseService.getAllCourses(
+          pagination,
+          params.course === 'ALL' ? '' : params.course || '',
+        );
         setListCourse(homeCourse);
       }
     } catch (error) {
@@ -54,20 +61,36 @@ const CourseUI: React.FC = () => {
   };
 
   useEffect(() => {
+    if (params?.page) {
+      if (Number(pagination.page) !== Number(params.page)) {
+        console.log('pagination :>> ', pagination);
+        setPagination({ ...pagination, page: params?.page });
+      }
+    }
+  }, [params.page]);
+
+  useEffect(() => {
     fetCourse(pagination);
   }, [pagination, params.course]);
+
   const onChangePage = (page: number) => {
-    console.log('pagenum', page);
     setPagination({ ...pagination, page });
-    router.push(`${RoutePaths.COURSE}/?page=${page}`);
+    router.push(`${RoutePaths.COURSE}?course=${params.course}&page=${page}`);
   };
+
   return (
     <div>
       <Divider orientation="left">
         <Breadcrumb separator={<SwapOutlined />}>
-          <Breadcrumb.Item href={RoutePaths.HOME}>Trang chính</Breadcrumb.Item>
-          <Breadcrumb.Item href={''}>Khoá học</Breadcrumb.Item>
-          <Breadcrumb.Item href={''}>{UpperCaseFirstLetter(params?.course || '')}</Breadcrumb.Item>
+          <Breadcrumb.Item href={RoutePaths.HOME}>
+            <HomeOutlined
+              css={css`
+                font-size: 30px !important;
+              `}
+            />
+          </Breadcrumb.Item>
+          <Breadcrumb.Item href={`${RoutePaths.COURSE}?course=ALL`}>Khoá học</Breadcrumb.Item>
+          <Breadcrumb.Item>{UpperCaseFirstLetter(params.course === 'ALL' ? '' : params.course || '')}</Breadcrumb.Item>
         </Breadcrumb>
       </Divider>
       {loading ? (
