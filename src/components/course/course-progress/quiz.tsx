@@ -168,7 +168,7 @@ const QuizSection: React.FC<QuizProps> = (props) => {
       ) : (
         <></>
       )}
-      {!loading && !isEmpty(listQuiz) ? (
+      {!loading && isDone ? (
         <Progress
           type="circle"
           className="mark"
