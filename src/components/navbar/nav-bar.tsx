@@ -53,11 +53,7 @@ const Nav: React.FC = () => {
       </Link>
     );
   };
-  useEffect(() => {
-    for (let i = 0; i < 4; i++) {
-      console.log('target:', getTargetUrl(header[i].detail.type, 'ALL'));
-    }
-  }, [header]);
+
   const getListHeader = async () => {
     try {
       const listItems = header.map((v, i) => {

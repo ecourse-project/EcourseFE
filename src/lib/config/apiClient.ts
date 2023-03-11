@@ -1,5 +1,8 @@
 import axios from 'axios';
+import { Router } from 'next/router';
 import { StorageKeys } from 'src/lib/utils/enum';
+import AuthService from '../api/auth';
+import { OToken } from '../types/backend_modal';
 import globalVariable from './env';
 
 // let apiClient: ApiClient;
@@ -31,6 +34,16 @@ const config = {
 
 const baseUrl = globalVariable.API_URL;
 
+const refreshToken = async (refresh: string) => {
+  try {
+    const newToken = await AuthService.refreshToken(refresh);
+    return newToken.access;
+  } catch (error) {
+    console.log('error :>> ', error);
+    throw error;
+  }
+};
+
 export const apiClient = axios.create({
   baseURL: baseUrl,
   headers: {
@@ -40,15 +53,18 @@ export const apiClient = axios.create({
   withCredentials: true,
 });
 // Add a request interceptor
+
 apiClient.interceptors.request.use(
   function (config) {
-    // console.log('config: ', config);
+    const token: OToken =
+      typeof window !== 'undefined'
+        ? (JSON.parse(localStorage.getItem(StorageKeys.SESSION_KEY) || '{}') as OToken)
+        : ({} as OToken);
     // Do something before request is sent
-    const token = localStorage.getItem(StorageKeys.SESSION_KEY);
-    if (token) {
+    if (token.access) {
       if (config.headers === undefined) {
         config.headers = {};
-      } else config.headers.Authorization = `Bearer ${token}`;
+      } else config.headers.Authorization = `Bearer ${token?.access}`;
     }
     return config;
   },
@@ -65,9 +81,34 @@ apiClient.interceptors.response.use(
     // Do something with response data
     return response.data;
   },
-  function (error) {
+  async (error) => {
+    const token: OToken =
+      typeof window !== 'undefined'
+        ? (JSON.parse(localStorage.getItem(StorageKeys.SESSION_KEY) || '{}') as OToken)
+        : ({} as OToken);
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
+    const originalRequest = error.config;
+    if (error.response.status === 401 && originalRequest && !originalRequest['_retry']) {
+      originalRequest._retry = true;
+      try {
+        // const response = await AuthService.refreshToken(token.refresh);
+        const newAccessToken = await refreshToken(token.refresh);
+
+        // Save new access token to local storage or other persistent storage
+        // Update Authorization header with new access token
+        const newToken = { ...token, access: newAccessToken };
+        localStorage.setItem(StorageKeys.SESSION_KEY, JSON.stringify(newToken));
+        apiClient.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
+
+        return apiClient(originalRequest);
+      } catch (error) {
+        // Handle refresh token error
+        localStorage.clear();
+        // window.location.href = '/';
+        return Promise.reject(error);
+      }
+    }
     return Promise.reject(error);
   },
 );

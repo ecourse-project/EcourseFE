@@ -13,6 +13,11 @@ class AuthService {
       password: password,
     });
   }
+  static refreshToken(refreshToken: string): Promise<{ access: string }> {
+    return apiClient.post(apiURL.refresh(), {
+      refresh: refreshToken,
+    });
+  }
   // static verifyEmail(key: string): Promise<unknown> {
   // 	return apiIns.auth.verifyEmail(key);
   // }
