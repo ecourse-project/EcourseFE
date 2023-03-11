@@ -115,7 +115,7 @@ export const TabPaneSettingsSection: React.FC<TabPaneProps> = React.memo((props:
         activeKey={activeKey}
         tabPosition={'left'}
       >
-        {tabData.map((v) => {
+        {tabData?.map((v) => {
           return (
             <TabPane
               // tab={

@@ -54,7 +54,7 @@ const HomeUI = () => {
   }, []);
   return (
     <div className="page-container">
-      {homeData.map((v, i) => {
+      {homeData?.map((v, i) => {
         return <HomeData homeData={v} key={i} />;
       })}
     </div>

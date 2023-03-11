@@ -32,14 +32,14 @@ const CartOrderBill: React.FC<OrderBillProps> = ({ checkList, cartData, totalPri
       <Row gutter={[16, 16]} className="cart-list">
         <Col className="cart-list-item">
           {docs?.length ? (
-            docs.map((v, i) => {
+            docs?.map((v, i) => {
               return <CartItemRow document={v} key={i} isDeleteBtn={false} />;
             })
           ) : (
             <div></div>
           )}
           {courses?.length ? (
-            courses.map((v, i) => {
+            courses?.map((v, i) => {
               return <CartItemRow course={v} key={i} isDeleteBtn={false} />;
             })
           ) : (
@@ -60,7 +60,7 @@ const CartOrderBill: React.FC<OrderBillProps> = ({ checkList, cartData, totalPri
                 onChange={onChangeCourse}
                 className="checkbox-group"
                 value={checkedListCourse}
-                options={cartData?.courses.map((v) => ({
+                options={cartData?.courses?.map((v) => ({
                   label: <CartItemRow course={v} />,
                   value: v.id,
                   Properties: null,

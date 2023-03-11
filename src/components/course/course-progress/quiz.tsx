@@ -32,7 +32,7 @@ const QuizSection: React.FC<QuizProps> = (props) => {
   const [customResult, setCustomResult] = useState<any>([]);
   const [listAnswer, setListAnswer] = useState<string[]>(
     state.answerSheet &&
-      state.answerSheet.filter((v) => v.answer_choice !== AnswerChoiceEnum.NO_CHOICE).map((u) => u.quiz_id),
+      state.answerSheet.filter((v) => v.answer_choice !== AnswerChoiceEnum.NO_CHOICE)?.map((u) => u.quiz_id),
   );
   const [value, setValue] = useState(0);
 
@@ -183,7 +183,7 @@ const QuizSection: React.FC<QuizProps> = (props) => {
       ) : (
         <></>
       )}
-      {listQuiz.map((quiz, i) => {
+      {listQuiz?.map((quiz, i) => {
         return (
           <div key={i} className="question-list">
             <Text className="question">{`${i + 1}/ ${quiz.question}`}</Text>

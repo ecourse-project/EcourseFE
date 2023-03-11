@@ -55,7 +55,7 @@ const CommentItem: React.FC<CommentItemProps> = (props) => {
         }
       >
         {item.reply_comments.length !== 0
-          ? item.reply_comments.map((v, i) => {
+          ? item.reply_comments?.map((v, i) => {
               return (
                 <Comment
                   key={i}

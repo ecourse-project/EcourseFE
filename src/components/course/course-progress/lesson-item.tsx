@@ -193,7 +193,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                 key={'1'}
                 className="course_list_video"
               >
-                {lesson.videos.map((v, i) => (
+                {lesson.videos?.map((v, i) => (
                   <div
                     key={i}
                     className={`course_video_item video_${v.id}`}
@@ -253,7 +253,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                 key={'1'}
                 className="course_list_video"
               >
-                {lesson.documents.map((v, i) => (
+                {lesson.documents?.map((v, i) => (
                   <div
                     key={i}
                     className={`course_video_item video_${v.id}`}

@@ -46,6 +46,7 @@ const parseParamsToUrL = (url: string, params: string[], paramsName: string) => 
 
 export const apiURL = {
   login: () => 'api/users-auth/token/',
+  refresh: () => `api/users-auth/token/refresh/`,
   me: () => 'api/users/me/',
   register: () => 'api/users-auth/registration/',
   existEmail: (email) => `api/users/exists/?email=${email}`,

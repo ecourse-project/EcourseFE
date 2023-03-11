@@ -40,7 +40,7 @@
 // //   const list: any[] = [];
 // //   Object.keys(data).forEach((key) => {
 // //     if (Array.isArray(data[key])) {
-// //       data[key].map((v, i) => {
+// //       data[key]?.map((v, i) => {
 // //         if (typeof list[i] !== 'object') {
 // //           list[i] = {};
 // //           list[i][key] = v;
@@ -124,7 +124,7 @@
 // 			}
 // 		}
 // 	}
-// 	return el.map((v) => {
+// 	return el?.map((v) => {
 // 		return { ...v, geometry: formatGeoJson(v?.geometry) };
 // 	});
 // };
@@ -161,7 +161,7 @@
 // 	// }
 // };
 // export const getGeoJSONPrototype = (google) => {
-// 	google.maps.Polygon.prototype.getGeoJSON = function () {
+// 	google?.maps.Polygon.prototype.getGeoJSON = function () {
 // 		const paths = this.getPaths().getArray();
 // 		const GeoJSON: { type: string; coordinates: Array<Array<Array<number>>> } =
 // 			{
@@ -191,7 +191,7 @@
 // 	};
 // };
 // export const getGeoJSONWktPrototype = (google) => {
-// 	google.maps.Polygon.prototype.getGeoJSONWkt = function () {
+// 	google?.maps.Polygon.prototype.getGeoJSONWkt = function () {
 // 		const paths = this.getPaths().getArray();
 // 		const GeoJSON = {
 // 			match: 'polygon',
@@ -248,7 +248,7 @@
 // 			for (let j = 0; j < GeoJSONConvert.coordinates[i].length; j++) {
 // 				const path: any = [];
 // 				for (let k = 0; k < GeoJSONConvert.coordinates[i][j].length; k++) {
-// 					const ll: any = new google.maps.LatLng(
+// 					const ll: any = new google?.maps.LatLng(
 // 						GeoJSONConvert.coordinates[i][j][k][1],
 // 						GeoJSONConvert.coordinates[i][j][k][0]
 // 					);
@@ -262,45 +262,45 @@
 // };
 
 // export const addListenerEventPolygon = (google) => {
-// 	google.maps.Polygon.prototype.enableCoordinatesChangedEvent = function () {
+// 	google?.maps.Polygon.prototype.enableCoordinatesChangedEvent = function () {
 // 		// eslint-disable-next-line
 // 		let me = this,
 // 			isBeingDragged = false,
 // 			// eslint-disable-next-line prefer-const
 // 			triggerCoordinatesChanged = function () {
-// 				google.maps.event.trigger(me, 'coordinates_changed');
+// 				google?.maps.event.trigger(me, 'coordinates_changed');
 // 			};
-// 		google.maps.event.addListener(me, 'dragstart', function () {
+// 		google?.maps.event.addListener(me, 'dragstart', function () {
 // 			isBeingDragged = true;
 // 		});
 
-// 		google.maps.event.addListener(me, 'dragend', function () {
+// 		google?.maps.event.addListener(me, 'dragend', function () {
 // 			triggerCoordinatesChanged();
 // 			isBeingDragged = false;
 // 		});
 
 // 		const paths = me.getPaths();
 // 		paths.forEach(function (path, i) {
-// 			google.maps.event.addListener(path, 'insert_at', function () {
+// 			google?.maps.event.addListener(path, 'insert_at', function () {
 // 				triggerCoordinatesChanged();
 // 			});
-// 			google.maps.event.addListener(path, 'set_at', function () {
+// 			google?.maps.event.addListener(path, 'set_at', function () {
 // 				if (!isBeingDragged) {
 // 					triggerCoordinatesChanged();
 // 				}
 // 			});
-// 			google.maps.event.addListener(path, 'remove_at', function () {
+// 			google?.maps.event.addListener(path, 'remove_at', function () {
 // 				triggerCoordinatesChanged();
 // 			});
 // 		});
 // 	};
 // };
 // export const clearListeners = (google) => {
-// 	google.maps.event.clearListeners(google.map, 'coordinates_changed');
-// 	google.maps.event.clearListeners(google.map, 'dragend');
-// 	google.maps.event.clearListeners(google.map, 'insert_at');
-// 	google.maps.event.clearListeners(google.map, 'set_at');
-// 	google.maps.event.clearListeners(google.map, 'remove_at');
+// 	google?.maps.event.clearListeners(google?.map, 'coordinates_changed');
+// 	google?.maps.event.clearListeners(google?.map, 'dragend');
+// 	google?.maps.event.clearListeners(google?.map, 'insert_at');
+// 	google?.maps.event.clearListeners(google?.map, 'set_at');
+// 	google?.maps.event.clearListeners(google?.map, 'remove_at');
 // };
 
 // export const cloneArr = (arrLayer, currentStep, newEl) => {
@@ -335,8 +335,8 @@
 
 // export const prototypeGetBounds = (google) => {
 // 	if (!google) return;
-// 	google.maps.Polygon.prototype.getBounds = function () {
-// 		const bounds = new google.maps.LatLngBounds();
+// 	google?.maps.Polygon.prototype.getBounds = function () {
+// 		const bounds = new google?.maps.LatLngBounds();
 // 		const paths = this.getPaths();
 // 		let path;
 // 		for (let i = 0; i < paths.getLength(); i++) {

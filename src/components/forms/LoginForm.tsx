@@ -51,7 +51,7 @@ const LoginForm: React.FC = () => {
       const { email, password } = values;
       try {
         const response = await AuthService.signIn(email, password);
-        localStorage.setItem(StorageKeys.SESSION_KEY, response.access.toString());
+        localStorage.setItem(StorageKeys.SESSION_KEY, JSON.stringify(response));
         const [profile, init] = await Promise.all([UserService.myInfo(), CourseService.initData()]);
         dispatch(appActions.setMyProfile(profile));
         router.push('/');
@@ -63,7 +63,9 @@ const LoginForm: React.FC = () => {
       }
     },
   });
-
+  React.useEffect(() => {
+    localStorage.clear();
+  }, []);
   const hasError = (key: string) => {
     return Object.keys(formik.errors).length > 0 && !!formik.errors[key] && formik.touched[key];
   };
