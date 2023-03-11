@@ -182,7 +182,7 @@ const CourseProgress = () => {
       });
       const quizList = await CourseService.listQuiz(courseDetail.id);
       setListQuiz(quizList);
-      const initialAnswer = quizList.map(
+      const initialAnswer = quizList?.map(
         (v) =>
           ({
             quiz_id: v.id,

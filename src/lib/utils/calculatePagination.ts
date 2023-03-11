@@ -1,5 +1,5 @@
 export const getRange = (start, end) => {
-  return [...Array(end - start + 1)].map((_, i) => start + i);
+  return [...Array(end - start + 1)]?.map((_, i) => start + i);
 };
 
 export const getPageInfo = ({ limit, pageCount, total, page }) => {

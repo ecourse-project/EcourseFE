@@ -52,7 +52,6 @@ const LoginForm: React.FC = () => {
       try {
         const response = await AuthService.signIn(email, password);
         localStorage.setItem(StorageKeys.SESSION_KEY, JSON.stringify(response));
-
         const [profile, init] = await Promise.all([UserService.myInfo(), CourseService.initData()]);
         dispatch(appActions.setMyProfile(profile));
         router.push('/');

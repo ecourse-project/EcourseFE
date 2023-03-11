@@ -52,7 +52,6 @@ export const apiClient = axios.create({
   },
   withCredentials: true,
 });
-// Add a request interceptor
 
 apiClient.interceptors.request.use(
   function (config) {
@@ -60,7 +59,6 @@ apiClient.interceptors.request.use(
       typeof window !== 'undefined'
         ? (JSON.parse(localStorage.getItem(StorageKeys.SESSION_KEY) || '{}') as OToken)
         : ({} as OToken);
-    // Do something before request is sent
     if (token.access) {
       if (config.headers === undefined) {
         config.headers = {};
@@ -69,16 +67,12 @@ apiClient.interceptors.request.use(
     return config;
   },
   function (error) {
-    // Do something with request error
     return Promise.reject(error);
   },
 );
 
-// Add a response interceptor
 apiClient.interceptors.response.use(
   function (response) {
-    // Any status code that lie within the range of 2xx cause this function to trigger
-    // Do something with response data
     return response.data;
   },
   async (error) => {
@@ -86,28 +80,24 @@ apiClient.interceptors.response.use(
       typeof window !== 'undefined'
         ? (JSON.parse(localStorage.getItem(StorageKeys.SESSION_KEY) || '{}') as OToken)
         : ({} as OToken);
-    // Any status codes that falls outside the range of 2xx cause this function to trigger
-    // Do something with response error
     const originalRequest = error.config;
-    if (error.response.status === 401 && originalRequest && !originalRequest['_retry']) {
+    if (error.response.status === 401 && originalRequest && !originalRequest._retry) {
       originalRequest._retry = true;
-      try {
-        // const response = await AuthService.refreshToken(token.refresh);
-        const newAccessToken = await refreshToken(token.refresh);
 
-        // Save new access token to local storage or other persistent storage
-        // Update Authorization header with new access token
-        const newToken = { ...token, access: newAccessToken };
-        localStorage.setItem(StorageKeys.SESSION_KEY, JSON.stringify(newToken));
-        apiClient.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
-
-        return apiClient(originalRequest);
-      } catch (error) {
-        // Handle refresh token error
-        localStorage.clear();
-        // window.location.href = '/';
-        return Promise.reject(error);
-      }
+      refreshToken(token.refresh)
+        .then((response) => {
+          const newToken = { ...token, access: response };
+          apiClient.defaults.headers.common.Authorization = `Bearer ${response}`;
+          originalRequest.headers.Authorization = `Bearer ${response}`;
+          localStorage.setItem(StorageKeys.SESSION_KEY, JSON.stringify(newToken));
+          window.location.reload();
+          return apiClient(originalRequest);
+        })
+        .catch((error) => {
+          localStorage.clear();
+          window.location.href = '/';
+          return Promise.reject(error);
+        });
     }
     return Promise.reject(error);
   },

@@ -14,7 +14,7 @@ const FeedbackSection = (props: RatingItemProps) => {
   const { rateList } = props;
   return (
     <>
-      {rateList.map((item, index) => {
+      {rateList?.map((item, index) => {
         return (
           <div
             css={css`

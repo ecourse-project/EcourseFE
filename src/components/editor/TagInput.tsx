@@ -43,7 +43,7 @@ const TagInput = ({ tagList, addTag, removeTag }) => {
         />
 
         <div className="tag-list">
-          {tagList.map((tag, index) => (
+          {tagList?.map((tag, index) => (
             <span className="tag-default tag-pill" key={index}>
               <i className="ion-close-round" onClick={() => handleRemoveTag(tag)} />
               {tag}

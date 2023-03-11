@@ -89,7 +89,7 @@ export const appSlice = createSlice({
       state.listOrder.results.unshift(action.payload);
     },
     cancelOrder: (state, action: PayloadAction<OutputOrder>) => {
-      state.listOrder.results.map((v) => (v.id === action.payload.id ? (v.status = OrderStatus.FAILED) : ''));
+      state.listOrder.results?.map((v) => (v.id === action.payload.id ? (v.status = OrderStatus.FAILED) : ''));
     },
     clearDocCart: (state, action: PayloadAction<CreateOrderArg>) => {
       action.payload.documents.forEach((v) => {

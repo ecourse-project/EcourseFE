@@ -56,7 +56,7 @@ const Nav: React.FC = () => {
 
   const getListHeader = async () => {
     try {
-      const listItems = header.map((v, i) => {
+      const listItems = header?.map((v, i) => {
         return getItem(
           <Link href={getTargetUrl(v.detail.type, 'ALL') || ''}>{v.header.toLocaleUpperCase()}</Link>,
           v.header + `id=${uuidv4()}`,

@@ -58,7 +58,7 @@ const CartUI: React.FC = () => {
     getCart();
   }, []);
   const onChangeDoc = (list) => {
-    // setCheckedListDoc(list.map((v) => v.id));
+    // setCheckedListDoc(list?.map((v) => v.id));
     setCheckedListDoc(list);
     setIndeterminateDoc(!!list.length && list.length < docCart.length);
     setCheckAllDoc(list.length === docCart.length);
@@ -67,14 +67,14 @@ const CartUI: React.FC = () => {
   const onCheckAllChangeDoc = (e: CheckboxChangeEvent) => {
     setCheckedListDoc(
       // e.target.checked ? Array.from(Array(docCart?.length).keys()) : []
-      e.target.checked ? docCart.map((v) => v.id) : [],
+      e.target.checked ? docCart?.map((v) => v.id) : [],
     );
     setIndeterminateDoc(false);
     setCheckAllDoc(e.target.checked);
   };
 
   const onChangeCourse = (list) => {
-    // setCheckedListDoc(list.map((v) => v.id));
+    // setCheckedListDoc(list?.map((v) => v.id));
 
     setCheckedListCourse(list);
     setIndeterminateCourse(!!list.length && list.length < courseCart.length);
@@ -84,7 +84,7 @@ const CartUI: React.FC = () => {
   const onCheckAllChangeCourse = (e: CheckboxChangeEvent) => {
     setCheckedListCourse(
       // e.target.checked ? Array.from(Array(courseCart?.length).keys()) : []
-      e.target.checked ? courseCart.map((v) => v.id) : [],
+      e.target.checked ? courseCart?.map((v) => v.id) : [],
     );
     setIndeterminateCourse(false);
     setCheckAllCourse(e.target.checked);
@@ -95,8 +95,8 @@ const CartUI: React.FC = () => {
     // debounceSetCheckList(checkedListDoc, checkedListCourse);
 
     setCheckedList({
-      documents: checkedListDoc.map((v) => v.toString()),
-      courses: checkedListCourse.map((v) => v.toString()),
+      documents: checkedListDoc?.map((v) => v.toString()),
+      courses: checkedListCourse?.map((v) => v.toString()),
     });
   }, [checkedListDoc, checkedListCourse]);
 
@@ -106,8 +106,8 @@ const CartUI: React.FC = () => {
   // 		debounce((checkedListDoc, checkedListCourse) => {
   // 			console.log('set again');
   // 			// setCheckedList({
-  // 			// 	documents: checkedListDoc.map((v) => v.toString()),
-  // 			// 	courses: checkedListCourse.map((v) => v.id),
+  // 			// 	documents: checkedListDoc?.map((v) => v.toString()),
+  // 			// 	courses: checkedListCourse?.map((v) => v.id),
   // 			// });
   // 		}, 1000);
   // 		setAgain();
@@ -298,7 +298,7 @@ const CartUI: React.FC = () => {
                   onChange={onChangeCourse}
                   className="checkbox-group"
                   value={checkedListCourse}
-                  options={courseCart.map((v) => ({
+                  options={courseCart?.map((v) => ({
                     label: <CartItemRow course={v} onDelete={removeFromCart} />,
                     value: v.id,
                     Properties: null,

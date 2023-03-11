@@ -118,7 +118,7 @@ const TabPaneSection = React.memo((props: PropsWithChildren<TabPaneProps>) => {
         }}
         activeKey={activeKey}
       >
-        {tabData.map((v) => {
+        {tabData?.map((v) => {
           return (
             <TabPane tab={v.label} key={v.key} className={v.label === 'Pass Orders' ? 'past-orders-tab' : ''}>
               {v.content}

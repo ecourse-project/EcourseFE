@@ -57,7 +57,7 @@ const MyCourseUI: React.FC<MyCourseUIProps> = (props) => {
             <Spin indicator={antIcon} />
           </div>
         ) : docs.length ? (
-          docs.map((v, i) => {
+          docs?.map((v, i) => {
             return <LearningItem doc={v} key={i} />;
           })
         ) : (
@@ -75,7 +75,7 @@ const MyCourseUI: React.FC<MyCourseUIProps> = (props) => {
             <Spin indicator={antIcon} />
           </div>
         ) : courses.length ? (
-          courses.map((v, i) => {
+          courses?.map((v, i) => {
             return <LearningItem course={v} key={i} />;
           })
         ) : (
