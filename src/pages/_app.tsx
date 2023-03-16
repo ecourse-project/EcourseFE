@@ -8,6 +8,8 @@ import { Provider } from 'react-redux';
 import { store } from 'src/lib/config/reduxStore';
 // import 'antd/dist/antd.css';
 import 'src/styles/global.scss';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 import Logo from 'public/images/ecourseLogo.png';
 
 const MyApp = ({ Component, pageProps }) => (
@@ -17,9 +19,11 @@ const MyApp = ({ Component, pageProps }) => (
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
     </Head>
     <Provider store={store}>
-      <ContextProvider>
-        <Component {...pageProps} />
-      </ContextProvider>
+      <SkeletonTheme baseColor="#323239" highlightColor="#544c4c">
+        <ContextProvider>
+          <Component {...pageProps} />
+        </ContextProvider>
+      </SkeletonTheme>
     </Provider>
   </>
 );

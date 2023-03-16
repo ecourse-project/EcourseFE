@@ -97,6 +97,7 @@ const RegisterForm: React.FC = () => {
       }
     },
   });
+
   useEffect(() => {
     console.log('error', formik.errors);
   }, [formik.errors]);

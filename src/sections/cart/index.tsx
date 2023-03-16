@@ -22,6 +22,7 @@ import { css } from '@emotion/react';
 import CartItemRow from '../../components/cart/cart-item';
 
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
+import Skeleton from 'react-loading-skeleton';
 const antIcon = <Loading3QuartersOutlined style={{ fontSize: 40 }} spin />;
 const CheckboxGroup = Checkbox.Group;
 const CartUI: React.FC = () => {
@@ -252,9 +253,7 @@ const CartUI: React.FC = () => {
       </Divider>
       <p className="title">Danh sách tài liệu trong giỏ</p>
       {loading ? (
-        <div style={{ height: '72px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <Spin indicator={antIcon} />
-        </div>
+        <CartSkeleton />
       ) : (
         <Row gutter={[16, 16]} className="cart-list">
           <Col span={18} className="cart-list-item">
@@ -330,6 +329,59 @@ const CartUI: React.FC = () => {
           </Col>
         </Row>
       )}
+    </div>
+  );
+};
+
+const CartSkeleton = () => {
+  return (
+    <div
+      css={css`
+        .doc_course_list {
+          width: 100%;
+          .title {
+            width: 20%;
+            .react-loading-skeleton {
+              height: 30px;
+            }
+          }
+        }
+        .price-card {
+          width: 100%;
+        }
+        /* .btn-checkout {
+          display: flex;
+          justify-content: center;
+        } */
+      `}
+    >
+      <Row gutter={16}>
+        <Col span={18}>
+          <div className="doc_course_list">
+            <div className="title">
+              <Skeleton />
+            </div>
+            <div className="doc-list_skeleton">
+              <Skeleton count={3} />
+            </div>
+            <br />
+            <br />
+            <div className="title">
+              <Skeleton />
+            </div>
+            <div className="doc-list_skeleton">
+              <Skeleton count={3} />
+            </div>
+          </div>
+        </Col>
+        <Col span={6}>
+          <div className="price-card">
+            <Skeleton height={100} />
+            <Skeleton count={3} />
+            <Skeleton height={30} width={180} containerClassName="btn-checkout" />
+          </div>
+        </Col>
+      </Row>
     </div>
   );
 };

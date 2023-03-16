@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 
-import { Breadcrumb, Col, Divider, Empty, Pagination as BasicPagination, Spin } from 'antd';
+import { Breadcrumb, Col, Divider, Empty, Pagination as BasicPagination, Row, Spin } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -15,6 +15,8 @@ import RoutePaths from 'src/lib/utils/routes';
 
 import { HomeOutlined, Loading3QuartersOutlined, SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
+import Skeleton from 'react-loading-skeleton';
+import { times } from 'lodash';
 
 export interface DocumentParams {
   page?: number;
@@ -87,10 +89,23 @@ const DocumentUI: React.FC = () => {
           </Breadcrumb.Item>
         </Breadcrumb>
       </Divider>
+      <Row gutter={[48, 56]} wrap>
+        {times(10).map((_v, i) => (
+          <Col key={i}>
+            <DocumentItemSkeleton />
+          </Col>
+        ))}
+      </Row>
       {loading ? (
-        <div style={{ height: '72px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <Spin indicator={antIcon} />
-        </div>
+        <DocCourseWrapper>
+          {/* <Row gutter={24} wrap> */}
+          {times(10).map((_v, i) => (
+            <Col key={i}>
+              <DocumentItemSkeleton />
+            </Col>
+          ))}
+          {/* </Row> */}
+        </DocCourseWrapper>
       ) : (
         <>
           <DocCourseWrapper>
@@ -125,4 +140,40 @@ const DocumentUI: React.FC = () => {
     </div>
   );
 };
+
+const DocumentItemSkeleton = () => {
+  return (
+    <div
+      css={css`
+        .detail {
+          display: flex;
+          gap: 10px;
+        }
+      `}
+    >
+      <div className="doc-item">
+        <Skeleton height={150} width={200} />
+        <Skeleton width={200} />
+        <div className="detail">
+          <Skeleton circle width={15} />
+          <Skeleton width={150} />
+        </div>
+        <div className="detail">
+          <Skeleton circle width={15} />
+          <Skeleton width={150} />
+        </div>
+        <div className="detail">
+          <Skeleton circle width={15} />
+          <Skeleton width={150} />
+        </div>
+        <div className="detail">
+          <Skeleton width={30} />
+          <Skeleton width={135} />
+        </div>
+        <Skeleton width={200} height={30} />
+      </div>
+    </div>
+  );
+};
+
 export default DocumentUI;

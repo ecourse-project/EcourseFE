@@ -3,6 +3,7 @@ const validation = {
     required: 'Vui lòng điền Email.',
     invalid: 'Định dạng Email không hợp lệ.',
     format: 'Email này đã được đăng ký.',
+    not_exist: 'Email này không khớp với bất kỳ tài khoản nào.',
     exist: 'Email does not exist/Email has not been registered.',
   },
   username: {

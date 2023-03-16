@@ -31,6 +31,7 @@ import Rating from '@mui/material/Rating';
 
 import AppButton from '../button';
 import { ItemDocCourseWrapper } from './style';
+import Skeleton from 'react-loading-skeleton';
 
 interface ChildProps {
   document: Document; // try not to use any.
@@ -160,6 +161,9 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
                     transition: all 1s ease;
                   }
                 }
+                .download:hover {
+                  text-decoration: none;
+                }
               `}
             >
               <p className="title">{document.name}</p>
@@ -248,5 +252,13 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
     </ItemDocCourseWrapper>
   );
 }, isEqual);
+
+const DocumentItemSkeleton = () => {
+  return (
+    <div css={css``}>
+      <Skeleton count={3} />
+    </div>
+  );
+};
 
 export default DocItem;

@@ -17,18 +17,13 @@ const RegisterSection: React.FC = () => {
         border-radius: 0px;
         background-image: none;
         background: rgb(66, 103, 212);
-        background: linear-gradient(
-          207deg,
-          rgba(66, 103, 212, 1) 20%,
-          rgba(66, 146, 212, 1) 53%,
-          rgba(0, 212, 255, 1) 100%
-        );
+        background: linear-gradient(to bottom right, #38a2d7, #561139);
         .section-register {
           max-width: 580px;
           color: #000;
           width: 100%;
           font-weight: 300;
-
+          box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
           .wrapper-register {
             padding: 40px;
             border-radius: 15px;

@@ -1,7 +1,7 @@
 import { CheckboxChangeEvent } from 'antd/lib/checkbox/Checkbox';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import AppButton from 'src/components/button';
 import ErrorMessage from 'src/components/error-message';
@@ -19,6 +19,7 @@ import * as Yup from 'yup';
 
 import { css } from '@emotion/react';
 import CourseService from 'src/lib/api/course';
+import { debounce } from 'lodash';
 
 const LoginForm: React.FC = () => {
   const router = useRouter();
@@ -28,12 +29,22 @@ const LoginForm: React.FC = () => {
         .required(validation.email.required)
         .email(validation.email.invalid)
         .matches(/^[\w.-]+@([\w-]+\.)+[\w-]{1,4}$/, validation.email.invalid),
+      // .test('existingEmail', validation.email.not_exist, async (value?: string) => {
+      //   try {
+      //     if (!value) return true;
+      //     const isExist: boolean | undefined = await debounceCheckEmail(value);
+      //     return isExist || false;
+      //   } catch (error) {
+      //     return false;
+      //   }
+      // }),
       password: Yup.string().required(validation.password.required),
     }),
   );
   const queryParams = useQueryParam<LoginQueryParams>();
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [loginError, setLoginError] = React.useState<string>('');
+  const [enableLogin, setEnableLogin] = React.useState<boolean>(false);
   const [rememberMe, setRememberMe] = useState(
     localStorage.getItem(StorageKeys.REMEMBER_ME_KEY) === 'true' ? true : false,
   );
@@ -55,16 +66,31 @@ const LoginForm: React.FC = () => {
         const [profile, init] = await Promise.all([UserService.myInfo(), CourseService.initData()]);
         dispatch(appActions.setMyProfile(profile));
         router.push('/');
-      } catch (error) {
-        setLoginError((error as Error).message);
+      } catch (error: any) {
+        setLoginError(
+          error.detail?.includes('No active account found with the given credentials')
+            ? validation.email.not_exist
+            : error.detail,
+        );
       } finally {
         setIsLoading(false);
         formik.setSubmitting(false);
       }
     },
   });
+  const debounceCheckEmail = debounce(
+    async (v) => {
+      const isCreated = await UserService.existEmail(v);
+      console.log('isCreated :>> ', isCreated.exists);
+      return isCreated.exists;
+    },
+    500,
+    {
+      trailing: true,
+    },
+  );
   React.useEffect(() => {
-    localStorage.clear();
+    // localStorage.clear();
   }, []);
   const hasError = (key: string) => {
     return Object.keys(formik.errors).length > 0 && !!formik.errors[key] && formik.touched[key];
@@ -73,6 +99,10 @@ const LoginForm: React.FC = () => {
     localStorage.setItem(StorageKeys.REMEMBER_ME_KEY, `${e.target.checked}`);
     setRememberMe(e.target.checked);
   };
+  useEffect(() => {
+    console.log('dirty', formik.dirty);
+    console.log('formik.isValid :>> ', formik.isValid);
+  }, [formik.dirty, formik.isValid]);
   return (
     <>
       <form
@@ -137,7 +167,7 @@ const LoginForm: React.FC = () => {
             className="btn-login"
             type="primary"
             htmlType="submit"
-            disabled={formik.isSubmitting}
+            // disabled={formik.isSubmitting || !formik.isValid}
           >
             Đăng nhập
           </AppButton>

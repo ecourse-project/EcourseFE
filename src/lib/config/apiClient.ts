@@ -60,6 +60,7 @@ apiClient.interceptors.request.use(
         ? (JSON.parse(localStorage.getItem(StorageKeys.SESSION_KEY) || '{}') as OToken)
         : ({} as OToken);
     if (token.access) {
+      console.log('token.access :>> ', token.access);
       if (config.headers === undefined) {
         config.headers = {};
       } else config.headers.Authorization = `Bearer ${token?.access}`;
@@ -67,7 +68,7 @@ apiClient.interceptors.request.use(
     return config;
   },
   function (error) {
-    return Promise.reject(error);
+    return Promise.reject(error.response.data);
   },
 );
 
@@ -81,9 +82,14 @@ apiClient.interceptors.response.use(
         ? (JSON.parse(localStorage.getItem(StorageKeys.SESSION_KEY) || '{}') as OToken)
         : ({} as OToken);
     const originalRequest = error.config;
-    if (error.response.status === 401 && originalRequest && !originalRequest._retry) {
+    if (
+      error.response.status === 401 &&
+      originalRequest &&
+      !originalRequest._retry &&
+      !error.response.data.detail?.includes('given credentials')
+    ) {
       originalRequest._retry = true;
-
+      console.log('error :>> ', error);
       refreshToken(token.refresh)
         .then((response) => {
           const newToken = { ...token, access: response };
@@ -99,7 +105,7 @@ apiClient.interceptors.response.use(
           return Promise.reject(error);
         });
     }
-    return Promise.reject(error);
+    return Promise.reject(error.response.data);
   },
 );
 // export { apiClient, apiIns };

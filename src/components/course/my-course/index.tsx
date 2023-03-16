@@ -7,6 +7,7 @@ import { AppstoreAddOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 
 import { LearningItem } from './learning-item';
+import Skeleton from 'react-loading-skeleton';
 
 const { Title } = Typography;
 interface MyCourseUIProps {
@@ -53,9 +54,11 @@ const MyCourseUI: React.FC<MyCourseUIProps> = (props) => {
       </div>
       <div className="course_list list_item">
         {loading ? (
-          <div style={{ height: '72px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Spin indicator={antIcon} />
-          </div>
+          <>
+            <MyCourseSkeleton />
+            <MyCourseSkeleton />
+            <MyCourseSkeleton />
+          </>
         ) : docs.length ? (
           docs?.map((v, i) => {
             return <LearningItem doc={v} key={i} />;
@@ -71,9 +74,11 @@ const MyCourseUI: React.FC<MyCourseUIProps> = (props) => {
       </div>
       <div className="doc_list list_item">
         {loading ? (
-          <div style={{ height: '72px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Spin indicator={antIcon} />
-          </div>
+          <>
+            <MyCourseSkeleton />
+            <MyCourseSkeleton />
+            <MyCourseSkeleton />
+          </>
         ) : courses.length ? (
           courses?.map((v, i) => {
             return <LearningItem course={v} key={i} />;
@@ -81,6 +86,37 @@ const MyCourseUI: React.FC<MyCourseUIProps> = (props) => {
         ) : (
           <Empty />
         )}
+      </div>
+    </div>
+  );
+};
+
+const MyCourseSkeleton = () => {
+  return (
+    <div
+      css={css`
+        width: 25%;
+        .btn-skeleton {
+          display: flex;
+          gap: 10px;
+          .skeleton-item {
+            width: 100%;
+          }
+          .react-loading-skeleton {
+            width: 100%;
+          }
+        }
+      `}
+    >
+      <div className="img-skeleton">
+        <Skeleton containerClassName="skeleton-item" height={150} />
+      </div>
+      <div className="content-skeleton">
+        <Skeleton containerClassName="skeleton-item" height={15} count={3} />
+      </div>
+      <div className="btn-skeleton">
+        <Skeleton containerClassName="skeleton-item" height={25} />
+        <Skeleton containerClassName="skeleton-item" height={25} />
       </div>
     </div>
   );

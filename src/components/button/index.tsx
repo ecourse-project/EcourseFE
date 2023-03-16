@@ -14,23 +14,11 @@ interface AppButtonProps extends ButtonProps {
   btnWidth: 'full-w' | 'fix-content';
   nonBordered?: boolean;
   borderRadius?: '5px' | '3px';
-  colorHover?: 'darkBlue' | 'white' | 'BRICK';
   bgColor?: string;
 }
 const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
-  const {
-    disabled,
-    children,
-    btnSize,
-    btnStyle,
-    btnTextColor,
-    nonBordered,
-    colorHover,
-    borderRadius,
-    btnWidth,
-    bgColor,
-    ...rest
-  } = props;
+  const { disabled, children, btnSize, btnStyle, btnTextColor, nonBordered, borderRadius, btnWidth, bgColor, ...rest } =
+    props;
   const getSize = () => {
     switch (btnSize) {
       case 'large':
@@ -221,72 +209,7 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
             color: #000;
           }
         }
-        &.btn-agentlookup {
-          background-color: #faae18 !important;
-          transition: all 400ms ease;
-          color: #000;
-          font-weight: 700;
-          letter-spacing: initial;
-          &:hover {
-            letter-spacing: 8px;
-            color: #000;
-          }
-        }
-        &.btn-website {
-          min-width: 200px;
-          min-height: 50px;
-          margin-top: 20px;
-          padding-top: 12px;
-          padding-bottom: 12px;
-          border-radius: 3px;
-          background-color: #000;
-          font-weight: 500;
-          letter-spacing: 4px;
-          text-transform: uppercase;
-          display: inline-block;
-          padding: 9px 15px;
-          background-color: #3898ec;
-          color: white;
-          border: 0;
-          line-height: inherit;
-          text-decoration: none;
-          cursor: pointer;
-          border-radius: 0;
-          border-radius: 4px;
-        }
-        &.btn-generic {
-          font-size: 18px;
-          height: 45px !important;
-          max-width: 200px !important;
-          background-color: #ffa900 !important;
-          font-weight: 500;
-          text-transform: uppercase;
-          border: none;
-          margin-top: 30px;
-          padding-top: 12px;
-          padding-bottom: 12px;
-          border-radius: 3px;
-          font-weight: 500 !important;
-          letter-spacing: 4px;
-          display: inline-block;
-          padding: 9px 15px;
-          color: white;
-          border: 0;
-          line-height: inherit;
-          text-decoration: none;
-          cursor: pointer;
-          &:active,
-          &:focus,
-          &:hover {
-            background-color: #ffa900 !important;
-            color: #fff;
-            border: none;
-          }
-          @media only screen and (max-width: ${theme.media.phones}px) {
-            max-width: 100% !important;
-            margin-top: 46px;
-          }
-        }
+
         &.btn-setting {
           padding-right: 40px;
           padding-left: 40px;
@@ -312,43 +235,6 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
             letter-spacing: 4px;
           }
         }
-        &.btn-protected {
-          height: 48px;
-          padding: 12px 20px 12px 24px;
-          justify-content: center;
-          align-items: center;
-          border-style: none;
-          border-radius: 0px;
-          background-color: #000;
-          background-image: none;
-          transition: box-shadow 600ms ease, border-color 600ms ease, color 600ms ease, background-color 600ms ease;
-          color: #fff;
-          font-size: 14px;
-          line-height: 20px;
-          font-weight: 400;
-          text-align: center;
-          letter-spacing: 4px;
-          text-decoration: none;
-          text-transform: uppercase;
-          &:hover {
-            background-color: #ffa535 !important;
-          }
-        }
-        &.bth-header {
-          font-weight: 300;
-          font-size: 14px;
-          opacity: 0.8;
-          @media only screen and (max-width: ${theme.media.desktops}px) {
-            height: 36px;
-            font-size: 12px;
-          }
-          @media only screen and (max-width: ${theme.media.tablets}px) {
-            letter-spacing: 2px;
-          }
-        }
-        &.shadow-inset {
-          box-shadow: inset 0 0 0 1px hsl(0deg 0% 100% / 50%) !important;
-        }
         &.ant-btn {
           position: unset !important;
           .fa-icon {
@@ -366,97 +252,6 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
             }
           }
         }
-        &.overview-btn {
-          min-width: 200px;
-
-          letter-spacing: 4px;
-        }
-        &.btn-downsizes {
-          max-width: 200px !important;
-          background-color: #ffa535 !important;
-          transition: all 500ms ease;
-          font-weight: 500;
-          text-transform: uppercase;
-          border: none;
-          margin-top: 20px;
-          padding-top: 12px;
-          padding-bottom: 12px;
-          border-radius: 3px;
-          letter-spacing: 4px;
-          display: inline-block;
-          padding: 9px 15px;
-          color: white;
-          border: 0;
-          line-height: inherit;
-          text-decoration: none;
-          cursor: pointer;
-          &:hover {
-            background-color: #0096f4 !important;
-            color: #fff;
-          }
-          @media only screen and (max-width: ${theme.media.phones}px) {
-            max-width: 100% !important;
-            margin-top: 46px;
-          }
-        }
-        &.btn-managetAgents {
-          max-width: 100% !important;
-          height: 54px;
-          background-color: #ffa535 !important;
-          transition: all 400ms ease;
-          text-transform: uppercase;
-          border-radius: 3px;
-          letter-spacing: 0px;
-          display: inline-block;
-          padding: 1px 15px;
-          color: #000;
-          border: 0;
-          line-height: inherit;
-          text-decoration: none;
-          cursor: pointer;
-          font-weight: 600;
-          &:hover {
-            border: none;
-          }
-        }
-        ${colorHover
-          ? `
-        &:hover,
-        :active,
-        :focus,
-        :visited,
-        :active {
-          color: ${
-            colorHover === 'darkBlue' || colorHover === 'BRICK'
-              ? '#fff'
-              : colorHover === 'white'
-              ? '#051d29'
-              : 'initial'
-          }!important;
-          background: ${
-            colorHover === 'darkBlue'
-              ? '#043046'
-              : colorHover === 'BRICK'
-              ? '#900'
-              : colorHover === 'white'
-              ? '#fff'
-              : 'initial'
-          }!important;
-          border: ${nonBordered ? 'none' : getBorderStyle()};
-        `
-          : `
-        &:hover,
-        :active,
-        :focus,
-        :visited,
-        :active {
-          color: ${getTextColor()};
-          background: ${getBackgroundColor()};
-          background-image: ${getBackgroundColor()};
-          border: ${nonBordered ? 'none' : getBorderStyle()};
-        }
-      }
-        `}
       `}
       disabled={disabled}
       {...rest}

@@ -22,17 +22,20 @@ const LoginUI: React.FC = () => {
         width: 100%;
         padding: 30px 20px 30px;
         background: rgb(66, 103, 212);
-        background: linear-gradient(
-          207deg,
-          rgba(66, 103, 212, 1) 20%,
-          rgba(66, 146, 212, 1) 53%,
-          rgba(197, 22, 240, 1) 84%,
-          rgba(0, 212, 255, 1) 100%
-        );
+        background: linear-gradient(to bottom right, #38a2d7, #561139);
+        /* background: radial-gradient(circle, #736ec1 10%, transparent 11%),
+          radial-gradient(circle at bottom left, #736ec1 5%, transparent 6%),
+          radial-gradient(circle at bottom right, #736ec1 5%, transparent 6%),
+          radial-gradient(circle at top left, #736ec1 5%, transparent 6%),
+          radial-gradient(circle at top right, #736ec1 5%, transparent 6%);
+        background-size: 2em 2em;
+        background-color: #090606;
+        opacity: 1; */
         .section-login {
           max-width: 480px;
           width: 100%;
           font-weight: 300;
+          box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
           .wrapper-login {
             padding: 30px 50px;
             border-radius: 20px;
@@ -121,15 +124,13 @@ const LoginUI: React.FC = () => {
         }
       `}
     >
+      <div className="background"></div>
       <div className="section-login">
         <div className="wrapper-login">
           <h2 className="login-header">Đăng nhập</h2>
           <LoginForm />
           <Divider className="divider" />
           <div className="form-item-bot">
-            {/* <Link className="forgot-pwd" href={RoutePaths.FORGOT_PASSWORD}>
-              Quên mật khẩu?
-            </Link> */}
             <div className="login-text">
               <p>Chưa có tài khoản?</p>
               <Link className="register-here" href={RoutePaths.REGISTER}>

@@ -95,8 +95,6 @@ const CartItemRow: React.FC<ChildProps> = ({ document, course, isDeleteBtn = tru
             <img
               className="thumb"
               src={`${document?.thumbnail?.image_path}`}
-              // src="https://localhost:4000/media/2022/08/14/gdcd.png"
-
               width={80}
               height={80}
               alt="Product image."
@@ -136,8 +134,6 @@ const CartItemRow: React.FC<ChildProps> = ({ document, course, isDeleteBtn = tru
             <img
               className="thumb"
               src={`${course?.thumbnail?.image_path}`}
-              // src="https://localhost:4000/media/2022/08/14/gdcd.png"
-
               width={80}
               height={80}
               alt="Product image."
