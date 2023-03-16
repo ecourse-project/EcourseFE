@@ -16,7 +16,7 @@ const ErrorMessage: React.FC<ErrorMessageProps> = React.memo(({ children, classN
       className={className}
       css={css`
         font-style: normal;
-        font-weight: 400;
+        font-weight: 600;
         font-size: 14px;
         line-height: 17px;
         color: ${theme.text.errorColor};

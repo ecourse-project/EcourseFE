@@ -12,7 +12,8 @@ const validation = {
   },
   password: {
     required: 'Vui lòng điền mật khẩu.',
-    invalidPwdRegex: 'The password must have a min. of eight characters, at least one letter and one number.',
+    // invalidPwdRegex: 'The password must have a min. of eight characters, at least one letter and one number.',
+    invalidPwdRegex: 'Mật khẩu phải có ít nhất 8 ký tự bao gồm chữ và số.',
   },
   target: {
     required: 'Vui lòng điền thông tin.',
@@ -53,7 +54,8 @@ const validation = {
   fullName: {
     required: 'Vui lòng điền thông tin',
     trim: 'Full Name cannot include leading and trailing spaces.',
-    format: 'Full Name cannot include numeric and special characters.',
+    // format: 'Full Name cannot include numeric and special characters.',
+    format: 'Họ và tên không được có số và kí tự đặc biệt.',
   },
   firstName: {
     required: 'Vui lòng điền thông tin',
@@ -97,7 +99,7 @@ const validation = {
   },
   confirmPassword: {
     required: 'Vui lòng điền thông tin',
-    doesNotMatch: 'Passwords do not match.',
+    doesNotMatch: 'Mật khẩu không trùng khớp.',
   },
   address: {
     required: 'Vui lòng điền thông tin.',

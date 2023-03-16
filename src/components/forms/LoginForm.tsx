@@ -55,8 +55,10 @@ const LoginForm: React.FC = () => {
         const [profile, init] = await Promise.all([UserService.myInfo(), CourseService.initData()]);
         dispatch(appActions.setMyProfile(profile));
         router.push('/');
-      } catch (error) {
-        setLoginError((error as Error).message);
+      } catch (error: any) {
+        if (error.detail?.includes('No active account found with the given credentials'))
+          setLoginError('Email hoặc mật khẩu không đúng');
+        else setLoginError(error.detail);
       } finally {
         setIsLoading(false);
         formik.setSubmitting(false);
