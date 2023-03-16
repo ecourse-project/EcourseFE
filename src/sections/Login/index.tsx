@@ -22,17 +22,12 @@ const LoginUI: React.FC = () => {
         width: 100%;
         padding: 30px 20px 30px;
         background: rgb(66, 103, 212);
-        background: linear-gradient(
-          207deg,
-          rgba(66, 103, 212, 1) 20%,
-          rgba(66, 146, 212, 1) 53%,
-          rgba(197, 22, 240, 1) 84%,
-          rgba(0, 212, 255, 1) 100%
-        );
+        background: linear-gradient(to bottom right, #38a2d7, #561139);
         .section-login {
           max-width: 480px;
           width: 100%;
           font-weight: 300;
+          box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
           .wrapper-login {
             padding: 30px 50px;
             border-radius: 20px;

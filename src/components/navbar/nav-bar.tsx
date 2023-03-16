@@ -61,7 +61,7 @@ const Nav: React.FC = () => {
           <Link href={getTargetUrl(v.detail.type, 'ALL') || ''}>{v.header.toLocaleUpperCase()}</Link>,
           v.header + `id=${uuidv4()}`,
           '',
-          v.detail.title?.map((u, n) => {
+          v.detail.topic?.map((u, n) => {
             return getItem(
               <Link
                 href={getTargetUrl(v.detail.type, u) || ''}

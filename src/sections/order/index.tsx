@@ -57,6 +57,7 @@ const OrderUI = () => {
         .ant-typography {
           padding: 0.5em 0;
           margin: 0;
+          font-family: FiraSans;
         }
       `}
     >
