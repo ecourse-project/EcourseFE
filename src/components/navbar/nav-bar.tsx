@@ -102,6 +102,13 @@ const Nav: React.FC = () => {
         display: flex;
         align-items: center;
         justify-content: space-between;
+        padding-right: calc(var(--bs-gutter-x) * 0.5);
+        padding-left: calc(var(--bs-gutter-x) * 0.7);
+
+        border-radius: 5px;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        --bs-gutter-x: 5rem;
+        --bs-gutter-y: 0;
         .left-box {
           display: flex;
           align-items: center;
@@ -122,6 +129,14 @@ const Nav: React.FC = () => {
         }
         .logo {
           width: 250px;
+          font-weight: 600;
+          &:hover {
+            color: red;
+            text-decoration: none;
+            letter-spacing: 1px;
+            transition: all 400ms ease-in-out;
+            font-weight: 700;
+          }
         }
         .ant-menu-overflow-item {
           height: fit-content;
@@ -185,6 +200,7 @@ const Nav: React.FC = () => {
             color: #000;
             font-weight: 700;
             font-size: 18px;
+            font-family: 'Montserrat';
             &:hover,
             &:focus {
               text-decoration: none;
@@ -203,8 +219,8 @@ const Nav: React.FC = () => {
         }
       `}
     >
-      <Link href={'/'}>
-        <h1 className="logo">E-Course</h1>
+      <Link href={'/'} className="logo">
+        <h1>E-Course</h1>
       </Link>
       <div className="left-box">
         <Menu items={listNav} mode="horizontal" className="nav-menu" triggerSubMenuAction="hover" />
