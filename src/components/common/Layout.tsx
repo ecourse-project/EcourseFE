@@ -10,7 +10,7 @@ const PageNavWrapper = styled.div`
 
 const Layout = ({ children, isNoneHeader = false, isNoneFooter = true }) => (
   <>
-    <PageNavWrapper className="page-nav">{!isNoneHeader && <Navbar />}</PageNavWrapper>
+    <div>{!isNoneHeader && <Navbar />}</div>
     <div className="page-container">
       {children}
       {!isNoneFooter && <Footer />}

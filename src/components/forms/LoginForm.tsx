@@ -67,11 +67,9 @@ const LoginForm: React.FC = () => {
         dispatch(appActions.setMyProfile(profile));
         router.push('/');
       } catch (error: any) {
-        setLoginError(
-          error.detail?.includes('No active account found with the given credentials')
-            ? validation.email.not_exist
-            : error.detail,
-        );
+        if (error.detail?.includes('No active account found with the given credentials'))
+          setLoginError('Email hoặc mật khẩu không đúng');
+        else setLoginError(error.detail);
       } finally {
         setIsLoading(false);
         formik.setSubmitting(false);

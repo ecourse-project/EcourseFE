@@ -82,6 +82,14 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean) =>
       opacity: 0.7;
     }
     &.login-field {
+      input {
+        font-size: 20px;
+        font-weight: 600;
+        font-style: italic;
+        color: #3f3939 !important;
+        font-family: 'Montserrat';
+      }
+
       width: 100%;
       .s-label {
         margin: 0 0 0 10px;

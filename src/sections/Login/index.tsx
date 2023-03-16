@@ -23,14 +23,6 @@ const LoginUI: React.FC = () => {
         padding: 30px 20px 30px;
         background: rgb(66, 103, 212);
         background: linear-gradient(to bottom right, #38a2d7, #561139);
-        /* background: radial-gradient(circle, #736ec1 10%, transparent 11%),
-          radial-gradient(circle at bottom left, #736ec1 5%, transparent 6%),
-          radial-gradient(circle at bottom right, #736ec1 5%, transparent 6%),
-          radial-gradient(circle at top left, #736ec1 5%, transparent 6%),
-          radial-gradient(circle at top right, #736ec1 5%, transparent 6%);
-        background-size: 2em 2em;
-        background-color: #090606;
-        opacity: 1; */
         .section-login {
           max-width: 480px;
           width: 100%;

@@ -114,7 +114,7 @@ export interface OImageUpload {
 }
 
 // ===========================================Documents===========================================
-export interface DocumentTitle {
+export interface DocumentTopic {
   id: string;
   name: string;
 }
@@ -125,7 +125,7 @@ export interface Document {
   modified: string;
   name: string;
   description: string;
-  title: string;
+  topic: string;
   price: number;
   sold: number;
   thumbnail: OImageUpload;
@@ -143,7 +143,7 @@ export interface Document {
 export interface IDocumentUpload {
   name: string;
   description: string;
-  title: string;
+  topic: string;
   price: number;
   image: string;
   file: string;
@@ -153,7 +153,7 @@ export interface ODocumentUpload {
   id: string;
   name: string;
   description: string;
-  title: string;
+  topic: string;
   price: number;
   sold: number;
   thumbnail: OImageUpload;
@@ -168,7 +168,7 @@ export interface Data {
 export interface IDocumentUpdate {
   name: string;
   description: string;
-  title: string;
+  topic: string;
   price: number;
   image: string;
   file: string;
@@ -196,7 +196,7 @@ export interface CourseDocument {
   modified: string;
   name: string;
   description: string;
-  title: string;
+  topic: string;
   file: OFileUpload;
 }
 
@@ -239,7 +239,6 @@ export interface Course {
   my_rating?: Rating;
   quiz_detail?: QuizResult;
   rating_stats?: RatingStats;
-  title: string;
 }
 
 // ===========================================Comments===========================================
@@ -408,7 +407,7 @@ export enum NavTypeEnum {
 }
 export interface NavDetail {
   type: NavTypeEnum;
-  title: string[];
+  topic: string[];
 }
 
 export interface Nav {
@@ -422,6 +421,7 @@ export interface HomepageDetail {
 }
 
 export interface Homepage {
-  title: string;
+  topic: string;
   detail: HomepageDetail;
 }
+//========================================================
