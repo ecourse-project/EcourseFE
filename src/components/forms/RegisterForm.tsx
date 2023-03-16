@@ -202,6 +202,15 @@ const RegisterForm: React.FC = () => {
               }
             }
           }
+          .login-field {
+            input {
+              font-size: 20px;
+              font-weight: 600;
+              font-style: italic;
+              color: #3f3939 !important;
+              font-family: 'Montserrat';
+            }
+          }
         `}
         className="register-form"
         onSubmit={formik.handleSubmit}
