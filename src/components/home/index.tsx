@@ -75,7 +75,7 @@ export default function HomeData(props: IHomeData) {
       `}
     >
       <AppstoreAddOutlined />
-      <span className="title">{homeData.title}</span>
+      <span className="title">{homeData.topic}</span>
       {loading ? (
         <div style={{ height: '72px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Spin indicator={antIcon} />

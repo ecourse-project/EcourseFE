@@ -307,11 +307,11 @@ const DocDetail: React.FC = () => {
         <Breadcrumb separator={<SwapOutlined />}>
           <Breadcrumb.Item href={RoutePaths.HOME}>Trang chính</Breadcrumb.Item>
           <Breadcrumb.Item>Tài liệu</Breadcrumb.Item>
-          <Breadcrumb.Item>{doc.title}</Breadcrumb.Item>
+          <Breadcrumb.Item>{doc?.topic}</Breadcrumb.Item>
         </Breadcrumb>
       </Divider>
       <PageHeader
-        title={doc?.title}
+        title={doc?.topic}
         className="site-page-header"
         // subTitle="This is a subtitle"
         // tags={
