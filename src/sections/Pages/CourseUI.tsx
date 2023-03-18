@@ -37,7 +37,6 @@ const CourseUI: React.FC = () => {
   const fetCourse = async (pagination) => {
     const token = localStorage.getItem(StorageKeys.SESSION_KEY);
     setLoading(true);
-    console.log('call :>> ');
     try {
       if (!token) {
         const homeCourse = await CourseService.getHomeCourses(

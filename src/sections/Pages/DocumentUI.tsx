@@ -38,7 +38,7 @@ const DocumentUI: React.FC = () => {
     try {
       setLoading(true);
       const newPagination = { ...pagination };
-      if (!params.page) pagination.page = 1;
+      // if (!params.page) pagination.page = 1;
       if (!token) {
         const homeDoc = await CourseService.getHomeDocs(
           newPagination,
