@@ -1,4 +1,4 @@
-import { Divider, Menu } from 'antd';
+import { Button, Divider, Dropdown, Menu } from 'antd';
 import { isEmpty } from 'lodash';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
@@ -8,7 +8,13 @@ import { Nav, NavTypeEnum } from 'src/lib/types/backend_modal';
 import RoutePaths from 'src/lib/utils/routes';
 import { v4 as uuidv4 } from 'uuid';
 
-import { ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  AppstoreOutlined,
+  LogoutOutlined,
+  SettingOutlined,
+  ShoppingCartOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import { css } from '@emotion/react';
 
 import type { MenuTheme } from 'antd/es/menu';
@@ -95,6 +101,19 @@ const Nav: React.FC = () => {
     getListHeader();
   }, []);
 
+  const items: MenuProps['items'] = [
+    {
+      key: '1',
+      label: <Link href={RoutePaths.SETTINGS}>Cài đặt</Link>,
+      icon: <SettingOutlined />,
+    },
+    {
+      key: '2',
+      label: <Link href={RoutePaths.LOGOUT}>Đăng xuất</Link>,
+      icon: <LogoutOutlined />,
+    },
+  ];
+
   return (
     <div
       className="nav-bar"
@@ -102,13 +121,14 @@ const Nav: React.FC = () => {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding-right: calc(var(--bs-gutter-x) * 0.5);
-        padding-left: calc(var(--bs-gutter-x) * 0.7);
+        padding-right: calc(var(--bs-gutter-x) * 1);
+        padding-left: calc(var(--bs-gutter-x) * 1);
 
         border-radius: 5px;
         box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
         --bs-gutter-x: 5rem;
         --bs-gutter-y: 0;
+        margin-bottom: 30px;
         .left-box {
           display: flex;
           align-items: center;
@@ -172,9 +192,11 @@ const Nav: React.FC = () => {
         .login-btn {
           font-weight: 700;
           color: #000;
+          width: 120px !important;
           &:hover {
-            letter-spacing: 2px;
+            letter-spacing: 0.5px;
             transition: all 0.5s ease-in-out;
+            text-decoration: none;
           }
         }
         .setting-btn {
@@ -232,12 +254,12 @@ const Nav: React.FC = () => {
         <Divider type="vertical" style={{ height: '100%' }} />
 
         {!isEmpty(myProfile) ? (
-          <Link href={RoutePaths.SETTINGS} className="setting-btn">
+          <Dropdown menu={{ items }} placement="bottom" arrow>
             <UserOutlined className="setting-icon" />
-          </Link>
+          </Dropdown>
         ) : (
           <Link href={RoutePaths.LOGIN} className="login-btn">
-            Login
+            Đăng nhập
           </Link>
         )}
       </div>

@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 
 import { css } from '@emotion/react';
-import { Pagination as BasicPagination, Spin, Typography } from 'antd';
+import { Empty, Pagination as BasicPagination, Spin, Typography } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import OrderItem from 'src/components/order/order-item';
 import { RootState } from 'src/lib/reducers/model';
@@ -66,12 +66,14 @@ const OrderUI = () => {
         <div style={{ height: '72px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <Spin indicator={antIcon} />
         </div>
-      ) : (
+      ) : listOrder?.results?.length ? (
         listOrder?.results?.map((v, i) => (
           <div key={i}>
             <OrderItem orderItem={v} cancelOrder={cancelOrder} />
           </div>
         ))
+      ) : (
+        <Empty className="empty-data" image={Empty.PRESENTED_IMAGE_SIMPLE} />
       )}
       <div
         css={css`

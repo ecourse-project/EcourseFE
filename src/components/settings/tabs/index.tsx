@@ -59,13 +59,6 @@ const SettingTabs: React.FC<{ className?: string }> = React.memo(
         content: <OrderUI />,
         key: TabSettingKey.ORDER,
       },
-      {
-        id: uuidv4(),
-        label: 'Đăng xuất',
-        icon: <LogoutOutlined />,
-        content: <LoginPage />,
-        key: TabSettingKey.LOGOUT,
-      },
     ];
 
     const [switchTabs, setSwitchTabs] = React.useState<string>(TabSettingKey.INFORMATION);
