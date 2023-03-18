@@ -142,11 +142,11 @@ export const DocCourseWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   text-align: left;
-  gap: 15px;
+  gap: 25px;
   justify-content: space-evenly;
-  .ant-col {
+  /* .ant-col {
     padding: 0 5px 30px 5px;
-  }
+  } */
   .item:hover {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     transition: all 1s ease;

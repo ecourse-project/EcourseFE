@@ -224,6 +224,9 @@ const CartUI: React.FC = () => {
           overflow: auto;
           .ant-checkbox-wrapper {
             align-items: start;
+            & > span:not(:first-child) {
+              width: 100%;
+            }
           }
           .ant-checkbox-group-item {
             margin: 0;

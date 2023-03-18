@@ -40,7 +40,7 @@ interface PdfProps {
 const PdfViewer: React.FC<PdfProps> = (props: PdfProps) => {
   const { url } = props;
   return (
-    <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjsVersion}/build/pdf.worker.min.js`}>
+    <Worker workerUrl={`https://unpkg.com/pdfjs-dist@${pdfjsVersion.replace('^', '')}/build/pdf.worker.min.js`}>
       <div
         css={css`
           border: 1px solid rgba(0, 0, 0, 0.3);

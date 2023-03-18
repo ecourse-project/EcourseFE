@@ -29,9 +29,9 @@ const CartItemRow: React.FC<ChildProps> = ({ document, course, isDeleteBtn = tru
     <div
       className="container"
       css={css`
+        width: 100%;
         .document-item {
           display: flex;
-          align-items: flex-end;
           justify-content: space-between;
           flex-direction: column;
           .document-content {
