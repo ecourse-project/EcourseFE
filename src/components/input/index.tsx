@@ -14,7 +14,13 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean) =>
   return css`
     position: relative;
     z-index: 1;
-
+    input {
+      font-size: 20px;
+      font-weight: 600;
+      font-style: italic;
+      color: #3f3939 !important;
+      font-family: 'Montserrat';
+    }
     .s-label {
       top: ${isLabelAffected ? '7px' : '-30px'};
       font-size: ${isLabelAffected ? '17px' : '17px'};

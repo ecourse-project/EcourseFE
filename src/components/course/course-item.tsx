@@ -94,16 +94,20 @@ const CourseItem: React.FC<ChildProps> = (props) => {
   const handleAddFav = async (id) => {
     setLoading(true);
     setTimeout(async () => {
-      if (currentCourse.is_favorite) {
-        const removeFromFav: Course = await CourseService.moveCourse(id, MoveEnum.FAVORITE, MoveEnum.LIST);
-        dispatch(courseAction.setIsFavourite(removeFromFav));
-        setCurrentCourse(removeFromFav);
-      } else {
-        const addToFav: Course = await CourseService.moveCourse(id, MoveEnum.LIST, MoveEnum.FAVORITE);
-        dispatch(courseAction.setIsFavourite(addToFav));
-        setCurrentCourse(addToFav);
+      try {
+        if (currentCourse.is_favorite) {
+          const removeFromFav: Course = await CourseService.moveCourse(id, MoveEnum.FAVORITE, MoveEnum.LIST);
+          dispatch(courseAction.setIsFavourite(removeFromFav));
+          setCurrentCourse(removeFromFav);
+        } else {
+          const addToFav: Course = await CourseService.moveCourse(id, MoveEnum.LIST, MoveEnum.FAVORITE);
+          dispatch(courseAction.setIsFavourite(addToFav));
+          setCurrentCourse(addToFav);
+        }
+      } catch (error) {
+        console.log('error :>> ', error);
+        setLoading(false);
       }
-      setLoading(false);
     }, 300);
   };
   return (

@@ -48,15 +48,23 @@ const CommentSection = () => {
 
   const onAddComment = async (value) => {
     if (!value) return;
-    const cmt = await CourseService.createComment('', params.id || '', userProfile.id, value);
-    setPagination({ ...pagination, page: 1 });
-    cmt && fetchComment(params.id, pagination.limit, pagination.page);
+    try {
+      const cmt = await CourseService.createComment('', params.id || '', userProfile.id, value);
+      setPagination({ ...pagination, page: 1 });
+      cmt && fetchComment(params.id, pagination.limit, pagination.page);
+    } catch (error) {
+      console.log('error :>> ', error);
+    }
   };
 
   const handleReply = async (content: string, item: CourseComment) => {
-    const reply = await CourseService.createComment(item.id, params.id || '', userProfile.id, content);
-    // setPagination({ ...pagination, page: 1 });
-    reply && fetchComment(params.id, pagination.limit, pagination.page);
+    try {
+      const reply = await CourseService.createComment(item.id, params.id || '', userProfile.id, content);
+      // setPagination({ ...pagination, page: 1 });
+      reply && fetchComment(params.id, pagination.limit, pagination.page);
+    } catch (error) {
+      console.log('error :>> ', error);
+    }
   };
   return (
     <div

@@ -210,12 +210,20 @@ const CourseDetail: React.FC = () => {
 
   const onAddComment = async (value) => {
     if (!value) return;
-    const cmt = await CourseService.createComment('', course.id, userProfile.id, value);
-    cmt && fetchComment(params.id);
+    try {
+      const cmt = await CourseService.createComment('', course.id, userProfile.id, value);
+      cmt && fetchComment(params.id);
+    } catch (error) {
+      console.log('error :>> ', error);
+    }
   };
   const handleReply = async (content: string, item: CourseComment) => {
-    const reply = await CourseService.createComment(item.id, course.id, userProfile.id, content);
-    reply && fetchComment(params.id);
+    try {
+      const reply = await CourseService.createComment(item.id, course.id, userProfile.id, content);
+      reply && fetchComment(params.id);
+    } catch (error) {
+      console.log('error :>> ', error);
+    }
   };
 
   const rateCourse = async (course_id: string, rating: number, comment: string) => {

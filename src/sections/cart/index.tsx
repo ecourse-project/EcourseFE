@@ -1,5 +1,5 @@
 /* eslint-disable react/no-children-prop */
-import { Breadcrumb, Checkbox, Col, Divider, Row, Spin } from 'antd';
+import { Breadcrumb, Checkbox, Col, Divider, Empty, Row, Spin } from 'antd';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import PricingCard from 'src/components/cart/cart-price';
@@ -57,6 +57,7 @@ const CartUI: React.FC = () => {
   useEffect(() => {
     getCart();
   }, []);
+
   const onChangeDoc = (list) => {
     // setCheckedListDoc(list?.map((v) => v.id));
     setCheckedListDoc(list);
@@ -93,7 +94,8 @@ const CartUI: React.FC = () => {
   useEffect(() => {
     // console.log('call debounce');
     // debounceSetCheckList(checkedListDoc, checkedListCourse);
-
+    // setCheckAllCourse(Boolean(checkedListCourse.length));
+    // setCheckAllDoc(Boolean(checkedListDoc.length));
     setCheckedList({
       documents: checkedListDoc?.map((v) => v.toString()),
       courses: checkedListCourse?.map((v) => v.toString()),
@@ -114,11 +116,15 @@ const CartUI: React.FC = () => {
   // 	}
   // );
   const debouncePrice = useDebouncedCallback(async (checkedList: CalculatePriceArgs) => {
-    if (checkedList.courses?.length || checkedList.documents?.length) {
-      const price = await CourseService.calculatePrice(checkedList);
-      setTotalPrice(price.total_price);
-    } else {
-      setTotalPrice(0);
+    try {
+      if (checkedList.courses?.length || checkedList.documents?.length) {
+        const price = await CourseService.calculatePrice(checkedList);
+        setTotalPrice(price.total_price);
+      } else {
+        setTotalPrice(0);
+      }
+    } catch (error) {
+      console.log('error :>> ', error);
     }
   }, 500);
   useEffect(() => {
@@ -127,23 +133,31 @@ const CartUI: React.FC = () => {
 
   const removeFromCart = async (id: string, type: NavTypeEnum) => {
     try {
-      const newDoc = docCart.slice();
-      const newCourse = courseCart.slice();
+      let newDoc = docCart.slice();
+      let newCourse = courseCart.slice();
       if (type === NavTypeEnum.COURSE) {
         const removeDoc = await CourseService.moveCourse(id, MoveEnum.CART, MoveEnum.LIST);
-        const idx = newCourse.findIndex((v) => v.id === removeDoc.id);
+        // const idx = newCourse.findIndex((v) => v.id === removeDoc.id);
 
-        if (idx >= 0) {
-          newCourse.splice(idx, 1);
-          setCourseCart(newCourse);
-        }
+        // if (idx >= 0) {
+        //   newCourse.splice(idx, 1);
+        //   setCourseCart(newCourse);
+        // }
+        newCourse = newCourse.filter((v) => v.id !== removeDoc.id);
+        const newListCourseChecked = checkedListCourse.filter((v) => v !== removeDoc.id);
+        setCheckedListCourse(newListCourseChecked);
+        setCourseCart(newCourse);
       } else if (type === NavTypeEnum.DOCUMENT) {
         const removeDoc = await CourseService.moveDoc(id, MoveEnum.CART, MoveEnum.LIST);
-        const idx = newDoc.findIndex((v) => v.id === removeDoc.id);
-        if (idx >= 0) {
-          newDoc.splice(idx, 1);
-          setDocCart(newDoc);
-        }
+        // const idx = newDoc.findIndex((v) => v.id === removeDoc.id);
+        // if (idx >= 0) {
+        //   newDoc.splice(idx, 1);
+        //   setDocCart(newDoc);
+        // }
+        newDoc = newDoc.filter((v) => v.id !== removeDoc.id);
+        setDocCart(newDoc);
+        const newListDocChecked = checkedListDoc.filter((v) => v !== removeDoc.id);
+        setCheckedListDoc(newListDocChecked);
       }
     } catch (error) {
       console.log(error);
@@ -281,7 +295,7 @@ const CartUI: React.FC = () => {
                 />
               </>
             ) : (
-              <></>
+              <Empty className="empty-data" image={Empty.PRESENTED_IMAGE_SIMPLE} />
             )}
             {courseCart?.length ? (
               <>
@@ -306,7 +320,7 @@ const CartUI: React.FC = () => {
                 />
               </>
             ) : (
-              <></>
+              <Empty className="empty-data" image={Empty.PRESENTED_IMAGE_SIMPLE} />
             )}
             {/* {cartData?.documents?.length === 0 &&
 						cartData?.courses?.length === 0 && (
