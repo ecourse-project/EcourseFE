@@ -3,6 +3,7 @@ import { Router } from 'next/router';
 import { StorageKeys } from 'src/lib/utils/enum';
 import AuthService from '../api/auth';
 import { OToken } from '../types/backend_modal';
+import { forceLogout } from '../utils/auth';
 import globalVariable from './env';
 
 // let apiClient: ApiClient;
@@ -100,7 +101,7 @@ apiClient.interceptors.response.use(
         })
         .catch((error) => {
           localStorage.clear();
-          window.location.href = '/';
+          forceLogout();
           return Promise.reject(error);
         });
     }

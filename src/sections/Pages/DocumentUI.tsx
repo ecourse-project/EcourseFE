@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 
-import { Breadcrumb, Col, Divider, Empty, Pagination as BasicPagination, Spin } from 'antd';
+import { Breadcrumb, Card, Col, Divider, Empty, Pagination, Row, Spin } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -8,13 +8,15 @@ import DocItem from 'src/components/document/doc-item';
 import { DocCourseWrapper } from 'src/components/document/style';
 import CourseService from 'src/lib/api/course';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
-import { Document, Pagination, PaginationParams } from 'src/lib/types/backend_modal';
+import { Document, Pagination as PaginationType, PaginationParams } from 'src/lib/types/backend_modal';
 import { StorageKeys } from 'src/lib/utils/enum';
 import { UpperCaseFirstLetter } from 'src/lib/utils/format';
 import RoutePaths from 'src/lib/utils/routes';
 
 import { HomeOutlined, Loading3QuartersOutlined, SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
+import HomeSide from 'src/components/home/homeSide';
+import CustomPagination from 'src/components/pagination';
 
 export interface DocumentParams {
   page?: number;
@@ -23,13 +25,13 @@ export interface DocumentParams {
 
 const antIcon = <Loading3QuartersOutlined style={{ fontSize: 40 }} spin />;
 const DocumentUI: React.FC = () => {
-  const [listDoc, setListDoc] = useState<Pagination<Document>>();
+  const [listDoc, setListDoc] = useState<PaginationType<Document>>();
   const [loading, setLoading] = useState<boolean>(false);
   // const listDoc = useSelector((state: RootState) => state.document.listDoc);
   const router = useRouter();
   const params: DocumentParams = useQueryParam();
   const [pagination, setPagination] = useState<PaginationParams>({
-    page: 1,
+    page: params?.page || 1,
     limit: 10,
   });
   const dispatch = useDispatch();
@@ -62,13 +64,17 @@ const DocumentUI: React.FC = () => {
   useEffect(() => {
     setPagination({ ...pagination, page: 1 });
   }, [params.document]);
+
+  useEffect(() => {
+    setPagination({ ...pagination, page: params.page || 1 });
+  }, [params.page]);
   useEffect(() => {
     fetchDocument(pagination);
   }, [pagination]);
 
   const onChangePage = (page: number) => {
     setPagination({ ...pagination, page });
-    router.push(`${RoutePaths.DOCUMENT}?document=${params.document}`);
+    router.push(`${RoutePaths.DOCUMENT}?document=${params.document}&page=${page}`);
   };
   return (
     <div>
@@ -81,47 +87,56 @@ const DocumentUI: React.FC = () => {
               `}
             />
           </Breadcrumb.Item>
-          <Breadcrumb.Item href={`${RoutePaths.DOCUMENT}?document=ALL`}>Tài liệu</Breadcrumb.Item>
+          <Breadcrumb.Item href={`${RoutePaths.DOCUMENT}?document=ALL&pgae=${1}`}>Tài liệu</Breadcrumb.Item>
           <Breadcrumb.Item href={''}>
             {UpperCaseFirstLetter(params.document === 'ALL' ? '' : params.document || '')}
           </Breadcrumb.Item>
         </Breadcrumb>
       </Divider>
-      {loading ? (
-        <div style={{ height: '72px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <Spin indicator={antIcon} />
-        </div>
-      ) : (
-        <>
-          <DocCourseWrapper>
-            {listDoc?.results?.length ? (
-              listDoc?.results?.map((e, i) => {
-                return (
-                  <Col key={i} className="item">
-                    <DocItem document={e} />
-                  </Col>
-                );
-              })
-            ) : (
-              <Empty />
-            )}
-          </DocCourseWrapper>
+      <Row gutter={16}>
+        <Col span={18}>
+          <Card>
+            <DocCourseWrapper>
+              {listDoc?.results?.length ? (
+                listDoc?.results?.map((e, i) => {
+                  return (
+                    <Col key={i} className="item">
+                      <DocItem document={e} />
+                    </Col>
+                  );
+                })
+              ) : (
+                <Empty />
+              )}
+            </DocCourseWrapper>
+          </Card>
           <div
             css={css`
               text-align: center;
             `}
           >
-            <BasicPagination
-              current={pagination.page}
+            {/* <Pagination
+              defaultCurrent={1}
+              current={params.page || pagination.page}
               pageSize={pagination.limit}
               total={listDoc?.count || 10}
               showSizeChanger={false}
               onChange={onChangePage}
               hideOnSinglePage
+            /> */}
+            <CustomPagination
+              current={params.page || pagination.page}
+              pageSize={pagination.limit}
+              total={listDoc?.count || 10}
+              showSizeChanger={false}
+              onChange={onChangePage}
             />
           </div>
-        </>
-      )}
+        </Col>
+        <Col span={6}>
+          <HomeSide />
+        </Col>
+      </Row>
     </div>
   );
 };

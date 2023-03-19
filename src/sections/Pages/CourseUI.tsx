@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 
-import { Breadcrumb, Col, Divider, Empty, Spin } from 'antd';
+import { Breadcrumb, Card, Col, Divider, Empty, Row, Spin } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -16,6 +16,7 @@ import RoutePaths from 'src/lib/utils/routes';
 
 import { HomeOutlined, Loading3QuartersOutlined, SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
+import HomeSide from 'src/components/home/homeSide';
 
 interface DocumentParams {
   page?: number;
@@ -95,40 +96,49 @@ const CourseUI: React.FC = () => {
           <Breadcrumb.Item>{UpperCaseFirstLetter(params.course === 'ALL' ? '' : params.course || '')}</Breadcrumb.Item>
         </Breadcrumb>
       </Divider>
-      {loading ? (
-        <div style={{ height: '72px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <Spin indicator={antIcon} />
-        </div>
-      ) : (
-        <>
-          <DocCourseWrapper>
-            {listCourse?.results?.length ? (
-              listCourse?.results?.map((e, i) => {
-                return (
-                  <Col key={i} className="item">
-                    <CourseItem course={e} />
-                  </Col>
-                );
-              })
-            ) : (
-              <Empty />
-            )}
-          </DocCourseWrapper>
-          <div
-            css={css`
-              text-align: center;
-            `}
-          >
-            <CustomPagination
-              current={pagination.page}
-              pageSize={pagination.limit}
-              total={listCourse?.count || 10}
-              showSizeChanger={false}
-              onChange={onChangePage}
-            />
-          </div>
-        </>
-      )}
+      <Row gutter={16}>
+        <Col span={18}>
+          {loading ? (
+            <div style={{ height: '72px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <Spin indicator={antIcon} />
+            </div>
+          ) : (
+            <>
+              <Card>
+                <DocCourseWrapper>
+                  {listCourse?.results?.length ? (
+                    listCourse?.results?.map((e, i) => {
+                      return (
+                        <Col key={i} className="item">
+                          <CourseItem course={e} />
+                        </Col>
+                      );
+                    })
+                  ) : (
+                    <Empty />
+                  )}
+                </DocCourseWrapper>
+              </Card>
+              <div
+                css={css`
+                  text-align: center;
+                `}
+              >
+                <CustomPagination
+                  current={pagination.page}
+                  pageSize={pagination.limit}
+                  total={listCourse?.count || 10}
+                  showSizeChanger={false}
+                  onChange={onChangePage}
+                />
+              </div>
+            </>
+          )}
+        </Col>
+        <Col span={6}>
+          <HomeSide />
+        </Col>
+      </Row>
     </div>
   );
 };

@@ -38,10 +38,10 @@ const CustomPagination: FC<CustomPaginationProps> = ({
         justify-content: center;
         .ant-pagination {
           &-item {
-            border-radius: 50%;
+            /* border-radius: 50%; */
             border: 2px solid #ffa535;
-            // width: 55px;
-            // height: 55px;
+            width: 55px;
+            height: 55px;
             display: inline-flex;
             justify-content: center;
             align-items: center;

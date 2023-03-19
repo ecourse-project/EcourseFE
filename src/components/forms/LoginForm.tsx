@@ -1,7 +1,7 @@
 import { CheckboxChangeEvent } from 'antd/lib/checkbox/Checkbox';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import AppButton from 'src/components/button';
 import ErrorMessage from 'src/components/error-message';
@@ -31,7 +31,7 @@ const LoginForm: React.FC = () => {
       password: Yup.string().required(validation.password.required),
     }),
   );
-  const queryParams = useQueryParam<LoginQueryParams>();
+  const queryParams = useRouter();
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [loginError, setLoginError] = React.useState<string>('');
   const [rememberMe, setRememberMe] = useState(
@@ -54,7 +54,7 @@ const LoginForm: React.FC = () => {
         localStorage.setItem(StorageKeys.SESSION_KEY, JSON.stringify(response));
         const [profile, init] = await Promise.all([UserService.myInfo(), CourseService.initData()]);
         dispatch(appActions.setMyProfile(profile));
-        router.push('/');
+        router.push(queryParams.asPath.split('?redirect_url=')[1] || '/');
       } catch (error: any) {
         if (error.detail?.includes('No active account found with the given credentials'))
           setLoginError('Email hoặc mật khẩu không đúng');
@@ -68,6 +68,11 @@ const LoginForm: React.FC = () => {
   React.useEffect(() => {
     localStorage.clear();
   }, []);
+
+  useEffect(() => {
+    console.log('queryParams.redirect_url', queryParams);
+  }, [queryParams]);
+
   const hasError = (key: string) => {
     return Object.keys(formik.errors).length > 0 && !!formik.errors[key] && formik.touched[key];
   };

@@ -43,7 +43,7 @@ const DisplayDurationTime = (duration) => {
   // }`;
 
   const hourString = `${time.hours > 0 ? time.hours + ':' : ''}`;
-  const minuteString = `${time.minutes > 0 ? time.minutes + ':' : ''}`;
+  const minuteString = `${time.minutes + ':'}`;
   const secondString = `${time.seconds > 0 ? (time.seconds > 10 ? time.seconds : '0' + time.seconds) : ''}`;
   return hourString + minuteString + secondString;
 };

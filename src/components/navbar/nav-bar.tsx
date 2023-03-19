@@ -10,6 +10,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 import {
   AppstoreOutlined,
+  HomeFilled,
+  HomeOutlined,
   LogoutOutlined,
   SettingOutlined,
   ShoppingCartOutlined,
@@ -21,6 +23,7 @@ import type { MenuTheme } from 'antd/es/menu';
 type MenuItem = Required<MenuProps>['items'][number];
 
 import type { MenuProps } from 'antd';
+import { useRouter } from 'next/router';
 function getItem(
   label: React.ReactNode,
   key?: React.Key | null,
@@ -41,7 +44,7 @@ function getItem(
 
 const Nav: React.FC = () => {
   const header: Nav[] = useSelector((state: RootState) => state.app.header);
-
+  const router = useRouter();
   const [listNav, setListNav] = useState<MenuItem[]>();
   const myProfile = useSelector((state: RootState) => state.app.user);
   const getTargetUrl = (type: string, itemType) => {
@@ -69,22 +72,30 @@ const Nav: React.FC = () => {
           '',
           v.detail.topic?.map((u, n) => {
             return getItem(
-              <Link
-                href={getTargetUrl(v.detail.type, u) || ''}
+              <div
                 css={css`
-                  a {
-                    font-size: 50px;
-                    color: #000 !important;
-                    &:hover,
-                    &:foucs {
+                  max-width: 100px;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  .menu-item-link {
+                    color: #fff !important;
+                    &:hover {
                       text-decoration: none !important;
-                      color: #000 !important;
+                      color: #fff !important;
+                      outline: none !important;
+                    }
+                    &:focus {
+                      text-decoration: none !important;
+                      color: #fff !important;
+                      outline: none !important;
                     }
                   }
                 `}
               >
-                {u}
-              </Link>,
+                <Link href={getTargetUrl(v.detail.type, u) || ''} title={u} className="menu-item-link">
+                  {u}
+                </Link>
+              </div>,
               u + `id=${uuidv4()}`,
             );
           }),
@@ -93,7 +104,7 @@ const Nav: React.FC = () => {
       });
       setListNav(listItems);
     } catch (error) {
-      console.log('GetHeader', error);
+      console.log(' error GetHeader', error);
     }
   };
 
@@ -121,19 +132,22 @@ const Nav: React.FC = () => {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding-right: calc(var(--bs-gutter-x) * 1);
-        padding-left: calc(var(--bs-gutter-x) * 1);
-
+        margin-right: calc(var(--bs-gutter-x) * 1);
+        margin-left: calc(var(--bs-gutter-x) * 1);
         border-radius: 5px;
         box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
         --bs-gutter-x: 5rem;
         --bs-gutter-y: 0;
+        background-color: #4c4c4c !important;
+        max-width: 1200px;
+        margin: auto;
         margin-bottom: 30px;
         .left-box {
           display: flex;
           align-items: center;
           width: 80%;
           padding-right: 30px;
+
           > .ant-menu {
             width: 100%;
           }
@@ -143,22 +157,52 @@ const Nav: React.FC = () => {
           display: flex;
           justify-content: space-between;
           gap: 10px;
+          .ant-divider {
+            background: #fff;
+          }
           & a {
             width: 20px;
           }
-        }
-        .logo {
-          width: 250px;
-          font-weight: 600;
-          &:hover {
-            color: red;
-            text-decoration: none;
-            letter-spacing: 1px;
-            transition: all 400ms ease-in-out;
-            font-weight: 700;
+          .anticon {
+            color: #fff !important;
           }
         }
-        .ant-menu-overflow-item {
+        .home {
+          width: 160px;
+          height: 47px;
+          display: flex;
+          align-items: center;
+          background-color: #3a3a3a;
+          .logo {
+            font-weight: 600;
+            font-weight: 700;
+            font-size: 12px;
+            font-family: 'Montserrat';
+            padding-left: 15px;
+            color: #fff !important;
+            &:hover {
+              text-decoration: none;
+              letter-spacing: 0.5px;
+              transition: all 400ms ease-in-out;
+              font-weight: 700;
+            }
+
+            .anticon-home {
+              margin-right: 5px;
+              color: #fff;
+            }
+          }
+        }
+        .ant-menu-overflow {
+          background-color: #4c4c4c;
+          .ant-menu-overflow-item {
+            background-color: #4c4c4c;
+          }
+        }
+        .ant-menu-title-content {
+          a {
+            color: #fff !important;
+          }
           height: fit-content;
         }
         .anticon {
@@ -191,7 +235,7 @@ const Nav: React.FC = () => {
         }
         .login-btn {
           font-weight: 700;
-          color: #000;
+          color: #fff !important;
           width: 120px !important;
           &:hover {
             letter-spacing: 0.5px;
@@ -221,7 +265,7 @@ const Nav: React.FC = () => {
             text-decoration: none;
             color: #000;
             font-weight: 700;
-            font-size: 18px;
+            font-size: 12px;
             font-family: 'Montserrat';
             &:hover,
             &:focus {
@@ -241,11 +285,14 @@ const Nav: React.FC = () => {
         }
       `}
     >
-      <Link href={'/'} className="logo">
-        <h1>E-Course</h1>
-      </Link>
       <div className="left-box">
-        <Menu items={listNav} mode="horizontal" className="nav-menu" triggerSubMenuAction="hover" />
+        <div className="home">
+          <Link href={'/'} className="logo">
+            <HomeFilled />
+            TRANG CHỦ
+          </Link>
+        </div>
+        <Menu items={listNav} mode="horizontal" className="nav-menu" triggerSubMenuAction="hover" theme="dark" />
       </div>
       <div className="right-box">
         <Link href={RoutePaths.CART} className="cart-btn">

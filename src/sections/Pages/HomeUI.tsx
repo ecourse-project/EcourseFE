@@ -1,9 +1,11 @@
 /* eslint-disable prettier/prettier */
 
+import { Col, Row } from 'antd';
 import { StaticImageData } from 'next/image';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import HomeData from 'src/components/home';
+import HomeSide from 'src/components/home/homeSide';
 import CourseService from 'src/lib/api/course';
 import { RootState } from 'src/lib/reducers/model';
 import { Course, Document, Homepage } from 'src/lib/types/backend_modal';
@@ -47,16 +49,22 @@ const HomeUI = () => {
       setLoading(false);
     }
   };
-  const listDoc = useSelector((state: RootState) => state.document.mostDownDoc);
-  const listCourse = useSelector((state: RootState) => state.course.mostDownCourse);
+
   useEffect(() => {
     fetchHomeData();
   }, []);
   return (
     <div className="page-container">
-      {homeData?.map((v, i) => {
-        return <HomeData homeData={v} key={i} />;
-      })}
+      <Row gutter={16}>
+        <Col span={18}>
+          {homeData?.map((v, i) => {
+            return <HomeData homeData={v} key={i} />;
+          })}
+        </Col>
+        <Col span={6}>
+          <HomeSide />
+        </Col>
+      </Row>
     </div>
   );
 };
