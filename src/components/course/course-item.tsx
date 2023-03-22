@@ -176,7 +176,7 @@ const CourseItem: React.FC<ChildProps> = (props) => {
             <div>
               <h4 className="title">{currentCourse.name}</h4>
             </div>
-            <p className="download">
+            {/* <p className="download">
               <VerticalAlignBottomOutlined />
               Số lượt tải: {currentCourse.sold}
             </p>
@@ -193,10 +193,9 @@ const CourseItem: React.FC<ChildProps> = (props) => {
                 size="small"
                 readOnly
                 style={{ padding: '0 5px' }}
-                // emptyIcon={<StarIcon style={{ opacity: 1 }} fontSize="inherit" />}
               />
               {`(${currentCourse.num_of_rates})`}
-            </p>
+            </p> */}
           </div>
         </Link>
       </Popover>
@@ -204,7 +203,7 @@ const CourseItem: React.FC<ChildProps> = (props) => {
         <div className="price-tag">
           <span>
             <WalletOutlined />
-            {formatCurrency(currentCourse.price)}
+            {formatCurrency(currentCourse.price || 0)}
           </span>
 
           {currentCourse.sale_status === SaleStatusEnum.BOUGHT && <TaskAltIcon sx={{ color: `${Color.BOUGHT}` }} />}

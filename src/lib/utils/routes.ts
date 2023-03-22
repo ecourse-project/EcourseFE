@@ -13,7 +13,7 @@ const RoutePaths = {
   HOME: '/',
   DOCUMENT: '/documents',
   COURSE: '/courses',
-  CLASS_ROOM: '/class-room',
+  CLASS: '/classes',
   MY_COURSES: '/my-learning',
   CART: '/cart',
   ORDER_CART: '/order-cart',

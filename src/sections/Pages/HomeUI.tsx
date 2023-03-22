@@ -43,6 +43,8 @@ const HomeUI = () => {
       setLoading(true);
       const homes: Homepage[] = await CourseService.getHome();
       setHomeData(homes);
+      const classes = await CourseService.listClasses(20, 1, '');
+      console.log('classes :>> ', classes);
     } catch (error) {
       console.log('errror', error);
     } finally {

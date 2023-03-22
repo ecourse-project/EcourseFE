@@ -51,6 +51,7 @@ const Nav: React.FC = () => {
     if (!type) return null;
     if (type.toLocaleUpperCase() === NavTypeEnum.DOCUMENT) return `${RoutePaths.DOCUMENT}?document=${itemType}&page=1`;
     else if (type.toLocaleUpperCase() === NavTypeEnum.COURSE) return `${RoutePaths.COURSE}?course=${itemType}&page=1`;
+    else if (type.toLocaleUpperCase() === NavTypeEnum.CLASS) return `${RoutePaths.CLASS}?class=${itemType}&page=1`;
   };
 
   const checkTypeHeader = (navItem: Nav) => {
@@ -63,6 +64,9 @@ const Nav: React.FC = () => {
     );
   };
 
+  useEffect(() => {
+    console.log('header', header);
+  }, [header]);
   const getListHeader = async () => {
     try {
       const listItems = header?.map((v, i) => {
