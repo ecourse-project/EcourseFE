@@ -35,6 +35,7 @@ import {
   StarFilled,
   SwapOutlined,
   SyncOutlined,
+  UserOutlined,
   VerticalLeftOutlined,
 } from '@ant-design/icons';
 import { PageHeader } from '@ant-design/pro-layout';
@@ -277,11 +278,11 @@ const CourseDetail: React.FC = () => {
       key: 'comment',
       children: <CommentSection />,
     }, // remember to pass the key prop
-    {
-      label: 'Nhận xét',
-      key: 'feedback',
-      children: <FeedbackSection rateList={course?.rating_detail || []} />,
-    },
+    // {
+    //   label: 'Nhận xét',
+    //   key: 'feedback',
+    //   children: <FeedbackSection rateList={course?.rating_detail || []} />,
+    // },
   ];
 
   useEffect(() => {
@@ -393,9 +394,10 @@ const CourseDetail: React.FC = () => {
       <PageHeader
         title={course?.topic?.name}
         className="site-page-header"
-        avatar={{
-          src: 'https://avatars1.githubusercontent.com/u/8186664?s=460&v=4',
-        }}
+        // avatar={{
+        //   src: 'https://avatars1.githubusercontent.com/u/8186664?s=460&v=4',
+        // }}
+        avatar={{ src: <UserOutlined /> }}
         extra={
           course.sale_status !== SaleStatusEnum.PENDING && [
             <AppButton
@@ -412,36 +414,20 @@ const CourseDetail: React.FC = () => {
                 handleUpdateBtn();
               }}
             >
-              {/* {course.sale_status === SaleStatusEnum.AVAILABLE
-                ? 'THÊM'
-                : course.sale_status === SaleStatusEnum.IN_CART
-                ? 'XOÁ'
-                : course.sale_status === SaleStatusEnum.BOUGHT
-                ? 'VÀO HỌC'
-                : ''}
-              {course.sale_status === SaleStatusEnum.AVAILABLE ? (
-                <PlusCircleOutlined />
-              ) : course.sale_status === SaleStatusEnum.IN_CART ? (
-                <MinusCircleOutlined />
-              ) : course.sale_status === SaleStatusEnum.BOUGHT ? (
-                <VerticalLeftOutlined />
-              ) : (
-                ''
-              )} */}
               {btnString}
             </AppButton>,
-            course.sale_status === SaleStatusEnum.BOUGHT && (
-              <Button
-                key={2}
-                type="primary"
-                // className="rating-btn"
-                className="add-btn"
-                onClick={() => setOpenRatingModal(true)}
-                style={{ backgroundColor: '#fff', color: '#000' }}
-              >
-                Đánh giá <StarFilled />
-              </Button>
-            ),
+            // course.sale_status === SaleStatusEnum.BOUGHT && (
+            //   <Button
+            //     key={2}
+            //     type="primary"
+            //     // className="rating-btn"
+            //     className="add-btn"
+            //     onClick={() => setOpenRatingModal(true)}
+            //     style={{ backgroundColor: '#fff', color: '#000' }}
+            //   >
+            //     Đánh giá <StarFilled />
+            //   </Button>
+            // ),
           ]
         }
       >
@@ -514,20 +500,3 @@ const CourseDetail: React.FC = () => {
 };
 
 export default CourseDetail;
-// {
-// 	actions: [<span key="comment-list-reply-to-0">Reply to</span>],
-// 	author: 'Han Solo',
-// 	avatar: 'https://joeschmoe.io/api/v1/random',
-// 	content: (
-// 		<p>
-// 			We supply a series of design principles, practical patterns and high
-// 			quality design resources (Sketch and Axure), to help people create their
-// 			product prototypes beautifully and efficiently.
-// 		</p>
-// 	),
-// 	datetime: (
-// 		<Tooltip title="2016-11-22 11:22:33">
-// 			<span>8 hours ago</span>
-// 		</Tooltip>
-// 	),
-// },

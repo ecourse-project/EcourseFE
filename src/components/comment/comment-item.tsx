@@ -5,6 +5,7 @@ import moment from 'moment';
 import React, { useState } from 'react';
 import { CourseComment } from 'src/lib/types/backend_modal';
 import CommentForm from './comment-form';
+import { UserOutlined } from '@ant-design/icons';
 
 interface CommentItemProps {
   item: CourseComment;
@@ -34,7 +35,8 @@ const CommentItem: React.FC<CommentItemProps> = (props) => {
         ]}
         author={item?.user?.full_name}
         // avatar={item?.user?.avatar || <Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />}
-        avatar={<Avatar src="https://i.pravatar.cc/300" alt="Han Solo" />}
+        // avatar={<Avatar src="https://i.pravatar.cc/300" alt="Han Solo" />}
+        avatar={<Avatar src={<UserOutlined />} alt="avata" shape="square" />}
         content={
           <div>
             {item.content}
@@ -61,7 +63,7 @@ const CommentItem: React.FC<CommentItemProps> = (props) => {
                   key={i}
                   author={v?.user?.full_name}
                   // avatar={v?.user?.avatar || <Avatar src="https://i.pravatar.cc/300" alt="Han Solo" />}
-                  avatar={<Avatar src="https://i.pravatar.cc/300" alt="Han Solo" />}
+                  avatar={<Avatar src={<UserOutlined />} alt="avata" shape="square" />}
                   content={<div>{v.content}</div>}
                   datetime={
                     <Tooltip title={moment(v.created).format('dddd, MMMM Do YYYY, h:mm:ss a')}>
