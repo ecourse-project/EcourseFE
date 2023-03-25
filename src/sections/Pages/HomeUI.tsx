@@ -41,6 +41,8 @@ const HomeUI = () => {
   const fetchHomeData = async () => {
     try {
       setLoading(true);
+      const post = await CourseService.listPosts(20, 1, '');
+      console.log('post :>> ', post);
       const homes: Homepage[] = await CourseService.getHome();
       setHomeData(homes);
     } catch (error) {

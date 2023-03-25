@@ -38,32 +38,32 @@ const CustomPagination: FC<CustomPaginationProps> = ({
         justify-content: center;
         .ant-pagination {
           &-item {
-            /* border-radius: 50%; */
-            border: 2px solid #ffa535;
-            width: 55px;
-            height: 55px;
+            border-radius: 50%;
+            border: 2px solid #24a2ec;
+            width: 30px;
+            height: 30px;
             display: inline-flex;
             justify-content: center;
             align-items: center;
             a {
-              color: #ffa535;
+              color: #24a2ec;
               font-weight: 700;
             }
             &:hover,
             &-active {
-              background-color: #ffa535;
-              border-color: #ffa535;
+              background-color: #24a2ec;
+              border-color: #24a2ec;
               a {
                 color: #fff;
               }
             }
             &-ellipsis {
-              color: #ffa535 !important;
+              color: #24a2ec !important;
             }
           }
           .ant-pagination-item-${current} {
-            background-color: #ffa535;
-            border-color: #ffa535;
+            background-color: #24a2ec;
+            border-color: #24a2ec;
             a {
               color: #fff;
             }
@@ -80,7 +80,7 @@ const CustomPagination: FC<CustomPaginationProps> = ({
             &:hover {
               svg:not([disabled]) {
                 circle {
-                  fill: #ffa535;
+                  fill: #24a2ec;
                 }
                 path,
                 line {
