@@ -17,6 +17,7 @@ import RoutePaths from 'src/lib/utils/routes';
 import { HomeOutlined, Loading3QuartersOutlined, SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 import HomeSide from 'src/components/home/homeSide';
+import DocCourseItemSkeleton from 'src/components/skeleton/document-skeleton';
 
 interface DocumentParams {
   page?: number;
@@ -98,42 +99,38 @@ const CourseUI: React.FC = () => {
       </Divider>
       <Row gutter={16}>
         <Col span={18}>
-          {loading ? (
-            <div style={{ height: '72px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <Spin indicator={antIcon} />
-            </div>
-          ) : (
-            <>
-              <Card>
-                <DocCourseWrapper>
-                  {listCourse?.results?.length ? (
-                    listCourse?.results?.map((e, i) => {
-                      return (
-                        <Col key={i} className="item">
-                          <CourseItem course={e} />
-                        </Col>
-                      );
-                    })
-                  ) : (
-                    <Empty />
-                  )}
-                </DocCourseWrapper>
-              </Card>
-              <div
-                css={css`
-                  text-align: center;
-                `}
-              >
-                <CustomPagination
-                  current={pagination.page}
-                  pageSize={pagination.limit}
-                  total={listCourse?.count || 10}
-                  showSizeChanger={false}
-                  onChange={onChangePage}
-                />
-              </div>
-            </>
-          )}
+          <Card>
+            {loading ? (
+              <DocCourseItemSkeleton />
+            ) : (
+              <DocCourseWrapper>
+                {listCourse?.results?.length ? (
+                  listCourse?.results?.map((e, i) => {
+                    return (
+                      <Col key={i} className="item">
+                        <CourseItem course={e} />
+                      </Col>
+                    );
+                  })
+                ) : (
+                  <Empty />
+                )}
+              </DocCourseWrapper>
+            )}
+          </Card>
+          <div
+            css={css`
+              text-align: center;
+            `}
+          >
+            <CustomPagination
+              current={pagination.page}
+              pageSize={pagination.limit}
+              total={listCourse?.count || 10}
+              showSizeChanger={false}
+              onChange={onChangePage}
+            />
+          </div>
         </Col>
         <Col span={6}>
           <HomeSide />

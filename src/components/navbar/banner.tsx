@@ -1,5 +1,5 @@
 import { Image } from 'antd';
-import Logo from 'src/assets/images/app-logo.png';
+import Logo from 'src/assets/images/logo.png';
 import BannerImg from 'src/assets/images/app-banner.png';
 import styled from '@emotion/styled';
 

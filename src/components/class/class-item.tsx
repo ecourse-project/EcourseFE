@@ -1,104 +1,78 @@
 /* eslint-disable @next/next/no-img-element */
-import { Popover } from 'antd';
 import { isEqual } from 'lodash';
 import Link from 'next/link';
 import React, { memo, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import DefaultClassImg from 'src/assets/images/class.jpg';
 import CourseService from 'src/lib/api/course';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { docActions } from 'src/lib/reducers/document/documentSlice';
-import { RootState } from 'src/lib/reducers/model';
-import { Document, MoveEnum } from 'src/lib/types/backend_modal';
-import { formatCurrencySymbol } from 'src/lib/utils/currency';
+import { Class, Document, MoveEnum, RequestStatus } from 'src/lib/types/backend_modal';
 import { SaleStatusEnum } from 'src/lib/utils/enum';
-import { formatDate } from 'src/lib/utils/format';
 import RoutePaths from 'src/lib/utils/routes';
 import { checkAccountPermission } from 'src/lib/utils/utils';
 import { DocumentParams } from 'src/sections/Pages/DocumentUI';
-
 /* eslint-disable react/prop-types */
-import {
-  EyeFilled,
-  HeartFilled,
-  HeartOutlined,
-  LikeFilled,
-  VerticalAlignBottomOutlined,
-  WalletOutlined,
-} from '@ant-design/icons';
 import { css } from '@emotion/react';
-import TaskAltIcon from '@mui/icons-material/TaskAlt';
-import Rating from '@mui/material/Rating';
 
 import AppButton from '../button';
 import { ItemDocCourseWrapper } from './style';
+import { useRouter } from 'next/router';
 
 interface ChildProps {
-  document: Document; // try not to use any.
+  document?: Document | undefined; // try not to use any.
   isMyLearn?: boolean;
+  classItem: Class;
 }
-enum BtnString {
-  AVAILABLE = 'THÊM',
-  IN_CART = 'XOÁ',
-  PENDING = 'CHỜ THANH TOÁN',
-  BOUGHT = 'ĐÃ THANH TOÁN',
+export enum BtnString {
+  AVAILABLE = 'YÊU CẦU THAM GIA',
+  REQUESTED = 'HUỶ YÊU CẦU',
+  ACCEPTED = 'VÀO HỌC',
 }
 enum Color {
   AVAILABLE = '#0dcaf0',
-  IN_CART = '#ed5e68',
-  PENDING = '#8c8c8c',
-  BOUGHT = '#23c501',
+  REQUESTED = '#ed5e68',
+  ACCEPTED = '#23c501',
 }
 
-const DocItem: React.FC<ChildProps> = memo((props) => {
-  const { document, isMyLearn } = props;
-  const [added, setAdded] = useState(false);
+const ClassItem: React.FC<ChildProps> = memo((props) => {
+  const { isMyLearn, classItem } = props;
   const [btnString, setBtnString] = useState<string>(BtnString.AVAILABLE);
-  const cartData = useSelector((state: RootState) => state.document);
   const [loading, setLoading] = useState<boolean>(false);
-  const [currentDoc, setCurrentDoc] = useState<Document>(document);
-  const [isFav, setIsFav] = useState<boolean>(document?.is_favorite || false);
+  const [currentDoc, setCurrentDoc] = useState<Document>({} as Document);
+  const [currentClassItem, setCurrentClassItem] = useState<Class>(classItem);
   const params: DocumentParams = useQueryParam();
   const dispatch = useDispatch();
-
+  const router = useRouter();
   useEffect(() => {
-    if (currentDoc.sale_status === SaleStatusEnum.AVAILABLE) {
+    if (currentClassItem.request_status === RequestStatus.AVAILABLE) {
       setBtnString(BtnString.AVAILABLE);
-    } else if (currentDoc.sale_status === SaleStatusEnum.IN_CART) {
-      setBtnString(BtnString.IN_CART);
-    } else if (currentDoc.sale_status === SaleStatusEnum.PENDING) {
-      setBtnString(BtnString.PENDING);
-    } else if (currentDoc.sale_status === SaleStatusEnum.BOUGHT) {
-      setBtnString(BtnString.BOUGHT);
+    } else if (currentClassItem.request_status === RequestStatus.REQUESTED) {
+      setBtnString(BtnString.REQUESTED);
+    } else if (currentClassItem.request_status === RequestStatus.ACCEPTED) {
+      setBtnString(BtnString.ACCEPTED);
     }
-  }, [currentDoc]);
+  }, [currentClassItem]);
 
-  const handleUpdateDoc = async () => {
+  const handleRequestJoin = async () => {
     checkAccountPermission();
-    setLoading(true);
-    try {
-      if (currentDoc.sale_status === SaleStatusEnum.AVAILABLE) {
-        const addTo: Document = await CourseService.moveDoc(currentDoc.id, MoveEnum.LIST, MoveEnum.CART);
+    if (currentClassItem.request_status === RequestStatus.ACCEPTED) {
+      router.push(`${RoutePaths.COURSE_PROGRESS}?id=${currentClassItem?.course.id}`);
+    } else {
+      setLoading(true);
+      try {
+        const request = await CourseService.requestJoinClass(currentClassItem.id);
+
+        setCurrentClassItem((prev) => ({ ...prev, request_status: request.request_status }));
+      } catch (error) {
+        console.log('error update class', error);
+      } finally {
         setTimeout(() => {
-          setCurrentDoc(addTo);
-        }, 300);
-      } else if (currentDoc.sale_status === SaleStatusEnum.IN_CART) {
-        const removeFrom: Document = await CourseService.moveDoc(currentDoc.id, MoveEnum.CART, MoveEnum.LIST);
-        setTimeout(() => {
-          setCurrentDoc(removeFrom);
-        }, 300);
+          setLoading(false);
+        }, 500);
       }
-      console.log('call lại');
-    } catch (error) {
-      console.log('error update cart', error);
-    } finally {
-      setTimeout(() => {
-        setLoading(false);
-      }, 300);
     }
   };
-  useEffect(() => {
-    setCurrentDoc(document);
-  }, [document]);
 
   const handleAddFav = async () => {
     try {
@@ -124,100 +98,36 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
     <ItemDocCourseWrapper
       css={css`
         .card-btn {
+          letter-spacing: 0;
           &:hover {
-            border-color: ${btnString === BtnString.AVAILABLE ? Color.AVAILABLE : Color.IN_CART};
-            color: ${btnString === BtnString.AVAILABLE ? Color.AVAILABLE : Color.IN_CART};
-            letter-spacing: 8px;
+            letter-spacing: 0.5px;
+            font-weight: 600;
           }
-        }
-
-        .anticon-loading {
-          font-size: 18px;
-          color: ${btnString === BtnString.AVAILABLE ? Color.AVAILABLE : Color.IN_CART};
+          &:focus {
+            letter-spacing: 0.5px;
+            font-weight: 600;
+          }
+          &:active {
+            letter-spacing: 0.5px;
+            font-weight: 600;
+          }
         }
       `}
     >
       <div className="pop-up">
-        <Popover
-          placement="right"
-          content={
-            <div
-              css={css`
-                max-width: 300px;
-                .title {
-                  font-weight: 700;
-                  font-size: 15px;
-                }
-                .heart {
-                  font-size: 40px;
-                  margin-left: 10px;
-                  .anticon {
-                    color: ${currentDoc.is_favorite ? 'red' : ''};
-                  }
-                  .anticon:hover {
-                    color: red;
-                    cursor: pointer;
-                    transition: all 1s ease;
-                  }
-                }
-              `}
-            >
-              <p className="title">{document.name}</p>
-
-              {/* <Tag color="geekblue">Best Seller</Tag> */}
-              <p>Cập nhật: {formatDate(document?.modified)}</p>
-              {/* <p>Dung lượng: {(Number(document?.file?.file_size) / 1024000).toFixed(1)} MB</p> */}
-              <p>Dung lượng: {document?.file?.file_size} KB</p>
-
-              <p>{document.description}</p>
-              <p className="heart" onClick={() => handleAddFav()}>
-                {currentDoc.is_favorite ? <HeartFilled /> : <HeartOutlined />}
-              </p>
-            </div>
-          }
-          trigger="hover"
-        >
-          <Link href={`${RoutePaths.DOCUMENT_DETAIL}?document=${params?.document}&id=${document.id}`}>
-            <div className="doc--image">
-              <img className="doc-img" src={`${document?.thumbnail?.image_path}`} alt="doc image." />
-            </div>
-
-            <div className="doc_info">
-              <div className="title">{document.name}</div>
-              {/* <p className="download">
-                <VerticalAlignBottomOutlined />
-                Số lượt tải: {document.sold}
-              </p>
-              <p className="download">
-                <EyeFilled />
-                Số lượt xem: {document.views}
-              </p>
-              <p className="download">
-                <LikeFilled />
-                <span className="rate-score">{Number(document?.rating).toFixed(1)}</span>
-                <span>
-                  <Rating
-                    name="size-large"
-                    defaultValue={Number(Number(document.rating).toFixed(1))}
-                    size="small"
-                    readOnly
-                    style={{ padding: '0 5px' }}
-                  />
-                </span>
-
-                {`(${document.num_of_rates})`}
-              </p> */}
-            </div>
-          </Link>
-          <div className="price-tag">
-            <span>
-              <WalletOutlined />
-              {formatCurrencySymbol(document.price, 'VND')}
-            </span>
-
-            {document.sale_status === SaleStatusEnum.BOUGHT && <TaskAltIcon sx={{ color: `${Color.BOUGHT}` }} />}
+        <Link href={`${RoutePaths.CLASS_DETAIL}?id=${currentClassItem?.id}`}>
+          <div className="doc--image">
+            <img
+              className="doc-img"
+              src={`${currentClassItem?.course?.thumbnail?.image_path || DefaultClassImg.src}`}
+              alt="class image."
+            />
           </div>
-        </Popover>
+
+          <div className="doc_info">
+            <div className="title">{currentClassItem.name}</div>
+          </div>
+        </Link>
       </div>
 
       <div>
@@ -229,14 +139,10 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
             btnSize={'small'}
             btnWidth={'full-w'}
             loading={loading}
-            disabled={
-              currentDoc.sale_status === SaleStatusEnum.PENDING ||
-              currentDoc.sale_status === SaleStatusEnum.BOUGHT ||
-              loading
-            }
+            disabled={loading}
             onClick={(e) => {
               e.stopPropagation();
-              handleUpdateDoc();
+              handleRequestJoin();
             }}
           >
             {btnString}
@@ -247,4 +153,4 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
   );
 }, isEqual);
 
-export default DocItem;
+export default ClassItem;

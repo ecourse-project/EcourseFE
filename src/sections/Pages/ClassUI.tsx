@@ -17,6 +17,7 @@ import RoutePaths from 'src/lib/utils/routes';
 import { HomeOutlined, Loading3QuartersOutlined, SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 import HomeSide from 'src/components/home/homeSide';
+import ClassItem from 'src/components/class/class-item';
 
 interface DocumentParams {
   page?: number;
@@ -87,7 +88,7 @@ const ClassUI: React.FC = () => {
               `}
             />
           </Breadcrumb.Item>
-          <Breadcrumb.Item href={`${RoutePaths.CLASS}?class=ALL`}>Khoá học</Breadcrumb.Item>
+          <Breadcrumb.Item href={`${RoutePaths.CLASS}?class=ALL`}>Lớp</Breadcrumb.Item>
           <Breadcrumb.Item>{UpperCaseFirstLetter(params.class === 'ALL' ? '' : params.class || '')}</Breadcrumb.Item>
         </Breadcrumb>
       </Divider>
@@ -105,7 +106,7 @@ const ClassUI: React.FC = () => {
                     listClass?.results?.map((e, i) => {
                       return (
                         <Col key={i} className="item">
-                          {/* <CourseItem course={e} /> */}
+                          <ClassItem classItem={e} />
                         </Col>
                       );
                     })

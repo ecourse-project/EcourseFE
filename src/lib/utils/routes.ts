@@ -19,6 +19,7 @@ const RoutePaths = {
   ORDER_CART: '/order-cart',
   FORGOT_PASSWORD: '/forgot-password',
   DOCUMENT_DETAIL: '/document-detail',
+  CLASS_DETAIL: '/class-detail',
   COURSE_DETAIL: '/course-detail',
   COURSE_PROGRESS: '/course-progress',
   MY_ACCOUNT: '/me',

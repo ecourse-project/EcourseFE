@@ -17,6 +17,7 @@ import { HomeOutlined, Loading3QuartersOutlined, SwapOutlined } from '@ant-desig
 import { css } from '@emotion/react';
 import HomeSide from 'src/components/home/homeSide';
 import CustomPagination from 'src/components/pagination';
+import DocCourseItemSkeleton from 'src/components/skeleton/document-skeleton';
 
 export interface DocumentParams {
   page?: number;
@@ -96,19 +97,23 @@ const DocumentUI: React.FC = () => {
       <Row gutter={16}>
         <Col span={18}>
           <Card>
-            <DocCourseWrapper>
-              {listDoc?.results?.length ? (
-                listDoc?.results?.map((e, i) => {
-                  return (
-                    <Col key={i} className="item">
-                      <DocItem document={e} />
-                    </Col>
-                  );
-                })
-              ) : (
-                <Empty />
-              )}
-            </DocCourseWrapper>
+            {loading ? (
+              <DocCourseItemSkeleton />
+            ) : (
+              <DocCourseWrapper>
+                {listDoc?.results?.length ? (
+                  listDoc?.results?.map((e, i) => {
+                    return (
+                      <Col key={i} className="item">
+                        <DocItem document={e} />
+                      </Col>
+                    );
+                  })
+                ) : (
+                  <Empty />
+                )}
+              </DocCourseWrapper>
+            )}
           </Card>
           <div
             css={css`

@@ -1,7 +1,7 @@
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 
-import { Button, Col, Collapse, List, Popover, Progress, Row, Tabs } from 'antd';
+import { Button, Col, Collapse, Divider, List, Popover, Progress, Row, Tabs } from 'antd';
 import _, { isEmpty } from 'lodash';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -33,8 +33,8 @@ import {
   UserAnswersArgs,
 } from 'src/lib/types/backend_modal';
 import RoutePaths from 'src/lib/utils/routes';
-
-import { DownOutlined, PlayCircleOutlined, StarFilled, SwapOutlined } from '@ant-design/icons';
+import Skeleton from 'react-loading-skeleton';
+import { DownOutlined, HomeOutlined, PlayCircleOutlined, StarFilled, SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 
 import PdfViewer from '../../pdf';
@@ -101,11 +101,11 @@ const CourseProgress = () => {
       key: 'comment',
       children: <CommentSection />,
     }, // remember to pass the key prop
-    {
-      label: 'Nhận xét',
-      key: 'feedback',
-      children: <FeedbackSection rateList={course?.rating_detail || []} />,
-    },
+    // {
+    //   label: 'Nhận xét',
+    //   key: 'feedback',
+    //   children: <FeedbackSection rateList={course?.rating_detail || []} />,
+    // },
   ];
 
   useEffect(() => {
@@ -249,6 +249,10 @@ const CourseProgress = () => {
   }, [state.selectedDoc, state.selectedVideo, isShowQuiz]);
 
   useEffect(() => {
+    setVideoLoading(true);
+  }, [state.selectedVideo]);
+
+  useEffect(() => {
     //reload current watch
     const lesson: Lesson | undefined = course ? course?.lessons?.filter((v) => v.id === params?.lesson)[0] : undefined;
     if (params.video) {
@@ -302,6 +306,10 @@ const CourseProgress = () => {
     }
   };
 
+  useEffect(() => {
+    console.log('videoLoading :>> ', videoLoading);
+  }, [videoLoading]);
+
   return (
     <div
       css={css`
@@ -311,8 +319,9 @@ const CourseProgress = () => {
           color: #fff;
           width: 100%;
           display: flex;
-          justify-content: space-around;
-          padding: 0 7%;
+          justify-content: space-between;
+          padding: 0 40px;
+
           .ant-col {
             height: 100%;
           }
@@ -353,6 +362,7 @@ const CourseProgress = () => {
             height: 100%;
             align-items: center;
             background: #000;
+            width: unset;
             .progress_circle {
               .ant-progress-inner {
                 width: 50px !important;
@@ -395,7 +405,11 @@ const CourseProgress = () => {
             cursor: pointer;
           }
           .video_wrapper {
+            display: ${videoLoading ? 'none' : ''};
             height: 30%;
+            video {
+              border-radius: 5px;
+            }
           }
           .document_content {
             display: flex;
@@ -518,9 +532,14 @@ const CourseProgress = () => {
         @media (min-width: 1500px) {
           max-width: 90%;
           .video_wrapper {
-            visibility: ${videoLoading ? 'hidden' : ''};
+            /* visibility: ${videoLoading ? 'hidden' : ''}; */
+            display: ${videoLoading ? 'none' : ''};
+
             height: 16.7%;
             margin: auto;
+            video {
+              border-radius: 5px;
+            }
           }
         }
         .ant-collapse {
@@ -537,51 +556,50 @@ const CourseProgress = () => {
       `}
     >
       <Row className="course_header_wrapper">
-        <Col span={12}>
-          <div className="header-group">
-            <Link href={`${RoutePaths.HOME}`} className="home_header">
-              {`ECourse`}
-            </Link>
-            <SwapOutlined />
-            <Link href={`${RoutePaths.COURSE_DETAIL}?id=${course?.id}`} className="course_header">
-              {course?.name}
-            </Link>
-          </div>
-        </Col>
-        <Col span={12} className="right_box">
-          <div className="rating">
-            <StarFilled />
-            <Button className="rating_btn" onClick={() => setOpenRatingModal(true)}>
-              Đánh giá
-            </Button>
-          </div>
-
-          <div className="progress">
-            <Progress
-              className="progress_circle"
-              type="circle"
-              strokeColor={{
-                '0%': '#108ee9',
-                '100%': '#87d068',
-              }}
-              percent={Math.round(calculateProgress().progress_num)}
+        {/* <Col span={20}> */}
+        <div className="header-group">
+          <Link href={`${RoutePaths.HOME}`} className="home_header">
+            <HomeOutlined
+              css={css`
+                font-size: 20px !important;
+              `}
             />
-            <span className="progress_label">
-              <Popover
-                content={`${calculateProgress().done + '/' + calculateProgress().sum} đã hoàn thành`}
-                placement="bottom"
-              >
-                Tiến độ
-                <DownOutlined />
-              </Popover>
-            </span>
-          </div>
-        </Col>
+          </Link>
+          <SwapOutlined />
+          <Link href={`${RoutePaths.COURSE_DETAIL}?id=${course?.id}`} className="course_header">
+            {course?.name}
+          </Link>
+        </div>
+        {/* </Col> */}
+        {/* <Col span={4} className="right_box"> */}
+        <div className="progress">
+          <Progress
+            className="progress_circle"
+            type="circle"
+            strokeColor={{
+              '0%': '#108ee9',
+              '100%': '#87d068',
+            }}
+            percent={Math.round(calculateProgress().progress_num)}
+          />
+          <span className="progress_label">
+            <Popover
+              content={`${calculateProgress().done + '/' + calculateProgress().sum} đã hoàn thành`}
+              placement="bottom"
+            >
+              Tiến độ
+              <DownOutlined />
+            </Popover>
+          </span>
+        </div>
+        {/* </Col> */}
       </Row>
+      <Divider />
       <div className="">
         <Row>
           <Col span={16} className="course_content">
             <Row>
+              {videoLoading && <Skeleton height={150} />}
               {!_.isEmpty(state.selectedVideo) ? (
                 <div className="video_wrapper">
                   <ReactPlayer

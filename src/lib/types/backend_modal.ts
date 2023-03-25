@@ -243,10 +243,16 @@ export interface Course {
 }
 
 // ===========================================Classes===========================================
+export enum RequestStatus {
+  ACCEPTED = 'accepted',
+  REQUESTED = 'requested',
+  AVAILABLE = 'available',
+}
+
 export interface Class {
   id: string;
   name: string;
-  user_accepted: boolean;
+  request_status: RequestStatus;
   course: Course;
 }
 
