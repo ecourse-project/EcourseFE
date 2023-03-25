@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 
-import { Breadcrumb, Col, Divider, Empty, Spin } from 'antd';
+import { Breadcrumb, Card, Col, Divider, Empty, Row, Spin } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -16,6 +16,8 @@ import RoutePaths from 'src/lib/utils/routes';
 
 import { HomeOutlined, Loading3QuartersOutlined, SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
+import HomeSide from 'src/components/home/homeSide';
+import DocCourseItemSkeleton from 'src/components/skeleton/document-skeleton';
 
 interface DocumentParams {
   page?: number;
@@ -95,25 +97,27 @@ const CourseUI: React.FC = () => {
           <Breadcrumb.Item>{UpperCaseFirstLetter(params.course === 'ALL' ? '' : params.course || '')}</Breadcrumb.Item>
         </Breadcrumb>
       </Divider>
-      {loading ? (
-        <div style={{ height: '72px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <Spin indicator={antIcon} />
-        </div>
-      ) : (
-        <>
-          <DocCourseWrapper>
-            {listCourse?.results?.length ? (
-              listCourse?.results?.map((e, i) => {
-                return (
-                  <Col key={i} className="item">
-                    <CourseItem course={e} />
-                  </Col>
-                );
-              })
+      <Row gutter={16}>
+        <Col span={18}>
+          <Card>
+            {loading ? (
+              <DocCourseItemSkeleton />
             ) : (
-              <Empty />
+              <DocCourseWrapper>
+                {listCourse?.results?.length ? (
+                  listCourse?.results?.map((e, i) => {
+                    return (
+                      <Col key={i} className="item">
+                        <CourseItem course={e} />
+                      </Col>
+                    );
+                  })
+                ) : (
+                  <Empty />
+                )}
+              </DocCourseWrapper>
             )}
-          </DocCourseWrapper>
+          </Card>
           <div
             css={css`
               text-align: center;
@@ -127,8 +131,11 @@ const CourseUI: React.FC = () => {
               onChange={onChangePage}
             />
           </div>
-        </>
-      )}
+        </Col>
+        <Col span={6}>
+          <HomeSide />
+        </Col>
+      </Row>
     </div>
   );
 };

@@ -6,9 +6,10 @@ import Layout from 'src/components/common/Layout';
 import ContextProvider from 'src/lib/context';
 import { Provider } from 'react-redux';
 import { store } from 'src/lib/config/reduxStore';
-// import 'antd/dist/antd.css';
 import 'src/styles/global.scss';
 import Logo from 'public/images/ecourseLogo.png';
+import 'react-loading-skeleton/dist/skeleton.css';
+import { SkeletonTheme } from 'react-loading-skeleton';
 
 const MyApp = ({ Component, pageProps }) => (
   <>
@@ -18,7 +19,9 @@ const MyApp = ({ Component, pageProps }) => (
     </Head>
     <Provider store={store}>
       <ContextProvider>
-        <Component {...pageProps} />
+        <SkeletonTheme baseColor="#777777">
+          <Component {...pageProps} />
+        </SkeletonTheme>
       </ContextProvider>
     </Provider>
   </>

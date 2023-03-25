@@ -3,6 +3,7 @@
 import { apiClient } from 'src/lib/config/apiClient';
 import {
   CalculatePriceArgs,
+  Class,
   Course,
   CourseComment,
   CreateOrderArg,
@@ -23,6 +24,7 @@ import {
   OVerifyToken,
   Pagination,
   PaginationParams,
+  Post,
   Quiz,
   QuizResult,
   QuizResultArgs,
@@ -31,6 +33,7 @@ import {
   Rating,
   RatingEnum,
   RatingStats,
+  RequestStatus,
   TotalPrice,
   UpdateLessonArgs,
   UpdateProgressArgs,
@@ -49,8 +52,8 @@ const parseParamsToUrL = (url: string, params: string[], paramsName: string) => 
 
 export const apiURL = {
   login: () => 'api/users-auth/token/',
+  refresh: () => 'api/users-auth/token/refresh/',
   me: () => 'api/users/me/',
-  refresh: () => `api/users-auth/token/refresh/`,
   register: () => 'api/users-auth/registration/',
   existEmail: (email) => `api/users/exists/?email=${email}`,
   resetPwd: () => 'api/users/password-reset/',
@@ -122,6 +125,32 @@ export const apiURL = {
   listHeaders: () => `api/settings/headers/`,
   getHome: () => `api/settings/home/`,
   initData: () => `api/settings/init/`,
+
+  getHomeClasses: (limit, page, topic?, class_id?: string[]) => {
+    let url = `api/classes/home/?limit=${limit}&page=${page}&topic=${topic}`;
+    if (class_id) {
+      url = parseParamsToUrL(url, class_id, `class_id`);
+    }
+    return url;
+  },
+  listClasses: (limit, page, topic?, class_id?: string[]) => {
+    let url = `api/classes/?limit=${limit}&page=${page}&topic=${topic}`;
+    if (class_id) {
+      url = parseParamsToUrL(url, class_id, `class_id`);
+    }
+    return url;
+  },
+  getClassDetail: (class_id) => `api/classes/detail/?class_id=${class_id}`,
+  requestJoinClass: () => `api/classes/join-request/`,
+
+  getPostDetail: (post_id) => `api/posts/detail/&post_id=${post_id}`,
+  listPosts: (limit, page, topic?, post_id?: string[]) => {
+    let url = `api/posts/?limit=${limit}&page=${page}&topic=${topic}`;
+    if (post_id) {
+      url = parseParamsToUrL(url, post_id, `post_id`);
+    }
+    return url;
+  },
 };
 
 class CourseService {
@@ -312,6 +341,30 @@ class CourseService {
 
   static initData(): Promise<{ success: true }> {
     return apiClient.get(apiURL.initData());
+  }
+
+  static getHomeClasses(limit: number, page: number, topic?: string, class_id?: string[]): Promise<Pagination<Class>> {
+    return apiClient.get(apiURL.getHomeClasses(limit, page, topic, class_id));
+  }
+
+  static listClasses(limit: number, page: number, topic?: string, class_id?: string[]): Promise<Pagination<Class>> {
+    return apiClient.get(apiURL.listClasses(limit, page, topic, class_id));
+  }
+
+  static getClassDetail(class_id: string): Promise<Class> {
+    return apiClient.get(apiURL.getClassDetail(class_id));
+  }
+
+  static requestJoinClass(class_id: string): Promise<{ request_status: RequestStatus }> {
+    return apiClient.post(apiURL.requestJoinClass(), { class_id: class_id });
+  }
+
+  static listPosts(limit: number, page: number, topic?: string, post_id?: string[]): Promise<Pagination<Post>> {
+    return apiClient.get(apiURL.listPosts(limit, page, topic, post_id));
+  }
+
+  static getPostDetail(post_id: string): Promise<Post> {
+    return apiClient.get(apiURL.getPostDetail(post_id));
   }
 }
 export default CourseService;

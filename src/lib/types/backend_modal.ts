@@ -138,6 +138,7 @@ export interface Document {
   is_favorite?: boolean;
   rating_detail?: Rating[];
   my_rating?: Rating;
+  download: boolean;
 }
 
 export interface IDocumentUpload {
@@ -222,16 +223,16 @@ export interface Course {
   name: string;
   topic: Topic;
   description: string;
-  price: number;
-  sold: number;
+  price?: number;
+  sold?: number;
   lessons?: Lesson[];
   progress?: number;
   status?: ProgressStatusEnum;
   thumbnail?: OImageUpload;
   sale_status?: SaleStatusEnum;
-  views: number;
-  rating: number;
-  num_of_rates: number;
+  // views: number;
+  // rating: number;
+  // num_of_rates: number;
   mark?: number;
   is_done_quiz?: boolean;
   is_favorite?: boolean;
@@ -239,6 +240,20 @@ export interface Course {
   my_rating?: Rating;
   quiz_detail?: QuizResult;
   rating_stats?: RatingStats;
+}
+
+// ===========================================Classes===========================================
+export enum RequestStatus {
+  ACCEPTED = 'accepted',
+  REQUESTED = 'requested',
+  AVAILABLE = 'available',
+}
+
+export interface Class {
+  id: string;
+  name: string;
+  request_status: RequestStatus;
+  course: Course;
 }
 
 // ===========================================Comments===========================================
@@ -404,6 +419,8 @@ export interface QuizResult {
 export enum NavTypeEnum {
   DOCUMENT = 'DOCUMENT',
   COURSE = 'COURSE',
+  CLASS = 'CLASS',
+  POST = 'POST',
 }
 export interface NavDetail {
   type: NavTypeEnum;
@@ -418,10 +435,23 @@ export interface Nav {
 export interface HomepageDetail {
   document_id: string[];
   course_id: string[];
+  class_id: string[];
+  post_id: string[];
 }
 
 export interface Homepage {
   topic: string;
   detail: HomepageDetail;
 }
-//========================================================
+
+// ===========================================Post===========================================
+export interface Post {
+  id: string;
+  created: string;
+  modified: string;
+  name: string;
+  topic: string;
+  content: string;
+  thumbnail: OImageUpload;
+  images: OImageUpload[];
+}

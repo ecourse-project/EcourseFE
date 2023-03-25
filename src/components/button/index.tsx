@@ -29,6 +29,7 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
     borderRadius,
     btnWidth,
     bgColor,
+    loading,
     ...rest
   } = props;
   const getSize = () => {
@@ -179,14 +180,45 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
         .ant-btn-loading-icon {
           position: relative;
           .anticon.anticon-loading.anticon-spin {
-            position: absolute;
-            top: -7px;
-            left: -35px;
-            bottom: unset;
-            right: unset;
+            font-size: 23px;
             padding: 0;
             margin: 0;
             border: none;
+          }
+        }
+        .lds-ring {
+          display: inline-block;
+          position: relative;
+          width: 80px;
+          height: 80px;
+        }
+        .lds-ring div {
+          box-sizing: border-box;
+          display: block;
+          position: absolute;
+          width: 30px;
+          height: 30px;
+          margin: 25px;
+          border: 4px solid;
+          border-radius: 50%;
+          animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+          border-color: #70d1c1 transparent transparent transparent;
+        }
+        .lds-ring div:nth-child(1) {
+          animation-delay: -0.45s;
+        }
+        .lds-ring div:nth-child(2) {
+          animation-delay: -0.3s;
+        }
+        .lds-ring div:nth-child(3) {
+          animation-delay: -0.15s;
+        }
+        @keyframes lds-ring {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
           }
         }
         &.btn-cmt {
@@ -221,72 +253,7 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
             color: #000;
           }
         }
-        &.btn-agentlookup {
-          background-color: #faae18 !important;
-          transition: all 400ms ease;
-          color: #000;
-          font-weight: 700;
-          letter-spacing: initial;
-          &:hover {
-            letter-spacing: 8px;
-            color: #000;
-          }
-        }
-        &.btn-website {
-          min-width: 200px;
-          min-height: 50px;
-          margin-top: 20px;
-          padding-top: 12px;
-          padding-bottom: 12px;
-          border-radius: 3px;
-          background-color: #000;
-          font-weight: 500;
-          letter-spacing: 4px;
-          text-transform: uppercase;
-          display: inline-block;
-          padding: 9px 15px;
-          background-color: #3898ec;
-          color: white;
-          border: 0;
-          line-height: inherit;
-          text-decoration: none;
-          cursor: pointer;
-          border-radius: 0;
-          border-radius: 4px;
-        }
-        &.btn-generic {
-          font-size: 18px;
-          height: 45px !important;
-          max-width: 200px !important;
-          background-color: #ffa900 !important;
-          font-weight: 500;
-          text-transform: uppercase;
-          border: none;
-          margin-top: 30px;
-          padding-top: 12px;
-          padding-bottom: 12px;
-          border-radius: 3px;
-          font-weight: 500 !important;
-          letter-spacing: 4px;
-          display: inline-block;
-          padding: 9px 15px;
-          color: white;
-          border: 0;
-          line-height: inherit;
-          text-decoration: none;
-          cursor: pointer;
-          &:active,
-          &:focus,
-          &:hover {
-            background-color: #ffa900 !important;
-            color: #fff;
-            border: none;
-          }
-          @media only screen and (max-width: ${theme.media.phones}px) {
-            max-width: 100% !important;
-            margin-top: 46px;
-          }
-        }
+
         &.btn-setting {
           padding-right: 40px;
           padding-left: 40px;
@@ -312,43 +279,7 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
             letter-spacing: 4px;
           }
         }
-        &.btn-protected {
-          height: 48px;
-          padding: 12px 20px 12px 24px;
-          justify-content: center;
-          align-items: center;
-          border-style: none;
-          border-radius: 0px;
-          background-color: #000;
-          background-image: none;
-          transition: box-shadow 600ms ease, border-color 600ms ease, color 600ms ease, background-color 600ms ease;
-          color: #fff;
-          font-size: 14px;
-          line-height: 20px;
-          font-weight: 400;
-          text-align: center;
-          letter-spacing: 4px;
-          text-decoration: none;
-          text-transform: uppercase;
-          &:hover {
-            background-color: #ffa535 !important;
-          }
-        }
-        &.bth-header {
-          font-weight: 300;
-          font-size: 14px;
-          opacity: 0.8;
-          @media only screen and (max-width: ${theme.media.desktops}px) {
-            height: 36px;
-            font-size: 12px;
-          }
-          @media only screen and (max-width: ${theme.media.tablets}px) {
-            letter-spacing: 2px;
-          }
-        }
-        &.shadow-inset {
-          box-shadow: inset 0 0 0 1px hsl(0deg 0% 100% / 50%) !important;
-        }
+
         &.ant-btn {
           position: unset !important;
           .fa-icon {
@@ -366,59 +297,7 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
             }
           }
         }
-        &.overview-btn {
-          min-width: 200px;
 
-          letter-spacing: 4px;
-        }
-        &.btn-downsizes {
-          max-width: 200px !important;
-          background-color: #ffa535 !important;
-          transition: all 500ms ease;
-          font-weight: 500;
-          text-transform: uppercase;
-          border: none;
-          margin-top: 20px;
-          padding-top: 12px;
-          padding-bottom: 12px;
-          border-radius: 3px;
-          letter-spacing: 4px;
-          display: inline-block;
-          padding: 9px 15px;
-          color: white;
-          border: 0;
-          line-height: inherit;
-          text-decoration: none;
-          cursor: pointer;
-          &:hover {
-            background-color: #0096f4 !important;
-            color: #fff;
-          }
-          @media only screen and (max-width: ${theme.media.phones}px) {
-            max-width: 100% !important;
-            margin-top: 46px;
-          }
-        }
-        &.btn-managetAgents {
-          max-width: 100% !important;
-          height: 54px;
-          background-color: #ffa535 !important;
-          transition: all 400ms ease;
-          text-transform: uppercase;
-          border-radius: 3px;
-          letter-spacing: 0px;
-          display: inline-block;
-          padding: 1px 15px;
-          color: #000;
-          border: 0;
-          line-height: inherit;
-          text-decoration: none;
-          cursor: pointer;
-          font-weight: 600;
-          &:hover {
-            border: none;
-          }
-        }
         ${colorHover
           ? `
         &:hover,
@@ -461,7 +340,16 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
       disabled={disabled}
       {...rest}
     >
-      {children}
+      {loading ? (
+        <div className="lds-ring">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      ) : (
+        children
+      )}
     </Button>
   );
 });

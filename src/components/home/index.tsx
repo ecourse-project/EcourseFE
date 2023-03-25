@@ -1,10 +1,10 @@
-import { Col, Spin } from 'antd';
+import { Card, Col, Spin } from 'antd';
 import * as React from 'react';
 import CourseService from 'src/lib/api/course';
 import { Course, Document, Homepage, Pagination } from 'src/lib/types/backend_modal';
 import { StorageKeys } from 'src/lib/utils/enum';
 
-import { AppstoreAddOutlined, Loading3QuartersOutlined } from '@ant-design/icons';
+import { AppstoreAddOutlined, Loading3QuartersOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 
 import CourseItem from '../course/course-item';
@@ -63,53 +63,59 @@ export default function HomeData(props: IHomeData) {
   return (
     <div
       css={css`
+        margin-bottom: 10px;
         .title {
-          font-size: 25px;
+          font-size: 14px;
           font-weight: 700;
           text-decoration: underline;
         }
-        .anticon-appstore-add {
-          font-size: 25px;
-          margin: 5px;
-        }
       `}
     >
-      <AppstoreAddOutlined />
-      <span className="title">{homeData.topic}</span>
-      {loading ? (
-        <div style={{ height: '72px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <Spin indicator={antIcon} />
-        </div>
-      ) : (
-        <>
-          <DocCourseWrapper>
-            {listDoc?.results?.length ? (
-              listDoc?.results?.map((e, i) => {
-                return (
-                  <Col key={i}>
-                    <DocItem document={e} />
-                  </Col>
-                );
-              })
-            ) : (
-              <></>
-            )}
-          </DocCourseWrapper>
-          <DocCourseWrapper>
-            {listCourse?.results?.length ? (
-              listCourse?.results?.map((e, i) => {
-                return (
-                  <Col key={i}>
-                    <CourseItem course={e} />
-                  </Col>
-                );
-              })
-            ) : (
-              <></>
-            )}
-          </DocCourseWrapper>
-        </>
-      )}
+      {/* <AppstoreAddOutlined /> */}
+      <Card
+        title={homeData.topic}
+        extra={
+          <a href="#">
+            <UnorderedListOutlined />
+            Xem tất cả
+          </a>
+        }
+      >
+        {loading ? (
+          <div style={{ height: '72px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Spin indicator={antIcon} />
+          </div>
+        ) : (
+          <>
+            <DocCourseWrapper>
+              {listDoc?.results?.length ? (
+                listDoc?.results?.map((e, i) => {
+                  return (
+                    <Col key={i}>
+                      <DocItem document={e} />
+                    </Col>
+                  );
+                })
+              ) : (
+                <></>
+              )}
+            </DocCourseWrapper>
+            <DocCourseWrapper>
+              {listCourse?.results?.length ? (
+                listCourse?.results?.map((e, i) => {
+                  return (
+                    <Col key={i}>
+                      <CourseItem course={e} />
+                    </Col>
+                  );
+                })
+              ) : (
+                <></>
+              )}
+            </DocCourseWrapper>
+          </>
+        )}
+      </Card>
     </div>
   );
 }

@@ -165,8 +165,9 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
               <p className="title">{document.name}</p>
 
               {/* <Tag color="geekblue">Best Seller</Tag> */}
-              <p>Cập nhật: {formatDate(document.created)}</p>
-              <p>Dung lượng: {(Number(document?.file?.file_size) / 1024000).toFixed(1)} MB</p>
+              <p>Cập nhật: {formatDate(document?.modified)}</p>
+              {/* <p>Dung lượng: {(Number(document?.file?.file_size) / 1024000).toFixed(1)} MB</p> */}
+              <p>Dung lượng: {document?.file?.file_size} KB</p>
 
               <p>{document.description}</p>
               <p className="heart" onClick={() => handleAddFav()}>
@@ -182,9 +183,8 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
             </div>
 
             <div className="doc_info">
-              {' '}
               <div className="title">{document.name}</div>
-              <p className="download">
+              {/* <p className="download">
                 <VerticalAlignBottomOutlined />
                 Số lượt tải: {document.sold}
               </p>
@@ -195,7 +195,6 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
               <p className="download">
                 <LikeFilled />
                 <span className="rate-score">{Number(document?.rating).toFixed(1)}</span>
-                {/* <Rate defaultValue={Number(Number(document.rating).toFixed(1))} allowHalf disabled /> */}
                 <span>
                   <Rating
                     name="size-large"
@@ -203,12 +202,11 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
                     size="small"
                     readOnly
                     style={{ padding: '0 5px' }}
-                    // emptyIcon={<StarIcon style={{ opacity: 1 }} fontSize="inherit" />}
                   />
                 </span>
 
                 {`(${document.num_of_rates})`}
-              </p>
+              </p> */}
             </div>
           </Link>
           <div className="price-tag">
