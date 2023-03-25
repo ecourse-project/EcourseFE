@@ -11,6 +11,7 @@ import CommentForm from './comment-form';
 import CommentItem from './comment-item';
 import { useSelector } from 'react-redux';
 import { Comment } from '@ant-design/compatible';
+import { UserOutlined } from '@ant-design/icons';
 
 // interface CommentProps {
 // 	onAddComment: (value) => void;
@@ -80,7 +81,7 @@ const CommentSection = () => {
       <Row className="comment_group">
         <div className="comment_list">
           <Comment
-            avatar={<Avatar src="https://i.pravatar.cc/300" alt="Han Solo" />}
+            avatar={<Avatar src={<UserOutlined />} alt="avata" shape="square" />}
             content={<CommentForm onAddComment={onAddComment} />}
           />
           {comment?.length ? (

@@ -1,4 +1,4 @@
-import { Breadcrumb, Button, Col, Divider, List, Row, Statistic, Tabs, Tag, Typography } from 'antd';
+import { Avatar, Breadcrumb, Button, Col, Divider, List, Row, Statistic, Tabs, Tag, Typography } from 'antd';
 import { isEmpty } from 'lodash';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -33,6 +33,7 @@ import {
   StarFilled,
   SwapOutlined,
   SyncOutlined,
+  UserOutlined,
   VerticalLeftOutlined,
 } from '@ant-design/icons';
 import { PageHeader } from '@ant-design/pro-layout';
@@ -256,11 +257,11 @@ const CourseDetail: React.FC = () => {
       key: 'comment',
       children: <CommentSection />,
     }, // remember to pass the key prop
-    {
-      label: 'Nhận xét',
-      key: 'feedback',
-      children: <FeedbackSection rateList={course?.rating_detail || []} />,
-    },
+    // {
+    //   label: 'Nhận xét',
+    //   key: 'feedback',
+    //   children: <FeedbackSection rateList={course?.rating_detail || []} />,
+    // },
   ];
   return (
     <div
@@ -383,7 +384,8 @@ const CourseDetail: React.FC = () => {
         //   </>
         // }
         avatar={{
-          src: 'https://avatars1.githubusercontent.com/u/8186664?s=460&v=4',
+          src: `${course.thumbnail?.image_path}`,
+          shape: 'square',
         }}
         extra={
           course.sale_status !== SaleStatusEnum.PENDING && [
@@ -413,18 +415,18 @@ const CourseDetail: React.FC = () => {
                 ''
               )}
             </Button>,
-            course.sale_status === SaleStatusEnum.BOUGHT && (
-              <Button
-                key={2}
-                type="primary"
-                // className="rating-btn"
-                className="add-btn"
-                onClick={() => setOpenRatingModal(true)}
-                style={{ backgroundColor: '#fff', color: '#000' }}
-              >
-                Đánh giá <StarFilled />
-              </Button>
-            ),
+            // course.sale_status === SaleStatusEnum.BOUGHT && (
+            //   <Button
+            //     key={2}
+            //     type="primary"
+            //     // className="rating-btn"
+            //     className="add-btn"
+            //     onClick={() => setOpenRatingModal(true)}
+            //     style={{ backgroundColor: '#fff', color: '#000' }}
+            //   >
+            //     Đánh giá <StarFilled />
+            //   </Button>
+            // ),
           ]
         }
       >

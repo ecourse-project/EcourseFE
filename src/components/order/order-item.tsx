@@ -12,6 +12,7 @@ import { formatCurrency, formatCurrencySymbol } from 'src/lib/utils/currency';
 import { useDispatch } from 'react-redux';
 import RoutePaths from 'src/lib/utils/routes';
 import { AskForSave } from '../alert/SweetAlert';
+import PaymentInfo from './paymentInfo';
 const { Panel } = Collapse;
 const { Option } = Select;
 const text = `
@@ -191,7 +192,7 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
                           description={item.description}
                           style={{ marginRight: '20px' }}
                         />
-                        <div>{formatCurrency(item.price)}</div>
+                        <div>{formatCurrency(item.price || 0)}</div>
                       </Skeleton>
                     </List.Item>
                   )}
@@ -199,14 +200,19 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
               ) : (
                 <></>
               )}
-              <Row className="total">
+              {orderItem.status === OrderStatus.PENDING ? (
+                <PaymentInfo orderID={orderItem.code.split('-')[0].slice(3, 10)} price={orderItem.total_price} />
+              ) : (
+                ''
+              )}
+              {/* <Row className="total">
                 <Statistic
                   className="total2"
                   title="Tổng tiền"
                   value={formatCurrencySymbol(orderItem.total_price, 'VND', true)}
                   precision={0}
                 />
-              </Row>
+              </Row> */}
             </Card>
           </Panel>
         </Collapse>

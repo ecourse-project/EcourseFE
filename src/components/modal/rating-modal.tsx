@@ -1,3 +1,4 @@
+import { UserOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 import { Avatar, Card, Rate } from 'antd';
 import Meta from 'antd/lib/card/Meta';
@@ -103,7 +104,8 @@ const RatingModal: React.FC<RatingModalProps> = (props) => {
           <Card>
             <Meta
               // avatar={<Avatar src={rated?.user?.avatar || 'https://joeschmoe.io/api/v1/random'} />}
-              avatar={<Avatar src={'https://joeschmoe.io/api/v1/random'} />}
+              // avatar={<Avatar src={'https://joeschmoe.io/api/v1/random'} />}
+              avatar={<Avatar src={<UserOutlined />} alt="avata" shape="square" />}
               title={
                 <>
                   {rated?.user?.full_name}
