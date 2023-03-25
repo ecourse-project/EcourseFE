@@ -111,7 +111,7 @@ export const LearningItem: React.FC<LearningItem> = (props) => {
 
   return (
     <>
-      <RatingModal
+      {/* <RatingModal
         visible={openRatingModal}
         countStar={(value) => setStar(value)}
         onChangeFeedback={(value) => setFeedback(value)}
@@ -119,7 +119,7 @@ export const LearningItem: React.FC<LearningItem> = (props) => {
         onSave={handleSaveRating}
         rated={isEmpty(myRate) ? course?.my_rating : myRate}
         defaultStar={star}
-      />
+      /> */}
       {course ? (
         <ItemWrapper>
           <Card
@@ -139,34 +139,6 @@ export const LearningItem: React.FC<LearningItem> = (props) => {
                   : course.progress !== 0
                   ? `${course.progress}% đã hoàn thành`
                   : 'Bắt đầu học'}
-              </span>
-              <span>
-                <div>
-                  {Number(course?.my_rating?.rating) ? (
-                    <div
-                      className="rate"
-                      onClick={() => {
-                        setOpenRatingModal(true);
-                      }}
-                    >
-                      <div style={{ fontSize: '11px' }}>Đánh giá của bạn</div>
-                      <Rate
-                        defaultValue={course.my_rating?.rating || star}
-                        disabled={!!Number(course.rating)}
-                        onChange={(value) => {
-                          setStar(value);
-                          setOpenRatingModal(true);
-                        }}
-                        value={course.my_rating?.rating || star}
-                      />
-                    </div>
-                  ) : (
-                    <>
-                      <div style={{ fontSize: '11px' }}>Đánh giá trung bình </div>
-                      <Rate defaultValue={course.rating} disabled={true} value={course.rating} />
-                    </>
-                  )}
-                </div>
               </span>
             </div>
           </Card>

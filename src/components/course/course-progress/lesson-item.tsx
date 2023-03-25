@@ -16,6 +16,7 @@ interface LessonItemProps {
   lesson: Lesson;
   isCourseDetail?: boolean;
   index?: number;
+  isShowLessonDetail: boolean;
 }
 
 const DisplayDurationTime = (duration) => {
@@ -49,7 +50,7 @@ const DisplayDurationTime = (duration) => {
 };
 
 const LessonItem: React.FC<LessonItemProps> = (props) => {
-  const { lesson, isCourseDetail = false, index } = props;
+  const { lesson, isCourseDetail = false, index, isShowLessonDetail } = props;
   const { state, dispatch } = useContext(CourseProgressContext);
 
   const [checkedVideo, setCheckedVideo] = useState<string[]>(lesson.videos_completed || []);
@@ -176,127 +177,131 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
     >
       <List.Item>
         <Collapse defaultActiveKey={['1']} destroyInactivePanel className="course_lesson">
-          <Panel header={`Bài ${index || 0 + 1}: ${lesson?.name}`} key="1">
-            <Collapse defaultActiveKey={['1']}>
-              {/* <Collapse> */}
-              <Panel
-                header={
-                  <>
-                    <div>Video</div>
-                    {!isCourseDetail ? (
-                      <div>{`${checkedVideo.length} / ${lesson?.videos.length}`}</div>
-                    ) : (
-                      <div>{`${lesson?.videos.length} Video`}</div>
-                    )}
-                  </>
-                }
-                key={'1'}
-                className="course_list_video"
-              >
-                {lesson.videos?.map((v, i) => (
-                  <div
-                    key={i}
-                    className={`course_video_item video_${v.id}`}
-                    onClick={() => {
-                      dispatch({
-                        type: CourseProgressAction.SET_SELECTED_VIDEO,
-                        payload: v,
-                      });
-                      dispatch({
-                        type: CourseProgressAction.SET_CURRENT_LESSON,
-                        payload: lesson.id,
-                      });
-                    }}
+          <Panel header={`Bài ${lesson.lesson_number} ${lesson?.name}`} key="1">
+            {isShowLessonDetail ? (
+              <>
+                <Collapse defaultActiveKey={['1']}>
+                  <Panel
+                    header={
+                      <>
+                        <div>Video</div>
+                        {!isCourseDetail ? (
+                          <div>{`${checkedVideo.length} / ${lesson?.videos.length}`}</div>
+                        ) : (
+                          <div>{`${lesson?.videos.length} Video`}</div>
+                        )}
+                      </>
+                    }
+                    key={'1'}
+                    className="course_list_video"
                   >
-                    {!isCourseDetail && (
-                      <input
-                        value={v.id}
-                        type="checkbox"
-                        checked={checkedVideo.includes(v.id)}
-                        onChange={(e) => {
-                          if (checkedVideo.includes(e.target.value)) {
-                            const newChecked = checkedVideo.filter((v) => v !== e.target.value);
-                            setCheckedVideo(newChecked);
-                          } else {
-                            setCheckedVideo([...checkedVideo, e.target.value]);
-                          }
+                    {lesson.videos?.map((v, i) => (
+                      <div
+                        key={i}
+                        className={`course_video_item video_${v.id}`}
+                        onClick={() => {
+                          dispatch({
+                            type: CourseProgressAction.SET_SELECTED_VIDEO,
+                            payload: v,
+                          });
+                          dispatch({
+                            type: CourseProgressAction.SET_CURRENT_LESSON,
+                            payload: lesson.id,
+                          });
                         }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                        }}
-                      />
-                    )}
-                    <div className="item_info">
-                      <div className="">{`${i + 1}. ${v.file_name}`}</div>
-                      <div className="video_duration">
-                        <PlayCircleFilled />
-                        {`${DisplayDurationTime(v.duration)}s`}
+                      >
+                        {!isCourseDetail && (
+                          <input
+                            value={v.id}
+                            type="checkbox"
+                            checked={checkedVideo.includes(v.id)}
+                            onChange={(e) => {
+                              if (checkedVideo.includes(e.target.value)) {
+                                const newChecked = checkedVideo.filter((v) => v !== e.target.value);
+                                setCheckedVideo(newChecked);
+                              } else {
+                                setCheckedVideo([...checkedVideo, e.target.value]);
+                              }
+                            }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                            }}
+                          />
+                        )}
+                        <div className="item_info">
+                          <div className="">{`${i + 1}. ${v.file_name}`}</div>
+                          <div className="video_duration">
+                            <PlayCircleFilled />
+                            {`${DisplayDurationTime(v.duration)}s`}
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                ))}
-              </Panel>
-            </Collapse>
-            <Collapse defaultActiveKey="1">
-              {/* <Collapse> */}
-              <Panel
-                header={
-                  <>
-                    <div>Tệp</div>
-                    {!isCourseDetail ? (
-                      <div>{`${checkedDoc.length} / ${lesson?.documents.length}`}</div>
-                    ) : (
-                      <div>{`${lesson?.documents.length} Tệp`}</div>
-                    )}
-                  </>
-                }
-                key={'1'}
-                className="course_list_video"
-              >
-                {lesson.documents?.map((v, i) => (
-                  <div
-                    key={i}
-                    className={`course_video_item video_${v.id}`}
-                    onClick={() => {
-                      dispatch({
-                        type: CourseProgressAction.SET_SELECTED_DOC,
-                        payload: v,
-                      });
-                      dispatch({
-                        type: CourseProgressAction.SET_CURRENT_LESSON,
-                        payload: lesson.id,
-                      });
-                    }}
+                    ))}
+                  </Panel>
+                </Collapse>
+                <Collapse defaultActiveKey="1">
+                  <Panel
+                    header={
+                      <>
+                        <div>Tệp</div>
+                        {!isCourseDetail ? (
+                          <div>{`${checkedDoc.length} / ${lesson?.documents.length}`}</div>
+                        ) : (
+                          <div>{`${lesson?.documents.length} Tệp`}</div>
+                        )}
+                      </>
+                    }
+                    key={'1'}
+                    className="course_list_video"
                   >
-                    {!isCourseDetail && (
-                      <input
-                        value={v.id}
-                        type="checkbox"
-                        checked={checkedDoc.includes(v.id)}
-                        onChange={(e) => {
-                          if (checkedDoc.includes(e.target.value)) {
-                            const newChecked = checkedDoc.filter((v) => v !== e.target.value);
-                            setCheckedDoc(newChecked);
-                          } else {
-                            setCheckedDoc([...checkedDoc, e.target.value]);
-                          }
+                    {lesson.documents?.map((v, i) => (
+                      <div
+                        key={i}
+                        className={`course_video_item video_${v.id}`}
+                        onClick={() => {
+                          dispatch({
+                            type: CourseProgressAction.SET_SELECTED_DOC,
+                            payload: v,
+                          });
+                          dispatch({
+                            type: CourseProgressAction.SET_CURRENT_LESSON,
+                            payload: lesson.id,
+                          });
                         }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                        }}
-                      />
-                    )}
-                    <div className="item_info">
-                      <div className="">{`${i + 1}. ${v.name}`}</div>
-                      <div className="video_duration doc">
-                        <FileTextOutlined />
-                        {`${(v?.file?.file_size / 1000000).toFixed(2)} MB`}
+                      >
+                        {!isCourseDetail && (
+                          <input
+                            value={v.id}
+                            type="checkbox"
+                            checked={checkedDoc.includes(v.id)}
+                            onChange={(e) => {
+                              if (checkedDoc.includes(e.target.value)) {
+                                const newChecked = checkedDoc.filter((v) => v !== e.target.value);
+                                setCheckedDoc(newChecked);
+                              } else {
+                                setCheckedDoc([...checkedDoc, e.target.value]);
+                              }
+                            }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                            }}
+                          />
+                        )}
+                        <div className="item_info">
+                          <div className="">{`${i + 1}. ${v.name}`}</div>
+                          <div className="video_duration doc">
+                            <FileTextOutlined />
+                            {`${(v?.file?.file_size / 1000000).toFixed(2)} MB`}
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                ))}
-              </Panel>
-            </Collapse>
+                    ))}
+                  </Panel>
+                </Collapse>
+              </>
+            ) : (
+              <div></div>
+            )}
           </Panel>
         </Collapse>
       </List.Item>

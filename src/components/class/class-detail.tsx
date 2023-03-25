@@ -213,20 +213,21 @@ const CourseDetail: React.FC = () => {
     // } else {
     //   router.push(`${RoutePaths.COURSE_PROGRESS}?id=${course.id}`);
     // }
-    if (classDetail.request_status === RequestStatus.ACCEPTED) {
-      router.push(`${RoutePaths.COURSE_PROGRESS}?id=${course.id}`);
-    } else {
-      try {
-        setLoading(true);
-        const request = await CourseService.requestJoinClass(classDetail.id);
+
+    try {
+      setLoading(true);
+      const request = await CourseService.requestJoinClass(classDetail.id);
+      if (classDetail.request_status === request.request_status) {
+        router.push(`${RoutePaths.COURSE_PROGRESS}?id=${course.id}`);
+      } else {
         setClassDetail((prev) => ({ ...prev, request_status: request.request_status }));
-      } catch (error) {
-        console.log('error request', error);
-      } finally {
-        setTimeout(() => {
-          setLoading(false);
-        }, 500);
       }
+    } catch (error) {
+      console.log('error request', error);
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
     }
   };
 
@@ -442,7 +443,14 @@ const CourseDetail: React.FC = () => {
               className="list_lesson"
               itemLayout="horizontal"
               dataSource={course?.lessons}
-              renderItem={(item, index) => <LessonItem lesson={item} isCourseDetail={true} index={index} />}
+              renderItem={(item, index) => (
+                <LessonItem
+                  lesson={item}
+                  isCourseDetail={true}
+                  index={index}
+                  isShowLessonDetail={classDetail.request_status === RequestStatus.ACCEPTED}
+                />
+              )}
             />
           </Col>
         </Row>
@@ -485,7 +493,7 @@ const CourseDetail: React.FC = () => {
 					/>
 				</div>
 			)} */}
-      <div className="rating-modal-1">
+      {/* <div className="rating-modal-1">
         <RatingModal
           visible={openRatingModal}
           countStar={(value) => setStar(value)}
@@ -494,7 +502,7 @@ const CourseDetail: React.FC = () => {
           onSave={handleSaveRating}
           rated={isEmpty(myRate) ? course?.my_rating : myRate}
         />
-      </div>
+      </div> */}
     </div>
   );
 };

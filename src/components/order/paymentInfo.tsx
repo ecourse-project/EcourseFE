@@ -20,6 +20,9 @@ const PaymentInfo: React.FC<PaymentInfo> = ({ orderID, price }) => {
           font-family: monospace;
           padding: 7px 10px;
         }
+        .content {
+          color: red;
+        }
       `}
     >
       <Card title="Thông tin thanh toán">
@@ -31,11 +34,12 @@ const PaymentInfo: React.FC<PaymentInfo> = ({ orderID, price }) => {
             Chuyển khoản
           </Col>
           <Col span={12} className="left">
-            Mã chuyển khoản
-          </Col>
-          <Col span={12} className="right">
             Mã đơn
           </Col>
+          <Col span={12} className="right">
+            {orderID}
+          </Col>
+
           <Col span={12} className="left">
             Thông tin chuyển khoản
           </Col>
@@ -44,12 +48,15 @@ const PaymentInfo: React.FC<PaymentInfo> = ({ orderID, price }) => {
             <div>Số tài khoản</div>
             <div>Tên ngân hàng và chi nhánh</div>
           </Col>
-
           <Col span={12} className="left">
-            Khuyến mãi
+            Nội dung chuyển khoản
           </Col>
           <Col span={12} className="right">
-            Số tiền khuyến mãi
+            <div>[TÊN] - [MÃ ĐƠN]</div>
+
+            <div>
+              VD: <span className="content">NGUYEN VAN A - {orderID}</span>
+            </div>
           </Col>
           <Col span={12} className="left">
             Thanh toán

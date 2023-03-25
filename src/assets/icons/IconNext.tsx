@@ -12,7 +12,7 @@ const IconNext = (props: SVGProps<SVGSVGElement>): React.ReactElement => (
         r={15}
         transform="translate(0 -0.156)"
         fill="none"
-        stroke="#ffa535"
+        stroke="#24a2ec"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth={2}
@@ -23,7 +23,7 @@ const IconNext = (props: SVGProps<SVGSVGElement>): React.ReactElement => (
         d="M8,8l6.163,6.163L8,20.325"
         transform="translate(7 0.837)"
         fill="none"
-        stroke="#ffa535"
+        stroke="#24a2ec"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth={2}
@@ -34,7 +34,7 @@ const IconNext = (props: SVGProps<SVGSVGElement>): React.ReactElement => (
         x2={12}
         transform="translate(9 14.844)"
         fill="none"
-        stroke="#ffa535"
+        stroke="#24a2ec"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth={2}

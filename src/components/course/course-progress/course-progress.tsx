@@ -42,6 +42,7 @@ import reducer, { CourseProgressAction, CourseProgressContextType } from './cont
 import LessonItem from './lesson-item';
 import QuizSection from './quiz';
 import globalVariable from 'src/lib/config/env';
+import VideoJS from '../../video/videos';
 
 const { Panel } = Collapse;
 export interface CourseParams {
@@ -309,7 +310,48 @@ const CourseProgress = () => {
   useEffect(() => {
     console.log('videoLoading :>> ', videoLoading);
   }, [videoLoading]);
+  const playerRef = React.useRef(null);
+  const videoJsOptions = {
+    autoplay: false,
+    controls: true,
+    responsive: true,
+    preload: 'auto',
+    fluid: true,
+    liveui: true,
+    playbackRates: [0.5, 1, 1.5, 2],
+    controlBar: {
+      skipButtons: {
+        forward: 5,
+      },
+    },
+    displayCurrentQuality: true,
+    defaultQuality: 'auto',
+    qualities: [
+      { name: 'Auto', value: 'auto' },
+      { name: '360p', value: '360' },
+      { name: '720p', value: '720' },
+      { name: '1080p', value: '1080' },
+    ],
+    sources: [
+      {
+        src: state.selectedVideo?.file_path,
+        type: 'video/mp4',
+      },
+    ],
+  };
 
+  const handlePlayerReady = (player) => {
+    playerRef.current = player;
+
+    // You can handle player events here, for example:
+    player.on('waiting', () => {
+      console.log('player is waiting');
+    });
+
+    player.on('dispose', () => {
+      console.log('player will dispose');
+    });
+  };
   return (
     <div
       css={css`
@@ -405,8 +447,8 @@ const CourseProgress = () => {
             cursor: pointer;
           }
           .video_wrapper {
-            display: ${videoLoading ? 'none' : ''};
             height: 30%;
+            width: 100%;
             video {
               border-radius: 5px;
             }
@@ -533,8 +575,7 @@ const CourseProgress = () => {
           max-width: 90%;
           .video_wrapper {
             /* visibility: ${videoLoading ? 'hidden' : ''}; */
-            display: ${videoLoading ? 'none' : ''};
-
+            width: 100%;
             height: 16.7%;
             margin: auto;
             video {
@@ -602,7 +643,7 @@ const CourseProgress = () => {
               {videoLoading && <Skeleton height={150} />}
               {!_.isEmpty(state.selectedVideo) ? (
                 <div className="video_wrapper">
-                  <ReactPlayer
+                  {/* <ReactPlayer
                     url={state.selectedVideo?.file_path}
                     width="100%"
                     height="100%"
@@ -632,7 +673,8 @@ const CourseProgress = () => {
                     playIcon={<PlayCircleOutlined />}
                     light={false}
                     stopOnUnmount={false}
-                  />
+                  /> */}
+                  <VideoJS options={videoJsOptions} onReady={handlePlayerReady} />
                 </div>
               ) : !_.isEmpty(state.selectedDoc) ? (
                 <div className="pdf_wrapper">
@@ -678,13 +720,13 @@ const CourseProgress = () => {
               dataSource={course?.lessons}
               renderItem={(item, i) => (
                 <CourseProgressContext.Provider value={{ state, dispatch }}>
-                  <LessonItem lesson={item} index={i} />
+                  <LessonItem lesson={item} index={i} isShowLessonDetail={true} />
                 </CourseProgressContext.Provider>
               )}
             />
           </Col>
         </Row>
-        <div className="rating-modal-1">
+        {/* <div className="rating-modal-1">
           <RatingModal
             visible={openRatingModal}
             countStar={(value) => setStar(value)}
@@ -693,7 +735,7 @@ const CourseProgress = () => {
             onSave={handleSaveRating}
             rated={isEmpty(myRate) ? course?.my_rating : myRate}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );

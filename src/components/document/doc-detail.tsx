@@ -394,7 +394,7 @@ const DocDetail: React.FC = () => {
         )}
       </PageHeader>
       <Tabs items={items} className="tab-section" />
-      <div className="rating-modal-1">
+      {/* <div className="rating-modal-1">
         <RatingModal
           visible={openRatingModal}
           countStar={(value) => setStar(value)}
@@ -403,7 +403,7 @@ const DocDetail: React.FC = () => {
           onSave={handleSaveRating}
           rated={isEmpty(myRate) ? doc.my_rating : myRate || undefined}
         />
-      </div>
+      </div> */}
     </div>
   );
 };

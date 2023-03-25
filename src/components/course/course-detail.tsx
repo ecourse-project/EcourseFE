@@ -441,7 +441,14 @@ const CourseDetail: React.FC = () => {
               className="list_lesson"
               itemLayout="horizontal"
               dataSource={course?.lessons}
-              renderItem={(item, index) => <LessonItem lesson={item} isCourseDetail={true} index={index} />}
+              renderItem={(item, index) => (
+                <LessonItem
+                  lesson={item}
+                  isCourseDetail={true}
+                  index={index}
+                  isShowLessonDetail={course.sale_status === SaleStatusEnum.BOUGHT}
+                />
+              )}
             />
           </Col>
         </Row>
@@ -484,7 +491,7 @@ const CourseDetail: React.FC = () => {
 					/>
 				</div>
 			)} */}
-      <div className="rating-modal-1">
+      {/* <div className="rating-modal-1">
         <RatingModal
           visible={openRatingModal}
           countStar={(value) => setStar(value)}
@@ -493,7 +500,7 @@ const CourseDetail: React.FC = () => {
           onSave={handleSaveRating}
           rated={isEmpty(myRate) ? course?.my_rating : myRate}
         />
-      </div>
+      </div> */}
     </div>
   );
 };

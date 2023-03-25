@@ -151,7 +151,7 @@ const CartItemRow: React.FC<ChildProps> = ({ document, course, isDeleteBtn = tru
           <div className="price-group">
             <p className="price">
               {/* <TagOutlined /> */}
-              {formatCurrency(course.price, true)}
+              {formatCurrency(course.price || '', true)}
             </p>
             {deleteLoading ? (
               <Spin size="default" />

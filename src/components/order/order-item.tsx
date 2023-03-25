@@ -142,6 +142,7 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
             extra={genExtra()}
           >
             <Card
+              bordered={false}
               title={
                 <Row className="card-title">
                   <Col>{orderItem.status}</Col>
@@ -159,44 +160,50 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
               style={{ width: '100%', textAlign: 'left' }}
             >
               {orderItem.documents.length ? (
-                <List
-                  className="demo-loadmore-list"
-                  itemLayout="horizontal"
-                  dataSource={orderItem.documents}
-                  renderItem={(item) => (
-                    <List.Item>
-                      <Skeleton avatar title={false} active loading={false}>
-                        <List.Item.Meta
-                          title={<a href={`${RoutePaths.DOCUMENT_DETAIL}/?id=${item.id}`}>{item.name}</a>}
-                          description={item.description}
-                          style={{ marginRight: '20px' }}
-                        />
-                        <div>{formatCurrency(item.price)}</div>
-                      </Skeleton>
-                    </List.Item>
-                  )}
-                />
+                <>
+                  <h5>Tài liệu</h5>
+                  <List
+                    className="demo-loadmore-list"
+                    itemLayout="horizontal"
+                    dataSource={orderItem.documents}
+                    renderItem={(item) => (
+                      <List.Item>
+                        <Skeleton avatar title={false} active loading={false}>
+                          <List.Item.Meta
+                            title={<a href={`${RoutePaths.DOCUMENT_DETAIL}/?id=${item.id}`}>{item.name}</a>}
+                            description={item.description}
+                            style={{ marginRight: '20px' }}
+                          />
+                          <div>{formatCurrency(item.price)}</div>
+                        </Skeleton>
+                      </List.Item>
+                    )}
+                  />
+                </>
               ) : (
                 <></>
               )}
               {orderItem.courses.length ? (
-                <List
-                  className="demo-loadmore-list"
-                  itemLayout="horizontal"
-                  dataSource={orderItem.courses}
-                  renderItem={(item) => (
-                    <List.Item>
-                      <Skeleton avatar title={false} active loading={false}>
-                        <List.Item.Meta
-                          title={<a href={`${RoutePaths.COURSE_DETAIL}/?id=${item.id}`}>{item.name}</a>}
-                          description={item.description}
-                          style={{ marginRight: '20px' }}
-                        />
-                        <div>{formatCurrency(item.price || 0)}</div>
-                      </Skeleton>
-                    </List.Item>
-                  )}
-                />
+                <>
+                  <h5>Khoá học</h5>
+                  <List
+                    className="demo-loadmore-list"
+                    itemLayout="horizontal"
+                    dataSource={orderItem.courses}
+                    renderItem={(item) => (
+                      <List.Item>
+                        <Skeleton avatar title={false} active loading={false}>
+                          <List.Item.Meta
+                            title={<a href={`${RoutePaths.COURSE_DETAIL}/?id=${item.id}`}>{item.name}</a>}
+                            description={item.description}
+                            style={{ marginRight: '20px' }}
+                          />
+                          <div>{formatCurrency(item.price || 0)}</div>
+                        </Skeleton>
+                      </List.Item>
+                    )}
+                  />
+                </>
               ) : (
                 <></>
               )}
