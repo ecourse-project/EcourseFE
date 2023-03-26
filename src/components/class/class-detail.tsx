@@ -177,10 +177,8 @@ const CourseDetail: React.FC = () => {
   const content = (
     <div className="content-wrapper">
       <div className="content-detail">
-        <Title>{course?.name}</Title>
         <Paragraph>
           <FileSearchOutlined />
-          {'  '}
           {course?.description}
         </Paragraph>
         <div>
@@ -277,7 +275,7 @@ const CourseDetail: React.FC = () => {
     {
       label: 'Bình luận',
       key: 'comment',
-      children: <CommentSection />,
+      children: <CommentSection course_class_id={classDetail?.course?.id} />,
     }, // remember to pass the key prop
     // {
     //   label: 'Nhận xét',
@@ -393,44 +391,30 @@ const CourseDetail: React.FC = () => {
         </Breadcrumb>
       </Divider>
       <PageHeader
-        title={course?.topic?.name}
+        title={course?.name}
         className="site-page-header"
         // avatar={{
         //   src: 'https://avatars1.githubusercontent.com/u/8186664?s=460&v=4',
         // }}
         avatar={{ src: <UserOutlined /> }}
-        extra={
-          course.sale_status !== SaleStatusEnum.PENDING && [
-            <AppButton
-              key={1}
-              className="card-btn"
-              btnTextColor={'black'}
-              btnStyle={'outline'}
-              btnSize={'small'}
-              btnWidth={'full-w'}
-              loading={loading}
-              disabled={loading}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleUpdateBtn();
-              }}
-            >
-              {btnString}
-            </AppButton>,
-            // course.sale_status === SaleStatusEnum.BOUGHT && (
-            //   <Button
-            //     key={2}
-            //     type="primary"
-            //     // className="rating-btn"
-            //     className="add-btn"
-            //     onClick={() => setOpenRatingModal(true)}
-            //     style={{ backgroundColor: '#fff', color: '#000' }}
-            //   >
-            //     Đánh giá <StarFilled />
-            //   </Button>
-            // ),
-          ]
-        }
+        extra={[
+          <AppButton
+            key={1}
+            className="card-btn"
+            btnTextColor={'black'}
+            btnStyle={'outline'}
+            btnSize={'small'}
+            btnWidth={'full-w'}
+            loading={loading}
+            disabled={loading}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleUpdateBtn();
+            }}
+          >
+            {btnString}
+          </AppButton>,
+        ]}
       >
         <Content extraContent={undefined}>{content}</Content>
         <Row className="course_info">
@@ -463,8 +447,7 @@ const CourseDetail: React.FC = () => {
           }}
         />
       </PageHeader>
-      <Tabs items={items} className="tab-section" />
-
+      {!isEmpty(classDetail) && <Tabs items={items} className="tab-section" />}
       {/* {course.sale_status === SaleStatusEnum.BOUGHT && (
 				<div>
 					{comment?.length ? (
