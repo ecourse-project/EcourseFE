@@ -144,6 +144,7 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
             <div
               css={css`
                 max-width: 300px;
+                min-width: 200px;
                 .title {
                   font-weight: 700;
                   font-size: 15px;
@@ -170,9 +171,9 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
               <p>Dung lượng: {document?.file?.file_size} KB</p>
 
               <p>{document.description}</p>
-              <p className="heart" onClick={() => handleAddFav()}>
+              {/* <p className="heart" onClick={() => handleAddFav()}>
                 {currentDoc.is_favorite ? <HeartFilled /> : <HeartOutlined />}
-              </p>
+              </p> */}
             </div>
           }
           trigger="hover"

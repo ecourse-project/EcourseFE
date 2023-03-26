@@ -2,6 +2,8 @@ import { Image } from 'antd';
 import Logo from 'src/assets/images/logo.png';
 import BannerImg from 'src/assets/images/app-banner.png';
 import styled from '@emotion/styled';
+import Link from 'next/link';
+import RoutePaths from 'src/lib/utils/routes';
 
 const BannerWrapper = styled.div`
   width: 100%;
@@ -27,7 +29,9 @@ const Banner = () => {
   return (
     <BannerWrapper>
       <div className="app-logo">
-        <Image src={Logo.src} preview={false} height={100} />
+        <Link href={RoutePaths.HOME}>
+          <Image src={Logo.src} preview={false} height={100} />
+        </Link>
       </div>
       <div className="app-banner">
         <Image src={BannerImg.src} preview={false} height={100} />

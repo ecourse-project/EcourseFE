@@ -171,10 +171,8 @@ const CourseDetail: React.FC = () => {
   const content = (
     <div className="content-wrapper">
       <div className="content-detail">
-        <Title>{course?.name}</Title>
         <Paragraph>
           <FileSearchOutlined />
-          {'  '}
           {course?.description}
         </Paragraph>
         <div>
@@ -369,20 +367,8 @@ const CourseDetail: React.FC = () => {
         </Breadcrumb>
       </Divider>
       <PageHeader
-        title={course?.topic?.name}
+        title={course?.name}
         className="site-page-header"
-        // subTitle="This is a subtitle"
-        // tags={
-        //   <>
-        //     {tags(TagState.SUCCESS, `${course.sold} lượt mua`)}
-        //     {tags(TagState.WAITING, 'Cập nhật gần đây')}
-
-        //     {course.sale_status === SaleStatusEnum.PENDING && tags(TagState.PROCESSING, 'Chờ thanh toán')}
-        //     {course.sale_status === SaleStatusEnum.BOUGHT && tags(TagState.SUCCESS, 'Đã mua')}
-        //     {(course.sale_status === SaleStatusEnum.AVAILABLE || course.sale_status === SaleStatusEnum.IN_CART) &&
-        //       tags(TagState.ERROR, `Bán chạy của chủ đề ${course.topic}`)}
-        //   </>
-        // }
         avatar={{
           src: `${course.thumbnail?.image_path}`,
           shape: 'square',

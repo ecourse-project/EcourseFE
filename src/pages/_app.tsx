@@ -14,7 +14,7 @@ import { SkeletonTheme } from 'react-loading-skeleton';
 const MyApp = ({ Component, pageProps }) => (
   <>
     <Head>
-      <title>E-Course</title>
+      <title>Createtive Teaching</title>
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
     </Head>
     <Provider store={store}>

@@ -161,16 +161,16 @@ const CourseItem: React.FC<ChildProps> = (props) => {
 						</p> */}
 
             <p>{currentCourse.description}</p>
-            <p className="heart" onClick={() => handleAddFav(currentCourse.id)}>
+            {/* <p className="heart" onClick={() => handleAddFav(currentCourse.id)}>
               {currentCourse.is_favorite ? <HeartFilled /> : <HeartOutlined />}
-            </p>
+            </p> */}
           </div>
         }
         trigger="hover"
       >
         <Link href={`${RoutePaths.COURSE_DETAIL}?id=${currentCourse.id}`}>
           <div className="doc--image">
-            <img className="doc-img" src={`${currentCourse?.thumbnail?.image_path}`} alt="document image." />
+            <img className="doc-img" src={`${currentCourse?.thumbnail?.image_path}`} alt="course image." />
           </div>
           <div className="doc_info">
             <div>

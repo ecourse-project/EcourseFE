@@ -240,6 +240,7 @@ export interface Course {
   my_rating?: Rating;
   quiz_detail?: QuizResult;
   rating_stats?: RatingStats;
+  course_of_class: boolean;
 }
 
 // ===========================================Classes===========================================

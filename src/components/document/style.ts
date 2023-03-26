@@ -8,7 +8,8 @@ export const ItemDocCourseWrapper = styled.div`
   justify-content: space-evenly;
   min-height: 100%;
   max-width: 210px;
-
+  min-width: 200px;
+  min-height: 300px;
   &:hover {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     transition: all 1s ease;

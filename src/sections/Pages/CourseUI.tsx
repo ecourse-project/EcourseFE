@@ -55,7 +55,7 @@ const CourseUI: React.FC = () => {
       }
     } catch (error) {
       setLoading(false);
-      console.log('Fetch Course Faile :>> ', error);
+      console.log('Fetch Course Failed :>> ', error);
     } finally {
       setLoading(false);
     }

@@ -19,7 +19,7 @@ import { UserOutlined } from '@ant-design/icons';
 // 	totalCmnt: number;
 // }
 
-const CommentSection = () => {
+const CommentSection: React.FC<{ course_class_id?: string }> = ({ course_class_id }) => {
   // const {  onAddComment, handleReply, totalCmnt } = props;
   const [comment, setComment] = useState<CourseComment[]>([]);
   const [totalCmt, setTotalCmt] = useState<number>(0);
@@ -32,7 +32,7 @@ const CommentSection = () => {
   });
   const fetchComment = async (id: string, limit, page) => {
     try {
-      const cmt: Pagination<CourseComment> = await CourseService.listComments(id, limit, page);
+      const cmt: Pagination<CourseComment> = await CourseService.listComments(course_class_id || id, limit, page);
       cmt && setComment(cmt.results);
       setTotalCmt(cmt.count);
     } catch (error) {

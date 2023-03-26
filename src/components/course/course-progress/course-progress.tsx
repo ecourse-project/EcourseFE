@@ -43,6 +43,7 @@ import LessonItem from './lesson-item';
 import QuizSection from './quiz';
 import globalVariable from 'src/lib/config/env';
 import VideoJS from '../../video/videos';
+import { useRouter } from 'next/router';
 
 const { Panel } = Collapse;
 export interface CourseParams {
@@ -95,7 +96,7 @@ const CourseProgress = () => {
   };
   const [state, dispatch] = useReducer(reducer, initialState);
   const isInitialMount = useRef(true);
-
+  const router = useRouter();
   const items = [
     {
       label: 'Bình luận',
@@ -119,7 +120,8 @@ const CourseProgress = () => {
 
   const debounceUpdateProgress = useDebouncedCallback(async (params: UpdateProgressArgs) => {
     try {
-      await CourseService.updateLessonProgress(params);
+      if (course?.course_of_class) await CourseService.updateClassProgress(params);
+      else await CourseService.updateLessonProgress(params);
     } catch (error) {
       console.log('error update', error);
     }
@@ -219,11 +221,6 @@ const CourseProgress = () => {
     } catch (error) {
       console.log('error', error);
     }
-  };
-
-  const handleSaveRating = () => {
-    rateCourse(params.id, star, feedback);
-    setOpenRatingModal(false);
   };
 
   useEffect(() => {
@@ -398,6 +395,7 @@ const CourseProgress = () => {
             font-weight: 600;
             line-height: 50px;
             font-size: 18px;
+            cursor: pointer;
           }
           .progress {
             display: flex;
@@ -607,9 +605,14 @@ const CourseProgress = () => {
             />
           </Link>
           <SwapOutlined />
-          <Link href={`${RoutePaths.COURSE_DETAIL}?id=${course?.id}`} className="course_header">
+          <div
+            className="course_header"
+            onClick={() => {
+              router.back();
+            }}
+          >
             {course?.name}
-          </Link>
+          </div>
         </div>
         {/* </Col> */}
         {/* <Col span={4} className="right_box"> */}
@@ -640,10 +643,9 @@ const CourseProgress = () => {
         <Row>
           <Col span={16} className="course_content">
             <Row>
-              {videoLoading && <Skeleton height={150} />}
               {!_.isEmpty(state.selectedVideo) ? (
                 <div className="video_wrapper">
-                  {/* <ReactPlayer
+                  <ReactPlayer
                     url={state.selectedVideo?.file_path}
                     width="100%"
                     height="100%"
@@ -673,8 +675,8 @@ const CourseProgress = () => {
                     playIcon={<PlayCircleOutlined />}
                     light={false}
                     stopOnUnmount={false}
-                  /> */}
-                  <VideoJS options={videoJsOptions} onReady={handlePlayerReady} />
+                  />
+                  {/* <VideoJS options={videoJsOptions} onReady={handlePlayerReady} /> */}
                 </div>
               ) : !_.isEmpty(state.selectedDoc) ? (
                 <div className="pdf_wrapper">
