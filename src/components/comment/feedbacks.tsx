@@ -44,7 +44,7 @@ const FeedbackSection = (props: RatingItemProps) => {
               avatar={item?.user?.avatar || <Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />}
               datetime={
                 <>
-                  <Rate defaultValue={item.rating} disabled />
+                  {/* <Rate defaultValue={item.rating} disabled /> */}
                   <Tooltip title={moment(item.created).format('dddd, MMMM Do YYYY, h:mm:ss a')}>
                     <span>{`${moment(item.created).toNow(true)} ago`}</span>
                   </Tooltip>

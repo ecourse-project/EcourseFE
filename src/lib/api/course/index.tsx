@@ -144,7 +144,7 @@ export const apiURL = {
   requestJoinClass: () => `api/classes/join-request/`,
   updateClassProgress: () => `api/classes/update-lesson-progress/`,
 
-  getPostDetail: (post_id) => `api/posts/detail/&post_id=${post_id}`,
+  getPostDetail: (post_id) => `api/posts/detail/?post_id=${post_id}`,
   listPosts: (limit, page, topic?, post_id?: string[]) => {
     let url = `api/posts/?limit=${limit}&page=${page}&topic=${topic}`;
     if (post_id) {
@@ -367,6 +367,7 @@ class CourseService {
   static getPostDetail(post_id: string): Promise<Post> {
     return apiClient.get(apiURL.getPostDetail(post_id));
   }
+
   static updateClassProgress(params: UpdateProgressArgs): Promise<any> {
     return apiClient.post(apiURL.updateClassProgress(), params);
   }

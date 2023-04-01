@@ -1,4 +1,4 @@
-import { Button, Divider, Dropdown, Menu } from 'antd';
+import { Divider, Dropdown, Menu } from 'antd';
 import { isEmpty } from 'lodash';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
@@ -8,18 +8,9 @@ import { Nav, NavTypeEnum } from 'src/lib/types/backend_modal';
 import RoutePaths from 'src/lib/utils/routes';
 import { v4 as uuidv4 } from 'uuid';
 
-import {
-  AppstoreOutlined,
-  HomeFilled,
-  HomeOutlined,
-  LogoutOutlined,
-  SettingOutlined,
-  ShoppingCartOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
+import { HomeFilled, LogoutOutlined, SettingOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 
-import type { MenuTheme } from 'antd/es/menu';
 type MenuItem = Required<MenuProps>['items'][number];
 
 import type { MenuProps } from 'antd';
@@ -55,8 +46,8 @@ const Nav: React.FC = () => {
   };
 
   const checkTypeHeader = (navItem: Nav) => {
-    return Object.values(NavTypeEnum).includes(navItem.detail?.type?.toLocaleUpperCase() as unknown as NavTypeEnum) ? (
-      <Link href={getTargetUrl(navItem.detail.type, 'ALL') || ''}>{navItem.header.toLocaleUpperCase()}</Link>
+    return Object.values(NavTypeEnum).includes(navItem.type?.toLocaleUpperCase() as unknown as NavTypeEnum) ? (
+      <Link href={getTargetUrl(navItem.type, 'ALL') || ''}>{navItem.header.toLocaleUpperCase()}</Link>
     ) : (
       <Link href={'/'} legacyBehavior>
         <a className="disabled-nav">{navItem.header.toLocaleUpperCase()}</a>
@@ -64,17 +55,14 @@ const Nav: React.FC = () => {
     );
   };
 
-  useEffect(() => {
-    console.log('header', header);
-  }, [header]);
   const getListHeader = async () => {
     try {
       const listItems = header?.map((v, i) => {
         return getItem(
-          <Link href={getTargetUrl(v.detail.type, 'ALL') || ''}>{v.header.toLocaleUpperCase()}</Link>,
+          <Link href={getTargetUrl(v.type, 'ALL') || ''}>{v.header.toLocaleUpperCase()}</Link>,
           v.header + `id=${uuidv4()}`,
           '',
-          v.detail.topic?.map((u, n) => {
+          v.topic?.map((u, n) => {
             return getItem(
               <div
                 css={css`
@@ -96,14 +84,14 @@ const Nav: React.FC = () => {
                   }
                 `}
               >
-                <Link href={getTargetUrl(v.detail.type, u) || ''} title={u} className="menu-item-link">
+                <Link href={getTargetUrl(v.type, u) || ''} title={u} className="menu-item-link">
                   {u}
                 </Link>
               </div>,
               u + `id=${uuidv4()}`,
             );
           }),
-          !Object.values(NavTypeEnum).includes(v.detail?.type?.toLocaleUpperCase() as unknown as NavTypeEnum),
+          !Object.values(NavTypeEnum).includes(v?.type?.toLocaleUpperCase() as unknown as NavTypeEnum),
         );
       });
       setListNav(listItems);
@@ -305,7 +293,13 @@ const Nav: React.FC = () => {
         <Divider type="vertical" style={{ height: '100%' }} />
 
         {!isEmpty(myProfile) ? (
-          <Dropdown menu={{ items }} placement="bottom" arrow>
+          <Dropdown
+            menu={{ items }}
+            placement="bottom"
+            arrow
+            className="cuongDropdown"
+            overlayStyle={{ minWidth: 130 }}
+          >
             <UserOutlined className="setting-icon" />
           </Dropdown>
         ) : (

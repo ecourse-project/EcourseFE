@@ -12,7 +12,6 @@ import { Document, Pagination as PaginationType, PaginationParams } from 'src/li
 import { StorageKeys } from 'src/lib/utils/enum';
 import { UpperCaseFirstLetter } from 'src/lib/utils/format';
 import RoutePaths from 'src/lib/utils/routes';
-
 import { HomeOutlined, Loading3QuartersOutlined, SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 import HomeSide from 'src/components/home/homeSide';
@@ -36,6 +35,11 @@ const DocumentUI: React.FC = () => {
     limit: 10,
   });
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log(process.env);
+  }, []);
+
   const fetchDocument = async (pagination) => {
     const token = localStorage.getItem(StorageKeys.SESSION_KEY);
     try {
