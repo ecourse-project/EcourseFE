@@ -27,9 +27,6 @@ const CustomPagination: FC<CustomPaginationProps> = ({
     if (type === 'next') return <IconNext />;
     return originalElement;
   };
-  useEffect(() => {
-    console.log('current', current);
-  }, [current]);
 
   return (
     <div

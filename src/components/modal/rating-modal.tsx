@@ -109,7 +109,7 @@ const RatingModal: React.FC<RatingModalProps> = (props) => {
               title={
                 <>
                   {rated?.user?.full_name}
-                  <Rate disabled defaultValue={rated?.rating} />
+                  {/* <Rate disabled defaultValue={rated?.rating} /> */}
                 </>
               }
               description={rated?.comment}

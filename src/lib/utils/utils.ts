@@ -433,21 +433,10 @@
 // 	const fee = (FLAT_FEE_NFT + recipients * FEE_PER_RECIPIENT).toFixed(2);
 // 	return parseFloat(fee);
 // };
+
 import moment, { Moment } from 'moment';
 import { forceLogout } from './auth';
 import { StorageKeys } from './enum';
-
-const baseUrl = '';
-export const callApi = async (method, url, data) => {
-  const requestOptions = {
-    method: method,
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  };
-  const response = await fetch('http://127.0.0.1:4000/api/users-auth/token/', requestOptions);
-  console.log(`response of call API ${url}`);
-  return response;
-};
 
 export interface DurationTime {
   days: number;

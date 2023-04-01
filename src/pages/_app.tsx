@@ -1,17 +1,12 @@
-import 'antd/dist/reset.css';
-
 import Head from 'next/head';
-import React from 'react';
-import Layout from 'src/components/common/Layout';
-import ContextProvider from 'src/lib/context';
+import { SkeletonTheme } from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 import { Provider } from 'react-redux';
 import { store } from 'src/lib/config/reduxStore';
+import ContextProvider from 'src/lib/context';
 import 'src/styles/global.scss';
-import Logo from 'public/images/ecourseLogo.png';
-import 'react-loading-skeleton/dist/skeleton.css';
-import { SkeletonTheme } from 'react-loading-skeleton';
 
-const MyApp = ({ Component, pageProps }) => (
+const CreativeTeaching = ({ Component, pageProps }) => (
   <>
     <Head>
       <title>Createtive Teaching</title>
@@ -27,4 +22,4 @@ const MyApp = ({ Component, pageProps }) => (
   </>
 );
 
-export default MyApp;
+export default CreativeTeaching;

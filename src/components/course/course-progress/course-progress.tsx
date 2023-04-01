@@ -86,6 +86,7 @@ const CourseProgress = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [resultQuiz, setResultQuiz] = useState<QuizResult>();
   const [quizLoading, setQuizLoading] = useState<boolean>(false);
+
   const initialState: CourseProgressContextType = {
     selectedDoc: {} as CourseDocument,
     selectedVideo: {} as OFileUpload,
@@ -94,6 +95,7 @@ const CourseProgress = () => {
     updateParams: [] as UpdateLessonArgs[],
     answerSheet: [],
   };
+
   const [state, dispatch] = useReducer(reducer, initialState);
   const isInitialMount = useRef(true);
   const router = useRouter();
@@ -200,26 +202,6 @@ const CourseProgress = () => {
       console.log(error);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const rateCourse = async (course_id: string, rating: number, comment: string) => {
-    try {
-      if (rating === 1) rating = RatingEnum.ONE;
-      if (rating === 2) rating = RatingEnum.TWO;
-      if (rating === 3) rating = RatingEnum.THREE;
-      if (rating === 4) rating = RatingEnum.FOUR;
-      if (rating === 5) rating = RatingEnum.FIVE;
-
-      const rate = await CourseService.rateCourse({
-        course_id,
-        rating,
-        comment,
-      } as RateCourseArgs);
-      setMyRate(rate);
-      course?.rating_detail?.push(rate);
-    } catch (error) {
-      console.log('error', error);
     }
   };
 
@@ -541,9 +523,7 @@ const CourseProgress = () => {
             gap: 1.6rem;
             color: #1c1d1f;
             padding: 0.8rem 0.6rem;
-            // border: 1px solid #e4e1e1;
-            // border-left: none;
-            // border-right: none;
+
             cursor: pointer;
             &:hover {
               background-color: #d1d7dc;
@@ -557,10 +537,6 @@ const CourseProgress = () => {
             }
           }
         }
-        /* .page-container {
-          width: 100%;
-          max-width: 100%;
-          --bs-gutter-x: 0; */
 
         .comment_group {
           padding: 10px;

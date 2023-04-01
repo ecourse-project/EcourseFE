@@ -80,30 +80,30 @@ export const LearningItem: React.FC<LearningItem> = (props) => {
   const [star, setStar] = useState<number>(0);
   const [myRate, setMyRate] = useState<Rating>({} as Rating);
   const router = useRouter();
-  const rateCourse = async (course_id: string, rating: number, comment: string) => {
-    try {
-      if (rating === 1) rating = RatingEnum.ONE;
-      if (rating === 2) rating = RatingEnum.TWO;
-      if (rating === 3) rating = RatingEnum.THREE;
-      if (rating === 4) rating = RatingEnum.FOUR;
-      if (rating === 5) rating = RatingEnum.FIVE;
+  // const rateCourse = async (course_id: string, rating: number, comment: string) => {
+  //   try {
+  //     if (rating === 1) rating = RatingEnum.ONE;
+  //     if (rating === 2) rating = RatingEnum.TWO;
+  //     if (rating === 3) rating = RatingEnum.THREE;
+  //     if (rating === 4) rating = RatingEnum.FOUR;
+  //     if (rating === 5) rating = RatingEnum.FIVE;
 
-      const rate = await CourseService.rateCourse({
-        course_id,
-        rating,
-        comment,
-      } as RateCourseArgs);
-      setMyRate(rate);
-      course?.rating_detail?.push(rate);
-    } catch (error) {
-      console.log('error', error);
-    }
-  };
+  //     const rate = await CourseService.rateCourse({
+  //       course_id,
+  //       rating,
+  //       comment,
+  //     } as RateCourseArgs);
+  //     setMyRate(rate);
+  //     course?.rating_detail?.push(rate);
+  //   } catch (error) {
+  //     console.log('error', error);
+  //   }
+  // };
 
-  const handleSaveRating = () => {
-    rateCourse(course?.id || '', star, feedback);
-    setOpenRatingModal(false);
-  };
+  // const handleSaveRating = () => {
+  //   rateCourse(course?.id || '', star, feedback);
+  //   setOpenRatingModal(false);
+  // };
   const handleLearn = (type) => {
     if (type === ItemType.COURESE) router.push(`${RoutePaths.COURSE_DETAIL}/?id=${course?.id}`);
     if (type === ItemType.DOC) router.push(`${RoutePaths.DOCUMENT_DETAIL}/?id=${doc?.id}`);
@@ -169,7 +169,7 @@ export const LearningItem: React.FC<LearningItem> = (props) => {
                 Đọc tài liệu
               </span>
               <span>
-                <div>
+                {/* <div>
                   {Number(doc?.my_rating?.rating) ? (
                     <div
                       className="rate"
@@ -194,7 +194,7 @@ export const LearningItem: React.FC<LearningItem> = (props) => {
                       <Rate defaultValue={doc.rating} disabled={true} value={doc.rating} />{' '}
                     </>
                   )}
-                </div>
+                </div> */}
               </span>
             </div>
           </Card>

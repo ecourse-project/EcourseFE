@@ -136,9 +136,6 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
           color: #1c1d1f;
           padding: 0.8rem 0.6rem;
           padding-left: ${isCourseDetail ? '65px' : ''};
-          // border: 1px solid #e4e1e1;
-          // border-left: none;
-          // border-right: none;
           cursor: pointer;
           &:hover {
             background-color: #d1d7dc;

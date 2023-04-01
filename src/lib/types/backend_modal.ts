@@ -133,11 +133,11 @@ export interface Document {
   sale_status?: SaleStatusEnum;
   is_selling: boolean;
   views: number;
-  rating: number;
+  // rating: number;
   num_of_rates: number;
   is_favorite?: boolean;
-  rating_detail?: Rating[];
-  my_rating?: Rating;
+  // rating_detail?: Rating[];
+  // my_rating?: Rating;
   download: boolean;
 }
 
@@ -236,11 +236,11 @@ export interface Course {
   mark?: number;
   is_done_quiz?: boolean;
   is_favorite?: boolean;
-  rating_detail?: Rating[];
-  my_rating?: Rating;
+  // rating_detail?: Rating[];
+  // my_rating?: Rating;
   quiz_detail?: QuizResult;
-  rating_stats?: RatingStats;
-  course_of_class: boolean;
+  // rating_stats?: RatingStats;
+  course_of_class?: boolean;
 }
 
 // ===========================================Classes===========================================
@@ -348,13 +348,13 @@ export interface UserRatingInfo {
 
 export interface RateDocArgs {
   document_id: string;
-  rating: RatingEnum;
+  // rating: RatingEnum;
   comment: string;
 }
 
 export interface RateCourseArgs {
   course_id: string;
-  rating: RatingEnum;
+  // rating: RatingEnum;
   comment: string;
 }
 
@@ -362,7 +362,7 @@ export interface Rating {
   id: string;
   created: string;
   user: UserRatingInfo;
-  rating: RatingEnum;
+  // rating: RatingEnum;
   comment: string;
 }
 
@@ -423,14 +423,11 @@ export enum NavTypeEnum {
   CLASS = 'CLASS',
   POST = 'POST',
 }
-export interface NavDetail {
-  type: NavTypeEnum;
-  topic: string[];
-}
 
 export interface Nav {
   header: string;
-  detail: NavDetail;
+  topic: string[];
+  type: NavTypeEnum;
 }
 
 export interface HomepageDetail {

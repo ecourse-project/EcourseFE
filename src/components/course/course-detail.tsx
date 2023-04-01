@@ -225,29 +225,29 @@ const CourseDetail: React.FC = () => {
     }
   };
 
-  const rateCourse = async (course_id: string, rating: number, comment: string) => {
-    try {
-      if (rating === 1) rating = RatingEnum.ONE;
-      if (rating === 2) rating = RatingEnum.TWO;
-      if (rating === 3) rating = RatingEnum.THREE;
-      if (rating === 4) rating = RatingEnum.FOUR;
-      if (rating === 5) rating = RatingEnum.FIVE;
+  // const rateCourse = async (course_id: string, rating: number, comment: string) => {
+  //   try {
+  //     if (rating === 1) rating = RatingEnum.ONE;
+  //     if (rating === 2) rating = RatingEnum.TWO;
+  //     if (rating === 3) rating = RatingEnum.THREE;
+  //     if (rating === 4) rating = RatingEnum.FOUR;
+  //     if (rating === 5) rating = RatingEnum.FIVE;
 
-      const rate = await CourseService.rateCourse({
-        course_id,
-        rating,
-        comment,
-      } as RateCourseArgs);
-      setMyRate(rate);
-      course.rating_detail?.push(rate);
-    } catch (error) {
-      console.log('error', error);
-    }
-  };
-  const handleSaveRating = () => {
-    rateCourse(params.id, star, feedback);
-    setOpenRatingModal(false);
-  };
+  //     const rate = await CourseService.rateCourse({
+  //       course_id,
+  //       rating,
+  //       comment,
+  //     } as RateCourseArgs);
+  //     setMyRate(rate);
+  //     course.rating_detail?.push(rate);
+  //   } catch (error) {
+  //     console.log('error', error);
+  //   }
+  // };
+  // const handleSaveRating = () => {
+  //   rateCourse(params.id, star, feedback);
+  //   setOpenRatingModal(false);
+  // };
 
   const items = [
     {

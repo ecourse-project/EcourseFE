@@ -140,30 +140,30 @@ const DocDetail: React.FC = () => {
   // 	document && setDoc(document);
   // }, [listDoc]);
 
-  const rateDoc = async (document_id: string, rating: number, comment: string) => {
-    try {
-      if (rating === 1) rating = RatingEnum.ONE;
-      if (rating === 2) rating = RatingEnum.TWO;
-      if (rating === 3) rating = RatingEnum.THREE;
-      if (rating === 4) rating = RatingEnum.FOUR;
-      if (rating === 5) rating = RatingEnum.FIVE;
+  // const rateDoc = async (document_id: string, rating: number, comment: string) => {
+  //   try {
+  //     if (rating === 1) rating = RatingEnum.ONE;
+  //     if (rating === 2) rating = RatingEnum.TWO;
+  //     if (rating === 3) rating = RatingEnum.THREE;
+  //     if (rating === 4) rating = RatingEnum.FOUR;
+  //     if (rating === 5) rating = RatingEnum.FIVE;
 
-      const rate = await CourseService.rateDocument({
-        document_id,
-        rating,
-        comment,
-      } as RateDocArgs);
-      setMyRate(rate);
-      doc.rating_detail?.push(rate);
-    } catch (error) {
-      console.log('error', error);
-    }
-  };
+  //     const rate = await CourseService.rateDocument({
+  //       document_id,
+  //       rating,
+  //       comment,
+  //     } as RateDocArgs);
+  //     setMyRate(rate);
+  //     doc.rating_detail?.push(rate);
+  //   } catch (error) {
+  //     console.log('error', error);
+  //   }
+  // };
 
-  const handleSaveRating = () => {
-    rateDoc(params.id, star, feedback);
-    setOpenRatingModal(false);
-  };
+  // const handleSaveRating = () => {
+  //   rateDoc(params.id, star, feedback);
+  //   setOpenRatingModal(false);
+  // };
   const content = (
     <div className="content-wrapper">
       <div className="content-detail">
