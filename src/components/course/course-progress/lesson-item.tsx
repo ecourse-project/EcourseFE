@@ -1,14 +1,15 @@
 import { Collapse, List } from 'antd';
 import { debounce } from 'lodash';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { Lesson, UpdateLessonArgs } from 'src/lib/types/backend_modal';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Course, Lesson, UpdateLessonArgs, UpdateProgressArgs } from 'src/lib/types/backend_modal';
 import { DurationTime, formatDurationTime } from 'src/lib/utils/utils';
 
 import { FileTextOutlined, PlayCircleFilled } from '@ant-design/icons';
 import { css } from '@emotion/react';
 
-import { CourseProgressAction } from './context/reducer';
-import { CourseProgressContext } from './course-progress';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'src/lib/reducers/model';
+import { progressAction } from 'src/lib/reducers/progress/progressSlice';
 
 const { Panel } = Collapse;
 
@@ -17,6 +18,7 @@ interface LessonItemProps {
   isCourseDetail?: boolean;
   index?: number;
   isShowLessonDetail: boolean;
+  courseDetail: Course;
 }
 
 const DisplayDurationTime = (duration) => {
@@ -50,11 +52,13 @@ const DisplayDurationTime = (duration) => {
 };
 
 const LessonItem: React.FC<LessonItemProps> = (props) => {
-  const { lesson, isCourseDetail = false, index, isShowLessonDetail } = props;
-  const { state, dispatch } = useContext(CourseProgressContext);
-
+  const { lesson, isCourseDetail = false, index, isShowLessonDetail, courseDetail } = props;
+  const selectedDoc = useSelector((state: RootState) => state.progress.selectedDoc);
+  const selectedVideo = useSelector((state: RootState) => state.progress.selectedVideo);
+  const isDoneVideo = useSelector((state: RootState) => state.progress.isDoneVideo);
   const [checkedVideo, setCheckedVideo] = useState<string[]>(lesson.videos_completed || []);
   const [checkedDoc, setCheckedDoc] = useState<string[]>(lesson.docs_completed || []);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     debounceCheckedItem(checkedVideo, checkedDoc);
@@ -79,26 +83,36 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
   // }, 1000);
   const debounceCheckedItem = useCallback(
     debounce((videos, docs) => {
-      dispatch({
-        type: CourseProgressAction.UPDATE_CHECKED_ITEM,
-        payload: {
-          lesson_id: lesson.id,
-          completed_videos: [...(videos || [])],
-          completed_docs: [...(docs || [])],
-        } as UpdateLessonArgs,
-      });
+      // dispatch({
+      //   type: CourseProgressAction.UPDATE_CHECKED_ITEM,
+      //   payload: {
+      //     lesson_id: lesson.id,
+      //     completed_videos: [...(videos || [])],
+      //     completed_docs: [...(docs || [])],
+      //   } as UpdateLessonArgs,
+      // });
+      dispatch(
+        progressAction.updateCheckedItem({
+          course_id: courseDetail.id || '',
+          lessons: {
+            lesson_id: lesson.id,
+            completed_videos: [...(videos || [])],
+            completed_docs: [...(docs || [])],
+          } as UpdateLessonArgs,
+        }),
+      );
     }, 1000),
     [],
   );
 
   useEffect(() => {
-    if (state.isDoneVideo) {
-      const idx = checkedVideo.indexOf(state.selectedVideo.id);
+    if (isDoneVideo) {
+      const idx = checkedVideo.indexOf(selectedVideo.id);
       if (idx >= 0) {
-        setCheckedVideo([...checkedVideo, state.selectedVideo.id]);
+        setCheckedVideo([...checkedVideo, selectedVideo.id]);
       }
     }
-  }, [state.isDoneVideo]);
+  }, [isDoneVideo]);
 
   return (
     <div
@@ -115,10 +129,10 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
             }
           }
         }
-        .video_${state.selectedVideo?.id} {
+        .video_${selectedVideo?.id} {
           background-color: #d1d7dc;
         }
-        .video_${state.selectedDoc?.id} {
+        .video_${selectedDoc?.id} {
           background-color: #d1d7dc;
         }
         .ant-list-item {
@@ -197,14 +211,16 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                         key={i}
                         className={`course_video_item video_${v.id}`}
                         onClick={() => {
-                          dispatch({
-                            type: CourseProgressAction.SET_SELECTED_VIDEO,
-                            payload: v,
-                          });
-                          dispatch({
-                            type: CourseProgressAction.SET_CURRENT_LESSON,
-                            payload: lesson.id,
-                          });
+                          // dispatch({
+                          //   type: CourseProgressAction.SET_SELECTED_VIDEO,
+                          //   payload: v,
+                          // });
+                          // dispatch({
+                          //   type: CourseProgressAction.SET_CURRENT_LESSON,
+                          //   payload: lesson.id,
+                          // });
+                          dispatch(progressAction.setCompleteVideo(v));
+                          dispatch(progressAction.setCurrentLesson(lesson.id));
                         }}
                       >
                         {!isCourseDetail && (
@@ -256,14 +272,16 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                         key={i}
                         className={`course_video_item video_${v.id}`}
                         onClick={() => {
-                          dispatch({
-                            type: CourseProgressAction.SET_SELECTED_DOC,
-                            payload: v,
-                          });
-                          dispatch({
-                            type: CourseProgressAction.SET_CURRENT_LESSON,
-                            payload: lesson.id,
-                          });
+                          // dispatch({
+                          //   type: CourseProgressAction.SET_SELECTED_DOC,
+                          //   payload: v,
+                          // });
+                          // dispatch({
+                          //   type: CourseProgressAction.SET_CURRENT_LESSON,
+                          //   payload: lesson.id,
+                          // });
+                          dispatch(progressAction.setSelectedDoc(v));
+                          dispatch(progressAction.setCurrentLesson(lesson.id));
                         }}
                       >
                         {!isCourseDetail && (

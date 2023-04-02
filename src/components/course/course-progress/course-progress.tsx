@@ -1,17 +1,17 @@
-import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import '@react-pdf-viewer/core/lib/styles/index.css';
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 
-import { Button, Col, Collapse, Divider, List, Popover, Progress, Row, Tabs } from 'antd';
+import { DownOutlined, HomeOutlined, PlayCircleOutlined, SwapOutlined } from '@ant-design/icons';
+import { css } from '@emotion/react';
+import { Col, Collapse, Divider, List, Popover, Progress, Row, Tabs } from 'antd';
 import _, { isEmpty } from 'lodash';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { createContext, useEffect, useReducer, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ExamImg from 'src/assets/images/exam.png';
 import CommentSection from 'src/components/comment';
-import FeedbackSection from 'src/components/comment/feedbacks';
-import RatingModal from 'src/components/modal/rating-modal';
 import CourseService from 'src/lib/api/course';
 import useDebouncedCallback from 'src/lib/hooks/useDebouncedCallback';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
@@ -25,25 +25,20 @@ import {
   Quiz,
   QuizResult,
   QuizResultArgs,
-  RateCourseArgs,
   Rating,
-  RatingEnum,
   UpdateLessonArgs,
   UpdateProgressArgs,
   UserAnswersArgs,
 } from 'src/lib/types/backend_modal';
 import RoutePaths from 'src/lib/utils/routes';
-import Skeleton from 'react-loading-skeleton';
-import { DownOutlined, HomeOutlined, PlayCircleOutlined, StarFilled, SwapOutlined } from '@ant-design/icons';
-import { css } from '@emotion/react';
 
+import { useRouter } from 'next/router';
+import globalVariable from 'src/lib/config/env';
 import PdfViewer from '../../pdf';
-import reducer, { CourseProgressAction, CourseProgressContextType } from './context/reducer';
+// import reducer, { CourseProgressAction, CourseProgressContextType } from './context/reducer';
+import { progressAction } from 'src/lib/reducers/progress/progressSlice';
 import LessonItem from './lesson-item';
 import QuizSection from './quiz';
-import globalVariable from 'src/lib/config/env';
-import VideoJS from '../../video/videos';
-import { useRouter } from 'next/router';
 
 const { Panel } = Collapse;
 export interface CourseParams {
@@ -60,11 +55,6 @@ interface IProgress {
   sum: number;
   progress_num: number;
 }
-
-export const CourseProgressContext = createContext<{
-  state: CourseProgressContextType;
-  dispatch: React.Dispatch<any>;
-}>({ state: {} as CourseProgressContextType, dispatch: () => null });
 
 const CourseProgress = () => {
   const [course, setCourse] = useState<Course>();
@@ -86,17 +76,9 @@ const CourseProgress = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [resultQuiz, setResultQuiz] = useState<QuizResult>();
   const [quizLoading, setQuizLoading] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  const state = useSelector((state: RootState) => state.progress);
 
-  const initialState: CourseProgressContextType = {
-    selectedDoc: {} as CourseDocument,
-    selectedVideo: {} as OFileUpload,
-    currentLesson: '',
-    isDoneVideo: false,
-    updateParams: [] as UpdateLessonArgs[],
-    answerSheet: [],
-  };
-
-  const [state, dispatch] = useReducer(reducer, initialState);
   const isInitialMount = useRef(true);
   const router = useRouter();
   const items = [
@@ -112,18 +94,20 @@ const CourseProgress = () => {
     // },
   ];
 
-  useEffect(() => {
-    const updateParams: UpdateProgressArgs = {
-      course_id: params.id || '',
-      lessons: state.updateParams,
-    };
-    debounceUpdateProgress(updateParams);
-  }, [state.updateParams]);
+  // useEffect(() => {
+  //   const updateParams: UpdateProgressArgs = {
+  //     course_id: params.id || '',
+  //     lessons: state.updateParams,
+  //   };
+  //   debounceUpdateProgress(updateParams);
+  // }, [state.updateParams]);
 
   const debounceUpdateProgress = useDebouncedCallback(async (params: UpdateProgressArgs) => {
+    console.log('call 106');
     try {
       if (course?.course_of_class) await CourseService.updateClassProgress(params);
       else await CourseService.updateLessonProgress(params);
+      dispatch(progressAction.updateCheckedItem(params));
     } catch (error) {
       console.log('error update', error);
     }
@@ -140,10 +124,11 @@ const CourseProgress = () => {
         if (idxLesson >= 0) {
           const idxDoc = courseDetail.lessons[idxLesson].documents.findIndex((doc) => doc.id === params.doc);
           if (idxDoc >= 0) {
-            dispatch({
-              type: CourseProgressAction.SET_SELECTED_DOC,
-              payload: courseDetail.lessons[idxLesson].documents[idxDoc],
-            });
+            // dispatch({
+            //   type: CourseProgressAction.SET_SELECTED_DOC,
+            //   payload: courseDetail.lessons[idxLesson].documents[idxDoc],
+            // });
+            dispatch(progressAction.setSelectedDoc(courseDetail.lessons[idxLesson].documents[idxDoc]));
           }
         }
       } else if (params.video && courseDetail.lessons) {
@@ -151,21 +136,24 @@ const CourseProgress = () => {
         if (idxLesson >= 0) {
           const idxVid = courseDetail.lessons[idxLesson].videos.findIndex((video) => video.id === params.video);
           if (idxVid >= 0) {
-            dispatch({
-              type: CourseProgressAction.SET_SELECTED_DOC,
-              payload: courseDetail.lessons[idxLesson].documents[idxVid],
-            });
+            // dispatch({
+            //   type: CourseProgressAction.SET_SELECTED_DOC,
+            //   payload: courseDetail.lessons[idxLesson].documents[idxVid],
+            // });
+            dispatch(progressAction.setSelectedDoc(courseDetail.lessons[idxLesson].documents[idxVid]));
           }
         }
       } else if (courseDetail.lessons && !params.exam) {
-        dispatch({
-          type: CourseProgressAction.SET_CURRENT_LESSON,
-          payload: courseDetail.lessons[0].id,
-        });
-        dispatch({
-          type: CourseProgressAction.SET_SELECTED_VIDEO,
-          payload: courseDetail.lessons[0].videos[0],
-        });
+        // dispatch({
+        //   type: CourseProgressAction.SET_CURRENT_LESSON,
+        //   payload: courseDetail.lessons[0].id,
+        // });
+        // dispatch({
+        //   type: CourseProgressAction.SET_SELECTED_VIDEO,
+        //   payload: courseDetail.lessons[0].videos[0],
+        // });
+        dispatch(progressAction.setCurrentLesson(courseDetail.lessons[0].id));
+        dispatch(progressAction.setSelectedVideo(courseDetail.lessons[0].videos[0]));
       } else if (params.exam) {
         setIsShowQuiz(true);
       }
@@ -181,10 +169,11 @@ const CourseProgress = () => {
       setSumDoc(courseDetail.lessons?.reduce((p, c) => p + c.documents.length, 0) || 0);
       setSumVid(courseDetail.lessons?.reduce((p, c) => p + c.videos.length, 0) || 0);
 
-      dispatch({
-        type: CourseProgressAction.UPDATE_CHECKED_ITEM,
-        payload: res,
-      });
+      // dispatch({
+      //   type: CourseProgressAction.UPDATE_CHECKED_ITEM,
+      //   payload: res,
+      // });
+      dispatch(progressAction.updateCheckedItem(res));
       const quizList = await CourseService.listQuiz(courseDetail.id);
       setListQuiz(quizList);
       const initialAnswer = quizList?.map(
@@ -194,10 +183,11 @@ const CourseProgress = () => {
             answer_choice: AnswerChoiceEnum.NO_CHOICE,
           } as UserAnswersArgs),
       );
-      dispatch({
-        type: CourseProgressAction.UPDATE_CHECKED_ANSWER,
-        payload: initialAnswer,
-      });
+      // dispatch({
+      //   type: CourseProgressAction.UPDATE_CHECKED_ANSWER,
+      //   payload: initialAnswer,
+      // });
+      dispatch(progressAction.updateCheckedAnswer(initialAnswer));
     } catch (error) {
       console.log(error);
     } finally {
@@ -237,22 +227,24 @@ const CourseProgress = () => {
     const lesson: Lesson | undefined = course ? course?.lessons?.filter((v) => v.id === params?.lesson)[0] : undefined;
     if (params.video) {
       const selected = lesson?.videos?.filter((v) => v.id === params.video)[0];
-      dispatch({
-        type: CourseProgressAction.SET_SELECTED_VIDEO,
-        payload: selected,
-      });
+      // dispatch({
+      //   type: CourseProgressAction.SET_SELECTED_VIDEO,
+      //   payload: selected,
+      // });
+      dispatch(progressAction.setSelectedVideo(selected));
     } else if (params.doc) {
       const selected = lesson?.documents?.filter((v) => v.file.id === params.doc)[0];
-      dispatch({
-        type: CourseProgressAction.SET_SELECTED_DOC,
-        payload: selected,
-      });
+      // dispatch({
+      //   type: CourseProgressAction.SET_SELECTED_DOC,
+      //   payload: selected,
+      // });
+      dispatch(progressAction.setSelectedDoc(selected));
     }
   }, [course]);
 
   const calculateProgress = () => {
-    const doneDoc = state.updateParams.reduce((p, c) => p + c.completed_docs.length, 0);
-    const doneVid = state.updateParams.reduce((p, c) => p + c.completed_videos.length, 0);
+    const doneDoc = state.updateParams.reduce((p, c) => p + c.completed_docs?.length, 0);
+    const doneVid = state.updateParams.reduce((p, c) => p + c.completed_videos?.length, 0);
     return {
       done: doneDoc + doneVid,
       sum: sumDoc + sumVid,
@@ -260,10 +252,11 @@ const CourseProgress = () => {
     } as IProgress;
   };
   const showQuiz = () => {
-    dispatch({
-      type: CourseProgressAction.SET_SELECTED_DOC,
-      payload: {} as CourseDocument,
-    });
+    // dispatch({
+    //   type: CourseProgressAction.SET_SELECTED_DOC,
+    //   payload: {} as CourseDocument,
+    // });
+    dispatch(progressAction.setSelectedDoc({}));
     setIsShowQuiz(true);
   };
 
@@ -640,9 +633,7 @@ const CourseProgress = () => {
                       },
                     }}
                     onEnded={() => {
-                      dispatch({
-                        type: CourseProgressAction.SET_COMPLETE_VIDEO,
-                      });
+                      dispatch(progressAction.setCompleteVideo());
                     }}
                     // onProgress={(v) => console.log('progress', v)}
                     onError={(e) => console.log('video errror', e)}
@@ -659,18 +650,16 @@ const CourseProgress = () => {
                   <PdfViewer url={state.selectedDoc?.file?.file_path} />
                 </div>
               ) : isShowQuiz ? (
-                <CourseProgressContext.Provider value={{ state, dispatch }}>
-                  {/* if user unchecked a video while doing quiz, show modal to warn that the quiz will hide if they continue unchecking that video */}
-                  <QuizSection
-                    listQuiz={listQuiz}
-                    onSubmit={onSubmitQuiz}
-                    result={course?.quiz_detail}
-                    isDone={course?.is_done_quiz || false}
-                    loading={loading}
-                    courseId={course?.id || params.id}
-                    mark={course?.mark || 0} //remove later
-                  />
-                </CourseProgressContext.Provider>
+                /* if user unchecked a video while doing quiz, show modal to warn that the quiz will hide if they continue unchecking that video */
+                <QuizSection
+                  listQuiz={listQuiz}
+                  onSubmit={onSubmitQuiz}
+                  result={course?.quiz_detail}
+                  isDone={course?.is_done_quiz || false}
+                  loading={loading}
+                  courseId={course?.id || params.id}
+                  mark={course?.mark || 0} //remove later
+                />
               ) : (
                 <>{isShowQuiz}</>
               )}
@@ -697,9 +686,7 @@ const CourseProgress = () => {
               itemLayout="horizontal"
               dataSource={course?.lessons}
               renderItem={(item, i) => (
-                <CourseProgressContext.Provider value={{ state, dispatch }}>
-                  <LessonItem lesson={item} index={i} isShowLessonDetail={true} />
-                </CourseProgressContext.Provider>
+                <LessonItem lesson={item} index={i} isShowLessonDetail={true} courseDetail={course || ({} as Course)} />
               )}
             />
           </Col>

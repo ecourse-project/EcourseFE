@@ -1,15 +1,15 @@
 import { Collapse, Progress, Radio, RadioChangeEvent, Spin, Typography } from 'antd';
 import { isEmpty } from 'lodash';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AppButton from 'src/components/button';
 import { AnswerChoiceEnum, Quiz, QuizResult, UserAnswersArgs } from 'src/lib/types/backend_modal';
 import { antIcon } from 'src/lib/utils/animations';
 
 import { css } from '@emotion/react';
 
-import { CourseProgressAction } from './context/reducer';
-import { CourseProgressContext } from './course-progress';
-import CourseService, { apiURL } from 'src/lib/api/course';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'src/lib/reducers/model';
+import { progressAction } from 'src/lib/reducers/progress/progressSlice';
 
 const { Panel } = Collapse;
 
@@ -27,26 +27,26 @@ interface QuizProps {
 
 const QuizSection: React.FC<QuizProps> = (props) => {
   const { listQuiz, onSubmit, result, loading, isDone, courseId, mark } = props;
-  const { state, dispatch } = useContext(CourseProgressContext);
+  const answerSheet = useSelector((state: RootState) => state.progress.answerSheet);
   const [isSubmit, setIsSubmit] = useState<boolean>(false);
   const [customResult, setCustomResult] = useState<any>([]);
+
   const [listAnswer, setListAnswer] = useState<string[]>(
-    state.answerSheet &&
-      state.answerSheet.filter((v) => v.answer_choice !== AnswerChoiceEnum.NO_CHOICE)?.map((u) => u.quiz_id),
+    answerSheet && answerSheet.filter((v) => v.answer_choice !== AnswerChoiceEnum.NO_CHOICE)?.map((u) => u.quiz_id),
   );
   const [value, setValue] = useState(0);
-
+  const dispatch = useDispatch();
   const onChange = (e: RadioChangeEvent, id: string) => {
     let choice = e.target.value;
     if (choice === 1) choice = AnswerChoiceEnum.A;
     if (choice === 2) choice = AnswerChoiceEnum.B;
     if (choice === 3) choice = AnswerChoiceEnum.C;
     if (choice === 4) choice = AnswerChoiceEnum.D;
-    dispatch({
-      type: CourseProgressAction.UPDATE_CHECKED_ANSWER,
-      payload: { quiz_id: id, answer_choice: choice } as UserAnswersArgs,
-    });
-
+    // dispatch({
+    //   type: CourseProgressAction.UPDATE_CHECKED_ANSWER,
+    //   payload: { quiz_id: id, answer_choice: choice } as UserAnswersArgs,
+    // });
+    dispatch(progressAction.updateCheckedAnswer({ quiz_id: id, answer_choice: choice } as UserAnswersArgs));
     const idx = listAnswer.indexOf(id);
     if (idx < 0) {
       setListAnswer([...listAnswer, id]);
