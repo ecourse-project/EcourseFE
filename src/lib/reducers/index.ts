@@ -16,7 +16,6 @@ import courseSaga from './course/courseSage';
 import appSaga from './app/appSage';
 
 import { RootState } from './model';
-import progressSaga from './progress/progressSaga';
 /*** Importing sagas ***/
 
 export interface ActionBase {
@@ -36,7 +35,6 @@ function* rootSaga(): Generator<ForkEffect<void>, void, unknown> {
   yield fork(documentSaga);
   yield fork(courseSaga);
   yield fork(appSaga);
-  yield fork(progressSaga);
 }
 
 export { rootReducer, rootSaga };

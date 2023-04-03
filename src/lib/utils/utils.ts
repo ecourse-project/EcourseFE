@@ -457,3 +457,5 @@ export const checkAccountPermission = async () => {
     forceLogout();
   }
 };
+
+export const uniqueArr = (arr: [any]) => [...new Set(arr)];
