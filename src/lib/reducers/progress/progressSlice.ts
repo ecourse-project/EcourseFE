@@ -42,18 +42,6 @@ export const progressSlice = createSlice({
     setCurrentLesson: (state, action: PayloadAction<any>) => {
       state.currentLesson = action.payload;
     },
-    updateCheckedItem: (state, action: PayloadAction<any>) => {
-      console.log('call cehck', action);
-      state.loading = true;
-    },
-    updateCheckedItemSuccess: (state, action) => {
-      state.loading = false;
-      console.log('action', action.payload);
-    },
-    updateCheckedItemFailure: (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    },
     updateCheckedAnswer: (state, action: PayloadAction<any>) => {
       if (!state.answerSheet.length) {
         state.answerSheet = action.payload;

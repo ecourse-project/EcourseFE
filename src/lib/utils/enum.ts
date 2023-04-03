@@ -26,26 +26,6 @@ export enum StatusManager {
   COMPLETED = 'COMPLETED',
 }
 
-export enum typeTitleToolBox {
-  MOVE_UP = 'move_up_seller_buyer',
-  DOWNSIZERS = 'downsizer',
-  ABSENTEE = 'absentee',
-  LIKELY_TO_MOVE = 'likely_to_move',
-  HOME_COUNT = 'home_count',
-  MO_TOTAL_TRANSACTIONS_12 = 'mo_total_transactions_12',
-}
-export enum ActionsType {
-  TEXT = 'text',
-  EMAIL = 'email',
-  PHONE = 'phone',
-}
-export enum AddMailingType {
-  IMPORT = 'IMPORT',
-  DRAW = 'DRAW',
-}
-export enum CardListType {
-  ENTER_NEW_CARD = 'ENTER_NEW_CARD',
-}
 export enum MaxLengthText {
   MAILING_LIST_NAME = '50',
 }
@@ -81,4 +61,19 @@ export enum SaleStatusEnum {
   IN_CART = 'IN_CART',
   PENDING = 'PENDING',
   BOUGHT = 'BOUGHT',
+}
+export enum BtnString {
+  AVAILABLE = 'THÊM',
+  IN_CART = 'XOÁ',
+  PENDING = 'CHỜ THANH TOÁN',
+  BOUGHT = 'VÀO HỌC',
+  ACCEPTED = 'VÀO HỌC',
+  REQUESTED = 'HUỶ YÊU CẦU',
+  AVAILABLE_REQUEST = 'YÊU CẦU THAM GIA',
+}
+export enum Color {
+  AVAILABLE = '#0dcaf0',
+  IN_CART = '#ed5e68',
+  PENDING = '#8c8c8c',
+  BOUGHT = '#23c501',
 }

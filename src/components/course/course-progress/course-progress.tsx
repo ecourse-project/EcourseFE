@@ -78,7 +78,7 @@ const CourseProgress = () => {
   const [quizLoading, setQuizLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
   const state = useSelector((state: RootState) => state.progress);
-
+  const [checkedItems, setCheckedItems] = useState<UpdateLessonArgs[]>([]);
   const isInitialMount = useRef(true);
   const router = useRouter();
   const items = [
@@ -86,80 +86,43 @@ const CourseProgress = () => {
       label: 'Bình luận',
       key: 'comment',
       children: <CommentSection />,
-    }, // remember to pass the key prop
-    // {
-    //   label: 'Nhận xét',
-    //   key: 'feedback',
-    //   children: <FeedbackSection rateList={course?.rating_detail || []} />,
-    // },
+    },
   ];
-
-  // useEffect(() => {
-  //   const updateParams: UpdateProgressArgs = {
-  //     course_id: params.id || '',
-  //     lessons: state.updateParams,
-  //   };
-  //   debounceUpdateProgress(updateParams);
-  // }, [state.updateParams]);
-
-  const debounceUpdateProgress = useDebouncedCallback(async (params: UpdateProgressArgs) => {
-    console.log('call 106');
-    try {
-      if (course?.course_of_class) await CourseService.updateClassProgress(params);
-      else await CourseService.updateLessonProgress(params);
-      dispatch(progressAction.updateCheckedItem(params));
-    } catch (error) {
-      console.log('error update', error);
-    }
-  }, 1000);
 
   const getCourseDetail = async (id: string) => {
     try {
       setLoading(true);
       const courseDetail = await CourseService.getCourseDetail(id);
       setCourse(courseDetail);
-
+      // set current doc when reload page
       if (params.doc && courseDetail.lessons) {
         const idxLesson = courseDetail?.lessons.findIndex((v) => v.id === params.lesson);
         if (idxLesson >= 0) {
           const idxDoc = courseDetail.lessons[idxLesson].documents.findIndex((doc) => doc.id === params.doc);
           if (idxDoc >= 0) {
-            // dispatch({
-            //   type: CourseProgressAction.SET_SELECTED_DOC,
-            //   payload: courseDetail.lessons[idxLesson].documents[idxDoc],
-            // });
             dispatch(progressAction.setSelectedDoc(courseDetail.lessons[idxLesson].documents[idxDoc]));
           }
-        }
+        } //set current video on reloading page
       } else if (params.video && courseDetail.lessons) {
         const idxLesson = courseDetail?.lessons.findIndex((v) => v.id === params.lesson);
         if (idxLesson >= 0) {
           const idxVid = courseDetail.lessons[idxLesson].videos.findIndex((video) => video.id === params.video);
           if (idxVid >= 0) {
-            // dispatch({
-            //   type: CourseProgressAction.SET_SELECTED_DOC,
-            //   payload: courseDetail.lessons[idxLesson].documents[idxVid],
-            // });
             dispatch(progressAction.setSelectedDoc(courseDetail.lessons[idxLesson].documents[idxVid]));
           }
-        }
+        } //if there is not any current => assign first video by default
       } else if (courseDetail.lessons && !params.exam) {
-        // dispatch({
-        //   type: CourseProgressAction.SET_CURRENT_LESSON,
-        //   payload: courseDetail.lessons[0].id,
-        // });
-        // dispatch({
-        //   type: CourseProgressAction.SET_SELECTED_VIDEO,
-        //   payload: courseDetail.lessons[0].videos[0],
-        // });
         dispatch(progressAction.setCurrentLesson(courseDetail.lessons[0].id));
         dispatch(progressAction.setSelectedVideo(courseDetail.lessons[0].videos[0]));
       } else if (params.exam) {
+        //doing quiz
         setIsShowQuiz(true);
       }
+
+      // set initial checked item and checked answer
       const res = courseDetail?.lessons?.map((v) => {
-        setSumDoc(sumDoc + v?.documents?.length);
-        setSumVid(sumVid + v?.videos?.length);
+        // setSumDoc(sumDoc + v?.documents?.length);
+        // setSumVid(sumVid + v?.videos?.length);
         return {
           lesson_id: v.id,
           completed_docs: [...(v?.docs_completed || [])],
@@ -169,11 +132,7 @@ const CourseProgress = () => {
       setSumDoc(courseDetail.lessons?.reduce((p, c) => p + c.documents.length, 0) || 0);
       setSumVid(courseDetail.lessons?.reduce((p, c) => p + c.videos.length, 0) || 0);
 
-      // dispatch({
-      //   type: CourseProgressAction.UPDATE_CHECKED_ITEM,
-      //   payload: res,
-      // });
-      dispatch(progressAction.updateCheckedItem(res));
+      setCheckedItems(res || []);
       const quizList = await CourseService.listQuiz(courseDetail.id);
       setListQuiz(quizList);
       const initialAnswer = quizList?.map(
@@ -183,10 +142,6 @@ const CourseProgress = () => {
             answer_choice: AnswerChoiceEnum.NO_CHOICE,
           } as UserAnswersArgs),
       );
-      // dispatch({
-      //   type: CourseProgressAction.UPDATE_CHECKED_ANSWER,
-      //   payload: initialAnswer,
-      // });
       dispatch(progressAction.updateCheckedAnswer(initialAnswer));
     } catch (error) {
       console.log(error);
@@ -199,25 +154,52 @@ const CourseProgress = () => {
     getCourseDetail(params.id);
   }, []);
 
+  const onUpdate = async (data: UpdateLessonArgs) => {
+    const arrWithoutDataUpdate = checkedItems.filter((v) => v.lesson_id !== data.lesson_id);
+    arrWithoutDataUpdate.push(data);
+
+    const updateParams: UpdateProgressArgs = {
+      course_id: params.id || '',
+      lessons: arrWithoutDataUpdate,
+    };
+    debounceUpdateProgress(updateParams);
+    setCheckedItems([...arrWithoutDataUpdate]);
+  };
+
+  const debounceUpdateProgress = useDebouncedCallback(async (params: UpdateProgressArgs) => {
+    try {
+      if (course?.course_of_class) await CourseService.updateClassProgress(params);
+      else await CourseService.updateLessonProgress(params);
+    } catch (error) {
+      console.log('error update', error);
+    }
+  }, 1000);
+
   useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-    } else if (!loading) {
-      const url = window.location.protocol + '//' + window.location.host + window.location.pathname;
-      const videoId = state.selectedVideo?.id;
-      const docId = state.selectedDoc?.file?.id;
-      const newUrl = videoId
-        ? `${url}?id=${params.id}&lesson=${state.currentLesson}&video=${videoId}`
-        : docId
-        ? `${url}?id=${params.id}&lesson=${state.currentLesson}&doc=${docId}`
-        : `${url}?id=${params.id}&exam=true`;
-      window.history.pushState({ path: newUrl }, '', newUrl);
-      if (!isEmpty(state.selectedDoc) || !isEmpty(state.selectedVideo)) {
-        setIsShowQuiz(false);
-      }
+    const videoId = state.selectedVideo?.id;
+    const docId = state.selectedDoc?.file?.id;
+    router.push(
+      {
+        pathname: '/course-progress',
+        query: {
+          ...router.query,
+          lesson: state.currentLesson,
+          video: videoId,
+          doc: docId,
+          // exam: !videoId && !docId ? 'true' : '',
+        },
+      },
+      undefined,
+      { shallow: true },
+    );
+    if (!isEmpty(state.selectedDoc) || !isEmpty(state.selectedVideo)) {
+      setIsShowQuiz(false);
     }
   }, [state.selectedDoc, state.selectedVideo, isShowQuiz]);
 
+  useEffect(() => {
+    console.log('router.query :>> ', router.query);
+  }, [router.query]);
   useEffect(() => {
     setVideoLoading(true);
   }, [state.selectedVideo]);
@@ -227,17 +209,9 @@ const CourseProgress = () => {
     const lesson: Lesson | undefined = course ? course?.lessons?.filter((v) => v.id === params?.lesson)[0] : undefined;
     if (params.video) {
       const selected = lesson?.videos?.filter((v) => v.id === params.video)[0];
-      // dispatch({
-      //   type: CourseProgressAction.SET_SELECTED_VIDEO,
-      //   payload: selected,
-      // });
       dispatch(progressAction.setSelectedVideo(selected));
     } else if (params.doc) {
       const selected = lesson?.documents?.filter((v) => v.file.id === params.doc)[0];
-      // dispatch({
-      //   type: CourseProgressAction.SET_SELECTED_DOC,
-      //   payload: selected,
-      // });
       dispatch(progressAction.setSelectedDoc(selected));
     }
   }, [course]);
@@ -252,10 +226,6 @@ const CourseProgress = () => {
     } as IProgress;
   };
   const showQuiz = () => {
-    // dispatch({
-    //   type: CourseProgressAction.SET_SELECTED_DOC,
-    //   payload: {} as CourseDocument,
-    // });
     dispatch(progressAction.setSelectedDoc({}));
     setIsShowQuiz(true);
   };
@@ -686,7 +656,13 @@ const CourseProgress = () => {
               itemLayout="horizontal"
               dataSource={course?.lessons}
               renderItem={(item, i) => (
-                <LessonItem lesson={item} index={i} isShowLessonDetail={true} courseDetail={course || ({} as Course)} />
+                <LessonItem
+                  lesson={item}
+                  index={i}
+                  isShowLessonDetail={true}
+                  courseDetail={course || ({} as Course)}
+                  onUpdate={onUpdate}
+                />
               )}
             />
           </Col>

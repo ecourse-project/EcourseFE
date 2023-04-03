@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 
-import { Breadcrumb, Card, Col, Divider, Empty, Row, Spin } from 'antd';
+import { Breadcrumb, Card, Col, Divider, Empty, Row } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -19,9 +19,10 @@ import { css } from '@emotion/react';
 import HomeSide from 'src/components/home/homeSide';
 import DocCourseItemSkeleton from 'src/components/skeleton/document-skeleton';
 
-interface DocumentParams {
+export interface CourseClassParams {
   page?: number;
   course?: string;
+  class?: string;
 }
 
 const antIcon = <Loading3QuartersOutlined style={{ fontSize: 40 }} spin />;
@@ -30,28 +31,46 @@ const CourseUI: React.FC = () => {
   const [listCourse, setListCourse] = useState<Pagination<Course>>();
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
-  const params: DocumentParams = useQueryParam();
+  const params: CourseClassParams = useQueryParam();
   const [pagination, setPagination] = useState<PaginationParams>({
     page: 1,
     limit: 10,
   });
   const dispatch = useDispatch();
-  const fetCourse = async (pagination) => {
+  const fetCourseClass = async (pagination: PaginationParams) => {
     const token = localStorage.getItem(StorageKeys.SESSION_KEY);
     setLoading(true);
     try {
       if (!token) {
-        const homeCourse = await CourseService.getHomeCourses(
-          pagination,
-          params.course === 'ALL' ? '' : params.course || '',
-        );
-        setListCourse(homeCourse);
+        if (params.course) {
+          const homeCourse = await CourseService.getHomeCourses(
+            pagination,
+            params.course === 'ALL' ? '' : params.course || '',
+          );
+          setListCourse(homeCourse);
+        } else if (params.class) {
+          const homeClass = await CourseService.getHomeClasses(
+            pagination.limit,
+            pagination.page,
+            params.class === 'ALL' ? '' : params.class || '',
+          );
+          setListCourse(homeClass);
+        }
       } else {
-        const homeCourse = await CourseService.getAllCourses(
-          pagination,
-          params.course === 'ALL' ? '' : params.course || '',
-        );
-        setListCourse(homeCourse);
+        if (params.course) {
+          const homeCourse = await CourseService.getAllCourses(
+            pagination,
+            params.course === 'ALL' ? '' : params.course || '',
+          );
+          setListCourse(homeCourse);
+        } else if (params.class) {
+          const homeCourse = await CourseService.listClasses(
+            pagination.limit,
+            pagination.page,
+            params.class === 'ALL' ? '' : params.class || '',
+          );
+          setListCourse(homeCourse);
+        }
       }
     } catch (error) {
       setLoading(false);
@@ -73,7 +92,7 @@ const CourseUI: React.FC = () => {
     setPagination({ ...pagination, page: 1 });
   }, [params.course]);
   useEffect(() => {
-    fetCourse(pagination);
+    fetCourseClass(pagination);
   }, [pagination]);
 
   const onChangePage = (page: number) => {

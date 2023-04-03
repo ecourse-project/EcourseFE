@@ -68,6 +68,8 @@ apiClient.interceptors.request.use(
     return config;
   },
   function (error) {
+    console.log('71', error);
+
     return Promise.reject(error.response.data);
   },
 );
@@ -105,7 +107,8 @@ apiClient.interceptors.response.use(
           return Promise.reject(error);
         });
     }
-    return Promise.reject(error.response.data);
+    console.log('108', error);
+    return Promise.reject(error);
   },
 );
 // export { apiClient, apiIns };

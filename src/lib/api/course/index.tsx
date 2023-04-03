@@ -344,15 +344,15 @@ class CourseService {
     return apiClient.get(apiURL.initData());
   }
 
-  static getHomeClasses(limit: number, page: number, topic?: string, class_id?: string[]): Promise<Pagination<Class>> {
+  static getHomeClasses(limit: number, page: number, topic?: string, class_id?: string[]): Promise<Pagination<Course>> {
     return apiClient.get(apiURL.getHomeClasses(limit, page, topic, class_id));
   }
 
-  static listClasses(limit: number, page: number, topic?: string, class_id?: string[]): Promise<Pagination<Class>> {
+  static listClasses(limit: number, page: number, topic?: string, class_id?: string[]): Promise<Pagination<Course>> {
     return apiClient.get(apiURL.listClasses(limit, page, topic, class_id));
   }
 
-  static getClassDetail(class_id: string): Promise<Class> {
+  static getClassDetail(class_id: string): Promise<Course> {
     return apiClient.get(apiURL.getClassDetail(class_id));
   }
 

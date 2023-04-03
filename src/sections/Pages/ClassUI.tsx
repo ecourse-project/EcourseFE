@@ -27,7 +27,7 @@ interface DocumentParams {
 const antIcon = <Loading3QuartersOutlined style={{ fontSize: 40 }} spin />;
 
 const ClassUI: React.FC = () => {
-  const [listClass, setListClass] = useState<Pagination<Class>>();
+  const [listClass, setListClass] = useState<Pagination<Course>>();
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
   const params: DocumentParams = useQueryParam();

@@ -2,7 +2,7 @@ import { Collapse, List } from 'antd';
 import { debounce } from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Course, Lesson, UpdateLessonArgs, UpdateProgressArgs } from 'src/lib/types/backend_modal';
-import { DurationTime, formatDurationTime } from 'src/lib/utils/utils';
+import { DurationTime, formatDurationTime, uniqueArr } from 'src/lib/utils/utils';
 
 import { FileTextOutlined, PlayCircleFilled } from '@ant-design/icons';
 import { css } from '@emotion/react';
@@ -18,7 +18,7 @@ interface LessonItemProps {
   isCourseDetail?: boolean;
   index?: number;
   isShowLessonDetail: boolean;
-  courseDetail: Course;
+  onUpdate: (data: UpdateLessonArgs) => void;
 }
 
 const DisplayDurationTime = (duration) => {
@@ -52,7 +52,7 @@ const DisplayDurationTime = (duration) => {
 };
 
 const LessonItem: React.FC<LessonItemProps> = (props) => {
-  const { lesson, isCourseDetail = false, index, isShowLessonDetail, courseDetail } = props;
+  const { lesson, isCourseDetail = false, index, isShowLessonDetail, onUpdate } = props;
   const selectedDoc = useSelector((state: RootState) => state.progress.selectedDoc);
   const selectedVideo = useSelector((state: RootState) => state.progress.selectedVideo);
   const isDoneVideo = useSelector((state: RootState) => state.progress.isDoneVideo);
@@ -60,47 +60,13 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
   const [checkedDoc, setCheckedDoc] = useState<string[]>(lesson.docs_completed || []);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    debounceCheckedItem(checkedVideo, checkedDoc);
-  }, [checkedVideo, checkedDoc]);
-  // useEffect(() => {
-  // 	console.log('inital chjeck ', lesson.name, checkedDoc, checkedVideo);
-  // 	console.log('inital lesson ', lesson.videos);
-
-  // 	console.log('inital state ', state);
-  // }, [checkedVideo, checkedDoc, state]);
-
-  // const debounceCheckedItem = useDebouncedCallback((videos, docs) => {
-  // 	dispatch({
-  // 		type: CourseProgressAction.UPDATE_CHECKED_ITEM,
-  // 		payload: {
-  // 			lesson_id: lesson.id,
-  // 			completed_videos: [...(videos || [])],
-  // 			completed_docs: [...(docs || [])],
-  // 		} as UpdateLessonArgs,
-  // 	});
-  // 	console.log('call back debounce');
-  // }, 1000);
   const debounceCheckedItem = useCallback(
     debounce((videos, docs) => {
-      // dispatch({
-      //   type: CourseProgressAction.UPDATE_CHECKED_ITEM,
-      //   payload: {
-      //     lesson_id: lesson.id,
-      //     completed_videos: [...(videos || [])],
-      //     completed_docs: [...(docs || [])],
-      //   } as UpdateLessonArgs,
-      // });
-      dispatch(
-        progressAction.updateCheckedItem({
-          course_id: courseDetail.id || '',
-          lessons: {
-            lesson_id: lesson.id,
-            completed_videos: [...(videos || [])],
-            completed_docs: [...(docs || [])],
-          } as UpdateLessonArgs,
-        }),
-      );
+      onUpdate({
+        lesson_id: lesson.id,
+        completed_videos: [...(uniqueArr(videos) || [])],
+        completed_docs: [...(uniqueArr(docs) || [])],
+      } as UpdateLessonArgs);
     }, 1000),
     [],
   );
@@ -211,15 +177,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                         key={i}
                         className={`course_video_item video_${v.id}`}
                         onClick={() => {
-                          // dispatch({
-                          //   type: CourseProgressAction.SET_SELECTED_VIDEO,
-                          //   payload: v,
-                          // });
-                          // dispatch({
-                          //   type: CourseProgressAction.SET_CURRENT_LESSON,
-                          //   payload: lesson.id,
-                          // });
-                          dispatch(progressAction.setCompleteVideo(v));
+                          dispatch(progressAction.setSelectedVideo(v));
                           dispatch(progressAction.setCurrentLesson(lesson.id));
                         }}
                       >
@@ -232,8 +190,10 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                               if (checkedVideo.includes(e.target.value)) {
                                 const newChecked = checkedVideo.filter((v) => v !== e.target.value);
                                 setCheckedVideo(newChecked);
+                                debounceCheckedItem(newChecked, checkedDoc);
                               } else {
-                                setCheckedVideo([...checkedVideo, e.target.value]);
+                                setCheckedVideo((prev) => [...prev, e.target.value]);
+                                debounceCheckedItem([...checkedVideo, e.target.value], checkedDoc);
                               }
                             }}
                             onClick={(e) => {
@@ -272,14 +232,6 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                         key={i}
                         className={`course_video_item video_${v.id}`}
                         onClick={() => {
-                          // dispatch({
-                          //   type: CourseProgressAction.SET_SELECTED_DOC,
-                          //   payload: v,
-                          // });
-                          // dispatch({
-                          //   type: CourseProgressAction.SET_CURRENT_LESSON,
-                          //   payload: lesson.id,
-                          // });
                           dispatch(progressAction.setSelectedDoc(v));
                           dispatch(progressAction.setCurrentLesson(lesson.id));
                         }}
@@ -293,8 +245,10 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                               if (checkedDoc.includes(e.target.value)) {
                                 const newChecked = checkedDoc.filter((v) => v !== e.target.value);
                                 setCheckedDoc(newChecked);
+                                debounceCheckedItem(checkedVideo, newChecked);
                               } else {
                                 setCheckedDoc([...checkedDoc, e.target.value]);
+                                debounceCheckedItem(checkedVideo, [...checkedDoc, e.target.value]);
                               }
                             }}
                             onClick={(e) => {

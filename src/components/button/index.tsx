@@ -177,6 +177,7 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
         span {
           transition: all 400ms ease;
         }
+        outline: none !important;
         .ant-btn-loading-icon {
           position: relative;
           .anticon.anticon-loading.anticon-spin {

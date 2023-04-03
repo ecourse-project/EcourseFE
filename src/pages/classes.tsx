@@ -6,7 +6,7 @@ import Layout from 'src/components/common/Layout';
 import PrivateProvider from 'src/components/providers/PrivateProvider';
 
 const ClasLoadable = Loadable({
-  loader: () => import('src/sections/Pages/ClassUI'),
+  loader: () => import('src/sections/Pages/CourseUI'),
   loading: () => <LoadingPage isLoading={true} />,
 });
 const Class: React.FC = () => {
