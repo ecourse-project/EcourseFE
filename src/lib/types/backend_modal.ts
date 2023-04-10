@@ -241,6 +241,7 @@ export interface Course {
   quiz_detail?: QuizResult;
   // rating_stats?: RatingStats;
   request_status?: RequestStatus;
+  course_of_class?: boolean;
 }
 
 // ===========================================Classes===========================================

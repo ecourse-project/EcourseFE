@@ -66,7 +66,7 @@ const CourseItem: React.FC<ChildProps> = (props) => {
 
   const handleClick = async () => {
     if (currentCourse.request_status === RequestStatus.ACCEPTED) {
-      route.push(`${RoutePaths.COURSE_PROGRESS}?id=${currentCourse.id}`);
+      route.push(`${RoutePaths.COURSE_PROGRESS}?id=${currentCourse.id}&isClass=${params.class ? 'true' : 'false'}`);
     }
     checkAccountPermission();
     setLoading(true);

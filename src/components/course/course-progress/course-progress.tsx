@@ -48,6 +48,7 @@ export interface CourseParams {
   doc?: string;
   tab?: string;
   exam?: boolean;
+  isClass?: boolean;
 }
 
 interface IProgress {
@@ -92,8 +93,14 @@ const CourseProgress = () => {
   const getCourseDetail = async (id: string) => {
     try {
       setLoading(true);
-      const courseDetail = await CourseService.getCourseDetail(id);
-      setCourse(courseDetail);
+      let courseDetail: Course = {} as Course;
+      if (params.isClass) {
+        courseDetail = await CourseService.getClassDetail(id);
+        setCourse(courseDetail);
+      } else {
+        courseDetail = await CourseService.getCourseDetail(id);
+        setCourse(courseDetail);
+      }
       // set current doc when reload page
       if (params.doc && courseDetail.lessons) {
         const idxLesson = courseDetail?.lessons.findIndex((v) => v.id === params.lesson);
@@ -197,9 +204,9 @@ const CourseProgress = () => {
     }
   }, [state.selectedDoc, state.selectedVideo, isShowQuiz]);
 
-  useEffect(() => {
-    console.log('router.query :>> ', router.query);
-  }, [router.query]);
+  // useEffect(() => {
+  //   console.log('router.query :>> ', router.query);
+  // }, [router.query]);
   useEffect(() => {
     setVideoLoading(true);
   }, [state.selectedVideo]);
@@ -660,7 +667,7 @@ const CourseProgress = () => {
                   lesson={item}
                   index={i}
                   isShowLessonDetail={true}
-                  courseDetail={course || ({} as Course)}
+                  // courseDetail={course || ({} as Course)}
                   onUpdate={onUpdate}
                 />
               )}

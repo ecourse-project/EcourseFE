@@ -62,6 +62,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
 
   const debounceCheckedItem = useCallback(
     debounce((videos, docs) => {
+      console.log('lesson.id,videos,docs :>> ', lesson.id, videos, docs);
       onUpdate({
         lesson_id: lesson.id,
         completed_videos: [...(uniqueArr(videos) || [])],
