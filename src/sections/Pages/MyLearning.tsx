@@ -1,17 +1,16 @@
-import { css } from '@emotion/react';
-import { Tabs } from 'antd';
-import React, { useEffect, useState } from 'react';
-import WishListUI from 'src/components/course/my-course/wish-list';
-import { Course, Document, FavoriteList } from 'src/lib/types/backend_modal';
-import CourseService from 'src/lib/api/course';
-import { v4 as uuidv4 } from 'uuid';
-import MyCourseUI from 'src/components/course/my-course';
-import RoutePaths from 'src/lib/utils/routes';
-import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { useRouter } from 'next/router';
-import { TypeTabPanel } from 'src/lib/types/commentType';
-import TabPaneSection from 'src/components/tab-pane-learning';
+import React, { useEffect, useState } from 'react';
+import MyCourseUI from 'src/components/course/my-course';
+import WishListUI from 'src/components/course/my-course/wish-list';
 import { SettingContext } from 'src/components/settings/tabs';
+import TabPaneSection from 'src/components/tab-pane-learning';
+import CourseService from 'src/lib/api/course';
+import { useQueryParam } from 'src/lib/hooks/useQueryParam';
+import { Course, Document, FavoriteList } from 'src/lib/types/backend_modal';
+import { TypeTabPanel } from 'src/lib/types/commentType';
+import { v4 as uuidv4 } from 'uuid';
+
+import { css } from '@emotion/react';
 
 interface MyLearnParams {
   tab?: string;

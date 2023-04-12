@@ -1,15 +1,14 @@
 import { Collapse, List } from 'antd';
 import { debounce } from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Course, Lesson, UpdateLessonArgs, UpdateProgressArgs } from 'src/lib/types/backend_modal';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'src/lib/reducers/model';
+import { progressAction } from 'src/lib/reducers/progress/progressSlice';
+import { Lesson, UpdateLessonArgs } from 'src/lib/types/backend_modal';
 import { DurationTime, formatDurationTime, uniqueArr } from 'src/lib/utils/utils';
 
 import { FileTextOutlined, PlayCircleFilled } from '@ant-design/icons';
 import { css } from '@emotion/react';
-
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'src/lib/reducers/model';
-import { progressAction } from 'src/lib/reducers/progress/progressSlice';
 
 const { Panel } = Collapse;
 

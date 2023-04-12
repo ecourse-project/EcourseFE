@@ -1,10 +1,12 @@
-import { configureStore, ThunkAction, Action, compose } from '@reduxjs/toolkit';
-import createSagaMiddleware from 'redux-saga';
-import { createStore, applyMiddleware, AnyAction, CombinedState, Store } from 'redux';
-import { rootReducer, rootSaga } from '../reducers';
-import { RootState } from '../reducers/model';
+import { createStore } from 'redux';
 import reduxReset from 'redux-reset';
+import createSagaMiddleware from 'redux-saga';
+
+import { Action, compose, configureStore, ThunkAction } from '@reduxjs/toolkit';
+
+import { rootReducer, rootSaga } from '../reducers';
 import AppAction from '../reducers/actions';
+import { RootState } from '../reducers/model';
 
 const sagaMiddleware = createSagaMiddleware();
 const enhanceCreateStore = compose(reduxReset(AppAction.RESET_ROOT_STATE))(createStore);

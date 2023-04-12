@@ -1,8 +1,7 @@
+import { Document, Pagination } from 'src/lib/types/backend_modal';
+
 import { createSlice, current, PayloadAction } from '@reduxjs/toolkit';
-import { List } from 'antd';
-import { OrderStatus } from 'src/components/order/order-item';
-import { CreateOrderArg, Document, OCart, OutputOrder, Pagination } from 'src/lib/types/backend_modal';
-import { SaleStatusEnum } from 'src/lib/types/backend_modal';
+
 export interface DocumentState {
   updateLoading: number;
   listDoc: Pagination<Document>;

@@ -3,10 +3,11 @@
 import { Breadcrumb, Card, Col, Divider, Empty, Row } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import CourseItem from 'src/components/course/course-item';
 import { DocCourseWrapper } from 'src/components/document/style';
-import CustomPagination from 'src/components/pagination';
+import HomeSide from 'src/components/home/homeSide';
+import CustomPagination from 'src/components/order/pagination';
+import DocCourseItemSkeleton from 'src/components/skeleton/document-skeleton';
 import CourseService from 'src/lib/api/course';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { Course, Pagination, PaginationParams } from 'src/lib/types/backend_modal';
@@ -16,8 +17,6 @@ import RoutePaths from 'src/lib/utils/routes';
 
 import { HomeOutlined, Loading3QuartersOutlined, SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
-import HomeSide from 'src/components/home/homeSide';
-import DocCourseItemSkeleton from 'src/components/skeleton/document-skeleton';
 
 export interface CourseClassParams {
   page?: number;
@@ -36,7 +35,6 @@ const CourseUI: React.FC = () => {
     page: 1,
     limit: 10,
   });
-  const dispatch = useDispatch();
   const fetCourseClass = async (pagination: PaginationParams) => {
     const token = localStorage.getItem(StorageKeys.SESSION_KEY);
     setLoading(true);

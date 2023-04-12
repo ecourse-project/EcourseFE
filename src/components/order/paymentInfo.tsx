@@ -1,5 +1,6 @@
-import { Card, Col, Divider, Row } from 'antd';
-import { formatCurrency, formatCurrencySymbol } from 'src/lib/utils/currency';
+import { Card, Col, Row } from 'antd';
+import { formatCurrencySymbol } from 'src/lib/utils/currency';
+
 import { css } from '@emotion/react';
 
 interface PaymentInfo {

@@ -1,10 +1,11 @@
+import 'react-loading-skeleton/dist/skeleton.css';
+import 'src/styles/global.scss';
+
 import Head from 'next/head';
 import { SkeletonTheme } from 'react-loading-skeleton';
-import 'react-loading-skeleton/dist/skeleton.css';
 import { Provider } from 'react-redux';
 import { store } from 'src/lib/config/reduxStore';
 import ContextProvider from 'src/lib/context';
-import 'src/styles/global.scss';
 
 const CreativeTeaching = ({ Component, pageProps }) => (
   <>

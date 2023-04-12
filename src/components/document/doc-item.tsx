@@ -17,17 +17,9 @@ import { checkAccountPermission } from 'src/lib/utils/utils';
 import { DocumentParams } from 'src/sections/Pages/DocumentUI';
 
 /* eslint-disable react/prop-types */
-import {
-  EyeFilled,
-  HeartFilled,
-  HeartOutlined,
-  LikeFilled,
-  VerticalAlignBottomOutlined,
-  WalletOutlined,
-} from '@ant-design/icons';
+import { WalletOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
-import Rating from '@mui/material/Rating';
 
 import AppButton from '../button';
 import { ItemDocCourseWrapper } from './style';

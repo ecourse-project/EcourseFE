@@ -3,7 +3,6 @@
 import { apiClient } from 'src/lib/config/apiClient';
 import {
   CalculatePriceArgs,
-  Class,
   Course,
   CourseComment,
   CreateOrderArg,
@@ -17,10 +16,8 @@ import {
   OPasswordChange,
   OPasswordRest,
   ORegistration,
-  OutputAdd,
   OutputCancel,
   OutputOrder,
-  OutputRemove,
   OVerifyToken,
   Pagination,
   PaginationParams,
@@ -35,7 +32,6 @@ import {
   RatingStats,
   RequestStatus,
   TotalPrice,
-  UpdateLessonArgs,
   UpdateProgressArgs,
   User,
 } from 'src/lib/types/backend_modal';

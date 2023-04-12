@@ -1,9 +1,10 @@
 import { Image } from 'antd';
-import Logo from 'src/assets/images/logo.png';
-import BannerImg from 'src/assets/images/app-banner.png';
-import styled from '@emotion/styled';
 import Link from 'next/link';
+import BannerImg from 'src/assets/images/app-banner.png';
+import Logo from 'src/assets/images/logo.png';
 import RoutePaths from 'src/lib/utils/routes';
+
+import styled from '@emotion/styled';
 
 const BannerWrapper = styled.div`
   width: 100%;

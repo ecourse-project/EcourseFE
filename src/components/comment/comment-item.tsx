@@ -1,11 +1,13 @@
-import { css } from '@emotion/react';
 import { Avatar, Tooltip } from 'antd';
-import { Comment } from '@ant-design/compatible';
 import moment from 'moment';
 import React, { useState } from 'react';
 import { CourseComment } from 'src/lib/types/backend_modal';
-import CommentForm from './comment-form';
+
+import { Comment } from '@ant-design/compatible';
 import { UserOutlined } from '@ant-design/icons';
+import { css } from '@emotion/react';
+
+import CommentForm from './comment-form';
 
 interface CommentItemProps {
   item: CourseComment;

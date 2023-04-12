@@ -1,4 +1,3 @@
-import { css } from '@emotion/react';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/router';
 // import { navigate } from 'gatsby';
@@ -10,6 +9,9 @@ import { ResetPassword1FieldData } from 'src/lib/types/commentType';
 import RoutePaths from 'src/lib/utils/routes';
 import validation from 'src/lib/utils/validation';
 import * as Yup from 'yup';
+
+import { css } from '@emotion/react';
+
 import ErrorMessage from '../error-message';
 
 interface ResendEmailFormProps {

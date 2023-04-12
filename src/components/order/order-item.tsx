@@ -1,18 +1,18 @@
-import { Button, Card, Col, Collapse, List, Row, Select, Skeleton, Statistic } from 'antd';
+import { Button, Card, Col, Collapse, List, Row, Select, Skeleton } from 'antd';
 import { ExpandIconPosition } from 'antd/lib/collapse/Collapse';
+import moment from 'moment';
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { OutputOrder } from 'src/lib/types/backend_modal';
+import { formatCurrency } from 'src/lib/utils/currency';
+import RoutePaths from 'src/lib/utils/routes';
 
 import { css } from '@emotion/react';
 import InfoIcon from '@mui/icons-material/Info';
-import moment from 'moment';
-import BaseModal from 'src/components/modal';
-import { OutputOrder } from 'src/lib/types/backend_modal';
-import AppAction from 'src/lib/reducers/actions';
-import { formatCurrency, formatCurrencySymbol } from 'src/lib/utils/currency';
-import { useDispatch } from 'react-redux';
-import RoutePaths from 'src/lib/utils/routes';
+
 import { AskForSave } from '../alert/SweetAlert';
 import PaymentInfo from './paymentInfo';
+
 const { Panel } = Collapse;
 const { Option } = Select;
 const text = `

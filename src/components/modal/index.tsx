@@ -1,6 +1,5 @@
-import React from 'react';
 import { Modal, ModalProps } from 'antd';
-import IconClose from 'src/assets/images/close.svg';
+import React from 'react';
 
 interface BaseModalProps extends ModalProps {
   visible: boolean;

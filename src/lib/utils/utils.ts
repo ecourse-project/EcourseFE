@@ -434,7 +434,8 @@
 // 	return parseFloat(fee);
 // };
 
-import moment, { Moment } from 'moment';
+import moment from 'moment';
+
 import { forceLogout } from './auth';
 import { StorageKeys } from './enum';
 

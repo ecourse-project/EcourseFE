@@ -1,14 +1,13 @@
-import { css } from '@emotion/react';
-// import { navigate } from 'gatsby';
+import { Image } from 'antd';
 import React from 'react';
-import AppButton from 'src/components/button';
-import AuthService from 'src/lib/api/auth';
-import { getQueryParam } from 'src/lib/utils/query';
-import Form from 'src/components/verify/ResendForm';
-import RoutePaths from 'src/lib/utils/routes';
 import { FaRegUser } from 'react-icons/fa';
 import ArrowLeft from 'src/assets/images/arrow-left.svg';
-import { Image } from 'antd';
+import AppButton from 'src/components/button';
+import Form from 'src/components/verify/ResendForm';
+import { getQueryParam } from 'src/lib/utils/query';
+
+import { css } from '@emotion/react';
+
 interface VerifyParams {
   token?: string;
   resend?: boolean;

@@ -8,8 +8,6 @@ import HomeSide from 'src/components/home/homeSide';
 import CourseService from 'src/lib/api/course';
 import { Course, Document, Homepage } from 'src/lib/types/backend_modal';
 
-const LIMIT = 4;
-
 interface InitialState {
   listDoc: Document[];
   listCourse: Course[];

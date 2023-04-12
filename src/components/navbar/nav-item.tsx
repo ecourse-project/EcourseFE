@@ -1,4 +1,5 @@
 import Link from 'next/link';
+
 interface NavItemProps {
   text: string;
   href: string;

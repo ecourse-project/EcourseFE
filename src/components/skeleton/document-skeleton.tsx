@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types';
-import Skeleton from 'react-loading-skeleton';
 import { times } from 'lodash';
+import Skeleton from 'react-loading-skeleton';
+
 import { css } from '@emotion/react';
 
 function DocCourseItemSkeleton(props) {

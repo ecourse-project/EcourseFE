@@ -1,4 +1,5 @@
 import React from 'react';
+
 import VideoJS from './videos';
 
 // This imports the functional component from the previous sample.

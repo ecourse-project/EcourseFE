@@ -1,21 +1,23 @@
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 
-import { DownOutlined, HomeOutlined, PlayCircleOutlined, SwapOutlined } from '@ant-design/icons';
-import { css } from '@emotion/react';
 import { Col, Collapse, Divider, List, Popover, Progress, Row, Tabs } from 'antd';
 import _, { isEmpty } from 'lodash';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { useDispatch, useSelector } from 'react-redux';
 import ExamImg from 'src/assets/images/exam.png';
 import CommentSection from 'src/components/comment';
 import CourseService from 'src/lib/api/course';
+import globalVariable from 'src/lib/config/env';
 import useDebouncedCallback from 'src/lib/hooks/useDebouncedCallback';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { RootState } from 'src/lib/reducers/model';
+// import reducer, { CourseProgressAction, CourseProgressContextType } from './context/reducer';
+import { progressAction } from 'src/lib/reducers/progress/progressSlice';
 import {
   AnswerChoiceEnum,
   Course,
@@ -32,11 +34,10 @@ import {
 } from 'src/lib/types/backend_modal';
 import RoutePaths from 'src/lib/utils/routes';
 
-import { useRouter } from 'next/router';
-import globalVariable from 'src/lib/config/env';
+import { DownOutlined, HomeOutlined, PlayCircleOutlined, SwapOutlined } from '@ant-design/icons';
+import { css } from '@emotion/react';
+
 import PdfViewer from '../../pdf';
-// import reducer, { CourseProgressAction, CourseProgressContextType } from './context/reducer';
-import { progressAction } from 'src/lib/reducers/progress/progressSlice';
 import LessonItem from './lesson-item';
 import QuizSection from './quiz';
 

@@ -1,17 +1,20 @@
 import { Popover } from 'antd';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import DefaultClassImg from 'src/assets/images/class.jpg';
 import CourseService from 'src/lib/api/course';
+import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { courseAction } from 'src/lib/reducers/course/courseSlice';
-import { RootState } from 'src/lib/reducers/model';
-import { Course, CourseDocument, MoveEnum, RequestStatus } from 'src/lib/types/backend_modal';
+import { Course, MoveEnum, RequestStatus } from 'src/lib/types/backend_modal';
 import { formatCurrency } from 'src/lib/utils/currency';
 import { BtnString, Color, SaleStatusEnum } from 'src/lib/utils/enum';
 import { formatDate } from 'src/lib/utils/format';
 import RoutePaths from 'src/lib/utils/routes';
 import { checkAccountPermission } from 'src/lib/utils/utils';
+import { CourseClassParams } from 'src/sections/Pages/CourseUI';
 
 import { WalletOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
@@ -19,10 +22,6 @@ import TaskAltIcon from '@mui/icons-material/TaskAlt';
 
 import AppButton from '../button';
 import { ItemDocCourseWrapper } from '../document/style';
-import { useQueryParam } from 'src/lib/hooks/useQueryParam';
-import { CourseClassParams } from 'src/sections/Pages/CourseUI';
-import DefaultClassImg from 'src/assets/images/class.jpg';
-import { useRouter } from 'next/router';
 
 interface ChildProps {
   course: Course;

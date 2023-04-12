@@ -1,17 +1,15 @@
-import { Worker } from '@react-pdf-viewer/core';
-import { Viewer, LoadError } from '@react-pdf-viewer/core';
-import { ProgressBar } from '@react-pdf-viewer/core';
-import packageJson from 'package.json';
-const pdfjsVersion = packageJson.dependencies['pdfjs-dist'];
-import '@react-pdf-viewer/core/lib/styles/index.css';
-import renderError from './errorRender';
-import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
-
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
-import { css } from '@emotion/react';
+import packageJson from 'package.json';
 
+import { css } from '@emotion/react';
+import { ProgressBar, Viewer, Worker } from '@react-pdf-viewer/core';
+import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
+
+import renderError from './errorRender';
+
+const pdfjsVersion = packageJson.dependencies['pdfjs-dist'];
 interface ViewerWrapperProps {
   fileUrl: string;
 }

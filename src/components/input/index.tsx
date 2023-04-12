@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
 import { Input } from 'antd';
-import styled from '@emotion/styled';
 import { InputProps } from 'antd/lib/input';
-import { css } from '@emotion/react';
+import React, { useState } from 'react';
 import theme from 'src/styles/theme';
+
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons/lib/icons';
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
 
 const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean) => {
   let isLabelAffected = isFocusing;

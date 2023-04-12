@@ -1,5 +1,7 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { CourseDocument, OFileUpload, UpdateLessonArgs, UserAnswersArgs } from 'src/lib/types/backend_modal';
+
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 export interface ProgressState {
   selectedDoc: CourseDocument;
   selectedVideo: OFileUpload;

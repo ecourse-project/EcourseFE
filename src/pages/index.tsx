@@ -1,12 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Loadable from 'react-loadable';
-import PublicProvider from 'src/components/providers/PublicProvider';
-import { LoadingPage } from 'src/components/loading/loadingBase';
 import Layout from 'src/components/common/Layout';
-import PrivateProvider from 'src/components/providers/PrivateProvider';
-import { Alert } from 'antd';
-// const { ErrorBoundary } = Alert;
 import { ErrorBoundary } from 'src/components/error';
+import { LoadingPage } from 'src/components/loading/loadingBase';
+import PublicProvider from 'src/components/providers/PublicProvider';
 
 const HomeLoadable = Loadable({
   loader: () => import('src/sections/Pages/HomeUI'),

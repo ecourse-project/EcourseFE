@@ -1,5 +1,3 @@
-/* eslint-disable react/react-in-jsx-scope */
-import RoutePaths from 'src/lib/utils/routes';
 import Swal, { SweetAlertResult } from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 

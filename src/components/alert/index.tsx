@@ -1,6 +1,7 @@
-import React from 'react';
-import { css } from '@emotion/react';
 import { Alert } from 'antd';
+import React from 'react';
+
+import { css } from '@emotion/react';
 
 const AlertCard: React.FC<{ description?: string; message?: string }> = ({ description, message = '' }) => {
   return (

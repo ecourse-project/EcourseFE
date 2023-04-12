@@ -1,5 +1,7 @@
+import { Course, Pagination } from 'src/lib/types/backend_modal';
+
 import { createSlice, current, PayloadAction } from '@reduxjs/toolkit';
-import { Course, Document, OCart, OutputOrder, Pagination } from 'src/lib/types/backend_modal';
+
 export interface CourseState {
   loading: boolean;
   listCourse: Pagination<Course>;

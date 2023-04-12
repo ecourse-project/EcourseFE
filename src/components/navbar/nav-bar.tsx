@@ -1,6 +1,7 @@
 import { Divider, Dropdown, Menu } from 'antd';
 import { isEmpty } from 'lodash';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/lib/reducers/model';
@@ -14,7 +15,6 @@ import { css } from '@emotion/react';
 type MenuItem = Required<MenuProps>['items'][number];
 
 import type { MenuProps } from 'antd';
-import { useRouter } from 'next/router';
 function getItem(
   label: React.ReactNode,
   key?: React.Key | null,

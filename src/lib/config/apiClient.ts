@@ -1,11 +1,11 @@
 import axios from 'axios';
-import { Router } from 'next/router';
+import { isEmpty } from 'lodash';
 import { StorageKeys } from 'src/lib/utils/enum';
+
 import AuthService from '../api/auth';
 import { OToken } from '../types/backend_modal';
 import { forceLogout } from '../utils/auth';
 import globalVariable from './env';
-import { isEmpty } from 'lodash';
 
 // let apiClient: ApiClient;
 // let apiIns: Api;

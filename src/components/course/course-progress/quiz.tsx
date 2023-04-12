@@ -1,15 +1,14 @@
 import { Collapse, Progress, Radio, RadioChangeEvent, Spin, Typography } from 'antd';
 import { isEmpty } from 'lodash';
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import AppButton from 'src/components/button';
+import { RootState } from 'src/lib/reducers/model';
+import { progressAction } from 'src/lib/reducers/progress/progressSlice';
 import { AnswerChoiceEnum, Quiz, QuizResult, UserAnswersArgs } from 'src/lib/types/backend_modal';
 import { antIcon } from 'src/lib/utils/animations';
 
 import { css } from '@emotion/react';
-
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'src/lib/reducers/model';
-import { progressAction } from 'src/lib/reducers/progress/progressSlice';
 
 const { Panel } = Collapse;
 

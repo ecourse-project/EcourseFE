@@ -8,17 +8,15 @@ import ErrorMessage from 'src/components/error-message';
 import AppInput from 'src/components/input';
 import AuthService from 'src/lib/api/auth';
 import { LoginParams } from 'src/lib/api/auth/model';
+import CourseService from 'src/lib/api/course';
 import UserService from 'src/lib/api/user';
-import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { appActions } from 'src/lib/reducers/app/appSlice';
-import { User } from 'src/lib/types/backend_modal';
-import { LoginFormData, LoginQueryParams } from 'src/lib/types/commentType';
+import { LoginFormData } from 'src/lib/types/commentType';
 import { StorageKeys } from 'src/lib/utils/enum';
 import validation from 'src/lib/utils/validation';
 import * as Yup from 'yup';
 
 import { css } from '@emotion/react';
-import CourseService from 'src/lib/api/course';
 
 const LoginForm: React.FC = () => {
   const router = useRouter();

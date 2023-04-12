@@ -1,20 +1,21 @@
 import { Button, Divider, Modal } from 'antd';
+import { useRouter } from 'next/router';
 import React, { ReactNode, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import AppButton from 'src/components/button';
 import CourseService from 'src/lib/api/course';
+import { CreateOrderArg, OCart } from 'src/lib/types/backend_modal';
 import { formatCurrencySymbol } from 'src/lib/utils/currency';
+import { GlobalStyle } from 'src/lib/utils/enum';
+import RoutePaths from 'src/lib/utils/routes';
+import Swal from 'sweetalert2';
 
 import { css } from '@emotion/react';
 import CurrencyRubleIcon from '@mui/icons-material/CurrencyRuble';
-import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
-import { CreateOrderArg, OCart } from 'src/lib/types/backend_modal';
-import { GlobalStyle } from 'src/lib/utils/enum';
-import Swal from 'sweetalert2';
-import { AskForSave } from '../alert/SweetAlert';
-import RoutePaths from 'src/lib/utils/routes';
+
 import { TabSettingKey } from '../settings/tabs';
 import CartOrderBill from './cart-order-bill';
+
 interface ChildProps {
   docNum: number;
   children: ReactNode;
