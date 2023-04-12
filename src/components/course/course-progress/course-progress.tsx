@@ -83,6 +83,7 @@ const CourseProgress = () => {
   const [checkedItems, setCheckedItems] = useState<UpdateLessonArgs[]>([]);
   const isInitialMount = useRef(true);
   const router = useRouter();
+  const [progressNumber, setProgressNumber] = useState<number>(course?.progress || 0);
   const items = [
     {
       label: 'Bình luận',
@@ -98,9 +99,11 @@ const CourseProgress = () => {
       if (params.isClass) {
         courseDetail = await CourseService.getClassDetail(id);
         setCourse(courseDetail);
+        setProgressNumber(courseDetail.progress || 0);
       } else {
         courseDetail = await CourseService.getCourseDetail(id);
         setCourse(courseDetail);
+        setProgressNumber(courseDetail.progress || 0);
       }
       // set current doc when reload page
       if (params.doc && courseDetail.lessons) {
@@ -163,9 +166,9 @@ const CourseProgress = () => {
   }, []);
 
   const onUpdate = async (data: UpdateLessonArgs) => {
-    const arrWithoutDataUpdate = checkedItems.filter((v) => v.lesson_id !== data.lesson_id);
+    const arrWithoutDataUpdate = checkedItems.filter((v) => v.lesson_id !== data.lesson_id); //instead of slicing
     arrWithoutDataUpdate.push(data);
-
+    console.log('arrWithoutDataUpdate :>> ', data);
     const updateParams: UpdateProgressArgs = {
       course_id: params.id || '',
       lessons: arrWithoutDataUpdate,
@@ -176,8 +179,13 @@ const CourseProgress = () => {
 
   const debounceUpdateProgress = useDebouncedCallback(async (params: UpdateProgressArgs) => {
     try {
-      if (course?.course_of_class) await CourseService.updateClassProgress(params);
-      else await CourseService.updateLessonProgress(params);
+      if (course?.course_of_class) {
+        const prN = await CourseService.updateClassProgress(params);
+        setProgressNumber(prN.progress);
+      } else {
+        const prN = await CourseService.updateLessonProgress(params);
+        setProgressNumber(prN.progress);
+      }
     } catch (error) {
       console.log('error update', error);
     }
@@ -227,6 +235,11 @@ const CourseProgress = () => {
   const calculateProgress = () => {
     const doneDoc = state.updateParams.reduce((p, c) => p + c.completed_docs?.length, 0);
     const doneVid = state.updateParams.reduce((p, c) => p + c.completed_videos?.length, 0);
+    // console.log('state 230:>> ', state);
+    // console.log('doneDoc :  >> ', doneDoc);
+    // console.log('doneVid :>> ', doneVid);
+    // console.log('sumDoc :>> ', sumDoc);
+    // console.log('sumVid:>> ', sumVid);
     return {
       done: doneDoc + doneVid,
       sum: sumDoc + sumVid,
@@ -257,9 +270,6 @@ const CourseProgress = () => {
     }
   };
 
-  useEffect(() => {
-    console.log('videoLoading :>> ', videoLoading);
-  }, [videoLoading]);
   const playerRef = React.useRef(null);
   const videoJsOptions = {
     autoplay: false,
@@ -474,12 +484,7 @@ const CourseProgress = () => {
               }
             }
           }
-          .video_${selectItemVideo?.id} {
-            background-color: #d1d7dc;
-          }
-          .video_${selectItemDoc?.id} {
-            background-color: #d1d7dc;
-          }
+
           .ant-list-item {
             padding: 0;
           }
@@ -571,7 +576,7 @@ const CourseProgress = () => {
               '0%': '#108ee9',
               '100%': '#87d068',
             }}
-            percent={Math.round(calculateProgress().progress_num)}
+            percent={Math.round(progressNumber)}
           />
           <span className="progress_label">
             <Popover

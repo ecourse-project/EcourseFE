@@ -13,7 +13,7 @@ const Home: React.FC = () => {
   return (
     <React.Fragment>
       <PublicProvider>
-        <Layout isNoneHeader>
+        <Layout>
           <ErrorBoundary>
             <HomeLoadable />
           </ErrorBoundary>
