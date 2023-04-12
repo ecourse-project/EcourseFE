@@ -3,11 +3,9 @@
 import { Col, Row } from 'antd';
 import { StaticImageData } from 'next/image';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import HomeData from 'src/components/home';
 import HomeSide from 'src/components/home/homeSide';
 import CourseService from 'src/lib/api/course';
-import { RootState } from 'src/lib/reducers/model';
 import { Course, Document, Homepage } from 'src/lib/types/backend_modal';
 
 const LIMIT = 4;
@@ -36,17 +34,12 @@ export interface ICategory {
 
 const HomeUI = () => {
   const [homeData, setHomeData] = useState<Homepage[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const dispatch = useDispatch();
   const fetchHomeData = async () => {
     try {
-      setLoading(true);
       const homes: Homepage[] = await CourseService.getHome();
       setHomeData(homes);
     } catch (error) {
-      console.log('errror', error);
-    } finally {
-      setLoading(false);
+      console.log('error', error);
     }
   };
 

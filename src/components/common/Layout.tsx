@@ -5,7 +5,7 @@ import Footer from './Footer';
 
 const Layout = ({ children, isNoneHeader = false, isNoneFooter = true }) => (
   <>
-    <Banner />
+    <div>{!isNoneHeader && <Banner />}</div>
     <div>{!isNoneHeader && <Navbar />}</div>
     <div className="page-container">
       {children}
