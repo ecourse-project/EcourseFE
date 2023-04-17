@@ -14,9 +14,9 @@ const Home: React.FC = () => {
     <React.Fragment>
       <PublicProvider>
         <Layout>
-          <ErrorBoundary>
-            <HomeLoadable />
-          </ErrorBoundary>
+          {/* <ErrorBoundary> */}
+          <HomeLoadable />
+          {/* </ErrorBoundary> */}
         </Layout>
       </PublicProvider>
     </React.Fragment>

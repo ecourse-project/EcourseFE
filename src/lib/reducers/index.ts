@@ -12,6 +12,7 @@ import documentSaga from './document/documentSage';
 import document from './document/documentSlice';
 import { RootState } from './model';
 import progress from './progress/progressSlice';
+import progressSaga from './progress/progressSaga';
 
 /*** Importing sagas ***/
 
@@ -32,6 +33,7 @@ function* rootSaga(): Generator<ForkEffect<void>, void, unknown> {
   yield fork(documentSaga);
   yield fork(courseSaga);
   yield fork(appSaga);
+  yield fork(progressSaga);
 }
 
 export { rootReducer, rootSaga };

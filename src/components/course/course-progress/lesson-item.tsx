@@ -1,5 +1,5 @@
 import { Collapse, List } from 'antd';
-import { debounce } from 'lodash';
+import { cloneDeep, debounce } from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/lib/reducers/model';
@@ -57,19 +57,69 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
   const isDoneVideo = useSelector((state: RootState) => state.progress.isDoneVideo);
   const [checkedVideo, setCheckedVideo] = useState<string[]>(lesson.videos_completed || []);
   const [checkedDoc, setCheckedDoc] = useState<string[]>(lesson.docs_completed || []);
+  const updateParams = useSelector((state: RootState) => state.progress.updateParams);
   const dispatch = useDispatch();
+
+  const handleCheckedDoc = (e) => {
+    if (checkedDoc.includes(e.target.value)) {
+      const newChecked = checkedDoc.filter((v) => v !== e.target.value);
+      // console.log('newChecked :>> ', newChecked);
+      setCheckedDoc(newChecked);
+      debounceCheckedItem2(checkedVideo, newChecked);
+    } else {
+      setCheckedDoc([...checkedDoc, e.target.value]);
+      // console.log('[...checkedDoc, e.target.value] :>> ', [...checkedDoc, e.target.value]);
+      debounceCheckedItem2(checkedVideo, [...checkedDoc, e.target.value]);
+    }
+  };
 
   const debounceCheckedItem = useCallback(
     debounce((videos, docs) => {
-      console.log('lesson.id,videos,docs :>> ', lesson.id, videos, docs);
-      onUpdate({
-        lesson_id: lesson.id,
-        completed_videos: [...(uniqueArr(videos) || [])],
-        completed_docs: [...(uniqueArr(docs) || [])],
-      } as UpdateLessonArgs);
+      const cloneUpdateParams = cloneDeep(updateParams);
+      // console.log('cloneUpdateParams :>> ', cloneUpdateParams);
+      const idx = cloneUpdateParams.findIndex((v) => v.lesson_id === lesson.id);
+      if (~idx) {
+        const updateParamsObject = {
+          lesson_id: lesson.id,
+          completed_videos: [...(uniqueArr(videos) || [])],
+          completed_docs: [...(uniqueArr(docs) || [])],
+        } as UpdateLessonArgs;
+        // console.log('updateParamsObject :>> ', updateParamsObject);
+        cloneUpdateParams.splice(idx, 1, updateParamsObject);
+      }
+      // console.log('cloneUpdateParams after splice :>> ', cloneUpdateParams);
+      dispatch(progressAction.updateProgress(cloneUpdateParams));
     }, 1000),
     [],
   );
+  useEffect(() => {
+    console.log('update', updateParams);
+  }, [updateParams]);
+  const debounceCheckedItem2 = useCallback((videos, docs) => {
+    // const cloneUpdateParams = cloneDeep(updateParams);
+    // // console.log('cloneUpdateParams :>> ', cloneUpdateParams);/
+    // const idx = cloneUpdateParams.findIndex((v) => v.lesson_id === lesson.id);
+    // console.log('idx :>> ', idx);
+    // if (~idx) {
+    //   const updateParamsObject = {
+    //     lesson_id: lesson.id,
+    //     completed_videos: [...(uniqueArr(videos) || [])],
+    //     completed_docs: [...(uniqueArr(docs) || [])],
+    //   } as UpdateLessonArgs;
+    //   console.log('updateParamsObject :>> ', cloneUpdateParams);
+    //   cloneUpdateParams.splice(idx, 1, updateParamsObject);
+    //   console.log('updateParamsObject after splice :>> ', cloneUpdateParams);
+    // }
+    // console.log('cloneUpdateParams after splice out side:>> ', cloneUpdateParams);
+    // dispatch(progressAction.updateProgress(cloneUpdateParams));
+    dispatch(
+      progressAction.updateProgress({
+        lesson_id: lesson.id,
+        completed_videos: [...(uniqueArr(videos) || [])],
+        completed_docs: [...(uniqueArr(docs) || [])],
+      } as UpdateLessonArgs),
+    );
+  }, []);
 
   useEffect(() => {
     if (isDoneVideo) {
@@ -232,8 +282,8 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                         key={i}
                         className={`course_video_item video_${v.id}`}
                         onClick={() => {
-                          dispatch(progressAction.setSelectedDoc(v));
-                          dispatch(progressAction.setCurrentLesson(lesson.id));
+                          // dispatch(progressAction.setSelectedDoc(v));
+                          // dispatch(progressAction.setCurrentLesson(lesson.id));
                         }}
                       >
                         {!isCourseDetail && (
@@ -241,16 +291,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                             value={v.id}
                             type="checkbox"
                             checked={checkedDoc.includes(v.id)}
-                            onChange={(e) => {
-                              if (checkedDoc.includes(e.target.value)) {
-                                const newChecked = checkedDoc.filter((v) => v !== e.target.value);
-                                setCheckedDoc(newChecked);
-                                debounceCheckedItem(checkedVideo, newChecked);
-                              } else {
-                                setCheckedDoc([...checkedDoc, e.target.value]);
-                                debounceCheckedItem(checkedVideo, [...checkedDoc, e.target.value]);
-                              }
-                            }}
+                            onChange={handleCheckedDoc}
                             onClick={(e) => {
                               e.stopPropagation();
                             }}

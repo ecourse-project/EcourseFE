@@ -1,6 +1,6 @@
 import { CourseDocument, OFileUpload, UpdateLessonArgs, UserAnswersArgs } from 'src/lib/types/backend_modal';
 
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, current, PayloadAction } from '@reduxjs/toolkit';
 
 export interface ProgressState {
   selectedDoc: CourseDocument;
@@ -43,6 +43,26 @@ export const progressSlice = createSlice({
     },
     setCurrentLesson: (state, action: PayloadAction<any>) => {
       state.currentLesson = action.payload;
+    },
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    setUpdateParams: (state, action: PayloadAction<UpdateLessonArgs[]>) => {
+      state.updateParams = action.payload;
+    },
+    updateProgress: (state, action: PayloadAction<any>) => {
+      // // console.log('action in reduce', action);
+      console.log('action.payload :>> ', action.payload);
+      const cloneState = [...current(state.updateParams)];
+      const idx = cloneState.findIndex((v) => v.lesson_id === action.payload.lesson_id);
+      if (~idx) {
+        cloneState.splice(idx, 1, action.payload);
+      }
+      console.log('cloneState :>> ', cloneState);
+      state.updateParams = cloneState;
+      // arrWithout.push(action.payload);
+      // // console.log('arrWithout :>> ', arrWithout);
+      // state.updateParams = arrWithout;
+      // console.log('state.up :>> ', state.updateParams);
+      // state.updateParams = action.payload;
     },
     updateCheckedAnswer: (state, action: PayloadAction<any>) => {
       if (!state.answerSheet.length) {

@@ -129,12 +129,12 @@ export const useStyleModal = (): {
         height: 25px;
         align-items: baseline;
         margin: 40px;
-        .anticon-left-circle {
+        /* .anticon-left-circle {
           cursor: ${pageNumber === 1 ? 'not-allowed' : 'pointer'};
         }
         .anticon-right-circle {
           cursor: ${pageNumber === numPages ? 'not-allowed' : 'pointer'};
-        }
+        } */
         p {
           font-size: 16px;
           font-weight: 500;

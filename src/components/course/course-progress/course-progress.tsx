@@ -1,6 +1,3 @@
-import '@react-pdf-viewer/core/lib/styles/index.css';
-import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
-
 import { Col, Collapse, Divider, List, Popover, Progress, Row, Tabs } from 'antd';
 import _, { isEmpty } from 'lodash';
 import Image from 'next/image';
@@ -36,8 +33,6 @@ import RoutePaths from 'src/lib/utils/routes';
 
 import { DownOutlined, HomeOutlined, PlayCircleOutlined, SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
-
-import PdfViewer from '../../pdf';
 import LessonItem from './lesson-item';
 import QuizSection from './quiz';
 
@@ -57,6 +52,19 @@ interface IProgress {
   sum: number;
   progress_num: number;
 }
+
+export const convertDataToUpdateParams = (lessons: Lesson[]) => {
+  const res = lessons?.map((v) => {
+    // setSumDoc(sumDoc + v?.documents?.length);
+    // setSumVid(sumVid + v?.videos?.length);
+    return {
+      lesson_id: v.id,
+      completed_docs: [...(v?.docs_completed || [])],
+      completed_videos: [...(v?.videos_completed || [])],
+    } as UpdateLessonArgs;
+  });
+  return res;
+};
 
 const CourseProgress = () => {
   const [course, setCourse] = useState<Course>();
@@ -92,6 +100,62 @@ const CourseProgress = () => {
     },
   ];
 
+  const setCurrentDocReloadPage = (courseDetail: Course) => {
+    // set current doc when reload page
+    if (params.doc && courseDetail.lessons) {
+      const idxLesson = courseDetail?.lessons.findIndex((v) => v.id === params.lesson);
+      if (idxLesson >= 0) {
+        const idxDoc = courseDetail.lessons[idxLesson].documents.findIndex((doc) => doc.id === params.doc);
+        if (idxDoc >= 0) {
+          dispatch(progressAction.setSelectedDoc(courseDetail.lessons[idxLesson].documents[idxDoc]));
+        }
+      } //set current video on reloading page
+    } else if (params.video && courseDetail.lessons) {
+      const idxLesson = courseDetail?.lessons.findIndex((v) => v.id === params.lesson);
+      if (idxLesson >= 0) {
+        const idxVid = courseDetail.lessons[idxLesson].videos.findIndex((video) => video.id === params.video);
+        if (idxVid >= 0) {
+          dispatch(progressAction.setSelectedDoc(courseDetail.lessons[idxLesson].documents[idxVid]));
+        }
+      } //if there is not any current => assign first video by default
+    } else if (courseDetail.lessons && !params.exam) {
+      dispatch(progressAction.setCurrentLesson(courseDetail.lessons[0].id));
+      dispatch(progressAction.setSelectedVideo(courseDetail.lessons[0].videos[0]));
+    } else if (params.exam) {
+      //doing quiz
+      setIsShowQuiz(true);
+    }
+  };
+
+  const setInitialCheck = async (courseDetail: Course) => {
+    // set initial checked item and checked answer
+    const res = convertDataToUpdateParams(courseDetail.lessons || []);
+    // const res = courseDetail?.lessons?.map((v) => {
+    //   // setSumDoc(sumDoc + v?.documents?.length);
+    //   // setSumVid(sumVid + v?.videos?.length);
+    //   return {
+    //     lesson_id: v.id,
+    //     completed_docs: [...(v?.docs_completed || [])],
+    //     completed_videos: [...(v?.videos_completed || [])],
+    //   } as UpdateLessonArgs;
+    // });
+    setSumDoc(courseDetail.lessons?.reduce((p, c) => p + c.documents.length, 0) || 0);
+    setSumVid(courseDetail.lessons?.reduce((p, c) => p + c.videos.length, 0) || 0);
+
+    setCheckedItems(res || []);
+    dispatch(progressAction.setUpdateParams(res || []));
+    const quizList = await CourseService.listQuiz(courseDetail.id);
+    setListQuiz(quizList);
+    const initialAnswer = quizList?.map(
+      (v) =>
+        ({
+          quiz_id: v.id,
+          answer_choice: AnswerChoiceEnum.NO_CHOICE,
+        } as UserAnswersArgs),
+    );
+    dispatch(progressAction.updateCheckedAnswer(initialAnswer));
+  };
+
   const getCourseDetail = async (id: string) => {
     try {
       setLoading(true);
@@ -106,54 +170,10 @@ const CourseProgress = () => {
         setProgressNumber(courseDetail.progress || 0);
       }
       // set current doc when reload page
-      if (params.doc && courseDetail.lessons) {
-        const idxLesson = courseDetail?.lessons.findIndex((v) => v.id === params.lesson);
-        if (idxLesson >= 0) {
-          const idxDoc = courseDetail.lessons[idxLesson].documents.findIndex((doc) => doc.id === params.doc);
-          if (idxDoc >= 0) {
-            dispatch(progressAction.setSelectedDoc(courseDetail.lessons[idxLesson].documents[idxDoc]));
-          }
-        } //set current video on reloading page
-      } else if (params.video && courseDetail.lessons) {
-        const idxLesson = courseDetail?.lessons.findIndex((v) => v.id === params.lesson);
-        if (idxLesson >= 0) {
-          const idxVid = courseDetail.lessons[idxLesson].videos.findIndex((video) => video.id === params.video);
-          if (idxVid >= 0) {
-            dispatch(progressAction.setSelectedDoc(courseDetail.lessons[idxLesson].documents[idxVid]));
-          }
-        } //if there is not any current => assign first video by default
-      } else if (courseDetail.lessons && !params.exam) {
-        dispatch(progressAction.setCurrentLesson(courseDetail.lessons[0].id));
-        dispatch(progressAction.setSelectedVideo(courseDetail.lessons[0].videos[0]));
-      } else if (params.exam) {
-        //doing quiz
-        setIsShowQuiz(true);
-      }
+      setCurrentDocReloadPage(courseDetail);
 
       // set initial checked item and checked answer
-      const res = courseDetail?.lessons?.map((v) => {
-        // setSumDoc(sumDoc + v?.documents?.length);
-        // setSumVid(sumVid + v?.videos?.length);
-        return {
-          lesson_id: v.id,
-          completed_docs: [...(v?.docs_completed || [])],
-          completed_videos: [...(v?.videos_completed || [])],
-        } as UpdateLessonArgs;
-      });
-      setSumDoc(courseDetail.lessons?.reduce((p, c) => p + c.documents.length, 0) || 0);
-      setSumVid(courseDetail.lessons?.reduce((p, c) => p + c.videos.length, 0) || 0);
-
-      setCheckedItems(res || []);
-      const quizList = await CourseService.listQuiz(courseDetail.id);
-      setListQuiz(quizList);
-      const initialAnswer = quizList?.map(
-        (v) =>
-          ({
-            quiz_id: v.id,
-            answer_choice: AnswerChoiceEnum.NO_CHOICE,
-          } as UserAnswersArgs),
-      );
-      dispatch(progressAction.updateCheckedAnswer(initialAnswer));
+      await setInitialCheck(courseDetail);
     } catch (error) {
       console.log(error);
     } finally {
@@ -165,26 +185,18 @@ const CourseProgress = () => {
     getCourseDetail(params.id);
   }, []);
 
-  const onUpdate = async (data: UpdateLessonArgs) => {
-    const arrWithoutDataUpdate = checkedItems.filter((v) => v.lesson_id !== data.lesson_id); //instead of slicing
-    arrWithoutDataUpdate.push(data);
-    console.log('arrWithoutDataUpdate :>> ', data);
-    const updateParams: UpdateProgressArgs = {
-      course_id: params.id || '',
-      lessons: arrWithoutDataUpdate,
-    };
-    debounceUpdateProgress(updateParams);
-    setCheckedItems([...arrWithoutDataUpdate]);
+  const onUpdate = async (data: UpdateLessonArgs, checkedItems: UpdateLessonArgs[]) => {
+    console.log('data :>> ', data);
   };
 
   const debounceUpdateProgress = useDebouncedCallback(async (params: UpdateProgressArgs) => {
     try {
       if (course?.course_of_class) {
         const prN = await CourseService.updateClassProgress(params);
-        setProgressNumber(prN.progress);
+        setProgressNumber(prN.progress || 0);
       } else {
         const prN = await CourseService.updateLessonProgress(params);
-        setProgressNumber(prN.progress);
+        setProgressNumber(prN.progress || 0);
       }
     } catch (error) {
       console.log('error update', error);
@@ -312,6 +324,11 @@ const CourseProgress = () => {
       console.log('player will dispose');
     });
   };
+
+  function onDocumentLoadSuccess({ numPages }) {
+    setNumPages(numPages);
+  }
+
   return (
     <div
       css={css`
@@ -630,7 +647,15 @@ const CourseProgress = () => {
                 </div>
               ) : !_.isEmpty(state.selectedDoc) ? (
                 <div className="pdf_wrapper">
-                  <PdfViewer url={state.selectedDoc?.file?.file_path} />
+                  {/* <PdfViewer url={state.selectedDoc?.file?.file_path} /> */}
+                  {/* <Document file={state.selectedDoc?.file?.file_path} onLoadSuccess={onDocumentLoadSuccess}>
+                    <Page pageNumber={pageNumber} />
+                  </Document>
+                  <p>
+                    Page {pageNumber} of {numPages}
+                  </p> */}
+
+                  <div>PDF</div>
                 </div>
               ) : isShowQuiz ? (
                 /* if user unchecked a video while doing quiz, show modal to warn that the quiz will hide if they continue unchecking that video */
@@ -674,7 +699,7 @@ const CourseProgress = () => {
                   index={i}
                   isShowLessonDetail={true}
                   // courseDetail={course || ({} as Course)}
-                  onUpdate={onUpdate}
+                  onUpdate={(data) => onUpdate(data, JSON.parse(JSON.stringify(checkedItems)))}
                 />
               )}
             />
