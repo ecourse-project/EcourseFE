@@ -216,7 +216,7 @@ const CourseDetail: React.FC = () => {
         setLoading(false);
       }
     } else {
-      router.push(`${RoutePaths.COURSE_PROGRESS}?id=${course.id}`);
+      router.push(`${RoutePaths.COURSE_PROGRESS}?id=${course.id}&isClass=${isClass}`);
     }
   };
 
@@ -495,7 +495,7 @@ const CourseDetail: React.FC = () => {
                   isCourseDetail={true}
                   index={index}
                   isShowLessonDetail={course.sale_status === SaleStatusEnum.BOUGHT || !!course.request_status}
-                  onUpdate={(data) => console.log('data', data)}
+                  // onUpdate={(data) => console.log('')}
                 />
               )}
             />

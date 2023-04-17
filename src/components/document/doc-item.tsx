@@ -79,7 +79,6 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
           setCurrentDoc(removeFrom);
         }, 300);
       }
-      console.log('call lại');
     } catch (error) {
       console.log('error update cart', error);
     } finally {

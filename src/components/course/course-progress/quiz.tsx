@@ -61,8 +61,6 @@ const QuizSection: React.FC<QuizProps> = (props) => {
       };
     });
     setCustomResult(obj);
-    console.log('obj :>> ', obj);
-    console.log('result :>> ', result);
   }, [result]);
 
   // useEffect(() => {

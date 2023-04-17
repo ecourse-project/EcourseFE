@@ -58,20 +58,12 @@ export const progressSlice = createSlice({
       state.updateParams = action.payload;
     },
     updateProgress: (state, action: PayloadAction<any>) => {
-      // // console.log('action in reduce', action);
-      console.log('action.payload :>> ', action.payload);
       const cloneStateLesson = [...current(state.updateParams.lessons)];
       const idx = cloneStateLesson.findIndex((v) => v.lesson_id === action.payload.lesson_id);
       if (~idx) {
         cloneStateLesson.splice(idx, 1, action.payload);
       }
-      console.log('cloneState :>> ', cloneStateLesson);
       state.updateParams.lessons = cloneStateLesson;
-      // arrWithout.push(action.payload);
-      // // console.log('arrWithout :>> ', arrWithout);
-      // state.updateParams = arrWithout;
-      // console.log('state.up :>> ', state.updateParams);
-      // state.updateParams = action.payload;
     },
     updateCheckedAnswer: (state, action: PayloadAction<any>) => {
       if (!state.answerSheet.length) {
@@ -84,7 +76,6 @@ export const progressSlice = createSlice({
       }
     },
     setCourse: (state, action: PayloadAction<Course>) => {
-      console.log('copurse set cot', action.payload);
       state.courseDetail = action.payload;
     },
   },

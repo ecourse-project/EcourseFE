@@ -67,10 +67,6 @@ const LoginForm: React.FC = () => {
     localStorage.clear();
   }, []);
 
-  useEffect(() => {
-    console.log('queryParams.redirect_url', queryParams);
-  }, [queryParams]);
-
   const hasError = (key: string) => {
     return Object.keys(formik.errors).length > 0 && !!formik.errors[key] && formik.touched[key];
   };

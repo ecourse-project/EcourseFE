@@ -123,9 +123,7 @@ const DocDetail: React.FC = () => {
       console.log('error get detail', error);
     }
   };
-  useEffect(() => {
-    console.log('params', params);
-  }, [params]);
+
   useEffect(() => {
     fetchDocDetail(params.id);
   }, []);

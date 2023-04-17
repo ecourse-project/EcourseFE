@@ -26,7 +26,7 @@ const OrderUI = () => {
       setLoading(true);
       const order = await CourseService.getAllOrders(pagination);
       setListOrder(order);
-      console.log(order);
+      // console.log(order);
     } catch (error) {
       console.log('error');
     } finally {

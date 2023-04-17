@@ -35,6 +35,7 @@ import { DownOutlined, HomeOutlined, PlayCircleOutlined, SwapOutlined } from '@a
 import { css } from '@emotion/react';
 import LessonItem from './lesson-item';
 import QuizSection from './quiz';
+import PdfViewer from 'src/components/pdf';
 
 const { Panel } = Collapse;
 export interface CourseParams {
@@ -185,10 +186,6 @@ const CourseProgress = () => {
     getCourseDetail(params.id);
   }, []);
 
-  const onUpdate = async (data: UpdateLessonArgs, checkedItems: UpdateLessonArgs[]) => {
-    console.log('data :>> ', data);
-  };
-
   const debounceUpdateProgress = useDebouncedCallback(async (params: UpdateProgressArgs) => {
     try {
       if (course?.course_of_class) {
@@ -266,7 +263,6 @@ const CourseProgress = () => {
   const onSubmitQuiz = async () => {
     try {
       if (course?.is_done_quiz) {
-        console.log('chung chi');
         await CourseService.downloadCerti(params.id);
         window.open(`${globalVariable.API_URL}api/quiz/certi/?course_id=${params.id}`, '_blank');
       } else {
@@ -633,7 +629,7 @@ const CourseProgress = () => {
                       dispatch(progressAction.setCompleteVideo());
                     }}
                     // onProgress={(v) => console.log('progress', v)}
-                    onError={(e) => console.log('video errror', e)}
+                    onError={(e) => console.log('video loader error', e)}
                     playing={false}
                     playsinline
                     playIcon={<PlayCircleOutlined />}
@@ -651,8 +647,6 @@ const CourseProgress = () => {
                   <p>
                     Page {pageNumber} of {numPages}
                   </p> */}
-
-                  <div>PDF</div>
                 </div>
               ) : isShowQuiz ? (
                 /* if user unchecked a video while doing quiz, show modal to warn that the quiz will hide if they continue unchecking that video */
@@ -696,7 +690,7 @@ const CourseProgress = () => {
                   index={i}
                   isShowLessonDetail={true}
                   // courseDetail={course || ({} as Course)}
-                  onUpdate={(data) => onUpdate(data, JSON.parse(JSON.stringify(checkedItems)))}
+                  // onUpdate={(data) => onUpdate(data, JSON.parse(JSON.stringify(checkedItems)))}
                 />
               )}
             />

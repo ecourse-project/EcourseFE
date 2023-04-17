@@ -17,7 +17,7 @@ interface LessonItemProps {
   isCourseDetail?: boolean;
   index?: number;
   isShowLessonDetail: boolean;
-  onUpdate: (data: UpdateLessonArgs) => void;
+  // onUpdate: (data: UpdateLessonArgs) => void;
 }
 
 const DisplayDurationTime = (duration) => {
@@ -51,7 +51,7 @@ const DisplayDurationTime = (duration) => {
 };
 
 const LessonItem: React.FC<LessonItemProps> = (props) => {
-  const { lesson, isCourseDetail = false, index, isShowLessonDetail, onUpdate } = props;
+  const { lesson, isCourseDetail = false, index, isShowLessonDetail } = props;
   const selectedDoc = useSelector((state: RootState) => state.progress.selectedDoc);
   const selectedVideo = useSelector((state: RootState) => state.progress.selectedVideo);
   const isDoneVideo = useSelector((state: RootState) => state.progress.isDoneVideo);
@@ -63,12 +63,10 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
   const handleCheckedDoc = (e) => {
     if (checkedDoc.includes(e.target.value)) {
       const newChecked = checkedDoc.filter((v) => v !== e.target.value);
-      // console.log('newChecked :>> ', newChecked);
       setCheckedDoc(newChecked);
       debounceCheckedItem2(checkedVideo, newChecked);
     } else {
       setCheckedDoc([...checkedDoc, e.target.value]);
-      // console.log('[...checkedDoc, e.target.value] :>> ', [...checkedDoc, e.target.value]);
       debounceCheckedItem2(checkedVideo, [...checkedDoc, e.target.value]);
     }
   };
@@ -92,9 +90,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
     }, 1000),
     [],
   );
-  useEffect(() => {
-    console.log('update', updateParams);
-  }, [updateParams]);
+
   const debounceCheckedItem2 = useCallback((videos, docs) => {
     // const cloneUpdateParams = cloneDeep(updateParams);
     // // console.log('cloneUpdateParams :>> ', cloneUpdateParams);/

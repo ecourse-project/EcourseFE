@@ -69,7 +69,7 @@ apiClient.interceptors.request.use(
     return config;
   },
   function (error) {
-    console.log('71', error);
+    // console.log('71', error);
 
     return Promise.reject(error.response.data);
   },
@@ -85,7 +85,7 @@ apiClient.interceptors.response.use(
         ? (JSON.parse(localStorage.getItem(StorageKeys.SESSION_KEY) || '{}') as OToken)
         : ({} as OToken);
     const originalRequest = error.config;
-    console.log('token', token);
+    // console.log('token', token);
     if (
       error.response.status === 401 &&
       originalRequest &&
@@ -94,9 +94,9 @@ apiClient.interceptors.response.use(
       !isEmpty(token)
     ) {
       originalRequest._retry = true;
-      console.log(error);
-      console.log('message', error.response.data.detail);
-      console.log('abc', error.response.data.detail?.includes('given credentials'));
+      // console.log(error);
+      // console.log('message', error.response.data.detail);
+      // console.log('abc', error.response.data.detail?.includes('given credentials'));
       refreshToken(token.refresh)
         .then((response) => {
           const newToken = { ...token, access: response };
@@ -107,7 +107,7 @@ apiClient.interceptors.response.use(
           return apiClient(originalRequest);
         })
         .catch((error) => {
-          console.log('105');
+          // console.log('105');
           localStorage.clear();
           forceLogout();
           return Promise.reject(error);
