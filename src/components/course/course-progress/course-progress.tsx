@@ -171,7 +171,7 @@ const CourseProgress = () => {
       }
       // set current doc when reload page
       setCurrentDocReloadPage(courseDetail);
-
+      dispatch(progressAction.setCourse(courseDetail));
       // set initial checked item and checked answer
       await setInitialCheck(courseDetail);
     } catch (error) {
@@ -593,13 +593,10 @@ const CourseProgress = () => {
               '0%': '#108ee9',
               '100%': '#87d068',
             }}
-            percent={Math.round(progressNumber)}
+            percent={Math.round(state.courseDetail.progress || 0)}
           />
           <span className="progress_label">
-            <Popover
-              content={`${calculateProgress().done + '/' + calculateProgress().sum} đã hoàn thành`}
-              placement="bottom"
-            >
+            <Popover content={`${state.courseDetail.progress} đã hoàn thành`} placement="bottom">
               Tiến độ
               <DownOutlined />
             </Popover>

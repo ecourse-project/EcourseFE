@@ -10,9 +10,13 @@ import { convertDataToUpdateParams } from 'src/components/course/course-progress
 
 function* watchUpdateProgress(action: PayloadAction<Course>) {
   const state = yield select((state: RootState) => state.progress);
-  yield console.log('action :>> ', action);
-  yield console.log('state:>> saga-======', state.updateParams);
-  const results: Course = yield CourseService.updateClassProgress(state.updateParams);
+
+  let results = {} as Course;
+  if (state.courseDetail.course_of_class) {
+    results = yield CourseService.updateClassProgress(state.updateParams);
+  } else {
+    results = yield CourseService.updateLessonProgress(state.updateParams);
+  }
   const updateParams = convertDataToUpdateParams(results.lessons || []);
   yield put(
     progressAction.setUpdateParams({
@@ -20,6 +24,7 @@ function* watchUpdateProgress(action: PayloadAction<Course>) {
       lessons: updateParams,
     }),
   );
+  yield put(progressAction.setCourse(results));
   // yield debounce(function* () {
   //   try {
   //     console.log('ab');

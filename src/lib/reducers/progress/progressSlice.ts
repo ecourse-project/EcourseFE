@@ -1,4 +1,5 @@
 import {
+  Course,
   CourseDocument,
   OFileUpload,
   UpdateLessonArgs,
@@ -9,6 +10,7 @@ import {
 import { createSlice, current, PayloadAction } from '@reduxjs/toolkit';
 
 export interface ProgressState {
+  courseDetail: Course;
   selectedDoc: CourseDocument;
   selectedVideo: OFileUpload;
   currentLesson: string;
@@ -20,6 +22,7 @@ export interface ProgressState {
 }
 
 const initialState: ProgressState = {
+  courseDetail: {} as Course,
   selectedDoc: {} as CourseDocument,
   selectedVideo: {} as OFileUpload,
   currentLesson: '',
@@ -57,13 +60,13 @@ export const progressSlice = createSlice({
     updateProgress: (state, action: PayloadAction<any>) => {
       // // console.log('action in reduce', action);
       console.log('action.payload :>> ', action.payload);
-      const cloneState = { ...current(state.updateParams) };
-      const idx = cloneState.lessons.findIndex((v) => v.lesson_id === action.payload.lesson_id);
+      const cloneStateLesson = [...current(state.updateParams.lessons)];
+      const idx = cloneStateLesson.findIndex((v) => v.lesson_id === action.payload.lesson_id);
       if (~idx) {
-        cloneState.lessons.splice(idx, 1, action.payload);
+        cloneStateLesson.splice(idx, 1, action.payload);
       }
-      console.log('cloneState :>> ', cloneState);
-      state.updateParams = cloneState;
+      console.log('cloneState :>> ', cloneStateLesson);
+      state.updateParams.lessons = cloneStateLesson;
       // arrWithout.push(action.payload);
       // // console.log('arrWithout :>> ', arrWithout);
       // state.updateParams = arrWithout;
@@ -79,6 +82,10 @@ export const progressSlice = createSlice({
       if (~idxAnswer) {
         state.answerSheet.splice(idxAnswer, 1, action.payload);
       }
+    },
+    setCourse: (state, action: PayloadAction<Course>) => {
+      console.log('copurse set cot', action.payload);
+      state.courseDetail = action.payload;
     },
   },
 });
