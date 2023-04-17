@@ -143,7 +143,7 @@ const CourseProgress = () => {
     setSumVid(courseDetail.lessons?.reduce((p, c) => p + c.videos.length, 0) || 0);
 
     setCheckedItems(res || []);
-    dispatch(progressAction.setUpdateParams(res || []));
+    dispatch(progressAction.setUpdateParams({ course_id: courseDetail.id, lessons: res }));
     const quizList = await CourseService.listQuiz(courseDetail.id);
     setListQuiz(quizList);
     const initialAnswer = quizList?.map(
@@ -245,8 +245,8 @@ const CourseProgress = () => {
   }, [course]);
 
   const calculateProgress = () => {
-    const doneDoc = state.updateParams.reduce((p, c) => p + c.completed_docs?.length, 0);
-    const doneVid = state.updateParams.reduce((p, c) => p + c.completed_videos?.length, 0);
+    const doneDoc = state.updateParams?.lessons?.reduce((p, c) => p + c.completed_docs?.length, 0);
+    const doneVid = state.updateParams?.lessons?.reduce((p, c) => p + c.completed_videos?.length, 0);
     // console.log('state 230:>> ', state);
     // console.log('doneDoc :  >> ', doneDoc);
     // console.log('doneVid :>> ', doneVid);

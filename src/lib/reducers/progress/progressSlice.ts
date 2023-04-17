@@ -1,4 +1,10 @@
-import { CourseDocument, OFileUpload, UpdateLessonArgs, UserAnswersArgs } from 'src/lib/types/backend_modal';
+import {
+  CourseDocument,
+  OFileUpload,
+  UpdateLessonArgs,
+  UpdateProgressArgs,
+  UserAnswersArgs,
+} from 'src/lib/types/backend_modal';
 
 import { createSlice, current, PayloadAction } from '@reduxjs/toolkit';
 
@@ -7,7 +13,7 @@ export interface ProgressState {
   selectedVideo: OFileUpload;
   currentLesson: string;
   isDoneVideo: boolean;
-  updateParams: UpdateLessonArgs[];
+  updateParams: UpdateProgressArgs;
   answerSheet: UserAnswersArgs[];
   loading: boolean;
   error: string | null;
@@ -18,7 +24,7 @@ const initialState: ProgressState = {
   selectedVideo: {} as OFileUpload,
   currentLesson: '',
   isDoneVideo: false,
-  updateParams: [] as UpdateLessonArgs[],
+  updateParams: {} as UpdateProgressArgs,
   answerSheet: [],
   loading: false,
   error: null,
@@ -45,16 +51,16 @@ export const progressSlice = createSlice({
       state.currentLesson = action.payload;
     },
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    setUpdateParams: (state, action: PayloadAction<UpdateLessonArgs[]>) => {
+    setUpdateParams: (state, action: PayloadAction<UpdateProgressArgs>) => {
       state.updateParams = action.payload;
     },
     updateProgress: (state, action: PayloadAction<any>) => {
       // // console.log('action in reduce', action);
       console.log('action.payload :>> ', action.payload);
-      const cloneState = [...current(state.updateParams)];
-      const idx = cloneState.findIndex((v) => v.lesson_id === action.payload.lesson_id);
+      const cloneState = { ...current(state.updateParams) };
+      const idx = cloneState.lessons.findIndex((v) => v.lesson_id === action.payload.lesson_id);
       if (~idx) {
-        cloneState.splice(idx, 1, action.payload);
+        cloneState.lessons.splice(idx, 1, action.payload);
       }
       console.log('cloneState :>> ', cloneState);
       state.updateParams = cloneState;

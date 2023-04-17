@@ -14,7 +14,12 @@ function* watchUpdateProgress(action: PayloadAction<Course>) {
   yield console.log('state:>> saga-======', state.updateParams);
   const results: Course = yield CourseService.updateClassProgress(state.updateParams);
   const updateParams = convertDataToUpdateParams(results.lessons || []);
-  yield put(progressAction.setUpdateParams(updateParams));
+  yield put(
+    progressAction.setUpdateParams({
+      course_id: results.id,
+      lessons: updateParams,
+    }),
+  );
   // yield debounce(function* () {
   //   try {
   //     console.log('ab');

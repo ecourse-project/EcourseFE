@@ -77,7 +77,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
     debounce((videos, docs) => {
       const cloneUpdateParams = cloneDeep(updateParams);
       // console.log('cloneUpdateParams :>> ', cloneUpdateParams);
-      const idx = cloneUpdateParams.findIndex((v) => v.lesson_id === lesson.id);
+      const idx = cloneUpdateParams.lessons.findIndex((v) => v.lesson_id === lesson.id);
       if (~idx) {
         const updateParamsObject = {
           lesson_id: lesson.id,
@@ -85,7 +85,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
           completed_docs: [...(uniqueArr(docs) || [])],
         } as UpdateLessonArgs;
         // console.log('updateParamsObject :>> ', updateParamsObject);
-        cloneUpdateParams.splice(idx, 1, updateParamsObject);
+        cloneUpdateParams.lessons.splice(idx, 1, updateParamsObject);
       }
       // console.log('cloneUpdateParams after splice :>> ', cloneUpdateParams);
       dispatch(progressAction.updateProgress(cloneUpdateParams));
