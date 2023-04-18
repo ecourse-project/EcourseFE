@@ -11,7 +11,6 @@ import RoutePaths from 'src/lib/utils/routes';
 import Swal from 'sweetalert2';
 
 import { css } from '@emotion/react';
-import CurrencyRubleIcon from '@mui/icons-material/CurrencyRuble';
 
 import { TabSettingKey } from '../settings/tabs';
 import CartOrderBill from './cart-order-bill';
@@ -76,7 +75,6 @@ const PricingCard: React.FC<ChildProps> = ({ docNum, checkoutList, children, car
   const handleCancel = () => {
     setOpenModal(false);
   };
-  const currency = <CurrencyRubleIcon />;
   return (
     <div
       className="xyz"

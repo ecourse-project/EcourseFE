@@ -7,6 +7,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { useDispatch, useSelector } from 'react-redux';
 import ExamImg from 'src/assets/images/exam.png';
+import NotFile from 'src/assets/images/notfoundfile.png';
 import CommentSection from 'src/components/comment';
 import CourseService from 'src/lib/api/course';
 import globalVariable from 'src/lib/config/env';
@@ -325,6 +326,10 @@ const CourseProgress = () => {
     setNumPages(numPages);
   }
 
+  useEffect(() => {
+    console.log('state.sele :>> ', state.selectedDoc);
+  }, [state.selectedDoc]);
+
   return (
     <div
       css={css`
@@ -605,7 +610,7 @@ const CourseProgress = () => {
         <Row>
           <Col span={16} className="course_content">
             <Row>
-              {!_.isEmpty(state.selectedVideo) ? (
+              {!_.isEmpty(state.selectedVideo) && state.selectedVideo?.file_path ? (
                 <div className="video_wrapper">
                   <ReactPlayer
                     url={state.selectedVideo?.file_path}
@@ -638,9 +643,9 @@ const CourseProgress = () => {
                   />
                   {/* <VideoJS options={videoJsOptions} onReady={handlePlayerReady} /> */}
                 </div>
-              ) : !_.isEmpty(state.selectedDoc) ? (
+              ) : !_.isEmpty(state.selectedDoc) && state.selectedDoc?.file?.file_path ? (
                 <div className="pdf_wrapper">
-                  <PdfViewer url={state.selectedDoc?.file?.file_path} />
+                  <PdfViewer url={state.selectedDoc?.file?.file_path || ''} />
                   {/* <Document file={state.selectedDoc?.file?.file_path} onLoadSuccess={onDocumentLoadSuccess}>
                     <Page pageNumber={pageNumber} />
                   </Document>
@@ -660,7 +665,9 @@ const CourseProgress = () => {
                   mark={course?.mark || 0} //remove later
                 />
               ) : (
-                <>{isShowQuiz}</>
+                <>
+                  <Image src={NotFile} alt="no file found" width={200} height={200} style={{ margin: '100px auto' }} />
+                </>
               )}
             </Row>
             <Tabs items={items} defaultActiveKey={params.tab} className="tab-section" />

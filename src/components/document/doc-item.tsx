@@ -19,7 +19,6 @@ import { DocumentParams } from 'src/sections/Pages/DocumentUI';
 /* eslint-disable react/prop-types */
 import { WalletOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
-import TaskAltIcon from '@mui/icons-material/TaskAlt';
 
 import AppButton from '../button';
 import { ItemDocCourseWrapper } from './style';
@@ -207,7 +206,7 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
               {formatCurrencySymbol(document.price, 'VND')}
             </span>
 
-            {document.sale_status === SaleStatusEnum.BOUGHT && <TaskAltIcon sx={{ color: `${Color.BOUGHT}` }} />}
+            {/* {document.sale_status === SaleStatusEnum.BOUGHT && <TaskAltIcon sx={{ color: `${Color.BOUGHT}` }} />} */}
           </div>
         </Popover>
       </div>

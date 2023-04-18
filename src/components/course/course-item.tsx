@@ -18,7 +18,6 @@ import { CourseClassParams } from 'src/sections/Pages/CourseUI';
 
 import { WalletOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
-import TaskAltIcon from '@mui/icons-material/TaskAlt';
 
 import AppButton from '../button';
 import { ItemDocCourseWrapper } from '../document/style';
@@ -235,7 +234,7 @@ const CourseItem: React.FC<ChildProps> = (props) => {
             {formatCurrency(currentCourse.price || 0)}
           </span>
 
-          {currentCourse.sale_status === SaleStatusEnum.BOUGHT && <TaskAltIcon sx={{ color: `${Color.BOUGHT}` }} />}
+          {/* {currentCourse.sale_status === SaleStatusEnum.BOUGHT && <TaskAltIcon sx={{ color: `${Color.BOUGHT}` }} />} */}
         </div>
         {!isMyLearn && (
           <AppButton

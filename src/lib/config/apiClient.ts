@@ -90,7 +90,7 @@ apiClient.interceptors.response.use(
       error.response.status === 401 &&
       originalRequest &&
       !originalRequest._retry &&
-      !error.response.data.detail?.includes('given credentials') &&
+      !error.response.data.detail?.includes('credentials') &&
       !isEmpty(token)
     ) {
       originalRequest._retry = true;

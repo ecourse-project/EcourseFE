@@ -8,10 +8,11 @@ import { formatCurrency } from 'src/lib/utils/currency';
 import RoutePaths from 'src/lib/utils/routes';
 
 import { css } from '@emotion/react';
-import InfoIcon from '@mui/icons-material/Info';
+// import InfoIcon from '@mui/icons-material/Info';
 
 import { AskForSave } from '../alert/SweetAlert';
 import PaymentInfo from './paymentInfo';
+import { InfoOutlined } from '@ant-design/icons';
 
 const { Panel } = Collapse;
 const { Option } = Select;
@@ -48,15 +49,7 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
     console.log(key);
   };
 
-  const genExtra = () => (
-    <InfoIcon
-      id="info-icon"
-      onClick={(event) => {
-        // If you don't want click extra trigger collapse, you can prevent this:
-        // event.stopPropagation();
-      }}
-    />
-  );
+  const genExtra = () => <InfoOutlined />;
   const showModal = () => {
     AskForSave(`Xác nhân huỷ`, `Huỷ đơn mã #${orderItem.code.split('-')[0].slice(3, 10)}`, 'OK', 'Huỷ', '', (value) => {
       if (value.isConfirmed) cancelOrder(orderItem);
