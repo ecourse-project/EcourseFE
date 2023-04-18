@@ -1,5 +1,6 @@
 {
   "name": "ecourse",
+  "author": "CuongNHT",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -19,6 +20,7 @@
     "@ckeditor/ckeditor5-engine": "^37.0.1",
     "@ckeditor/ckeditor5-react": "^5.1.0",
     "@ckeditor/ckeditor5-upload": "^37.0.1",
+    "@emotion/core": "^11.0.0",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@material-ui/core": "^4.12.4",

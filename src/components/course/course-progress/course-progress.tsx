@@ -640,7 +640,7 @@ const CourseProgress = () => {
                 </div>
               ) : !_.isEmpty(state.selectedDoc) ? (
                 <div className="pdf_wrapper">
-                  {/* <PdfViewer url={state.selectedDoc?.file?.file_path} /> */}
+                  <PdfViewer url={state.selectedDoc?.file?.file_path} />
                   {/* <Document file={state.selectedDoc?.file?.file_path} onLoadSuccess={onDocumentLoadSuccess}>
                     <Page pageNumber={pageNumber} />
                   </Document>

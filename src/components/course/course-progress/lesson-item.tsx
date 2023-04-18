@@ -278,8 +278,8 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                         key={i}
                         className={`course_video_item video_${v.id}`}
                         onClick={() => {
-                          // dispatch(progressAction.setSelectedDoc(v));
-                          // dispatch(progressAction.setCurrentLesson(lesson.id));
+                          dispatch(progressAction.setSelectedDoc(v));
+                          dispatch(progressAction.setCurrentLesson(lesson.id));
                         }}
                       >
                         {!isCourseDetail && (
