@@ -228,14 +228,18 @@ const CourseItem: React.FC<ChildProps> = (props) => {
         </Link>
       </Popover>
       <div>
-        <div className="price-tag">
-          <span>
-            <WalletOutlined />
-            {formatCurrency(currentCourse.price || 0)}
-          </span>
+        {!params.class ? (
+          <div className="price-tag">
+            <span>
+              <WalletOutlined />
+              {formatCurrency(currentCourse.price || 0)}
+            </span>
 
-          {/* {currentCourse.sale_status === SaleStatusEnum.BOUGHT && <TaskAltIcon sx={{ color: `${Color.BOUGHT}` }} />} */}
-        </div>
+            {/* {currentCourse.sale_status === SaleStatusEnum.BOUGHT && <TaskAltIcon sx={{ color: `${Color.BOUGHT}` }} />} */}
+          </div>
+        ) : (
+          <></>
+        )}
         {!isMyLearn && (
           <AppButton
             className="card-btn class-btn"
