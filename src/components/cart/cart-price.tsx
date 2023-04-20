@@ -133,7 +133,9 @@ const PricingCard: React.FC<ChildProps> = ({ docNum, checkoutList, children, car
         btnSize={'small'}
         btnWidth={'full-w'}
         onClick={handleCharge}
-        disabled={checkoutList.total_price === 0}
+        disabled={
+          checkoutList.total_price === 0 && checkoutList.documents.length === 0 && checkoutList.courses.length === 0
+        }
       >
         {btnText}
       </AppButton>
