@@ -22,6 +22,8 @@ import { css } from '@emotion/react';
 
 import AppButton from '../button';
 import { ItemDocCourseWrapper } from './style';
+import Image from 'next/image';
+import DefaultDocImage from 'src/assets/images/docDefault.jpg';
 
 interface ChildProps {
   document: Document; // try not to use any.
@@ -170,7 +172,14 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
         >
           <Link href={`${RoutePaths.DOCUMENT_DETAIL}?document=${params?.document}&id=${document.id}`}>
             <div className="doc--image">
-              <img className="doc-img" src={`${document?.thumbnail?.image_path}`} alt="doc image." />
+              {/* <img className="doc-img" src={`${document?.thumbnail?.image_path}`} alt="doc image." /> */}
+              <Image
+                // className="doc-img"
+                src={`${document?.thumbnail?.image_path || DefaultDocImage.src}`}
+                alt="doc_image"
+                width={200}
+                height={130}
+              />
             </div>
 
             <div className="doc_info">

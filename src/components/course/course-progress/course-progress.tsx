@@ -459,7 +459,7 @@ const CourseProgress = () => {
                   continue unchecking that video */
                 <>
                   <div onClick={() => downloadPDF(params.id, course?.name || '')}>Quiz</div>
-                  <DownloadAnchor />
+                  {/* <DownloadAnchor /> */}
                   <QuizSection
                     listQuiz={listQuiz}
                     onSubmit={onSubmitQuiz}

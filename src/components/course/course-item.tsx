@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import DefaultClassImg from 'src/assets/images/class.jpg';
+import DefaultCourseImage from 'src/assets/images/online-course.png';
 import CourseService from 'src/lib/api/course';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { courseAction } from 'src/lib/reducers/course/courseSlice';
@@ -21,6 +21,7 @@ import { css } from '@emotion/react';
 
 import AppButton from '../button';
 import { ItemDocCourseWrapper } from '../document/style';
+import Image from 'next/image';
 
 interface ChildProps {
   course: Course;
@@ -194,10 +195,17 @@ const CourseItem: React.FC<ChildProps> = (props) => {
           }`}
         >
           <div className="doc--image">
-            <img
+            {/* <img
               className="doc-img"
-              src={`${currentCourse?.thumbnail?.image_path || DefaultClassImg.src}`}
+              src={`${currentCourse?.thumbnail?.image_path || DefaultCourseImage.src}`}
               alt="course_image."
+            /> */}
+            <Image
+              // className="doc-img"
+              src={`${currentCourse?.thumbnail?.image_path || DefaultCourseImage.src}`}
+              alt="course_image."
+              width={200}
+              height={130}
             />
           </div>
           <div className="doc_info">
