@@ -39,6 +39,7 @@ import QuizSection from './quiz';
 import PdfViewer from 'src/components/pdf';
 import { useExportCertificate } from 'src/lib/hooks/useExportCerti';
 import { AlertTextError } from 'src/components/alert/NotificationAlert';
+import { CourseProgressWrapper } from './style';
 
 const { Panel } = Collapse;
 export interface CourseParams {
@@ -277,7 +278,7 @@ const CourseProgress = () => {
     try {
       if (course?.is_done_quiz) {
         downloadPDF(params.id, course.name);
-        window.open(`${globalVariable.API_URL}api/quiz/certi/?course_id=${params.id}`, '_blank');
+        // window.open(`${globalVariable.API_URL}api/quiz/certi/?course_id=${params.id}`, '_blank');
       } else {
         const result = await CourseService.getQuizResult({
           course_id: course?.id,
@@ -343,7 +344,7 @@ const CourseProgress = () => {
   }, [state.selectedDoc]);
 
   return (
-    <div
+    <CourseProgressWrapper
       css={css`
         .course_content {
           .page_group {
@@ -457,6 +458,7 @@ const CourseProgress = () => {
                 /* if user unchecked a video while doing quiz, show modal to warn that the quiz will hide if they
                   continue unchecking that video */
                 <>
+                  <div onClick={() => downloadPDF(params.id, course?.name || '')}>Quiz</div>
                   <DownloadAnchor />
                   <QuizSection
                     listQuiz={listQuiz}
@@ -518,7 +520,7 @@ const CourseProgress = () => {
           />
         </div> */}
       </div>
-    </div>
+    </CourseProgressWrapper>
   );
 };
 
