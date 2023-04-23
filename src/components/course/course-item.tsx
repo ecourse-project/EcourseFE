@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import DefaultCourseImage from 'src/assets/images/online-course.png';
+import DefaultClassImage from 'src/assets/images/class.jpg';
 import CourseService from 'src/lib/api/course';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { courseAction } from 'src/lib/reducers/course/courseSlice';
@@ -192,18 +193,19 @@ const CourseItem: React.FC<ChildProps> = (props) => {
       >
         <Link href={`${params.class ? RoutePaths.CLASS_DETAIL : RoutePaths.COURSE_DETAIL}?id=${currentCourse.id}`}>
           <div className="doc--image">
-            {/* <img
+            <img
               className="doc-img"
               src={`${currentCourse?.thumbnail?.image_path || DefaultCourseImage.src}`}
-              alt="course_image."
-            /> */}
-            <Image
+              alt="course_image"
+            />
+
+            {/* <Image
               // className="doc-img"
               src={`${currentCourse?.thumbnail?.image_path || DefaultCourseImage.src}`}
               alt="course_image."
               width={200}
               height={130}
-            />
+            /> */}
           </div>
           <div className="doc_info">
             <div>

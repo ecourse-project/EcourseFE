@@ -172,14 +172,18 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
         >
           <Link href={`${RoutePaths.DOCUMENT_DETAIL}?document=${params?.document}&id=${document.id}`}>
             <div className="doc--image">
-              {/* <img className="doc-img" src={`${document?.thumbnail?.image_path}`} alt="doc image." /> */}
-              <Image
+              <img
+                className="doc-img"
+                src={`${document?.thumbnail?.image_path || DefaultDocImage.src}`}
+                alt="doc image."
+              />
+              {/* <Image
                 // className="doc-img"
                 src={`${document?.thumbnail?.image_path || DefaultDocImage.src}`}
                 alt="doc_image"
                 width={200}
                 height={130}
-              />
+              /> */}
             </div>
 
             <div className="doc_info">
