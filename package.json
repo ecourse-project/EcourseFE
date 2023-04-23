@@ -14,6 +14,7 @@
   "dependencies": {
     "@ant-design/compatible": "^5.1.1",
     "@ant-design/icons": "^4.8.0",
+    "@ant-design/pro-layout": "^7.10.3",
     "@ckeditor/ckeditor5-build-classic": "^37.0.1",
     "@ckeditor/ckeditor5-easy-image": "^37.0.1",
     "@ckeditor/ckeditor5-engine": "^37.0.1",
@@ -67,7 +68,6 @@
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^13.1.6",
-    "@types/next": "^9.0.0",
     "@types/react": "^18.0.26",
     "eslint-config-prettier": "^8.6.0",
     "postcss-lit": "^1.0.1",

@@ -89,7 +89,7 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
               width: 60%;
             }
             .demo-loadmore-list {
-              &:first-child {
+              &:first-of-type {
                 border-bottom: 6px solid #000;
               }
             }
@@ -109,17 +109,19 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
             .ant-list-split .ant-list-item {
               border-bottom: none;
             }
-            .MuiSvgIcon-root {
-              font-size: 30px;
-              border-radius: 50px;
-              ${orderItem.status === OrderStatus.PENDING
-                ? `color: gray`
-                : `${orderItem.status === OrderStatus.SUCCESS ? `color: green` : `color: red`}`}
-            }
+
             .ant-statistic-title {
               color: #000;
               font-size: 18px;
               font-weight: 600;
+            }
+            .anticon-info {
+              border: 2px solid;
+              padding: 4px;
+              border-radius: 50px;
+              ${orderItem.status === OrderStatus.PENDING
+                ? `color: gray`
+                : `${orderItem.status === OrderStatus.SUCCESS ? `color: green` : `color: red`}`}
             }
           `}
         >

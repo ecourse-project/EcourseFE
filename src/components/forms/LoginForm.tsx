@@ -54,7 +54,7 @@ const LoginForm: React.FC = () => {
         dispatch(appActions.setMyProfile(profile));
         router.push(queryParams.asPath.split('?redirect_url=')[1] || '/');
       } catch (error: any) {
-        if (error.detail?.includes('No active account found with the given credentials'))
+        if (error.response.data.detail?.includes('No active account found with the given credentials'))
           setLoginError('Email hoặc mật khẩu không đúng');
         else setLoginError(error.detail);
       } finally {

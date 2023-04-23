@@ -89,7 +89,7 @@ export const CourseProgressWrapper = styled.div`
   }
   .course_content {
     .anticon {
-      padding: 0 10px;
+      /* padding: 0 10px; */
       font-size: 19px;
       cursor: pointer;
     }

@@ -86,8 +86,8 @@ const CourseProgress = () => {
   const [star, setStar] = useState<number>(0);
   const userProfile = useSelector((state: RootState) => state.app.user);
   const [myRate, setMyRate] = useState<Rating>({} as Rating);
-  // const [isShowQuiz, setIsShowQuiz] = useState<boolean>(params?.exam || false);
-  const [isShowQuiz, setIsShowQuiz] = useState<boolean>(true);
+  const [isShowQuiz, setIsShowQuiz] = useState<boolean>(params?.exam || false);
+  // const [isShowQuiz, setIsShowQuiz] = useState<boolean>(true);
 
   const [listQuiz, setListQuiz] = useState<Quiz[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -175,11 +175,12 @@ const CourseProgress = () => {
     try {
       setLoading(true);
       let courseDetail: Course = {} as Course;
-      if (params.isClass) {
+      if (String(params.isClass) === 'true') {
         courseDetail = await CourseService.getClassDetail(id);
         setCourse(courseDetail);
         setProgressNumber(courseDetail.progress || 0);
       } else {
+        console.log('abc :>> ');
         courseDetail = await CourseService.getCourseDetail(id);
         setCourse(courseDetail);
         setProgressNumber(courseDetail.progress || 0);
@@ -258,11 +259,6 @@ const CourseProgress = () => {
   const calculateProgress = () => {
     const doneDoc = state.updateParams?.lessons?.reduce((p, c) => p + c.completed_docs?.length, 0);
     const doneVid = state.updateParams?.lessons?.reduce((p, c) => p + c.completed_videos?.length, 0);
-    // console.log('state 230:>> ', state);
-    // console.log('doneDoc :  >> ', doneDoc);
-    // console.log('doneVid :>> ', doneVid);
-    // console.log('sumDoc :>> ', sumDoc);
-    // console.log('sumVid:>> ', sumVid);
     return {
       done: doneDoc + doneVid,
       sum: sumDoc + sumVid,
@@ -455,11 +451,8 @@ const CourseProgress = () => {
                 </div>
               ) : isShowQuiz ? (
                 /* if user unchecked a video while doing quiz, show modal to warn that the quiz will hide if they continue unchecking that video */
-                /* if user unchecked a video while doing quiz, show modal to warn that the quiz will hide if they
-                  continue unchecking that video */
+
                 <>
-                  <div onClick={() => downloadPDF(params.id, course?.name || '')}>Quiz</div>
-                  {/* <DownloadAnchor /> */}
                   <QuizSection
                     listQuiz={listQuiz}
                     onSubmit={onSubmitQuiz}

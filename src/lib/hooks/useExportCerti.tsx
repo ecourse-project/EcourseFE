@@ -27,7 +27,8 @@ export const useExportCertificate = ({
 
   const { user: profile } = useSelector((state: RootState) => state.app);
   const getFileName = (name: string) => {
-    return `${name.split(' ').join('_')}_${profile?.full_name}.pdf`;
+    console.log('profile.full_name :>> ', profile.full_name);
+    return `${name.split(' ').join('_')}_${profile?.full_name}_certificate.pdf`;
   };
 
   // const downloadPDF = async (id: string, name: string) => {
@@ -92,7 +93,6 @@ export const useExportCertificate = ({
       })
         .then((res) => {
           const contentType = res.headers.get('Content-Type');
-          console.log('contentType :>> ', contentType);
           return res.blob();
         })
         .then((blob) => {
@@ -101,7 +101,7 @@ export const useExportCertificate = ({
             URL.revokeObjectURL(link.href);
           });
           link.href = URL.createObjectURL(blob);
-          link.download = 'example.pdf';
+          link.download = getFileName(name);
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);

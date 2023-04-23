@@ -37,6 +37,7 @@ const CourseItem: React.FC<ChildProps> = (props) => {
   const params: CourseClassParams = useQueryParam();
   const dispatch = useDispatch();
   const route = useRouter();
+
   useEffect(() => {
     if (params.class) {
       if (currentCourse.request_status === RequestStatus.REQUESTED) {
@@ -46,7 +47,7 @@ const CourseItem: React.FC<ChildProps> = (props) => {
       } else if (currentCourse.request_status === RequestStatus.ACCEPTED) {
         setBtnString(BtnString.ACCEPTED);
       }
-    } else if (params.course) {
+    } else {
       if (currentCourse.sale_status === SaleStatusEnum.AVAILABLE) {
         setBtnString(BtnString.AVAILABLE);
       } else if (currentCourse.sale_status === SaleStatusEnum.IN_CART) {
@@ -64,7 +65,10 @@ const CourseItem: React.FC<ChildProps> = (props) => {
   }, [course]);
 
   const handleClick = async () => {
-    if (currentCourse.request_status === RequestStatus.ACCEPTED) {
+    if (
+      (currentCourse.course_of_class && currentCourse.request_status === RequestStatus.ACCEPTED) ||
+      currentCourse.sale_status === SaleStatusEnum.BOUGHT
+    ) {
       route.push(`${RoutePaths.COURSE_PROGRESS}?id=${currentCourse.id}&isClass=${params.class ? 'true' : 'false'}`);
     }
     checkAccountPermission();
@@ -77,17 +81,14 @@ const CourseItem: React.FC<ChildProps> = (props) => {
             setCurrentCourse((prev) => ({ ...prev, request_status: reuqestClass.request_status }));
           }, 300);
         }
-      } else if (params.course) {
+      } else {
+        console.log('current', currentCourse);
         if (currentCourse.sale_status === SaleStatusEnum.AVAILABLE) {
           const addTo: Course = await CourseService.moveCourse(currentCourse.id, MoveEnum.LIST, MoveEnum.CART);
-          setTimeout(() => {
-            setCurrentCourse(addTo);
-          }, 300);
+          setCurrentCourse(addTo);
         } else if (currentCourse.sale_status === SaleStatusEnum.IN_CART) {
           const removeFrom: Course = await CourseService.moveCourse(currentCourse.id, MoveEnum.CART, MoveEnum.LIST);
-          setTimeout(() => {
-            setCurrentCourse(removeFrom);
-          }, 300);
+          setCurrentCourse(removeFrom);
         }
       }
     } catch (error) {
@@ -189,11 +190,7 @@ const CourseItem: React.FC<ChildProps> = (props) => {
         }
         trigger="hover"
       >
-        <Link
-          href={`${params.course ? RoutePaths.COURSE_DETAIL : params.class ? RoutePaths.CLASS_DETAIL : ''}?id=${
-            currentCourse.id
-          }`}
-        >
+        <Link href={`${params.class ? RoutePaths.CLASS_DETAIL : RoutePaths.COURSE_DETAIL}?id=${currentCourse.id}`}>
           <div className="doc--image">
             {/* <img
               className="doc-img"
@@ -256,11 +253,7 @@ const CourseItem: React.FC<ChildProps> = (props) => {
             btnSize={'small'}
             btnWidth={'full-w'}
             loading={loading}
-            disabled={
-              loading ||
-              currentCourse.sale_status === SaleStatusEnum.PENDING ||
-              currentCourse.sale_status === SaleStatusEnum.BOUGHT
-            }
+            disabled={loading || currentCourse.sale_status === SaleStatusEnum.PENDING}
             onClick={handleClick}
           >
             {btnString}
