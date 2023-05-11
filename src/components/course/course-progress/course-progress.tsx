@@ -70,7 +70,7 @@ export const convertDataToUpdateParams = (lessons: Lesson[]) => {
   });
   return res;
 };
-
+const ifr = `<iframe width="1280" height="720" src="https://www.youtube.com/embed/UQda4-sVMzk?list=RDUQda4-sVMzk" title="Trọn Vẹn Nghĩa Tình (Orinn Remix) - Ưng Hoàng Phúc x Wowy | Nhạc Trẻ Remix Xu Hướng Hot Tiktok 2022" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
 const CourseProgress = () => {
   const [course, setCourse] = useState<Course>();
   const [selectItemVideo, setSelectItemVideo] = useState<OFileUpload>();
@@ -358,6 +358,12 @@ const CourseProgress = () => {
             /* visibility: ${videoLoading ? 'hidden' : ''}; */
           }
         }
+        .video_wrapper {
+          iframe {
+            max-width: 100%;
+            max-height: 450px;
+          }
+        }
       `}
     >
       <Row className="course_header_wrapper">
@@ -406,9 +412,10 @@ const CourseProgress = () => {
         <Row>
           <Col span={16} className="course_content">
             <Row>
+              <div className="video_wrapper" dangerouslySetInnerHTML={{ __html: ifr }}></div>
               {!_.isEmpty(state.selectedVideo) && state.selectedVideo?.file_path ? (
-                <div className="video_wrapper">
-                  <ReactPlayer
+                <div className="video_wrapper" dangerouslySetInnerHTML={{ __html: ifr }}>
+                  {/* <ReactPlayer
                     url={state.selectedVideo?.file_path}
                     width="100%"
                     height="100%"
@@ -436,7 +443,8 @@ const CourseProgress = () => {
                     playIcon={<PlayCircleOutlined />}
                     light={false}
                     stopOnUnmount={false}
-                  />
+                  /> */}
+
                   {/* <VideoJS options={videoJsOptions} onReady={handlePlayerReady} /> */}
                 </div>
               ) : !_.isEmpty(state.selectedDoc) && state.selectedDoc?.file?.file_path ? (

@@ -25,23 +25,10 @@ class MyDocument extends Document {
           <meta property="og:description" content="Next.js + SWR codebase containing ecourse" />
           <meta property="og:url" content="https://next-ecourse.now.sh/" />
           <meta property="og:image" content="https://next-ecourse.now.sh/images/share-link.png" />
-          <meta property="twitter:card" content="next-ecourse" />
-          <meta property="twitter:url" content="https://next-ecourse.now.sh/" />
-          <meta property="twitter:title" content="Next.js ecourse app" />
-          <meta property="twitter:description" content="Next.js + SWR codebase containing ecourse examples" />
-          <meta property="twitter:image" content="https://machimban.com/images/talk-link.jpg" />
           <meta name="msapplication-TileColor" content="#000" />
           <meta name="msapplication-TileImage" content="/images/ms-icon-144x144.png" />
           <meta name="theme-color" content="#000" />
-
-          {/* <link rel="manifest" href="/manifest.json" /> */}
-          <link rel="stylesheet" href="//demo.productionready.io/main.css" />
-          <link rel="stylesheet" href="//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
-          <link
-            rel="stylesheet"
-            href="//fonts.googleapis.com/css?family=Titillium+Web:700|Source+Serif+Pro:400,700|Merriweather+Sans:400,700|Source+Sans+Pro:400,300,600,700,300italic,400italic,600italic,700italic&display=swap"
-          />
-
+          <link rel="manifest" href="/site.webmanifest" />
           <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
           <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
           <link rel="shortcut icon" href="/favicon.ico" />

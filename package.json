@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "clean": "rm -rf public node_modules .cache",
+    "clean": "rm -rf node_modules .cache",
     "build": "next build",
     "start": "next start",
     "lint": "npm run lint:css && npm run lint:js",
