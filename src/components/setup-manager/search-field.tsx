@@ -1,11 +1,14 @@
-import { css } from '@emotion/react';
 import { Button, Image, Skeleton } from 'antd';
 import React, { useRef, useState } from 'react';
-import { AlertTextError } from 'src/components/alert/SweetAlert';
 import icBlackClose from 'src/assets/icons/black-close-icon.svg';
 import SearchIcon from 'src/assets/images/search.svg';
 import icClose from 'src/assets/images/white-close-icon.svg';
+import { AlertTextError } from 'src/components/alert/SweetAlert';
+
+import { css } from '@emotion/react';
+
 import AppInput from '../input';
+
 interface SearchFieldProps {
   isSearchByInput?: boolean;
   isSearchByFile?: boolean;

@@ -1,11 +1,10 @@
 import { Breadcrumb, Button, Divider, Dropdown, Menu, Row, Statistic, Tabs, Typography } from 'antd';
-import { isEmpty } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import CourseService from 'src/lib/api/course';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { RootState } from 'src/lib/reducers/model';
-import { Document, MoveEnum, RateDocArgs, Rating, RatingEnum, SaleStatusEnum } from 'src/lib/types/backend_modal';
+import { Document, MoveEnum, Rating, SaleStatusEnum } from 'src/lib/types/backend_modal';
 import { formatCurrency } from 'src/lib/utils/currency';
 import { formatDate } from 'src/lib/utils/format';
 import RoutePaths from 'src/lib/utils/routes';
@@ -18,14 +17,10 @@ import {
   MinusCircleOutlined,
   MoreOutlined,
   PlusCircleOutlined,
-  StarFilled,
   SwapOutlined,
 } from '@ant-design/icons';
 import { PageHeader } from '@ant-design/pro-layout/es/components/PageHeader';
 import { css } from '@emotion/react';
-
-import FeedbackSection from '../comment/feedbacks';
-import RatingModal from '../modal/rating-modal';
 
 const { Paragraph, Title } = Typography;
 const menu = (
@@ -128,9 +123,7 @@ const DocDetail: React.FC = () => {
       console.log('error get detail', error);
     }
   };
-  useEffect(() => {
-    console.log('params', params);
-  }, [params]);
+
   useEffect(() => {
     fetchDocDetail(params.id);
   }, []);

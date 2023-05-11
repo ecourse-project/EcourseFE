@@ -1,6 +1,7 @@
+import 'video.js/dist/video-js.css';
+
 import React from 'react';
 import videojs from 'video.js';
-import 'video.js/dist/video-js.css';
 
 export const VideoJS = (props) => {
   const videoRef = React.useRef<any>(null);

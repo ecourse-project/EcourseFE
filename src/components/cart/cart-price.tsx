@@ -1,20 +1,20 @@
 import { Button, Divider, Modal } from 'antd';
+import { useRouter } from 'next/router';
 import React, { ReactNode, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import AppButton from 'src/components/button';
 import CourseService from 'src/lib/api/course';
+import { CreateOrderArg, OCart } from 'src/lib/types/backend_modal';
 import { formatCurrencySymbol } from 'src/lib/utils/currency';
+import { GlobalStyle } from 'src/lib/utils/enum';
+import RoutePaths from 'src/lib/utils/routes';
+import Swal from 'sweetalert2';
 
 import { css } from '@emotion/react';
-import CurrencyRubleIcon from '@mui/icons-material/CurrencyRuble';
-import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
-import { CreateOrderArg, OCart } from 'src/lib/types/backend_modal';
-import { GlobalStyle } from 'src/lib/utils/enum';
-import Swal from 'sweetalert2';
-import { AskForSave } from '../alert/SweetAlert';
-import RoutePaths from 'src/lib/utils/routes';
+
 import { TabSettingKey } from '../settings/tabs';
 import CartOrderBill from './cart-order-bill';
+
 interface ChildProps {
   docNum: number;
   children: ReactNode;
@@ -75,7 +75,6 @@ const PricingCard: React.FC<ChildProps> = ({ docNum, checkoutList, children, car
   const handleCancel = () => {
     setOpenModal(false);
   };
-  const currency = <CurrencyRubleIcon />;
   return (
     <div
       className="xyz"
@@ -134,7 +133,11 @@ const PricingCard: React.FC<ChildProps> = ({ docNum, checkoutList, children, car
         btnSize={'small'}
         btnWidth={'full-w'}
         onClick={handleCharge}
-        disabled={checkoutList.total_price === 0}
+        disabled={
+          checkoutList?.total_price === 0 &&
+          checkoutList?.documents?.length === 0 &&
+          checkoutList?.courses?.length === 0
+        }
       >
         {btnText}
       </AppButton>

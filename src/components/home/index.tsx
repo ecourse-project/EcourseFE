@@ -4,7 +4,7 @@ import CourseService from 'src/lib/api/course';
 import { Course, Document, Homepage, Pagination } from 'src/lib/types/backend_modal';
 import { StorageKeys } from 'src/lib/utils/enum';
 
-import { AppstoreAddOutlined, Loading3QuartersOutlined, UnorderedListOutlined } from '@ant-design/icons';
+import { Loading3QuartersOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 
 import CourseItem from '../course/course-item';

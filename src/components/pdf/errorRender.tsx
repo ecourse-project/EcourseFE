@@ -1,4 +1,4 @@
-import { LoadError, Viewer } from '@react-pdf-viewer/core';
+import { LoadError } from '@react-pdf-viewer/core';
 
 const renderError = (error: LoadError) => {
   let message = '';

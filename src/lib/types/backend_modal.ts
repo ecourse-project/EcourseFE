@@ -221,8 +221,8 @@ export interface Course {
   id: string;
   modified: string;
   name: string;
-  topic: Topic;
-  description: string;
+  topic?: Topic;
+  description?: string;
   price?: number;
   sold?: number;
   lessons?: Lesson[];
@@ -240,6 +240,7 @@ export interface Course {
   // my_rating?: Rating;
   quiz_detail?: QuizResult;
   // rating_stats?: RatingStats;
+  request_status?: RequestStatus;
   course_of_class?: boolean;
 }
 
@@ -250,12 +251,7 @@ export enum RequestStatus {
   AVAILABLE = 'available',
 }
 
-export interface Class {
-  id: string;
-  name: string;
-  request_status: RequestStatus;
-  course: Course;
-}
+export interface Class {}
 
 // ===========================================Comments===========================================
 export interface ReplyComment {

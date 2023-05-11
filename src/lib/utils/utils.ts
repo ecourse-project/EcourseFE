@@ -434,7 +434,8 @@
 // 	return parseFloat(fee);
 // };
 
-import moment, { Moment } from 'moment';
+import moment from 'moment';
+
 import { forceLogout } from './auth';
 import { StorageKeys } from './enum';
 
@@ -453,7 +454,11 @@ export const formatDurationTime = (durationTime: string | number) => {
 
 export const checkAccountPermission = async () => {
   const token = localStorage.getItem(StorageKeys.SESSION_KEY);
+  // console.log('token', token);
   if (!token) {
+    // console.log('force logout');
     forceLogout();
   }
 };
+
+export const uniqueArr = (arr: [any]) => [...new Set(arr)];

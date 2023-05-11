@@ -1,5 +1,7 @@
+import { Course, Pagination } from 'src/lib/types/backend_modal';
+
 import { createSlice, current, PayloadAction } from '@reduxjs/toolkit';
-import { Course, Document, OCart, OutputOrder, Pagination } from 'src/lib/types/backend_modal';
+
 export interface CourseState {
   loading: boolean;
   listCourse: Pagination<Course>;
@@ -23,7 +25,7 @@ export const courseSlice = createSlice({
       state.mostDownCourse = action.payload;
     },
     updateCart: (state, action: PayloadAction<Course>) => {
-      console.log('curernte', current(state));
+      // console.log('curernte', current(state));
     },
     updateStatusAddCourse: (state, action: PayloadAction<Course>) => {
       const idx = state.listCourse.results?.findIndex((v) => v.id === action.payload.id);

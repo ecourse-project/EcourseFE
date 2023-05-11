@@ -1,7 +1,7 @@
-import React from 'react';
+import 'react-toastify/dist/ReactToastify.css';
+
 import ReactDOM from 'react-dom';
 import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 const optionDefault: any = {
   position: 'top-right',

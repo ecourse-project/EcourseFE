@@ -1,10 +1,7 @@
-import { Card, Divider, Progress, Rate } from 'antd';
-import { isEmpty } from 'lodash';
+import { Card, Divider, Progress } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import RatingModal from 'src/components/modal/rating-modal';
-import CourseService from 'src/lib/api/course';
-import { Course, Document, RateCourseArgs, Rating, RatingEnum } from 'src/lib/types/backend_modal';
+import { Course, Document, Rating } from 'src/lib/types/backend_modal';
 import RoutePaths from 'src/lib/utils/routes';
 
 import styled from '@emotion/styled';

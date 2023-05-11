@@ -1,8 +1,7 @@
+import { Document, Pagination } from 'src/lib/types/backend_modal';
+
 import { createSlice, current, PayloadAction } from '@reduxjs/toolkit';
-import { List } from 'antd';
-import { OrderStatus } from 'src/components/order/order-item';
-import { CreateOrderArg, Document, OCart, OutputOrder, Pagination } from 'src/lib/types/backend_modal';
-import { SaleStatusEnum } from 'src/lib/types/backend_modal';
+
 export interface DocumentState {
   updateLoading: number;
   listDoc: Pagination<Document>;
@@ -34,7 +33,7 @@ export const documentSlice = createSlice({
       state.mostDownDoc = action.payload;
     },
     updateCart: (state, action: PayloadAction<Document>) => {
-      console.log('curernte', current(state));
+      // console.log('curernte', current(state));
     },
     updateLoading: (state, action) => {
       state.updateLoading =

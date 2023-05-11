@@ -1,11 +1,13 @@
-/* eslint-disable react/react-in-jsx-scope */
-import RoutePaths from 'src/lib/utils/routes';
 import Swal, { SweetAlertResult } from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
 export const MySwal = withReactContent(Swal);
 
-export const AlertTextError = (_title: string, _body: string) => {
+export const AlertTextError = (
+  _title: string,
+  _body: string,
+  callBack?: (value: SweetAlertResult<unknown>) => void,
+) => {
   return MySwal.fire({
     title: _title,
     customClass: {
@@ -17,7 +19,7 @@ export const AlertTextError = (_title: string, _body: string) => {
     confirmButtonText: 'Okay',
     confirmButtonColor: '#051d29',
     focusConfirm: true,
-  });
+  }).then(callBack);
 };
 export const AlertTextSuccess = (
   _title: string,

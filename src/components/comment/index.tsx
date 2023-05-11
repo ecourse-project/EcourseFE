@@ -1,17 +1,19 @@
-import { css } from '@emotion/react';
 import { Avatar, List, Row } from 'antd';
 import { useEffect, useState } from 'react';
-import { useQueryParam } from 'src/lib/hooks/useQueryParam';
-import { CourseComment, Pagination, PaginationParams } from 'src/lib/types/backend_modal';
-import { RootState } from 'src/lib/reducers/model';
-import CourseService from 'src/lib/api/course';
-import { CourseParams } from '../course/course-progress/course-progress';
-import CustomPagination from '../pagination';
-import CommentForm from './comment-form';
-import CommentItem from './comment-item';
 import { useSelector } from 'react-redux';
+import CourseService from 'src/lib/api/course';
+import { useQueryParam } from 'src/lib/hooks/useQueryParam';
+import { RootState } from 'src/lib/reducers/model';
+import { CourseComment, Pagination, PaginationParams } from 'src/lib/types/backend_modal';
+
 import { Comment } from '@ant-design/compatible';
 import { UserOutlined } from '@ant-design/icons';
+import { css } from '@emotion/react';
+
+import { CourseParams } from '../course/course-progress/course-progress';
+import CustomPagination from '../order/pagination';
+import CommentForm from './comment-form';
+import CommentItem from './comment-item';
 
 // interface CommentProps {
 // 	onAddComment: (value) => void;

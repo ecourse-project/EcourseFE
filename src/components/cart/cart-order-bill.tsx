@@ -1,13 +1,14 @@
 /* eslint-disable react/no-children-prop */
 import { Checkbox, Col, Row } from 'antd';
-import CartItemRow from '../../components/cart/cart-item';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { Course, CreateOrderArg, Document, OCart } from 'src/lib/types/backend_modal';
 
 import { Loading3QuartersOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
-import { useDispatch } from 'react-redux';
-import { formatCurrencySymbol } from 'src/lib/utils/currency';
-import { useEffect, useState } from 'react';
-import { Course, CreateOrderArg, Document, OCart } from 'src/lib/types/backend_modal';
+
+import CartItemRow from '../../components/cart/cart-item';
+
 const antIcon = <Loading3QuartersOutlined style={{ fontSize: 40 }} spin />;
 const CheckboxGroup = Checkbox.Group;
 interface OrderBillProps {

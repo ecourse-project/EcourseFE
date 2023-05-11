@@ -1,9 +1,10 @@
-import { FacebookOutlined, RightOutlined } from '@ant-design/icons';
-import styled from '@emotion/styled';
 import { Card } from 'antd';
 import Search from 'antd/es/transfer/search';
 import Link from 'next/link';
-import * as React from 'react';
+
+import { FacebookOutlined, RightOutlined } from '@ant-design/icons';
+import styled from '@emotion/styled';
+
 import HomeTopicCard from './homeTopicCard';
 
 export interface IHomeSideProps {}

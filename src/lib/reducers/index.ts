@@ -1,20 +1,19 @@
 import { combineReducers } from 'redux';
 import { fork, ForkEffect } from 'redux-saga/effects';
 
+import appSaga from './app/appSage';
+import app from './app/appSlice';
+import courseSaga from './course/courseSage';
+import course from './course/courseSlice';
+/*** Importing reducers ***/
+/*** Importing sagas ***/
+import documentSaga from './document/documentSage';
 /*** Importing reducers ***/
 import document from './document/documentSlice';
-import course from './course/courseSlice';
-import app from './app/appSlice';
-
-/*** Importing reducers ***/
-
-/*** Importing sagas ***/
-
-import documentSaga from './document/documentSage';
-import courseSaga from './course/courseSage';
-import appSaga from './app/appSage';
-
 import { RootState } from './model';
+import progress from './progress/progressSlice';
+import progressSaga from './progress/progressSaga';
+
 /*** Importing sagas ***/
 
 export interface ActionBase {
@@ -27,12 +26,14 @@ const rootReducer = combineReducers<RootState, ActionBase>({
   app,
   document,
   course,
+  progress,
 });
 
 function* rootSaga(): Generator<ForkEffect<void>, void, unknown> {
   yield fork(documentSaga);
   yield fork(courseSaga);
   yield fork(appSaga);
+  yield fork(progressSaga);
 }
 
 export { rootReducer, rootSaga };

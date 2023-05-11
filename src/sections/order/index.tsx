@@ -1,15 +1,15 @@
+import { Empty, Pagination as BasicPagination, Spin, Typography } from 'antd';
 /* eslint-disable react/no-children-prop */
 import { useEffect, useState } from 'react';
-
-import { css } from '@emotion/react';
-import { Empty, Pagination as BasicPagination, Spin, Typography } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import OrderItem from 'src/components/order/order-item';
-import { RootState } from 'src/lib/reducers/model';
-import { OutputCancel, OutputOrder, Pagination, PaginationParams } from 'src/lib/types/backend_modal';
 import CourseService from 'src/lib/api/course';
-import { Loading3QuartersOutlined } from '@ant-design/icons';
+import { OutputCancel, OutputOrder, Pagination, PaginationParams } from 'src/lib/types/backend_modal';
 import Swal from 'sweetalert2';
+
+import { Loading3QuartersOutlined } from '@ant-design/icons';
+import { css } from '@emotion/react';
+
 const { Title, Paragraph, Text, Link } = Typography;
 const antIcon = <Loading3QuartersOutlined style={{ fontSize: 40 }} spin />;
 
@@ -26,7 +26,7 @@ const OrderUI = () => {
       setLoading(true);
       const order = await CourseService.getAllOrders(pagination);
       setListOrder(order);
-      console.log(order);
+      // console.log(order);
     } catch (error) {
       console.log('error');
     } finally {

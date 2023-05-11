@@ -1,5 +1,6 @@
 {
   "name": "ecourse",
+  "author": "CuongNHT",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -13,14 +14,15 @@
   "dependencies": {
     "@ant-design/compatible": "^5.1.1",
     "@ant-design/icons": "^4.8.0",
-    "@ant-design/pro-layout": "^7.6.1",
+    "@ant-design/pro-layout": "^7.10.3",
+    "@ckeditor/ckeditor5-build-classic": "^37.0.1",
+    "@ckeditor/ckeditor5-easy-image": "^37.0.1",
+    "@ckeditor/ckeditor5-engine": "^37.0.1",
     "@ckeditor/ckeditor5-react": "^5.1.0",
+    "@ckeditor/ckeditor5-upload": "^37.0.1",
+    "@emotion/core": "^11.0.0",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
-    "@material-ui/core": "^4.12.4",
-    "@material-ui/icons": "^4.11.3",
-    "@mui/icons-material": "^5.10.16",
-    "@mui/material": "^5.10.17",
     "@react-pdf-viewer/core": "^3.10.0",
     "@react-pdf-viewer/default-layout": "^3.10.0",
     "@reduxjs/toolkit": "^1.9.1",
@@ -66,7 +68,6 @@
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^13.1.6",
-    "@types/next": "^9.0.0",
     "@types/react": "^18.0.26",
     "eslint-config-prettier": "^8.6.0",
     "postcss-lit": "^1.0.1",

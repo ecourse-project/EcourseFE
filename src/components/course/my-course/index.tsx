@@ -17,9 +17,6 @@ interface MyCourseUIProps {
 
 const MyCourseUI: React.FC<MyCourseUIProps> = (props) => {
   const { courses, docs, loading } = props;
-  useEffect(() => {
-    console.log('courses', courses);
-  }, []);
 
   return (
     <div

@@ -1,15 +1,17 @@
-import { UserOutlined } from '@ant-design/icons';
-import { css } from '@emotion/react';
 import { Avatar, Card, Rate } from 'antd';
 import Meta from 'antd/lib/card/Meta';
 import TextArea from 'antd/lib/input/TextArea';
-import { defaults, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { Rating } from 'src/lib/types/backend_modal';
-import BaseModal from '.';
+
+import { UserOutlined } from '@ant-design/icons';
+import { css } from '@emotion/react';
+
 import AppButton from '../button';
 import ErrorMessage from '../error-message';
-import AppInput from '../input';
+import BaseModal from './';
+
 interface RatingModalProps {
   visible: boolean;
   countStar: (value) => void;

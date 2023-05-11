@@ -1,5 +1,3 @@
-import { createSlice, current, PayloadAction } from '@reduxjs/toolkit';
-import { List } from 'antd';
 import { OrderStatus } from 'src/components/order/order-item';
 import {
   Course,
@@ -12,7 +10,9 @@ import {
   Pagination,
   User,
 } from 'src/lib/types/backend_modal';
-import { SaleStatusEnum } from 'src/lib/types/backend_modal';
+
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 export interface AppState {
   appCart: OCart;
   listOrder: Pagination<OutputOrder>;

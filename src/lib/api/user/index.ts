@@ -1,12 +1,6 @@
 import { apiClient } from 'src/lib/config/apiClient';
-import {
-  IRegistration,
-  OIsExist,
-  OPasswordChange,
-  OPasswordRest,
-  ORegistration,
-  User,
-} from 'src/lib/types/backend_modal';
+import { OIsExist, OPasswordChange, OPasswordRest, ORegistration, User } from 'src/lib/types/backend_modal';
+
 import { apiURL } from '../course';
 
 class UserService {

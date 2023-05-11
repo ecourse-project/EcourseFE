@@ -1,18 +1,19 @@
-import { Button, Card, Col, Collapse, List, Row, Select, Skeleton, Statistic } from 'antd';
+import { Button, Card, Col, Collapse, List, Row, Select, Skeleton } from 'antd';
 import { ExpandIconPosition } from 'antd/lib/collapse/Collapse';
+import moment from 'moment';
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { OutputOrder } from 'src/lib/types/backend_modal';
+import { formatCurrency } from 'src/lib/utils/currency';
+import RoutePaths from 'src/lib/utils/routes';
 
 import { css } from '@emotion/react';
-import InfoIcon from '@mui/icons-material/Info';
-import moment from 'moment';
-import BaseModal from 'src/components/modal';
-import { OutputOrder } from 'src/lib/types/backend_modal';
-import AppAction from 'src/lib/reducers/actions';
-import { formatCurrency, formatCurrencySymbol } from 'src/lib/utils/currency';
-import { useDispatch } from 'react-redux';
-import RoutePaths from 'src/lib/utils/routes';
+// import InfoIcon from '@mui/icons-material/Info';
+
 import { AskForSave } from '../alert/SweetAlert';
 import PaymentInfo from './paymentInfo';
+import { InfoOutlined } from '@ant-design/icons';
+
 const { Panel } = Collapse;
 const { Option } = Select;
 const text = `
@@ -48,15 +49,7 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
     console.log(key);
   };
 
-  const genExtra = () => (
-    <InfoIcon
-      id="info-icon"
-      onClick={(event) => {
-        // If you don't want click extra trigger collapse, you can prevent this:
-        // event.stopPropagation();
-      }}
-    />
-  );
+  const genExtra = () => <InfoOutlined />;
   const showModal = () => {
     AskForSave(`Xác nhân huỷ`, `Huỷ đơn mã #${orderItem.code.split('-')[0].slice(3, 10)}`, 'OK', 'Huỷ', '', (value) => {
       if (value.isConfirmed) cancelOrder(orderItem);
@@ -96,7 +89,7 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
               width: 60%;
             }
             .demo-loadmore-list {
-              &:first-child {
+              &:first-of-type {
                 border-bottom: 6px solid #000;
               }
             }
@@ -116,17 +109,19 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
             .ant-list-split .ant-list-item {
               border-bottom: none;
             }
-            .MuiSvgIcon-root {
-              font-size: 30px;
-              border-radius: 50px;
-              ${orderItem.status === OrderStatus.PENDING
-                ? `color: gray`
-                : `${orderItem.status === OrderStatus.SUCCESS ? `color: green` : `color: red`}`}
-            }
+
             .ant-statistic-title {
               color: #000;
               font-size: 18px;
               font-weight: 600;
+            }
+            .anticon-info {
+              border: 2px solid;
+              padding: 4px;
+              border-radius: 50px;
+              ${orderItem.status === OrderStatus.PENDING
+                ? `color: gray`
+                : `${orderItem.status === OrderStatus.SUCCESS ? `color: green` : `color: red`}`}
             }
           `}
         >

@@ -1,17 +1,17 @@
-import { css } from '@emotion/react';
 import { useFormik } from 'formik';
 import React, { useState } from 'react';
 import { AlertTextSuccess } from 'src/components/alert/SweetAlert';
 import AppButton from 'src/components/button';
 import ErrorMessage from 'src/components/error-message';
 import AppInput from 'src/components/input';
-import AuthService from 'src/lib/api/auth';
 import CourseService from 'src/lib/api/course';
-import theme from 'src/styles/theme';
+import { ChangePasswordFieldData } from 'src/lib/types/commentType';
 import regex from 'src/lib/utils/regularExpression';
 import validation from 'src/lib/utils/validation';
+import theme from 'src/styles/theme';
 import * as Yup from 'yup';
-import { ChangePasswordFieldData } from 'src/lib/types/commentType';
+
+import { css } from '@emotion/react';
 
 const ChangePasswordForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);

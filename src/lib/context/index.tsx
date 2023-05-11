@@ -1,5 +1,3 @@
-import React from 'react';
-
 import PageContext from './PageContext';
 import PageCountContext from './PageCountContext';
 

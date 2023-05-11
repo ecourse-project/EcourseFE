@@ -1,10 +1,10 @@
-import { Comment } from '@ant-design/compatible';
-import { css } from '@emotion/react';
-import { Avatar, Rate, Tooltip } from 'antd';
+import { Avatar, Tooltip } from 'antd';
 import moment from 'moment';
 import React, { useState } from 'react';
-import { CourseComment, Rating } from 'src/lib/types/backend_modal';
-import CommentForm from './comment-form';
+import { Rating } from 'src/lib/types/backend_modal';
+
+import { Comment } from '@ant-design/compatible';
+import { css } from '@emotion/react';
 
 interface RatingItemProps {
   rateList: Rating[];

@@ -1,10 +1,11 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/display-name */
 
-import { css, useTheme } from '@emotion/react';
 import React from 'react';
 import isEqual from 'react-fast-compare';
 import theme from 'src/styles/theme';
+
+import { css } from '@emotion/react';
 
 interface ErrorMessageProps {
   className?: string;

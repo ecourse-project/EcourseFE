@@ -1,22 +1,23 @@
 /* eslint-disable prettier/prettier */
 
-import { Breadcrumb, Card, Col, Divider, Empty, Pagination, Row, Spin } from 'antd';
+import { Breadcrumb, Card, Col, Divider, Empty, Row } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import DocItem from 'src/components/document/doc-item';
 import { DocCourseWrapper } from 'src/components/document/style';
+import HomeSide from 'src/components/home/homeSide';
+import CustomPagination from 'src/components/order/pagination';
+import DocCourseItemSkeleton from 'src/components/skeleton/document-skeleton';
 import CourseService from 'src/lib/api/course';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { Document, Pagination as PaginationType, PaginationParams } from 'src/lib/types/backend_modal';
 import { StorageKeys } from 'src/lib/utils/enum';
 import { UpperCaseFirstLetter } from 'src/lib/utils/format';
 import RoutePaths from 'src/lib/utils/routes';
+
 import { HomeOutlined, Loading3QuartersOutlined, SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
-import HomeSide from 'src/components/home/homeSide';
-import CustomPagination from 'src/components/pagination';
-import DocCourseItemSkeleton from 'src/components/skeleton/document-skeleton';
 
 export interface DocumentParams {
   page?: number;

@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
-import { DatePicker, Input } from 'antd';
-import styled from '@emotion/styled';
+import { DatePicker } from 'antd';
 import { InputProps } from 'antd/lib/input';
-import { css } from '@emotion/react';
-import theme from 'src/styles/theme';
-import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons/lib/icons';
 import moment from 'moment';
+import React, { useState } from 'react';
+import theme from 'src/styles/theme';
+
+import { css } from '@emotion/react';
 
 const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean) => {
   let isLabelAffected = isFocusing;

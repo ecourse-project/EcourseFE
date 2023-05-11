@@ -1,11 +1,13 @@
 /* eslint-disable react/prop-types */
 
-import { css } from '@emotion/react';
-import styled from '@emotion/styled';
-import { Input, Select } from 'antd';
-import React, { useState, ReactNode } from 'react';
+import { Select } from 'antd';
+import React, { ReactNode, useState } from 'react';
 import { typeSelect } from 'src/lib/utils/enum';
 import theme from 'src/styles/theme';
+
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
+
 const { Option } = Select;
 const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean, suffixIcon?: ReactNode) => {
   let isLabelAffected = isFocusing;

@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { Store } from '@react-pdf-viewer/core';
 
 import StoreProps from './StoreProps';

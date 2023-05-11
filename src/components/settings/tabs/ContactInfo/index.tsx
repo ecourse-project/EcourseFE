@@ -46,7 +46,6 @@ const ContactInfo: React.FC<ContactSettingsFormProps> = () => {
         phone: phone,
         // avatar: avatar ? avatar : myProfile?.avatar,
       };
-      console.log('values :>> ', values);
       try {
         setIsLoading(true);
       } catch (error) {

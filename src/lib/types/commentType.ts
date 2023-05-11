@@ -78,7 +78,6 @@ export interface NeighbourhoodModels {
   name: string;
 }
 import { ReactElement, ReactNode } from 'react';
-import { string } from 'yup';
 
 // export interface PaginationParams {
 // 	_limit: number;

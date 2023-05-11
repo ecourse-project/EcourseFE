@@ -1,87 +1,96 @@
 import { Popover } from 'antd';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import DefaultCourseImage from 'src/assets/images/online-course.png';
+import DefaultClassImage from 'src/assets/images/class.jpg';
 import CourseService from 'src/lib/api/course';
+import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { courseAction } from 'src/lib/reducers/course/courseSlice';
-import { RootState } from 'src/lib/reducers/model';
-import { Course, MoveEnum } from 'src/lib/types/backend_modal';
+import { Course, MoveEnum, RequestStatus } from 'src/lib/types/backend_modal';
 import { formatCurrency } from 'src/lib/utils/currency';
-import { SaleStatusEnum } from 'src/lib/utils/enum';
+import { BtnString, Color, SaleStatusEnum } from 'src/lib/utils/enum';
 import { formatDate } from 'src/lib/utils/format';
 import RoutePaths from 'src/lib/utils/routes';
 import { checkAccountPermission } from 'src/lib/utils/utils';
+import { CourseClassParams } from 'src/sections/Pages/CourseUI';
 
-import {
-  EyeOutlined,
-  HeartFilled,
-  HeartOutlined,
-  LikeOutlined,
-  VerticalAlignBottomOutlined,
-  WalletOutlined,
-} from '@ant-design/icons';
+import { WalletOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
-import TaskAltIcon from '@mui/icons-material/TaskAlt';
-import Rating from '@mui/material/Rating';
 
 import AppButton from '../button';
 import { ItemDocCourseWrapper } from '../document/style';
+import Image from 'next/image';
 
 interface ChildProps {
   course: Course;
   isMyLearn?: boolean;
 }
-enum BtnString {
-  AVAILABLE = 'THÊM',
-  IN_CART = 'XOÁ',
-  PENDING = 'CHỜ THANH TOÁN',
-  BOUGHT = 'ĐÃ THANH TOÁN',
-}
-enum Color {
-  AVAILABLE = '#0dcaf0',
-  IN_CART = '#ed5e68',
-  PENDING = '#8c8c8c',
-  BOUGHT = '#23c501',
-}
+
 const CourseItem: React.FC<ChildProps> = (props) => {
   // eslint-disable-next-line prefer-const
   const { course, isMyLearn } = props;
-  const [added, setAdded] = useState(false);
   const [btnString, setBtnString] = useState<string>(BtnString.AVAILABLE);
-  const cartData = useSelector((state: RootState) => state.course);
   const [loading, setLoading] = useState<boolean>(false);
   const [currentCourse, setCurrentCourse] = useState<Course>(course);
+  const params: CourseClassParams = useQueryParam();
   const dispatch = useDispatch();
+  const route = useRouter();
+
   useEffect(() => {
-    if (currentCourse.sale_status === SaleStatusEnum.AVAILABLE) {
-      setBtnString(BtnString.AVAILABLE);
-    } else if (currentCourse.sale_status === SaleStatusEnum.IN_CART) {
-      setBtnString(BtnString.IN_CART);
-    } else if (currentCourse.sale_status === SaleStatusEnum.PENDING) {
-      setBtnString(BtnString.PENDING);
-    } else if (currentCourse.sale_status === SaleStatusEnum.BOUGHT) {
-      setBtnString(BtnString.BOUGHT);
+    if (params.class) {
+      if (currentCourse.request_status === RequestStatus.REQUESTED) {
+        setBtnString(BtnString.REQUESTED);
+      } else if (currentCourse.request_status === RequestStatus.AVAILABLE) {
+        setBtnString(BtnString.AVAILABLE_REQUEST);
+      } else if (currentCourse.request_status === RequestStatus.ACCEPTED) {
+        setBtnString(BtnString.ACCEPTED);
+      }
+    } else {
+      if (currentCourse.sale_status === SaleStatusEnum.AVAILABLE) {
+        setBtnString(BtnString.AVAILABLE);
+      } else if (currentCourse.sale_status === SaleStatusEnum.IN_CART) {
+        setBtnString(BtnString.IN_CART);
+      } else if (currentCourse.sale_status === SaleStatusEnum.PENDING) {
+        setBtnString(BtnString.PENDING);
+      } else if (currentCourse.sale_status === SaleStatusEnum.BOUGHT) {
+        setBtnString(BtnString.BOUGHT);
+      }
     }
   }, [currentCourse]);
 
   useEffect(() => {
     setCurrentCourse(course);
   }, [course]);
+
   const handleClick = async () => {
+    if (
+      (currentCourse.course_of_class && currentCourse.request_status === RequestStatus.ACCEPTED) ||
+      currentCourse.sale_status === SaleStatusEnum.BOUGHT
+    ) {
+      route.push(`${RoutePaths.COURSE_PROGRESS}?id=${currentCourse.id}&isClass=${params.class ? 'true' : 'false'}`);
+    }
     checkAccountPermission();
     setLoading(true);
     try {
-      if (currentCourse.sale_status === SaleStatusEnum.AVAILABLE) {
-        const addTo: Course = await CourseService.moveCourse(currentCourse.id, MoveEnum.LIST, MoveEnum.CART);
-        setTimeout(() => {
+      if (params.class) {
+        if (currentCourse.request_status !== RequestStatus.ACCEPTED) {
+          const reuqestClass = await CourseService.requestJoinClass(currentCourse.id);
+          setTimeout(() => {
+            setCurrentCourse((prev) => ({ ...prev, request_status: reuqestClass.request_status }));
+          }, 300);
+        }
+      } else {
+        console.log('current', currentCourse);
+        if (currentCourse.sale_status === SaleStatusEnum.AVAILABLE) {
+          const addTo: Course = await CourseService.moveCourse(currentCourse.id, MoveEnum.LIST, MoveEnum.CART);
           setCurrentCourse(addTo);
-        }, 300);
-      } else if (currentCourse.sale_status === SaleStatusEnum.IN_CART) {
-        const removeFrom: Course = await CourseService.moveCourse(currentCourse.id, MoveEnum.CART, MoveEnum.LIST);
-        setTimeout(() => {
+        } else if (currentCourse.sale_status === SaleStatusEnum.IN_CART) {
+          const removeFrom: Course = await CourseService.moveCourse(currentCourse.id, MoveEnum.CART, MoveEnum.LIST);
           setCurrentCourse(removeFrom);
-        }, 300);
+        }
       }
     } catch (error) {
       console.log('error update cart', error);
@@ -120,7 +129,21 @@ const CourseItem: React.FC<ChildProps> = (props) => {
             letter-spacing: 8px;
           }
         }
-
+        .class-btn {
+          letter-spacing: 0;
+          &:hover {
+            letter-spacing: 0.5px;
+            font-weight: 600;
+          }
+          &:focus {
+            letter-spacing: 0.5px;
+            font-weight: 600;
+          }
+          &:active {
+            letter-spacing: 0.5px;
+            font-weight: 600;
+          }
+        }
         .anticon-loading {
           font-size: 18px;
           color: ${btnString === BtnString.AVAILABLE ? Color.AVAILABLE : Color.IN_CART};
@@ -168,9 +191,21 @@ const CourseItem: React.FC<ChildProps> = (props) => {
         }
         trigger="hover"
       >
-        <Link href={`${RoutePaths.COURSE_DETAIL}?id=${currentCourse.id}`}>
+        <Link href={`${params.class ? RoutePaths.CLASS_DETAIL : RoutePaths.COURSE_DETAIL}?id=${currentCourse.id}`}>
           <div className="doc--image">
-            <img className="doc-img" src={`${currentCourse?.thumbnail?.image_path}`} alt="course image." />
+            <img
+              className="doc-img"
+              src={`${currentCourse?.thumbnail?.image_path || DefaultCourseImage.src}`}
+              alt="course_image"
+            />
+
+            {/* <Image
+              // className="doc-img"
+              src={`${currentCourse?.thumbnail?.image_path || DefaultCourseImage.src}`}
+              alt="course_image."
+              width={200}
+              height={130}
+            /> */}
           </div>
           <div className="doc_info">
             <div>
@@ -200,27 +235,27 @@ const CourseItem: React.FC<ChildProps> = (props) => {
         </Link>
       </Popover>
       <div>
-        <div className="price-tag">
-          <span>
-            <WalletOutlined />
-            {formatCurrency(currentCourse.price || 0)}
-          </span>
+        {!params.class ? (
+          <div className="price-tag">
+            <span>
+              <WalletOutlined />
+              {formatCurrency(currentCourse.price || 0)}
+            </span>
 
-          {currentCourse.sale_status === SaleStatusEnum.BOUGHT && <TaskAltIcon sx={{ color: `${Color.BOUGHT}` }} />}
-        </div>
+            {/* {currentCourse.sale_status === SaleStatusEnum.BOUGHT && <TaskAltIcon sx={{ color: `${Color.BOUGHT}` }} />} */}
+          </div>
+        ) : (
+          <></>
+        )}
         {!isMyLearn && (
           <AppButton
-            className="card-btn"
+            className="card-btn class-btn"
             btnTextColor={'black'}
             btnStyle={'outline'}
             btnSize={'small'}
             btnWidth={'full-w'}
             loading={loading}
-            disabled={
-              loading ||
-              currentCourse.sale_status === SaleStatusEnum.PENDING ||
-              currentCourse.sale_status === SaleStatusEnum.BOUGHT
-            }
+            disabled={loading || currentCourse.sale_status === SaleStatusEnum.PENDING}
             onClick={handleClick}
           >
             {btnString}

@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingPage } from 'src/components/loading/loadingBase';
-import AuthService from 'src/lib/api/auth';
 import CourseService from 'src/lib/api/course';
 import UserService from 'src/lib/api/user';
 import { appActions } from 'src/lib/reducers/app/appSlice';
@@ -11,6 +10,7 @@ import { RootState } from 'src/lib/reducers/model';
 import { User } from 'src/lib/types/backend_modal';
 import { StorageKeys } from 'src/lib/utils/enum';
 import RoutePaths from 'src/lib/utils/routes';
+
 const PublicProvider: React.FC<{ children?: ReactNode }> = ({ children }) => {
   const header = useSelector((state: RootState) => state.app.header);
   const myProfile = useSelector((state: RootState) => state.app.user);
@@ -23,7 +23,7 @@ const PublicProvider: React.FC<{ children?: ReactNode }> = ({ children }) => {
     try {
       if (isEmpty(header)) {
         const header = await CourseService.listHeaders();
-        console.log('header :>> ', header);
+        // console.log('header :>> ', header);
         dispatch(appActions.setAppHeader(header));
       }
       if (isEmpty(myProfile) && token) {

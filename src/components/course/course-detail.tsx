@@ -14,7 +14,9 @@ import {
   RateCourseArgs,
   Rating,
   RatingEnum,
+  RequestStatus,
   SaleStatusEnum,
+  UpdateLessonArgs,
 } from 'src/lib/types/backend_modal';
 import { formatCurrencySymbol } from 'src/lib/utils/currency';
 import { formatDate } from 'src/lib/utils/format';
@@ -43,6 +45,8 @@ import CommentSection from '../comment';
 import FeedbackSection from '../comment/feedbacks';
 import RatingModal from '../modal/rating-modal';
 import LessonItem from './course-progress/lesson-item';
+import { BtnString } from 'src/lib/utils/enum';
+import AppButton from '../button';
 
 const { Paragraph, Title } = Typography;
 
@@ -142,13 +146,19 @@ const CourseDetail: React.FC = () => {
   const [feedback, setFeedback] = useState<string>('');
   const listCourse = useSelector((state: RootState) => state.course.listCourse.results);
   const router = useRouter();
-
+  const isClass = router.pathname.includes(RoutePaths.CLASS_DETAIL);
   const userProfile = useSelector((state: RootState) => state.app.user);
+  const [btnString, setBtnString] = useState<string>(BtnString.AVAILABLE);
 
-  const fetchDocDetail = async (id: string) => {
+  const fetchCourseDetail = async (id: string) => {
     try {
-      const course: Course = await CourseService.getCourseDetail(id);
-      setCourse(course);
+      if (isClass) {
+        const course: Course = await CourseService.getClassDetail(id);
+        setCourse(course);
+      } else {
+        const course: Course = await CourseService.getCourseDetail(id);
+        setCourse(course);
+      }
     } catch (error) {
       console.log('error get detail', error);
     }
@@ -164,7 +174,7 @@ const CourseDetail: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchDocDetail(params.id);
+    fetchCourseDetail(params.id);
     fetchComment(params.id);
   }, []);
 
@@ -184,18 +194,21 @@ const CourseDetail: React.FC = () => {
   );
 
   const handleUpdateBtn = async () => {
-    if (course.sale_status !== SaleStatusEnum.BOUGHT) {
+    if (course.sale_status !== SaleStatusEnum.BOUGHT && course.request_status !== RequestStatus.ACCEPTED) {
       setLoading(true);
       try {
-        let newCourse = {} as Course;
-        if (course.sale_status === SaleStatusEnum.AVAILABLE) {
-          newCourse = await CourseService.moveCourse(course.id, MoveEnum.LIST, MoveEnum.CART);
-        } else if (course.sale_status === SaleStatusEnum.IN_CART) {
-          newCourse = await CourseService.moveCourse(course.id, MoveEnum.CART, MoveEnum.LIST);
-        }
-        setTimeout(() => {
+        if (isClass) {
+          const request = await CourseService.requestJoinClass(params?.id);
+          setCourse((prev) => ({ ...prev, request_status: request.request_status }));
+        } else {
+          let newCourse = {} as Course;
+          if (course.sale_status === SaleStatusEnum.AVAILABLE) {
+            newCourse = await CourseService.moveCourse(course.id, MoveEnum.LIST, MoveEnum.CART);
+          } else if (course.sale_status === SaleStatusEnum.IN_CART) {
+            newCourse = await CourseService.moveCourse(course.id, MoveEnum.CART, MoveEnum.LIST);
+          }
           setCourse(newCourse);
-        }, 500);
+        }
       } catch (error) {
         console.log('error', error);
         setLoading(false);
@@ -203,7 +216,7 @@ const CourseDetail: React.FC = () => {
         setLoading(false);
       }
     } else {
-      router.push(`${RoutePaths.COURSE_PROGRESS}?id=${course.id}`);
+      router.push(`${RoutePaths.COURSE_PROGRESS}?id=${course.id}&isClass=${isClass}`);
     }
   };
 
@@ -248,7 +261,27 @@ const CourseDetail: React.FC = () => {
   //   rateCourse(params.id, star, feedback);
   //   setOpenRatingModal(false);
   // };
-
+  useEffect(() => {
+    if (isClass) {
+      if (course.request_status === RequestStatus.REQUESTED) {
+        setBtnString(BtnString.REQUESTED);
+      } else if (course.request_status === RequestStatus.AVAILABLE) {
+        setBtnString(BtnString.AVAILABLE_REQUEST);
+      } else if (course.request_status === RequestStatus.ACCEPTED) {
+        setBtnString(BtnString.ACCEPTED);
+      }
+    } else {
+      if (course.sale_status === SaleStatusEnum.AVAILABLE) {
+        setBtnString(BtnString.AVAILABLE);
+      } else if (course.sale_status === SaleStatusEnum.IN_CART) {
+        setBtnString(BtnString.IN_CART);
+      } else if (course.sale_status === SaleStatusEnum.PENDING) {
+        setBtnString(BtnString.PENDING);
+      } else if (course.sale_status === SaleStatusEnum.BOUGHT) {
+        setBtnString(BtnString.BOUGHT);
+      }
+    }
+  }, [course]);
   const items = [
     {
       label: 'Bình luận',
@@ -272,31 +305,47 @@ const CourseDetail: React.FC = () => {
           font-weight: 600;
         }
 
-        .ant-btn-primary {
-          width: 160px;
-          height: 35px;
+        .ant-btn-primary,
+        .class-btn {
+          width: 180px;
+          height: 45px !important;
           border-radius: 2px;
-          background-color: ${course.sale_status === SaleStatusEnum.AVAILABLE && '#17a2b8'};
-          background-color: ${course.sale_status === SaleStatusEnum.IN_CART && '#ed5e68'};
-          background-color: ${course.sale_status === SaleStatusEnum.PENDING && '#6c757d'};
-          background-color: ${course.sale_status === SaleStatusEnum.BOUGHT && '#28a745'};
-          border-color: unset;
-          color: #fff;
+          background-color: ${course.sale_status === SaleStatusEnum.AVAILABLE ||
+          course.request_status === RequestStatus.AVAILABLE
+            ? '#17a2b8'
+            : ''} !important;
+          background-color: ${course.sale_status === SaleStatusEnum.IN_CART ||
+          course.request_status === RequestStatus.REQUESTED
+            ? '#ed5e68'
+            : ''}!important;
+          background-color: ${course.sale_status === SaleStatusEnum.PENDING ? '#6c757d' : ''} !important;
+          background-color: ${course.sale_status === SaleStatusEnum.BOUGHT ||
+          course.request_status === RequestStatus.ACCEPTED
+            ? '#28a745'
+            : ''} !important;
+          color: #000 !important;
           font-weight: 700;
           letter-spacing: 3px;
-          height: 50px;
+          letter-spacing: ${isClass ? '0px' : '3px'};
+
           border-radius: 4px;
           &:hover {
-            letter-spacing: 6px;
-            background-color: ${course.sale_status === SaleStatusEnum.AVAILABLE && '#17a2b8'};
-            background-color: ${course.sale_status === SaleStatusEnum.IN_CART && '#ed5e68'};
+            letter-spacing: ${isClass ? '1px' : '6px'};
+            /* background-color: ${course.sale_status === SaleStatusEnum.AVAILABLE ||
+            course.request_status === RequestStatus.AVAILABLE
+              ? '#17a2b8'
+              : ''};
+            background-color: ${course.sale_status === SaleStatusEnum.IN_CART ||
+            course.request_status === RequestStatus.REQUESTED
+              ? '#ed5e68'
+              : ''};
             background-color: ${course.sale_status === SaleStatusEnum.PENDING && '#6c757d'};
-            background-color: ${course.sale_status === SaleStatusEnum.BOUGHT && '#28a745'};
+            background-color: ${course.sale_status === SaleStatusEnum.BOUGHT ||
+            (course.request_status === RequestStatus.ACCEPTED && '#28a745')}; */
           }
-          .anticon {
-            vertical-align: inherit;
-            font-size: 16px;
-            font-weight: 700;
+
+          .anticon-loading {
+            font-size: 18px;
           }
         }
         .content-wrapper {
@@ -362,7 +411,11 @@ const CourseDetail: React.FC = () => {
       <Divider orientation="left">
         <Breadcrumb separator={<SwapOutlined />}>
           <Breadcrumb.Item href={RoutePaths.HOME}>Trang chính</Breadcrumb.Item>
-          <Breadcrumb.Item href={`${RoutePaths.COURSE}?course=ALL`}>Khoá học</Breadcrumb.Item>
+          {isClass ? (
+            <Breadcrumb.Item href={`${RoutePaths.CLASS}?class=ALL`}>Lớp học</Breadcrumb.Item>
+          ) : (
+            <Breadcrumb.Item href={`${RoutePaths.COURSE}?course=ALL`}>Khoá học</Breadcrumb.Item>
+          )}
           <Breadcrumb.Item>{course?.topic?.name}</Breadcrumb.Item>
         </Breadcrumb>
       </Divider>
@@ -373,48 +426,61 @@ const CourseDetail: React.FC = () => {
           src: `${course.thumbnail?.image_path}`,
           shape: 'square',
         }}
-        extra={
-          course.sale_status !== SaleStatusEnum.PENDING && [
-            <Button
-              key="1"
-              type="primary"
-              className="add-btn"
-              loading={loading}
-              onClick={handleUpdateBtn}
-              target="_self"
-              disabled={loading}
-            >
-              {course.sale_status === SaleStatusEnum.AVAILABLE
-                ? 'THÊM'
-                : course.sale_status === SaleStatusEnum.IN_CART
-                ? 'XOÁ'
-                : course.sale_status === SaleStatusEnum.BOUGHT
-                ? 'VÀO HỌC'
-                : ''}
-              {course.sale_status === SaleStatusEnum.AVAILABLE ? (
-                <PlusCircleOutlined />
-              ) : course.sale_status === SaleStatusEnum.IN_CART ? (
-                <MinusCircleOutlined />
-              ) : course.sale_status === SaleStatusEnum.BOUGHT ? (
-                <VerticalLeftOutlined />
-              ) : (
-                ''
-              )}
-            </Button>,
-            // course.sale_status === SaleStatusEnum.BOUGHT && (
-            //   <Button
-            //     key={2}
-            //     type="primary"
-            //     // className="rating-btn"
-            //     className="add-btn"
-            //     onClick={() => setOpenRatingModal(true)}
-            //     style={{ backgroundColor: '#fff', color: '#000' }}
-            //   >
-            //     Đánh giá <StarFilled />
-            //   </Button>
-            // ),
-          ]
-        }
+        extra={[
+          <AppButton
+            key={2}
+            className="class-btn card-btn"
+            btnTextColor="white"
+            btnStyle="outline"
+            btnSize={'small'}
+            btnWidth={'full-w'}
+            loading={loading}
+            onClick={handleUpdateBtn}
+          >
+            {btnString}
+            {course.sale_status === SaleStatusEnum.AVAILABLE ? (
+              <PlusCircleOutlined />
+            ) : course.sale_status === SaleStatusEnum.IN_CART ? (
+              <MinusCircleOutlined />
+            ) : course.sale_status === SaleStatusEnum.BOUGHT ? (
+              <VerticalLeftOutlined />
+            ) : (
+              ''
+            )}
+          </AppButton>,
+          // <Button
+          //   key="1"
+          //   type="primary"
+          //   className="add-btn"
+          //   loading={loading}
+          //   onClick={handleUpdateBtn}
+          //   target="_self"
+          //   disabled={loading}
+          // >
+          //   {btnString}
+          //   {course.sale_status === SaleStatusEnum.AVAILABLE ? (
+          //     <PlusCircleOutlined />
+          //   ) : course.sale_status === SaleStatusEnum.IN_CART ? (
+          //     <MinusCircleOutlined />
+          //   ) : course.sale_status === SaleStatusEnum.BOUGHT ? (
+          //     <VerticalLeftOutlined />
+          //   ) : (
+          //     ''
+          //   )}
+          // </Button>,
+          // course.sale_status === SaleStatusEnum.BOUGHT && (
+          //   <Button
+          //     key={2}
+          //     type="primary"
+          //     // className="rating-btn"
+          //     className="add-btn"
+          //     onClick={() => setOpenRatingModal(true)}
+          //     style={{ backgroundColor: '#fff', color: '#000' }}
+          //   >
+          //     Đánh giá <StarFilled />
+          //   </Button>
+          // ),
+        ]}
       >
         <Content extraContent={undefined}>{content}</Content>
         <Row className="course_info">
@@ -432,7 +498,8 @@ const CourseDetail: React.FC = () => {
                   lesson={item}
                   isCourseDetail={true}
                   index={index}
-                  isShowLessonDetail={course.sale_status === SaleStatusEnum.BOUGHT}
+                  isShowLessonDetail={course.sale_status === SaleStatusEnum.BOUGHT || !!course.request_status}
+                  // onUpdate={(data) => console.log('')}
                 />
               )}
             />
