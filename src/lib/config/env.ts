@@ -1,5 +1,5 @@
 const globalVariable = {
-  API_URL: 'http://127.0.0.1:4000/',
+  API_URL: 'be.creativeteaching.net/',
 };
 export default globalVariable;
 
