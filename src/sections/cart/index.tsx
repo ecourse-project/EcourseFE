@@ -298,7 +298,7 @@ const CartUI: React.FC = () => {
                 />
               </>
             ) : (
-              <Empty className="empty-data" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+              <> </>
             )}
             {courseCart?.length ? (
               <>
@@ -323,6 +323,9 @@ const CartUI: React.FC = () => {
                 />
               </>
             ) : (
+              <></>
+            )}
+            {!docCart?.length && !courseCart?.length && (
               <Empty className="empty-data" image={Empty.PRESENTED_IMAGE_SIMPLE} />
             )}
             {/* {cartData?.documents?.length === 0 &&

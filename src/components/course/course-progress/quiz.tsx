@@ -87,9 +87,14 @@ const QuizSection: React.FC<QuizProps> = (props) => {
         .done-btn {
           width: fit-content;
           background-color: #faad14 !important;
+          border-color: #faad14 !important;
           font-weight: 700;
+          border-radius: 10px;
+          width: 150px;
+          letter-spacing: 1px;
           &:hover {
             letter-spacing: 3px;
+            color: #000;
           }
           &[disabled] {
             cursor: not-allowed;

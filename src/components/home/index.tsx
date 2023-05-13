@@ -78,6 +78,7 @@ export default function HomeData(props: IHomeData) {
           <a href="#">
             <UnorderedListOutlined />
             Xem tất cả
+            {process.env.ECOURSE_API_URL}
           </a>
         }
       >

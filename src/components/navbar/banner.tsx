@@ -10,8 +10,7 @@ const BannerWrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  padding-right: calc(var(--bs-gutter-x) * 1);
-  padding-left: calc(var(--bs-gutter-x) * 1);
+
   padding-top: 20px;
   padding-bottom: 20px;
   border-radius: 5px;

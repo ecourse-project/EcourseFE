@@ -47,14 +47,14 @@ export default function HomeSide(props: IHomeSideProps) {
           <Search placeholder="Tìm kiếm khoá học" />
         </Card>
       </div>
-      <div className="side-item fb-page">
+      {/* <div className="side-item fb-page">
         <Card title="Facebook Page" style={{ width: 300 }}>
           <Link href={'https://www.facebook.com/chemistryresources.vn'} target="_blank">
             <FacebookOutlined />
             TeachingResources
           </Link>
         </Card>
-      </div>
+      </div> */}
       <div className="side-item popular-content">
         <Card title="Bài viết phổ biến" style={{ width: 300 }}>
           <HomeTopicCard />

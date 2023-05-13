@@ -73,13 +73,13 @@ export const TabPaneSettingsSection: React.FC<TabPaneProps> = React.memo((props:
                 display: flex;
                 justify-content: flex-end;
                 :hover {
-                  background-color: #00aaff !important;
+                  background-color: #666666 !important;
                   .ant-tabs-tab-btn {
                     color: #fff;
                   }
                 }
                 &.ant-tabs-tab-active {
-                  background-color: #00aaff !important;
+                  background-color: #666666 !important;
                   .ant-tabs-tab-btn {
                     color: #fff;
                   }

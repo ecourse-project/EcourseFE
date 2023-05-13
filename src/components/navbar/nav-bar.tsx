@@ -124,8 +124,7 @@ const Nav: React.FC = () => {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-right: calc(var(--bs-gutter-x) * 1);
-        margin-left: calc(var(--bs-gutter-x) * 1);
+
         border-radius: 5px;
         box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
         --bs-gutter-x: 5rem;
@@ -172,6 +171,7 @@ const Nav: React.FC = () => {
             font-family: 'Montserrat';
             padding-left: 15px;
             color: #fff !important;
+            text-decoration: none;
             &:hover {
               text-decoration: none;
               letter-spacing: 0.5px;

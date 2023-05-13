@@ -43,10 +43,11 @@ const HomeUI = () => {
 
   useEffect(() => {
     fetchHomeData();
+    console.log('process.env.ECOURSE_API_URL :>> ', process.env.ECOURSE_API_URL);
   }, []);
   return (
     <div className="page-container">
-      <Row gutter={16}>
+      <Row gutter={16} style={{ maxWidth: '100%' }}>
         <Col span={18}>
           {homeData?.map((v, i) => {
             return <HomeData homeData={v} key={i} />;

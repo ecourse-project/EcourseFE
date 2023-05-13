@@ -9,8 +9,7 @@ const RegisterSection: React.FC = () => {
       css={css`
         display: flex;
         min-height: 100vh;
-        padding-top: 30px;
-        padding-bottom: 0px;
+        padding: 0px;
         flex-direction: column;
         justify-content: center;
         align-items: center;
