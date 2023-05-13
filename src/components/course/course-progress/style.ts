@@ -9,7 +9,7 @@ export const CourseProgressWrapper = styled.div`
     display: flex;
     justify-content: space-between;
     padding: 0 40px;
-
+    border-radius: 0 0 10px 10px;
     .ant-col {
       height: 100%;
     }

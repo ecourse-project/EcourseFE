@@ -412,10 +412,9 @@ const CourseProgress = () => {
         <Row>
           <Col span={16} className="course_content">
             <Row>
-              <div className="video_wrapper" dangerouslySetInnerHTML={{ __html: ifr }}></div>
               {!_.isEmpty(state.selectedVideo) && state.selectedVideo?.file_path ? (
                 <div className="video_wrapper" dangerouslySetInnerHTML={{ __html: ifr }}>
-                  {/* <ReactPlayer
+                  <ReactPlayer
                     url={state.selectedVideo?.file_path}
                     width="100%"
                     height="100%"
@@ -443,7 +442,7 @@ const CourseProgress = () => {
                     playIcon={<PlayCircleOutlined />}
                     light={false}
                     stopOnUnmount={false}
-                  /> */}
+                  />
 
                   {/* <VideoJS options={videoJsOptions} onReady={handlePlayerReady} /> */}
                 </div>

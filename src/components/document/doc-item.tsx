@@ -24,6 +24,7 @@ import AppButton from '../button';
 import { ItemDocCourseWrapper } from './style';
 import Image from 'next/image';
 import DefaultDocImage from 'src/assets/images/docDefault.jpg';
+import IconChecked from 'src/assets/icons/IconChecked';
 
 interface ChildProps {
   document: Document; // try not to use any.
@@ -219,7 +220,7 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
               {formatCurrencySymbol(document.price, 'VND')}
             </span>
 
-            {/* {document.sale_status === SaleStatusEnum.BOUGHT && <TaskAltIcon sx={{ color: `${Color.BOUGHT}` }} />} */}
+            {document.sale_status === SaleStatusEnum.BOUGHT && <IconChecked />}
           </div>
         </Popover>
       </div>

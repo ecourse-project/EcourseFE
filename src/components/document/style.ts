@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 export const ItemDocCourseWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: space-between;
   min-height: 100%;
   max-width: 210px;
   min-width: 200px;
@@ -34,7 +34,8 @@ export const ItemDocCourseWrapper = styled.div`
     text-align: left;
     font-size: 17px;
     font-weight: 600;
-    height: 40px;
+    height: fit-content;
+    text-decoration: none;
   }
 
   .description {
@@ -104,7 +105,7 @@ export const ItemDocCourseWrapper = styled.div`
 
   .price-tag {
     display: flex;
-    justify-content: left;
+    justify-content: space-evenly;
     font-weight: 600;
     font-size: 22px;
     margin-left: 10px;

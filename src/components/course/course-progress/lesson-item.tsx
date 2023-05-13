@@ -1,4 +1,4 @@
-import { Collapse, List } from 'antd';
+import { Checkbox, Collapse, List } from 'antd';
 import { cloneDeep, debounce } from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -185,10 +185,20 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
           }
         }
         .item_info {
-          height: 50px;
+          min-height: 50px;
           display: flex;
           flex-direction: column;
           justify-content: space-evenly;
+          gap: 10px;
+          .subject-name {
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            width: 100%;
+            font-weight: 500;
+            font-style: italic;
+          }
         }
         .ant-collapse {
           width: 100%;
@@ -196,6 +206,26 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
             padding: 0 !important;
           }
         }
+        .ant-checkbox-inner {
+          width: 18px;
+          height: 18px;
+        }
+        /* .ant-checkbox-wrapper {
+          &:hover {
+            border-color: #000 !important;
+          }
+        }
+        .ant-checkbox-checked {
+          .ant-checkbox-inner {
+            width: 18px;
+            height: 18px;
+            background: #000 !important;
+            border-color: #000 !important;
+            &::after {
+              border-color: #000 !important;
+            }
+          }
+        } */
       `}
     >
       <List.Item>
@@ -245,10 +275,12 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                             onClick={(e) => {
                               e.stopPropagation();
                             }}
+                            width={18}
+                            height={18}
                           />
                         )}
                         <div className="item_info">
-                          <div className="">{`${i + 1}. ${v.file_name}`}</div>
+                          <p className="subject-name" title={v?.file_name}>{`${i + 1}. ${v?.file_name}`}</p>
                           <div className="video_duration">
                             <PlayCircleFilled />
                             {`${DisplayDurationTime(v.duration)}s`}
@@ -283,18 +315,26 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                         }}
                       >
                         {!isCourseDetail && (
-                          <input
-                            value={v.id}
-                            type="checkbox"
-                            checked={checkedDoc.includes(v.id)}
+                          // <input
+                          //   value={v.id}
+                          //   type="checkbox"
+                          //   checked={checkedDoc.includes(v.id)}
+                          //   onChange={handleCheckedDoc}
+                          //   onClick={(e) => {
+                          //     e.stopPropagation();
+                          //   }}
+                          //   width={18}
+                          //   height={18}
+                          // />
+                          <Checkbox
                             onChange={handleCheckedDoc}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                            }}
+                            checked={checkedDoc.includes(v.id)}
+                            value={v.id}
+                            onClick={(e) => e.stopPropagation()}
                           />
                         )}
                         <div className="item_info">
-                          <div className="">{`${i + 1}. ${v.name}`}</div>
+                          <div className="subject-name" title={v.name}>{`${i + 1}. ${v.name}`}</div>
                           <div className="video_duration doc">
                             <FileTextOutlined />
                             {`${(v?.file?.file_size / 1000000).toFixed(2)} MB`}

@@ -23,6 +23,7 @@ import { css } from '@emotion/react';
 import AppButton from '../button';
 import { ItemDocCourseWrapper } from '../document/style';
 import Image from 'next/image';
+import IconChecked from 'src/assets/icons/IconChecked';
 
 interface ChildProps {
   course: Course;
@@ -242,7 +243,7 @@ const CourseItem: React.FC<ChildProps> = (props) => {
               {formatCurrency(currentCourse.price || 0)}
             </span>
 
-            {/* {currentCourse.sale_status === SaleStatusEnum.BOUGHT && <TaskAltIcon sx={{ color: `${Color.BOUGHT}` }} />} */}
+            {currentCourse.sale_status === SaleStatusEnum.BOUGHT && <IconChecked />}
           </div>
         ) : (
           <></>

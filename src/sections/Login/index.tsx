@@ -11,8 +11,7 @@ const LoginUI: React.FC = () => {
     <div
       css={css`
         min-height: 100vh;
-        padding-top: 30px;
-        padding-bottom: 0px;
+        padding: 0px;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -20,7 +19,6 @@ const LoginUI: React.FC = () => {
         background-color: #e7edf3;
         position: relative;
         width: 100%;
-        padding: 30px 20px 30px;
         background: rgb(66, 103, 212);
         background: linear-gradient(to bottom right, #38a2d7, #561139);
         .section-login {
@@ -107,6 +105,7 @@ const LoginUI: React.FC = () => {
               .register-here {
                 color: #000;
                 font-weight: 600;
+                margin: auto 0;
                 &:hover {
                   font-weight: 700;
                 }

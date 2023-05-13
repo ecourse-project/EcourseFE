@@ -76,26 +76,31 @@ const CommentForm: React.FC<CommentFormProps> = ({ onAddComment }) => {
           color: #000;
           height: 40px !important;
           box-shadow: none;
+          border-radius: 18px;
 
           &:hover {
             border: none;
-            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
             color: #000;
+            box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+            background-color: #e5e5e5 !important;
+            font-weight: 700;
+            text-align: center;
           }
         }
         .btn-cmt {
-          background-color: #57a2e7 !important;
-          border-color: #57a2e7 !important;
-          color: #fff;
+          background-color: #065fd4 !important;
+          border-color: #065fd4 !important;
           height: 40px !important;
-          width: 170px;
+          border-radius: 18px !important;
+          width: fit-content;
+          color: #fff;
           &[disabled] {
-            background-color: rgba(0, 0, 0, 0.05) !important;
             color: #000;
+            background-color: rgba(0, 0, 0, 0.05) !important;
+            width: fit-content;
           }
           &:hover {
             box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-            color: #000;
             font-weight: 700;
           }
         }

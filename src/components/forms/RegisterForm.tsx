@@ -195,7 +195,7 @@ const RegisterForm: React.FC = () => {
               font-weight: 700;
               text-decoration: none;
               text-transform: uppercase;
-
+              margin: auto;
               &:hover {
                 text-decoration: underline;
               }
