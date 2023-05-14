@@ -21,6 +21,7 @@ import {
   OVerifyToken,
   Pagination,
   PaginationParams,
+  PaymentInfo,
   Post,
   Quiz,
   QuizResult,
@@ -139,7 +140,7 @@ export const apiURL = {
   getClassDetail: (class_id) => `api/classes/detail/?class_id=${class_id}`,
   requestJoinClass: () => `api/classes/join-request/`,
   updateClassProgress: () => `api/classes/update-lesson-progress/`,
-
+  listPostTopics: () => `api/posts/topics/`,
   getPostDetail: (post_id) => `api/posts/detail/?post_id=${post_id}`,
   listPosts: (limit, page, topic?, post_id?: string[]) => {
     let url = `api/posts/?limit=${limit}&page=${page}&topic=${topic}`;
@@ -148,6 +149,8 @@ export const apiURL = {
     }
     return url;
   },
+
+  getPaymentInfo: () => `api/configuration/payment-info/`,
 };
 
 class CourseService {
@@ -186,7 +189,9 @@ class CourseService {
       password2: password2,
     });
   }
-
+  static listPostTopics(): Promise<string[]> {
+    return apiClient.get(apiURL.listPostTopics());
+  }
   static verifyToken(token: string): Promise<OVerifyToken> {
     return apiClient.post(apiURL.verifyToken(), { token: token });
   }
@@ -366,6 +371,10 @@ class CourseService {
 
   static updateClassProgress(params: UpdateProgressArgs): Promise<Course> {
     return apiClient.post(apiURL.updateClassProgress(), params);
+  }
+
+  static getPaymentInfo(): Promise<PaymentInfo> {
+    return apiClient.get(apiURL.getPaymentInfo());
   }
 }
 export default CourseService;

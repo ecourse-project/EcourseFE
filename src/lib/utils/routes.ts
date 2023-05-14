@@ -23,5 +23,6 @@ const RoutePaths = {
   COURSE_DETAIL: '/course-detail',
   COURSE_PROGRESS: '/course-progress',
   MY_ACCOUNT: '/me',
+  POST: '/post',
 };
 export default RoutePaths;

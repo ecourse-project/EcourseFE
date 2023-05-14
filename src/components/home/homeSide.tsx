@@ -6,6 +6,9 @@ import { FacebookOutlined, RightOutlined } from '@ant-design/icons';
 import styled from '@emotion/styled';
 
 import HomeTopicCard from './homeTopicCard';
+import CourseService from 'src/lib/api/course';
+import { useEffect, useState } from 'react';
+import { Post } from 'src/lib/types/backend_modal';
 
 export interface IHomeSideProps {}
 
@@ -35,6 +38,22 @@ const HomeSideWrapper = styled.div`
 `;
 const topic = ['AR', 'Bài giảng', 'CHEM', 'CODE', 'Dạy học dự án', 'dạy học system', 'dạy học stem'];
 export default function HomeSide(props: IHomeSideProps) {
+  const [listPost, setListPost] = useState<Post[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const getAllPost = async () => {
+    try {
+      setLoading(true);
+      const res = await CourseService.listPosts(100, 1, '');
+      setListPost(res.results);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    getAllPost();
+  }, []);
   return (
     <HomeSideWrapper>
       <div className="side-item translate">
@@ -57,9 +76,9 @@ export default function HomeSide(props: IHomeSideProps) {
       </div> */}
       <div className="side-item popular-content">
         <Card title="Bài viết phổ biến" style={{ width: 300 }}>
-          <HomeTopicCard />
-          <HomeTopicCard />
-          <HomeTopicCard />
+          {listPost.map((v) => (
+            <HomeTopicCard key={v.id} post={v} isSideBar />
+          ))}
         </Card>
       </div>
       <div className="side-item topic">

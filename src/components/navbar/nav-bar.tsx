@@ -148,6 +148,7 @@ const Nav: React.FC = () => {
           display: flex;
           justify-content: space-between;
           gap: 10px;
+          align-items: center;
           .ant-divider {
             background: #fff;
           }
@@ -164,14 +165,22 @@ const Nav: React.FC = () => {
           display: flex;
           align-items: center;
           background-color: #3a3a3a;
+          border-radius: 5px;
           .logo {
-            font-weight: 600;
             font-weight: 700;
             font-size: 12px;
             font-family: 'Montserrat';
             padding-left: 15px;
             color: #fff !important;
             text-decoration: none;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .anticon-home {
+              position: relative;
+              top: -3px;
+            }
             &:hover {
               text-decoration: none;
               letter-spacing: 0.5px;
@@ -229,6 +238,7 @@ const Nav: React.FC = () => {
           font-weight: 700;
           color: #fff !important;
           width: 120px !important;
+          text-decoration: none;
           &:hover {
             letter-spacing: 0.5px;
             transition: all 0.5s ease-in-out;

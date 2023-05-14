@@ -180,7 +180,6 @@ const CourseProgress = () => {
         setCourse(courseDetail);
         setProgressNumber(courseDetail.progress || 0);
       } else {
-        console.log('abc :>> ');
         courseDetail = await CourseService.getCourseDetail(id);
         setCourse(courseDetail);
         setProgressNumber(courseDetail.progress || 0);
@@ -334,11 +333,6 @@ const CourseProgress = () => {
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
   }
-
-  useEffect(() => {
-    console.log('state.sele :>> ', state.selectedDoc);
-  }, [state.selectedDoc]);
-
   return (
     <CourseProgressWrapper
       css={css`
