@@ -462,3 +462,20 @@ export const checkAccountPermission = async () => {
 };
 
 export const uniqueArr = (arr: [any]) => [...new Set(arr)];
+
+export const getFormatDate = (dateInput) => {
+  const date = new Date(dateInput);
+
+  const options = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    // hour: '2-digit',
+    // minute: '2-digit',
+    // second: '2-digit',
+    // timeZone: 'UTC',
+  };
+
+  const formattedDate = date.toLocaleString('en-US', options as any);
+  return formattedDate;
+};

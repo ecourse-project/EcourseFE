@@ -100,6 +100,8 @@ export interface OFileUpload {
   file_type: string;
   file_name: string;
   duration: number;
+  video_embedded_url?: string;
+  use_embedded_url?: string;
 }
 
 export interface IImageUpload {
@@ -441,11 +443,17 @@ export interface Homepage {
 // ===========================================Post===========================================
 export interface Post {
   id: string;
-  created: string;
-  modified: string;
+  created?: string;
+  modified?: string;
   name: string;
-  topic: string;
-  content: string;
+  topic?: string;
+  content?: string;
+  content_summary: string;
   thumbnail: OImageUpload;
-  images: OImageUpload[];
+}
+
+// ===========================================Configuration===========================================
+export interface PaymentInfo {
+  name: string;
+  payment_info: string[];
 }

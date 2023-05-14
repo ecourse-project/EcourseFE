@@ -68,7 +68,7 @@ const CourseItem: React.FC<ChildProps> = (props) => {
 
   const handleClick = async () => {
     if (
-      (currentCourse.course_of_class && currentCourse.request_status === RequestStatus.ACCEPTED) ||
+      (currentCourse?.course_of_class && currentCourse.request_status === RequestStatus.ACCEPTED) ||
       currentCourse.sale_status === SaleStatusEnum.BOUGHT
     ) {
       route.push(`${RoutePaths.COURSE_PROGRESS}?id=${currentCourse.id}&isClass=${params.class ? 'true' : 'false'}`);
