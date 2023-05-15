@@ -141,7 +141,7 @@ export const CourseProgressWrapper = styled.div`
     }
   }
   .course_list {
-    max-height: 100vh;
+    max-height: 90vh;
     overflow: auto;
     .quiz_header {
       .ant-collapse-header {

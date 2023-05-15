@@ -71,8 +71,20 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
     }
   };
 
+  const handleCheckedVid = (e) => {
+    if (checkedVideo.includes(e.target.value)) {
+      const newChecked = checkedVideo.filter((v) => v !== e.target.value);
+      setCheckedVideo(newChecked);
+      debounceCheckedItem2(newChecked, checkedDoc);
+    } else {
+      setCheckedVideo([...checkedVideo, e.target.value]);
+      debounceCheckedItem2([...checkedVideo, e.target.value], checkedDoc);
+    }
+  };
+
   const debounceCheckedItem = useCallback(
     debounce((videos, docs) => {
+      console.log('videos :==>>', videos);
       const cloneUpdateParams = cloneDeep(updateParams);
       // console.log('cloneUpdateParams :>> ', cloneUpdateParams);
       const idx = cloneUpdateParams.lessons.findIndex((v) => v.lesson_id === lesson.id);
@@ -258,25 +270,31 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                         }}
                       >
                         {!isCourseDetail && (
-                          <input
-                            value={v.id}
-                            type="checkbox"
+                          // <input
+                          //   value={v.id}
+                          //   type="checkbox"
+                          //   checked={checkedVideo.includes(v.id)}
+                          //   onChange={(e) => {
+                          //     if (checkedVideo.includes(e.target.value)) {
+                          //       const newChecked = checkedVideo.filter((v) => v !== e.target.value);
+                          //       setCheckedVideo(newChecked);
+                          //       debounceCheckedItem(newChecked, checkedDoc);
+                          //     } else {
+                          //       setCheckedVideo((prev) => [...prev, e.target.value]);
+                          //       debounceCheckedItem([...checkedVideo, e.target.value], checkedDoc);
+                          //     }
+                          //   }}
+                          //   onClick={(e) => {
+                          //     e.stopPropagation();
+                          //   }}
+                          //   width={18}
+                          //   height={18}
+                          // />
+                          <Checkbox
+                            onChange={handleCheckedVid}
                             checked={checkedVideo.includes(v.id)}
-                            onChange={(e) => {
-                              if (checkedVideo.includes(e.target.value)) {
-                                const newChecked = checkedVideo.filter((v) => v !== e.target.value);
-                                setCheckedVideo(newChecked);
-                                debounceCheckedItem(newChecked, checkedDoc);
-                              } else {
-                                setCheckedVideo((prev) => [...prev, e.target.value]);
-                                debounceCheckedItem([...checkedVideo, e.target.value], checkedDoc);
-                              }
-                            }}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                            }}
-                            width={18}
-                            height={18}
+                            value={v.id}
+                            onClick={(e) => e.stopPropagation()}
                           />
                         )}
                         <div className="item_info">
