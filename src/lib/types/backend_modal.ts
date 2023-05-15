@@ -101,7 +101,7 @@ export interface OFileUpload {
   file_name: string;
   duration: number;
   video_embedded_url?: string;
-  use_embedded_url?: string;
+  use_embedded_url?: boolean;
 }
 
 export interface IImageUpload {

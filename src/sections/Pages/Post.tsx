@@ -1,39 +1,118 @@
+import { HomeOutlined, SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
-import { Card } from 'antd';
+import { Breadcrumb, Card, Divider } from 'antd';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import HomeTopicCard from 'src/components/home/homeTopicCard';
+import CustomPagination from 'src/components/order/pagination';
 import CourseService from 'src/lib/api/course';
-import { Post } from 'src/lib/types/backend_modal';
+import { useQueryParam } from 'src/lib/hooks/useQueryParam';
+import { Pagination, PaginationParams, Post } from 'src/lib/types/backend_modal';
+import { UpperCaseFirstLetter } from 'src/lib/utils/format';
+import RoutePaths from 'src/lib/utils/routes';
+
+export interface DocumentParams {
+  page?: number;
+  post?: string;
+}
 
 const Post: React.FC = () => {
-  const [listPost, setlistPost] = useState<Post[]>([]);
-  const getListPost = async () => {
+  const [listPost, setlistPost] = useState<Pagination<Post>>();
+  const params: DocumentParams = useQueryParam();
+  const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
+
+  const [pagination, setPagination] = useState<PaginationParams>({
+    page: params?.page || 1,
+    limit: 10,
+  });
+  const getListPost = async (pagination: PaginationParams) => {
     try {
-      const res = await CourseService.listPosts(100, 1, '');
-      // setlistPost(Array(13).fill(res.results[0]));
-      setlistPost(res.results);
+      setLoading(true);
+      const res = await CourseService.listPosts(
+        pagination.limit,
+        pagination.page,
+        params.post === 'ALL' ? '' : params.post || '',
+      );
+      setlistPost(res);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
+
   useEffect(() => {
-    getListPost();
-  }, []);
+    setPagination({ ...pagination, page: 1 });
+  }, [params.post]);
+
+  useEffect(() => {
+    setPagination({ ...pagination, page: params.page || 1 });
+  }, [params.page]);
+
+  useEffect(() => {
+    getListPost(pagination);
+  }, [pagination]);
+
+  const onChangePage = (page: number) => {
+    setPagination({ ...pagination, page });
+    router.push(`${RoutePaths.POST}?post=${params.post}&page=${page}`);
+  };
+
   return (
     <div>
+      <Divider orientation="left">
+        <Breadcrumb separator={<SwapOutlined />}>
+          <Breadcrumb.Item href={RoutePaths.HOME}>
+            <HomeOutlined
+              css={css`
+                font-size: 30px !important;
+              `}
+            />
+          </Breadcrumb.Item>
+          <Breadcrumb.Item href={`${RoutePaths.POST}?post=ALL&pgae=${1}`}>Bài viết</Breadcrumb.Item>
+          <Breadcrumb.Item href={''}>
+            {UpperCaseFirstLetter(params.post === 'ALL' ? '' : params.post || '')}
+          </Breadcrumb.Item>
+        </Breadcrumb>
+      </Divider>
       <div
-        className="side-item popular-content"
+        className=""
         css={css`
           display: flex;
           flex-wrap: wrap;
           gap: 30px;
         `}
       >
-        {listPost.map((v) => (
-          <Card key={v.id} style={{ width: 300 }}>
-            <HomeTopicCard post={v} />
-          </Card>
-        ))}
+        <Card>
+          {listPost?.results.map((v) => (
+            <Card key={v.id} style={{ width: 380 }}>
+              <HomeTopicCard post={v} />
+            </Card>
+          ))}
+        </Card>
+      </div>
+      <div
+        css={css`
+          text-align: center;
+        `}
+      >
+        {/* <Pagination
+              defaultCurrent={1}
+              current={params.page || pagination.page}
+              pageSize={pagination.limit}
+              total={listDoc?.count || 10}
+              showSizeChanger={false}
+              onChange={onChangePage}
+              hideOnSinglePage
+            /> */}
+        <CustomPagination
+          current={params.page || pagination.page}
+          pageSize={pagination.limit}
+          total={listPost?.count || 10}
+          showSizeChanger={false}
+          onChange={onChangePage}
+        />
       </div>
     </div>
   );

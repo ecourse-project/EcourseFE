@@ -37,10 +37,6 @@ const DocumentUI: React.FC = () => {
   });
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    console.log(process.env);
-  }, []);
-
   const fetchDocument = async (pagination) => {
     const token = localStorage.getItem(StorageKeys.SESSION_KEY);
     try {

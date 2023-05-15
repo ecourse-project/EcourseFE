@@ -406,40 +406,49 @@ const CourseProgress = () => {
         <Row>
           <Col span={16} className="course_content">
             <Row>
-              {!_.isEmpty(state.selectedVideo) && state.selectedVideo?.file_path ? (
-                <div className="video_wrapper" dangerouslySetInnerHTML={{ __html: ifr }}>
-                  <ReactPlayer
-                    url={state.selectedVideo?.file_path}
-                    width="100%"
-                    height="100%"
-                    controls={true}
-                    onReady={() => {
-                      setVideoLoading(false);
-                    }}
-                    // onBuffer={() => console.log('buffer')}
-                    // onBufferEnd={() => console.log('buffer end')}
-                    config={{
-                      file: {
-                        attributes: {
-                          onContextMenu: (e: { preventDefault: () => any }) => e.preventDefault(),
-                          controlsList: 'nodownload',
+              {!_.isEmpty(state.selectedVideo) &&
+              !state.selectedVideo.use_embedded_url &&
+              state.selectedVideo?.file_path ? (
+                <>
+                  <div>
+                    <ReactPlayer
+                      url={state.selectedVideo?.file_path}
+                      width="100%"
+                      height="100%"
+                      controls={true}
+                      onReady={() => {
+                        setVideoLoading(false);
+                      }}
+                      // onBuffer={() => console.log('buffer')}
+                      // onBufferEnd={() => console.log('buffer end')}
+                      config={{
+                        file: {
+                          attributes: {
+                            onContextMenu: (e: { preventDefault: () => any }) => e.preventDefault(),
+                            controlsList: 'nodownload',
+                          },
                         },
-                      },
-                    }}
-                    onEnded={() => {
-                      dispatch(progressAction.setCompleteVideo());
-                    }}
-                    // onProgress={(v) => console.log('progress', v)}
-                    onError={(e) => console.log('video loader error', e)}
-                    playing={false}
-                    playsinline
-                    playIcon={<PlayCircleOutlined />}
-                    light={false}
-                    stopOnUnmount={false}
-                  />
+                      }}
+                      onEnded={() => {
+                        dispatch(progressAction.setCompleteVideo());
+                      }}
+                      // onProgress={(v) => console.log('progress', v)}
+                      onError={(e) => console.log('video loader error', e)}
+                      playing={false}
+                      playsinline
+                      playIcon={<PlayCircleOutlined />}
+                      light={false}
+                      stopOnUnmount={false}
+                    />
 
-                  {/* <VideoJS options={videoJsOptions} onReady={handlePlayerReady} /> */}
-                </div>
+                    {/* <VideoJS options={videoJsOptions} onReady={handlePlayerReady} /> */}
+                  </div>
+                </>
+              ) : state.selectedVideo?.use_embedded_url ? (
+                <div
+                  className="video_wrapper"
+                  dangerouslySetInnerHTML={{ __html: state.selectedVideo.video_embedded_url || '' }}
+                ></div>
               ) : !_.isEmpty(state.selectedDoc) && state.selectedDoc?.file?.file_path ? (
                 <div className="pdf_wrapper">
                   <PdfViewer url={state.selectedDoc?.file?.file_path || ''} />
