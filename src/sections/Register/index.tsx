@@ -2,6 +2,8 @@ import React from 'react';
 import RegisterForm from 'src/components/forms/RegisterForm';
 
 import { css } from '@emotion/react';
+import Link from 'next/link';
+import { RollbackOutlined } from '@ant-design/icons';
 
 const RegisterSection: React.FC = () => {
   return (
@@ -68,6 +70,26 @@ const RegisterSection: React.FC = () => {
             background-color: #051d29;
           }
         }
+        a {
+          text-decoration: none;
+        }
+        .back-home {
+          color: #000;
+          text-align: center;
+          font-weight: 700;
+          margin: 0;
+          cursor: pointer;
+          letter-spacing: 1px;
+          opacity: 0.6;
+          &:hover {
+            letter-spacing: 2px;
+            opacity: 1;
+          }
+          transition: all 400ms ease;
+          width: 100%;
+          display: block;
+          margin-top: 20px;
+        }
       `}
     >
       <div className="section-register">
@@ -81,6 +103,9 @@ const RegisterSection: React.FC = () => {
           </div>
           {/* <h2 className="register-header">Create Account</h2> */}
           <RegisterForm />
+          <Link className="back-home" href={'/'}>
+            Về trang chủ
+          </Link>
         </div>
       </div>
     </div>
