@@ -41,17 +41,8 @@ const HomeUI = () => {
     }
   };
 
-  const fetchListPost = async () => {
-    try {
-      const post = CourseService.listPosts(100, 1, '');
-      const detail = CourseService.getPostDetail('8be3d89a-0768-4dc7-a574-bed863a5799e');
-    } catch (error) {
-      console.log('error', error);
-    }
-  };
   useEffect(() => {
     fetchHomeData();
-    fetchListPost();
   }, []);
   return (
     <div className="page-container">
