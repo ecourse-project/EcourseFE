@@ -52,7 +52,7 @@ export default function HomeTopicCard(props: IHomeTopicCardProps) {
         <Image src={post?.thumbnail?.image_path} preview={false} width={100} />
         <div className="post-content">
           <p className="post-name">{post?.name}</p>
-          <p className="post-sumary">{`${post?.content_summary.slice(0, 160)}...`}</p>
+          <p className="post-sumary">{`${post?.content_summary?.slice(0, 160) || ''}...`}</p>
           <p className="post-create">{getFormatDate(post?.created)}</p>
         </div>
       </Link>
