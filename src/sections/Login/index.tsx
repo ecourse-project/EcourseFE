@@ -5,6 +5,7 @@ import LoginForm from 'src/components/forms/LoginForm';
 import RoutePaths from 'src/lib/utils/routes';
 
 import { css } from '@emotion/react';
+import { HomeOutlined } from '@ant-design/icons';
 
 const LoginUI: React.FC = () => {
   return (
@@ -21,6 +22,11 @@ const LoginUI: React.FC = () => {
         width: 100%;
         background: rgb(66, 103, 212);
         background: linear-gradient(to bottom right, #38a2d7, #561139);
+
+        a {
+          text-decoration: none;
+        }
+
         .section-login {
           max-width: 480px;
           width: 100%;
@@ -113,8 +119,40 @@ const LoginUI: React.FC = () => {
             }
           }
         }
+        .back-home {
+          color: #000;
+          text-align: center;
+          font-weight: 700;
+          margin: 0;
+          cursor: pointer;
+          letter-spacing: 1px;
+          opacity: 0.6;
+          &:hover {
+            letter-spacing: 2px;
+            opacity: 1;
+          }
+          transition: all 400ms ease;
+        }
       `}
     >
+      {/* <button
+        className="back-home"
+        css={css`
+          position: absolute;
+          top: 0;
+          left: 0;
+          background-color: transparent;
+          border: none;
+          font-weight: 700;
+          letter-spacing: 1px;
+          cursor: pointer;
+          .anticon-home {
+            font-size: 20px !important;
+          }
+        `}
+      >
+        <HomeOutlined /> Trang chủ
+      </button> */}
       <div className="section-login">
         <div className="wrapper-login">
           <h2 className="login-header">Đăng nhập</h2>
@@ -130,6 +168,9 @@ const LoginUI: React.FC = () => {
                 Đăng ký
               </Link>
             </div>
+            <Link className="back-home" href={'/'}>
+              Về trang chủ
+            </Link>
           </div>
         </div>
       </div>

@@ -299,10 +299,12 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                         )}
                         <div className="item_info">
                           <p className="subject-name" title={v?.file_name}>{`${i + 1}. ${v?.file_name}`}</p>
-                          <div className="video_duration">
-                            <PlayCircleFilled />
-                            {`${DisplayDurationTime(v.duration)}s`}
-                          </div>
+                          {!v?.use_embedded_url && (
+                            <div className="video_duration">
+                              <PlayCircleFilled />
+                              {`${DisplayDurationTime(v.duration)}s`}
+                            </div>
+                          )}
                         </div>
                       </div>
                     ))}

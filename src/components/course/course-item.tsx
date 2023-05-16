@@ -42,7 +42,9 @@ const CourseItem: React.FC<ChildProps> = (props) => {
 
   useEffect(() => {
     if (params.class) {
-      if (currentCourse.request_status === RequestStatus.REQUESTED) {
+      if (currentCourse.course_of_class && !currentCourse.request_status) {
+        setBtnString(BtnString.AVAILABLE_REQUEST);
+      } else if (currentCourse.request_status === RequestStatus.REQUESTED) {
         setBtnString(BtnString.REQUESTED);
       } else if (currentCourse.request_status === RequestStatus.AVAILABLE) {
         setBtnString(BtnString.AVAILABLE_REQUEST);
