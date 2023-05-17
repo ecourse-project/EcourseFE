@@ -14,6 +14,7 @@ import RoutePaths from 'src/lib/utils/routes';
 export interface DocumentParams {
   page?: number;
   post?: string;
+  header?: string;
 }
 
 const Post: React.FC = () => {
@@ -33,6 +34,7 @@ const Post: React.FC = () => {
         pagination.limit,
         pagination.page,
         params.post === 'ALL' ? '' : params.post || '',
+        params.header,
       );
       setlistPost(res);
     } catch (error) {
@@ -52,7 +54,7 @@ const Post: React.FC = () => {
 
   useEffect(() => {
     getListPost(pagination);
-  }, [pagination]);
+  }, [pagination, params.header]);
 
   const onChangePage = (page: number) => {
     setPagination({ ...pagination, page });

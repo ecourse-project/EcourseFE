@@ -422,9 +422,14 @@ export enum NavTypeEnum {
   POST = 'POST',
 }
 
+export interface Topic {
+  label: string;
+  value: string;
+}
+
 export interface Nav {
   header: string;
-  topic: string[];
+  topic: Topic[];
   type: NavTypeEnum;
 }
 
@@ -447,9 +452,9 @@ export interface Post {
   modified?: string;
   name: string;
   topic?: string;
+  thumbnail: OImageUpload;
   content?: string;
   content_summary: string;
-  thumbnail: OImageUpload;
 }
 
 // ===========================================Configuration===========================================

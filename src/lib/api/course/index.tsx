@@ -140,15 +140,16 @@ export const apiURL = {
   getClassDetail: (class_id) => `api/classes/detail/?class_id=${class_id}`,
   requestJoinClass: () => `api/classes/join-request/`,
   updateClassProgress: () => `api/classes/update-lesson-progress/`,
-  listPostTopics: () => `api/posts/topics/`,
+
   getPostDetail: (post_id) => `api/posts/detail/?post_id=${post_id}`,
-  listPosts: (limit, page, topic?, post_id?: string[]) => {
-    let url = `api/posts/?limit=${limit}&page=${page}&topic=${topic}`;
+  listPosts: (limit, page, topic?, header?, post_id?: string[]) => {
+    let url = `api/posts/?limit=${limit}&page=${page}&topic=${topic}&header=${header}`;
     if (post_id) {
       url = parseParamsToUrL(url, post_id, `post_id`);
     }
     return url;
   },
+  listPostTopics: () => `api/posts/topics/`,
 
   getPaymentInfo: () => `api/configuration/payment-info/`,
 };
@@ -189,9 +190,7 @@ class CourseService {
       password2: password2,
     });
   }
-  static listPostTopics(): Promise<string[]> {
-    return apiClient.get(apiURL.listPostTopics());
-  }
+
   static verifyToken(token: string): Promise<OVerifyToken> {
     return apiClient.post(apiURL.verifyToken(), { token: token });
   }
@@ -361,12 +360,22 @@ class CourseService {
     return apiClient.post(apiURL.requestJoinClass(), { class_id: class_id });
   }
 
-  static listPosts(limit: number, page: number, topic?: string, post_id?: string[]): Promise<Pagination<Post>> {
-    return apiClient.get(apiURL.listPosts(limit, page, topic, post_id));
+  static listPosts(
+    limit: number,
+    page: number,
+    topic?: string,
+    header?: string,
+    post_id?: string[],
+  ): Promise<Pagination<Post>> {
+    return apiClient.get(apiURL.listPosts(limit, page, topic, header, post_id));
   }
 
   static getPostDetail(post_id: string): Promise<Post> {
     return apiClient.get(apiURL.getPostDetail(post_id));
+  }
+
+  static listPostTopics(): Promise<string[]> {
+    return apiClient.get(apiURL.listPostTopics());
   }
 
   static updateClassProgress(params: UpdateProgressArgs): Promise<Course> {

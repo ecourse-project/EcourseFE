@@ -111,7 +111,11 @@ const CourseUI: React.FC = () => {
               `}
             />
           </Breadcrumb.Item>
-          <Breadcrumb.Item href={`${RoutePaths.COURSE}?course=ALL`}>Khoá học</Breadcrumb.Item>
+          {params.class ? (
+            <Breadcrumb.Item href={`${RoutePaths.CLASS}?class=ALL`}>Lớp học</Breadcrumb.Item>
+          ) : (
+            <Breadcrumb.Item href={`${RoutePaths.COURSE}?course=ALL`}>Khoá học</Breadcrumb.Item>
+          )}
           <Breadcrumb.Item>{UpperCaseFirstLetter(params.course === 'ALL' ? '' : params.course || '')}</Breadcrumb.Item>
         </Breadcrumb>
       </Divider>
