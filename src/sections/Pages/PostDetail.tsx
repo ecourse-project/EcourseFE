@@ -45,7 +45,7 @@ const PostDetail: React.FC = () => {
       {/* <h1 className="topic">{postDetail?.name}</h1> */}
       <p className="create-date">Ngày đăng: {getFormatDate(postDetail?.created)}</p>
       <div dangerouslySetInnerHTML={{ __html: postDetail?.content || '' }}></div>
-      <p className="author">LTD</p>
+      {/* <p className="author">LTD</p> */}
     </div>
   );
 };

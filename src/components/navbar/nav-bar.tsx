@@ -38,17 +38,18 @@ const Nav: React.FC = () => {
   const router = useRouter();
   const [listNav, setListNav] = useState<MenuItem[]>();
   const myProfile = useSelector((state: RootState) => state.app.user);
-  const getTargetUrl = (type: string, itemType) => {
+  const getTargetUrl = (type: string, itemType: string, header: string) => {
     if (!type) return null;
     if (type.toLocaleUpperCase() === NavTypeEnum.DOCUMENT) return `${RoutePaths.DOCUMENT}?document=${itemType}&page=1`;
     else if (type.toLocaleUpperCase() === NavTypeEnum.COURSE) return `${RoutePaths.COURSE}?course=${itemType}&page=1`;
     else if (type.toLocaleUpperCase() === NavTypeEnum.CLASS) return `${RoutePaths.CLASS}?class=${itemType}&page=1`;
-    else if (type.toLocaleUpperCase() === NavTypeEnum.POST) return `${RoutePaths.POST}?post=${itemType}&page=1`;
+    else if (type.toLocaleUpperCase() === NavTypeEnum.POST)
+      return `${RoutePaths.POST}?post=${itemType}&header=${header}&page=1`;
   };
 
   const checkTypeHeader = (navItem: Nav) => {
     return Object.values(NavTypeEnum).includes(navItem.type?.toLocaleUpperCase() as unknown as NavTypeEnum) ? (
-      <Link href={getTargetUrl(navItem.type, 'ALL') || ''}>{navItem.header.toLocaleUpperCase()}</Link>
+      <Link href={getTargetUrl(navItem.type, 'ALL', navItem.header) || ''}>{navItem.header.toLocaleUpperCase()}</Link>
     ) : (
       <Link href={'/'} legacyBehavior>
         <a className="disabled-nav">{navItem.header.toLocaleUpperCase()}</a>
@@ -60,7 +61,7 @@ const Nav: React.FC = () => {
     try {
       const listItems = header?.map((v, i) => {
         return getItem(
-          <Link href={getTargetUrl(v.type, 'ALL') || ''}>{v.header.toLocaleUpperCase()}</Link>,
+          <Link href={getTargetUrl(v.type, 'ALL', v.header) || ''}>{v.header.toLocaleUpperCase()}</Link>,
           v.header + `id=${uuidv4()}`,
           '',
           v.topic?.map((u, n) => {
@@ -85,11 +86,11 @@ const Nav: React.FC = () => {
                   }
                 `}
               >
-                <Link href={getTargetUrl(v.type, u) || ''} title={u} className="menu-item-link">
-                  {u}
+                <Link href={getTargetUrl(v.type, u.value, v.header) || ''} title={u.label} className="menu-item-link">
+                  {u.label}
                 </Link>
               </div>,
-              u + `id=${uuidv4()}`,
+              u.label + `id=${uuidv4()}`,
             );
           }),
           !Object.values(NavTypeEnum).includes(v?.type?.toLocaleUpperCase() as unknown as NavTypeEnum),
