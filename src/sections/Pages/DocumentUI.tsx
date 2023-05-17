@@ -22,6 +22,7 @@ import { css } from '@emotion/react';
 export interface DocumentParams {
   page?: number;
   document?: string;
+  header?: string;
 }
 
 const antIcon = <Loading3QuartersOutlined style={{ fontSize: 40 }} spin />;
@@ -89,7 +90,7 @@ const DocumentUI: React.FC = () => {
               `}
             />
           </Breadcrumb.Item>
-          <Breadcrumb.Item href={`${RoutePaths.DOCUMENT}?document=ALL&pgae=${1}`}>Tài liệu</Breadcrumb.Item>
+          <Breadcrumb.Item href={`${RoutePaths.DOCUMENT}?document=ALL&pgae=${1}`}>{params?.header}</Breadcrumb.Item>
           <Breadcrumb.Item href={''}>
             {UpperCaseFirstLetter(params.document === 'ALL' ? '' : params.document || '')}
           </Breadcrumb.Item>
