@@ -40,9 +40,12 @@ const Nav: React.FC = () => {
   const myProfile = useSelector((state: RootState) => state.app.user);
   const getTargetUrl = (type: string, itemType: string, header: string) => {
     if (!type) return null;
-    if (type.toLocaleUpperCase() === NavTypeEnum.DOCUMENT) return `${RoutePaths.DOCUMENT}?document=${itemType}&page=1`;
-    else if (type.toLocaleUpperCase() === NavTypeEnum.COURSE) return `${RoutePaths.COURSE}?course=${itemType}&page=1`;
-    else if (type.toLocaleUpperCase() === NavTypeEnum.CLASS) return `${RoutePaths.CLASS}?class=${itemType}&page=1`;
+    if (type.toLocaleUpperCase() === NavTypeEnum.DOCUMENT)
+      return `${RoutePaths.DOCUMENT}?document=${itemType}&header=${header}&page=1`;
+    else if (type.toLocaleUpperCase() === NavTypeEnum.COURSE)
+      return `${RoutePaths.COURSE}?course=${itemType}&header=${header}&page=1`;
+    else if (type.toLocaleUpperCase() === NavTypeEnum.CLASS)
+      return `${RoutePaths.CLASS}?class=${itemType}&header=${header}&page=1`;
     else if (type.toLocaleUpperCase() === NavTypeEnum.POST)
       return `${RoutePaths.POST}?post=${itemType}&header=${header}&page=1`;
   };

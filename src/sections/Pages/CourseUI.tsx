@@ -22,6 +22,7 @@ export interface CourseClassParams {
   page?: number;
   course?: string;
   class?: string;
+  header?: string;
 }
 
 const antIcon = <Loading3QuartersOutlined style={{ fontSize: 40 }} spin />;
@@ -111,11 +112,17 @@ const CourseUI: React.FC = () => {
               `}
             />
           </Breadcrumb.Item>
-          {params.class ? (
-            <Breadcrumb.Item href={`${RoutePaths.CLASS}?class=ALL`}>Lớp học</Breadcrumb.Item>
-          ) : (
-            <Breadcrumb.Item href={`${RoutePaths.COURSE}?course=ALL`}>Khoá học</Breadcrumb.Item>
-          )}
+
+          <Breadcrumb.Item
+            href={`${
+              params.class
+                ? RoutePaths.CLASS + '?class=ALL&header=' + params.header
+                : RoutePaths.COURSE + '?course=ALL&header=' + params.header
+            }`}
+          >
+            {params.header}
+          </Breadcrumb.Item>
+
           <Breadcrumb.Item>{UpperCaseFirstLetter(params.course === 'ALL' ? '' : params.course || '')}</Breadcrumb.Item>
         </Breadcrumb>
       </Divider>

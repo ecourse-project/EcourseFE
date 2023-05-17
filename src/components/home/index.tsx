@@ -69,6 +69,9 @@ export default function HomeData(props: IHomeData) {
           font-weight: 700;
           text-decoration: underline;
         }
+        .ant-card-head-title {
+          font-weight: 700;
+        }
       `}
     >
       {/* <AppstoreAddOutlined /> */}
