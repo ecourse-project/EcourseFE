@@ -73,7 +73,7 @@ const Post: React.FC = () => {
               `}
             />
           </Breadcrumb.Item>
-          <Breadcrumb.Item >{params.header}</Breadcrumb.Item>
+          <Breadcrumb.Item>{params.header}</Breadcrumb.Item>
           <Breadcrumb.Item href={''}>
             {UpperCaseFirstLetter(params.post === 'ALL' ? '' : params.post || '')}
           </Breadcrumb.Item>
