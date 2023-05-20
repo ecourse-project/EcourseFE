@@ -294,6 +294,9 @@ const DocDetail: React.FC = () => {
             font-weight: 700;
           }
         }
+        .ant-btn-disabled {
+          opacity: 0.5;
+        }
       `}
     >
       <Divider orientation="left">
