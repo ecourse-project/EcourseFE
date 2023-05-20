@@ -32,6 +32,8 @@ const LoginUI: React.FC = () => {
           width: 100%;
           font-weight: 300;
           box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+          border-radius: 20px;
+
           .wrapper-login {
             padding: 30px 50px;
             border-radius: 20px;
