@@ -353,7 +353,7 @@ const DocDetail: React.FC = () => {
             onClick={handleUpdateBtn}
             href={doc.sale_status === SaleStatusEnum.BOUGHT ? doc?.file?.file_path : undefined}
             target="blank"
-            disabled={loading}
+            disabled={loading || !doc.download}
           >
             {doc.sale_status === SaleStatusEnum.AVAILABLE
               ? 'THÊM'
