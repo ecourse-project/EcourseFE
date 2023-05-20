@@ -13,6 +13,7 @@ import { css } from '@emotion/react';
 import { AskForSave } from '../alert/SweetAlert';
 import PaymentInfo from './paymentInfo';
 import { InfoOutlined } from '@ant-design/icons';
+import { PaymentInfo as PaymentInfomation } from 'src/lib/types/backend_modal';
 
 const { Panel } = Collapse;
 const { Option } = Select;
@@ -25,6 +26,7 @@ const text = `
 interface OrderItemPropType {
   orderItem: OutputOrder;
   cancelOrder: (item: OutputOrder) => void;
+  paymentInfo: PaymentInfomation;
 }
 
 export enum OrderStatus {
@@ -36,14 +38,7 @@ interface BaseType {
   open: boolean;
 }
 const OrderItem: React.FC<OrderItemPropType> = (props) => {
-  const [expandIconPosition, setExpandIconPosition] = useState<ExpandIconPosition>('start');
-  const [open, setOpen] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
-  const [modalText, setModalText] = useState('Content of the modal');
-  const { orderItem, cancelOrder } = props;
-  const onPositionChange = (newExpandIconPosition: ExpandIconPosition) => {
-    setExpandIconPosition(newExpandIconPosition);
-  };
+  const { orderItem, cancelOrder, paymentInfo } = props;
 
   const onChange = (key: string | string[]) => {
     console.log(key);
@@ -54,14 +49,6 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
     AskForSave(`Xác nhân huỷ`, `Huỷ đơn mã #${orderItem.code.split('-')[0].slice(3, 10)}`, 'OK', 'Huỷ', '', (value) => {
       if (value.isConfirmed) cancelOrder(orderItem);
     });
-  };
-  const dispatch = useDispatch();
-  const handleOk = () => {
-    cancelOrder(orderItem);
-  };
-
-  const handleCancel = () => {
-    setOpen(false);
   };
 
   return (
@@ -203,7 +190,11 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
                 <></>
               )}
               {orderItem.status === OrderStatus.PENDING ? (
-                <PaymentInfo orderID={orderItem.code.split('-')[0].slice(3, 10)} price={orderItem.total_price} />
+                <PaymentInfo
+                  orderID={orderItem.code.split('-')[0].slice(3, 10)}
+                  price={orderItem.total_price}
+                  paymentInfo={paymentInfo}
+                />
               ) : (
                 ''
               )}

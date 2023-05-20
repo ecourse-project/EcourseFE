@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import OrderItem from 'src/components/order/order-item';
 import CourseService from 'src/lib/api/course';
-import { OutputCancel, OutputOrder, Pagination, PaginationParams } from 'src/lib/types/backend_modal';
+import { OutputCancel, OutputOrder, Pagination, PaginationParams, PaymentInfo } from 'src/lib/types/backend_modal';
 import Swal from 'sweetalert2';
 
 import { Loading3QuartersOutlined } from '@ant-design/icons';
@@ -20,6 +20,7 @@ const OrderUI = () => {
   });
   const [listOrder, setListOrder] = useState<Pagination<OutputOrder>>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>({} as PaymentInfo);
   const dispatch = useDispatch();
   const getAllOrder = async () => {
     try {
@@ -33,6 +34,18 @@ const OrderUI = () => {
       setLoading(false);
     }
   };
+
+  const getPaymentInfo = async () => {
+    try {
+      const info = await CourseService.getPaymentInfo();
+      setPaymentInfo(info);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    getPaymentInfo();
+  }, []);
   useEffect(() => {
     getAllOrder();
   }, [pagination]);
@@ -69,7 +82,7 @@ const OrderUI = () => {
       ) : listOrder?.results?.length ? (
         listOrder?.results?.map((v, i) => (
           <div key={i}>
-            <OrderItem orderItem={v} cancelOrder={cancelOrder} />
+            <OrderItem orderItem={v} cancelOrder={cancelOrder} paymentInfo={paymentInfo} />
           </div>
         ))
       ) : (

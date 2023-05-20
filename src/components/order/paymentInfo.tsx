@@ -1,13 +1,15 @@
 import { Card, Col, Row } from 'antd';
 import { formatCurrencySymbol } from 'src/lib/utils/currency';
+import { PaymentInfo as PaymentInfomation } from 'src/lib/types/backend_modal';
 
 import { css } from '@emotion/react';
 
 interface PaymentInfo {
   orderID: string;
   price: number;
+  paymentInfo: PaymentInfomation;
 }
-const PaymentInfo: React.FC<PaymentInfo> = ({ orderID, price }) => {
+const PaymentInfo: React.FC<PaymentInfo> = ({ orderID, price, paymentInfo }) => {
   return (
     <div
       css={css`
@@ -32,7 +34,7 @@ const PaymentInfo: React.FC<PaymentInfo> = ({ orderID, price }) => {
             Hình thức
           </Col>
           <Col span={12} className="right">
-            Chuyển khoản
+            {paymentInfo.method}
           </Col>
           <Col span={12} className="left">
             Mã đơn
@@ -45,19 +47,21 @@ const PaymentInfo: React.FC<PaymentInfo> = ({ orderID, price }) => {
             Thông tin chuyển khoản
           </Col>
           <Col span={12} className="right">
-            <div>Tên giáo viên</div>
+            {/* <div>Tên giáo viên</div>
             <div>Số tài khoản</div>
-            <div>Tên ngân hàng và chi nhánh</div>
+            <div>Tên ngân hàng và chi nhánh</div> */}
+            {paymentInfo.payment_info}
           </Col>
           <Col span={12} className="left">
             Nội dung chuyển khoản
           </Col>
           <Col span={12} className="right">
-            <div>[TÊN] - [MÃ ĐƠN]</div>
+            {/* <div>[TÊN] - [MÃ ĐƠN]</div>
 
             <div>
               VD: <span className="content">NGUYEN VAN A - {orderID}</span>
-            </div>
+            </div> */}
+            {paymentInfo.content}
           </Col>
           <Col span={12} className="left">
             Thanh toán
