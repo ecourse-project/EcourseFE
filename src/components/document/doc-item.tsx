@@ -214,18 +214,18 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
               </p> */}
             </div>
           </Link>
-          <div className="price-tag">
-            <span>
-              <WalletOutlined />
-              {formatCurrencySymbol(document.price, 'VND')}
-            </span>
-
-            {document.sale_status === SaleStatusEnum.BOUGHT && <IconChecked />}
-          </div>
         </Popover>
       </div>
 
       <div>
+        <div className="price-tag">
+          <span>
+            <WalletOutlined />
+            {formatCurrencySymbol(document.price, 'VND')}
+          </span>
+
+          {document.sale_status === SaleStatusEnum.BOUGHT && <IconChecked />}
+        </div>
         {!isMyLearn && (
           <AppButton
             className="card-btn"
