@@ -34,7 +34,7 @@ const DocumentUI: React.FC = () => {
   const params: DocumentParams = useQueryParam();
   const [pagination, setPagination] = useState<PaginationParams>({
     page: params?.page || 1,
-    limit: 10,
+    limit: 12,
   });
   const dispatch = useDispatch();
 

@@ -116,8 +116,8 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
             showArrow={false}
             header={
               <Row gutter={32} className="header-row">
-                <Col>Mã đơn hàng: #{orderItem.code.split('-')[0].slice(3, 10)}</Col>
-                <Col className="price">Ngày tạo: {moment(orderItem.created).format('DD/MM/YYYY')}</Col>
+                <Col>Mã đơn hàng: #{orderItem?.code}</Col>
+                <Col className="price">Ngày tạo: {moment(orderItem?.created).format('DD/MM/YYYY')}</Col>
               </Row>
             }
             key="1"
@@ -127,8 +127,8 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
               bordered={false}
               title={
                 <Row className="card-title">
-                  <Col>{orderItem.status}</Col>
-                  {orderItem.status === OrderStatus.PENDING ? (
+                  <Col>{orderItem?.status}</Col>
+                  {orderItem?.status === OrderStatus.PENDING ? (
                     <Col>
                       <Button id="btn-cancel" onClick={showModal}>
                         Cancel
@@ -190,11 +190,7 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
                 <></>
               )}
               {orderItem.status === OrderStatus.PENDING ? (
-                <PaymentInfo
-                  orderID={orderItem.code.split('-')[0].slice(3, 10)}
-                  price={orderItem.total_price}
-                  paymentInfo={paymentInfo}
-                />
+                <PaymentInfo orderID={orderItem?.code} price={orderItem?.total_price} paymentInfo={paymentInfo} />
               ) : (
                 ''
               )}

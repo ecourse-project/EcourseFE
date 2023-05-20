@@ -25,7 +25,7 @@ const Post: React.FC = () => {
 
   const [pagination, setPagination] = useState<PaginationParams>({
     page: params?.page || 1,
-    limit: 10,
+    limit: 12,
   });
   const getListPost = async (pagination: PaginationParams) => {
     try {
