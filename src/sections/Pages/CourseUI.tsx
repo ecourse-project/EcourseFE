@@ -34,7 +34,7 @@ const CourseUI: React.FC = () => {
   const params: CourseClassParams = useQueryParam();
   const [pagination, setPagination] = useState<PaginationParams>({
     page: 1,
-    limit: 10,
+    limit: 12,
   });
   const fetCourseClass = async (pagination: PaginationParams) => {
     const token = localStorage.getItem(StorageKeys.SESSION_KEY);

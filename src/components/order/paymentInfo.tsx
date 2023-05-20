@@ -50,7 +50,7 @@ const PaymentInfo: React.FC<PaymentInfo> = ({ orderID, price, paymentInfo }) => 
             {/* <div>Tên giáo viên</div>
             <div>Số tài khoản</div>
             <div>Tên ngân hàng và chi nhánh</div> */}
-            {paymentInfo.payment_info}
+            <div dangerouslySetInnerHTML={{ __html: `<p>${paymentInfo.payment_info}</p>` }} />
           </Col>
           <Col span={12} className="left">
             Nội dung chuyển khoản
