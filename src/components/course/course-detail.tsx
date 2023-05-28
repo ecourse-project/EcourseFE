@@ -47,6 +47,7 @@ import RatingModal from '../modal/rating-modal';
 import LessonItem from './course-progress/lesson-item';
 import { BtnString } from 'src/lib/utils/enum';
 import AppButton from '../button';
+import { AlertTextError } from '../alert/SweetAlert';
 
 const { Paragraph, Title } = Typography;
 
@@ -159,8 +160,8 @@ const CourseDetail: React.FC = () => {
         const course: Course = await CourseService.getCourseDetail(id);
         setCourse(course);
       }
-    } catch (error) {
-      console.log('error get detail', error);
+    } catch (error: any) {
+      AlertTextError('Error', error?.response?.data?.detail, () => router.back());
     }
   };
 
