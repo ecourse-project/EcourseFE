@@ -100,7 +100,7 @@ export interface OFileUpload {
   file_type: string;
   file_name: string;
   duration: number;
-  video_embedded_url?: string;
+  file_embedded_url?: string;
   use_embedded_url?: boolean;
 }
 

@@ -358,6 +358,14 @@ const CourseProgress = () => {
             max-height: 450px;
           }
         }
+        .pdf_wrapper {
+          iframe {
+            width: 100%;
+            height: 750px;
+            max-width: 100%;
+            max-height: 1000px;
+          }
+        }
       `}
     >
       <Row className="course_header_wrapper">
@@ -406,9 +414,12 @@ const CourseProgress = () => {
         <Row>
           <Col span={16} className="course_content">
             <Row>
-              {!_.isEmpty(state.selectedVideo) &&
-              !state.selectedVideo.use_embedded_url &&
-              state.selectedVideo?.file_path ? (
+              {(!_.isEmpty(state.selectedVideo) &&
+                !state.selectedVideo.use_embedded_url &&
+                state.selectedVideo?.file_path) ||
+              (!_.isEmpty(state.selectedVideo) &&
+                state.selectedVideo?.use_embedded_url &&
+                !state.selectedVideo.file_embedded_url) ? (
                 <>
                   <div>
                     <ReactPlayer
@@ -447,10 +458,16 @@ const CourseProgress = () => {
               ) : state.selectedVideo?.use_embedded_url ? (
                 <div
                   className="video_wrapper"
-                  dangerouslySetInnerHTML={{ __html: state.selectedVideo.video_embedded_url || '' }}
+                  dangerouslySetInnerHTML={{ __html: state.selectedVideo?.file_embedded_url || '' }}
                 ></div>
-              ) : !_.isEmpty(state.selectedDoc) && state.selectedDoc?.file?.file_path ? (
+              ) : (!_.isEmpty(state.selectedDoc) &&
+                  !state.selectedDoc.file.use_embedded_url &&
+                  state.selectedDoc?.file?.file_path) ||
+                (!_.isEmpty(state.selectedDoc) &&
+                  state.selectedDoc.file.use_embedded_url &&
+                  !state.selectedDoc.file.file_embedded_url) ? (
                 <div className="pdf_wrapper">
+                  <div>Vao pdf</div>
                   <PdfViewer url={state.selectedDoc?.file?.file_path || ''} />
                   {/* <Document file={state.selectedDoc?.file?.file_path} onLoadSuccess={onDocumentLoadSuccess}>
                     <Page pageNumber={pageNumber} />
@@ -459,6 +476,11 @@ const CourseProgress = () => {
                     Page {pageNumber} of {numPages}
                   </p> */}
                 </div>
+              ) : state.selectedDoc?.file?.use_embedded_url ? (
+                <div
+                  className="pdf_wrapper"
+                  dangerouslySetInnerHTML={{ __html: state.selectedDoc?.file?.file_embedded_url || '' }}
+                ></div>
               ) : isShowQuiz ? (
                 /* if user unchecked a video while doing quiz, show modal to warn that the quiz will hide if they continue unchecking that video */
 
