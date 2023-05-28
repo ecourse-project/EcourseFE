@@ -38,7 +38,6 @@ const Nav: React.FC = () => {
   const router = useRouter();
   const [listNav, setListNav] = useState<MenuItem[]>();
   const myProfile = useSelector((state: RootState) => state.app.user);
-  console.log('rerender');
   const getTargetUrl = (type: string, itemType: string, header: string) => {
     if (!type) return null;
     if (type.toLocaleUpperCase() === NavTypeEnum.DOCUMENT)

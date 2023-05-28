@@ -38,8 +38,8 @@ import LessonItem from './lesson-item';
 import QuizSection from './quiz';
 import PdfViewer from 'src/components/pdf';
 import { useExportCertificate } from 'src/lib/hooks/useExportCerti';
-import { AlertTextError } from 'src/components/alert/NotificationAlert';
 import { CourseProgressWrapper } from './style';
+import { AlertTextError } from 'src/components/alert/SweetAlert';
 
 const { Panel } = Collapse;
 export interface CourseParams {
@@ -189,8 +189,8 @@ const CourseProgress = () => {
       dispatch(progressAction.setCourse(courseDetail));
       // set initial checked item and checked answer
       await setInitialCheck(courseDetail);
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      AlertTextError('Error', error?.response?.data?.detail, () => router.back());
     } finally {
       setLoading(false);
     }
@@ -217,20 +217,21 @@ const CourseProgress = () => {
   useEffect(() => {
     const videoId = state.selectedVideo?.id;
     const docId = state.selectedDoc?.file?.id;
-    router.push(
-      {
-        pathname: '/course-progress',
-        query: {
-          ...router.query,
-          lesson: state.currentLesson,
-          video: videoId,
-          doc: docId,
-          // exam: !videoId && !docId ? 'true' : '',
+    if (videoId || docId)
+      router.push(
+        {
+          pathname: '/course-progress',
+          query: {
+            ...router.query,
+            lesson: state.currentLesson,
+            video: videoId,
+            doc: docId,
+            // exam: !videoId && !docId ? 'true' : '',
+          },
         },
-      },
-      undefined,
-      { shallow: true },
-    );
+        undefined,
+        { shallow: true },
+      );
     if (!isEmpty(state.selectedDoc) || !isEmpty(state.selectedVideo)) {
       setIsShowQuiz(false);
     }
@@ -415,11 +416,11 @@ const CourseProgress = () => {
           <Col span={16} className="course_content">
             <Row>
               {(!_.isEmpty(state.selectedVideo) &&
-                !state.selectedVideo.use_embedded_url &&
+                !state.selectedVideo?.use_embedded_url &&
                 state.selectedVideo?.file_path) ||
               (!_.isEmpty(state.selectedVideo) &&
                 state.selectedVideo?.use_embedded_url &&
-                !state.selectedVideo.file_embedded_url) ? (
+                !state.selectedVideo?.file_embedded_url) ? (
                 <>
                   <div>
                     <ReactPlayer
@@ -461,11 +462,11 @@ const CourseProgress = () => {
                   dangerouslySetInnerHTML={{ __html: state.selectedVideo?.file_embedded_url || '' }}
                 ></div>
               ) : (!_.isEmpty(state.selectedDoc) &&
-                  !state.selectedDoc.file.use_embedded_url &&
+                  !state.selectedDoc.file?.use_embedded_url &&
                   state.selectedDoc?.file?.file_path) ||
                 (!_.isEmpty(state.selectedDoc) &&
-                  state.selectedDoc.file.use_embedded_url &&
-                  !state.selectedDoc.file.file_embedded_url) ? (
+                  state.selectedDoc.file?.use_embedded_url &&
+                  !state.selectedDoc.file?.file_embedded_url) ? (
                 <div className="pdf_wrapper">
                   <div>Vao pdf</div>
                   <PdfViewer url={state.selectedDoc?.file?.file_path || ''} />
