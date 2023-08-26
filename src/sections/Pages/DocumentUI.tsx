@@ -77,7 +77,7 @@ const DocumentUI: React.FC = () => {
 
   const onChangePage = (page: number) => {
     setPagination({ ...pagination, page });
-    router.push(`${RoutePaths.DOCUMENT}?document=${params.document}&page=${page}`);
+    router.push(`${RoutePaths.DOCUMENT}?document=${params.document}&page=${page}&header=${params.header}`);
   };
   return (
     <div>
@@ -90,7 +90,9 @@ const DocumentUI: React.FC = () => {
               `}
             />
           </Breadcrumb.Item>
-          <Breadcrumb.Item href={`${RoutePaths.DOCUMENT}?document=ALL&pgae=${1}`}>{params?.header}</Breadcrumb.Item>
+          <Breadcrumb.Item href={`${RoutePaths.DOCUMENT}?document=ALL&page=${1}&header=${params.header}`}>
+            {params?.header}
+          </Breadcrumb.Item>
           <Breadcrumb.Item href={''}>
             {UpperCaseFirstLetter(params.document === 'ALL' ? '' : params.document || '')}
           </Breadcrumb.Item>
