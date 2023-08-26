@@ -75,11 +75,20 @@ export default function HomeSide(props: IHomeSideProps) {
         </Card>
       </div> */}
       <div className="side-item popular-content">
-        <Card title="Bài viết phổ biến" style={{ width: 300 }}>
-          {listPost.map((v) => (
-            <HomeTopicCard key={v.id} post={v} isSideBar />
-          ))}
-        </Card>
+        {/* <Card title="Bài viết phổ biến" style={{ width: 300 }}>
+          {listPost
+            .concat(listPost)
+            .concat(listPost)
+            .concat(listPost)
+            .concat(listPost)
+            .concat(listPost)
+            .concat(listPost)
+            .concat(listPost)
+            .concat(listPost)
+            .map((v) => (
+              <HomeTopicCard key={v.id} post={v} isSideBar />
+            ))}
+        </Card> */}
       </div>
       <div className="side-item topic">
         <Card title="Chuyên mục" style={{ width: 300 }}>
