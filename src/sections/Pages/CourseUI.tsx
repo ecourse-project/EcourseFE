@@ -97,8 +97,8 @@ const CourseUI: React.FC = () => {
   const onChangePage = (page: number) => {
     setPagination({ ...pagination, page });
     // router.push(`${RoutePaths.COURSE}?course=${params.course}&page=${page}`);
-    if (params.course) router.push(`${RoutePaths.COURSE}?course=${params.course}`);
-    else if (params.class) router.push(`${RoutePaths.CLASS}?class=${params.class}`);
+    if (params.course) router.push(`${RoutePaths.COURSE}?course=${params.course}&header=${params.header}`);
+    else if (params.class) router.push(`${RoutePaths.CLASS}?class=${params.class}&header=${params.header}`);
   };
 
   return (

@@ -43,7 +43,7 @@ export default function HomeSide(props: IHomeSideProps) {
   const getAllPost = async () => {
     try {
       setLoading(true);
-      const res = await CourseService.listPosts(100, 1, '');
+      const res = await CourseService.listPosts(100, 1, '', '');
       setListPost(res.results);
     } catch (error) {
       console.error(error);
