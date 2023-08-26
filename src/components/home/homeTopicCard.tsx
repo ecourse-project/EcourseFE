@@ -14,6 +14,10 @@ const HomeTopicCardWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  min-height: 100%;
+  max-width: 210px;
+  min-width: 200px;
+  min-height: 300px;
   p {
     margin: 0;
   }
@@ -43,19 +47,26 @@ const HomeTopicCardWrapper = styled.div`
     margin-bottom: 0;
     text-align: right;
   }
+  img {
+    width: 200px;
+    height: 130px;
+    aspect-ratio: auto 240/135;
+  }
 `;
 export default function HomeTopicCard(props: IHomeTopicCardProps) {
   const { post, isSideBar } = props;
   return (
     <HomeTopicCardWrapper>
-      <Link href={`${RoutePaths.POST}/${post.id}`}>
-        <Image src={post?.thumbnail?.image_path} preview={false} width={100} />
-        <div className="post-content">
-          <p className="post-name">{post?.name}</p>
-          <p className="post-sumary">{`${post?.content_summary?.slice(0, 160) || ''}...`}</p>
-          <p className="post-create">{getFormatDate(post?.created)}</p>
-        </div>
-      </Link>
+      <div className="postItem">
+        <Link href={`${RoutePaths.POST}/${post.id}`}>
+          <Image src={post?.thumbnail?.image_path} preview={false} />
+          <div className="post-content">
+            <p className="post-name">{post?.name}</p>
+            <p className="post-sumary">{`${post?.content_summary?.slice(0, 160) || ''}...`}</p>
+            <p className="post-create">{getFormatDate(post?.created)}</p>
+          </div>
+        </Link>
+      </div>
     </HomeTopicCardWrapper>
   );
 }

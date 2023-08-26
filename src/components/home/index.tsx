@@ -10,6 +10,7 @@ import { css } from '@emotion/react';
 import CourseItem from '../course/course-item';
 import DocItem from '../document/doc-item';
 import { DocCourseWrapper } from '../document/style';
+import HomeTopicCard from './homeTopicCard';
 
 export interface IHomeData {
   homeData: Homepage;
@@ -182,19 +183,19 @@ export default function HomeData(props: IHomeData) {
                 <></>
               )}
             </DocCourseWrapper>
-            {/* <DocCourseWrapper>
-              {listCourse?.results?.length ? (
-                listCourse?.results?.map((e, i) => {
+            <DocCourseWrapper>
+              {listPost?.results?.length ? (
+                listPost?.results?.map((e, i) => {
                   return (
                     <Col key={i}>
-                      <CourseItem course={e} />
+                      <HomeTopicCard post={e} />
                     </Col>
                   );
                 })
               ) : (
                 <></>
               )}
-            </DocCourseWrapper> */}
+            </DocCourseWrapper>
           </>
         )}
       </Card>

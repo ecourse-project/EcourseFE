@@ -74,7 +74,8 @@ export const ItemDocCourseWrapper = styled.div`
     max-width: 100%;
     margin-bottom: 10px;
 
-    .doc-img {
+    .doc-img,
+    img {
       width: 200px;
       height: 130px;
       aspect-ratio: auto 240 / 135;
@@ -155,5 +156,40 @@ export const DocCourseWrapper = styled.div`
   }
   .ant-empty {
     margin: auto;
+  }
+`;
+
+export const PostWrapper = styled.div`
+  margin: 20px 0;
+  display: flex;
+  flex-wrap: wrap;
+  text-align: left;
+  gap: 25px;
+  justify-content: flex-start;
+  /* .ant-col {
+    padding: 0 5px 30px 5px;
+  } */
+  .item:hover {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    transition: all 1s ease;
+  }
+  .ant-empty {
+    margin: auto;
+  }
+`;
+
+export const PostItemWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100%;
+  max-width: 210px;
+  min-width: 200px;
+  min-height: 300px;
+
+  img {
+    width: 200px;
+    height: 130px;
+    aspect-ratio: auto 240/135;
   }
 `;
