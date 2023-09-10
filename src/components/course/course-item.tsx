@@ -79,17 +79,17 @@ const CourseItem: React.FC<ChildProps> = (props) => {
     checkAccountPermission();
     setLoading(true);
     try {
-      if (currentCourse.request_status !== RequestStatus.ACCEPTED) {
+      if (currentCourse.request_status && currentCourse.request_status !== RequestStatus.ACCEPTED) {
         const reuqestClass = await CourseService.requestJoinClass(currentCourse.id);
         setTimeout(() => {
           setCurrentCourse((prev) => ({ ...prev, request_status: reuqestClass.request_status }));
         }, 300);
         return;
       }
-      if (currentCourse.sale_status === SaleStatusEnum.AVAILABLE) {
+      if (currentCourse.sale_status && currentCourse.sale_status === SaleStatusEnum.AVAILABLE) {
         const addTo: Course = await CourseService.moveCourse(currentCourse.id, MoveEnum.LIST, MoveEnum.CART);
         setCurrentCourse(addTo);
-      } else if (currentCourse.sale_status === SaleStatusEnum.IN_CART) {
+      } else if (currentCourse.sale_status && currentCourse.sale_status === SaleStatusEnum.IN_CART) {
         const removeFrom: Course = await CourseService.moveCourse(currentCourse.id, MoveEnum.CART, MoveEnum.LIST);
         setCurrentCourse(removeFrom);
       }
