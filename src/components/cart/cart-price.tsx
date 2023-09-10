@@ -52,10 +52,11 @@ const PricingCard: React.FC<ChildProps> = ({ docNum, checkoutList, children, car
   const dispatch = useDispatch();
 
   useEffect(() => {
+    docNum = 10;
     if (docNum === 0) {
       setBtnText('Tiếp tục chọn tài liệu');
     } else {
-      setBtnText('Thanh toán');
+      setBtnText('Tạo đơn hàng');
     }
   }, [docNum]);
 
@@ -118,10 +119,10 @@ const PricingCard: React.FC<ChildProps> = ({ docNum, checkoutList, children, car
       `}
     >
       {/* <Image src={Img} /> */}
-      <div className="total-price">Tổng đơn:</div>
+      {/* <div className="total-price">Tổng đơn:</div> */}
       <Divider />
       <div className="current-price">
-        {formatCurrencySymbol(checkoutList.total_price, 'VND', true)}
+        {/* {formatCurrencySymbol(checkoutList.total_price, 'VND', true)} */}
         {/* {'/'}
 				{formatCurrencySymbol(totalPrice, 'VND', true)} */}
         {/* {totalPrice} */}
@@ -143,7 +144,7 @@ const PricingCard: React.FC<ChildProps> = ({ docNum, checkoutList, children, car
       </AppButton>
       <Modal
         className="checkout-modal"
-        title="Xác nhận thanh toán"
+        title="Xác nhận đặt đơn"
         open={openModal}
         onOk={handleOk}
         // confirmLoading={confirmLoading}
