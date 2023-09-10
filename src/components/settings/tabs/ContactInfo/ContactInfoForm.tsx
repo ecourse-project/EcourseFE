@@ -111,6 +111,9 @@ const ContactSettingForm: React.FC<ContactSettingsFormProps> = () => {
         [ant-click-animating-without-extra-node='true']:after {
           display: none;
         }
+        .ant-btn {
+          min-width: 200px;
+        }
       `}
       onSubmit={formik.handleSubmit}
     >

@@ -120,6 +120,9 @@ const ChangePasswordForm: React.FC = () => {
             grid-column-end: span 2;
             justify-self: stretch;
           }
+          .ant-btn {
+            min-width: 200px;
+          }
         }
       `}
     >
