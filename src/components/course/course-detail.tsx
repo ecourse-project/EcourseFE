@@ -506,14 +506,14 @@ const CourseDetail: React.FC = () => {
             />
           </Col>
         </Row>
-        <Statistic
+        {/* <Statistic
           // title="GIÁ"
           value={formatCurrencySymbol(course?.price || 0, 'VND', true)}
           style={{
             marginLeft: '10px',
             fontWeight: 'bold',
           }}
-        />
+        /> */}
       </PageHeader>
       <Tabs items={items} className="tab-section" />
 

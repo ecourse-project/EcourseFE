@@ -339,14 +339,14 @@ const DocDetail: React.FC = () => {
         >
           {content}
         </Content>
-        <Statistic
+        {/* <Statistic
           // title="GIÁ"
           value={formatCurrency(doc?.price || 0)}
           style={{
             marginLeft: '10px',
             fontWeight: 'bold',
           }}
-        />
+        /> */}
         {doc.sale_status !== SaleStatusEnum.PENDING ? (
           <Button
             key="1"
