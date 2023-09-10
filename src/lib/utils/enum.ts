@@ -65,7 +65,7 @@ export enum SaleStatusEnum {
 export enum BtnString {
   AVAILABLE = 'THÊM',
   IN_CART = 'XOÁ',
-  PENDING = 'CHỜ THANH TOÁN',
+  PENDING = 'CHỜ DUYỆT',
   BOUGHT = 'VÀO HỌC',
   ACCEPTED = 'VÀO HỌC',
   REQUESTED = 'HUỶ YÊU CẦU',

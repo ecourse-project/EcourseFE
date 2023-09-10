@@ -34,8 +34,8 @@ interface ChildProps {
 enum BtnString {
   AVAILABLE = 'THÊM',
   IN_CART = 'XOÁ',
-  PENDING = 'CHỜ THANH TOÁN',
-  BOUGHT = 'ĐÃ THANH TOÁN',
+  PENDING = 'ĐANG DUYỆT',
+  BOUGHT = 'ĐÃ DUYỆT',
 }
 enum Color {
   AVAILABLE = '#0dcaf0',
