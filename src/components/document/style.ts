@@ -112,7 +112,25 @@ export const ItemDocCourseWrapper = styled.div`
     margin-left: 10px;
     align-items: center;
   }
-
+  .contact-us {
+    text-align: center;
+    margin: auto;
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    a {
+      box-shadow: inset 0 0 0 0 #54b3d6;
+      color: #54b3d6;
+      margin: 0 -0.25rem;
+      padding: 0 0.25rem;
+      transition: color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+    a:hover {
+      box-shadow: inset 100px 0 0 0 #54b3d6;
+      color: white;
+    }
+  }
   .doc-info {
     margin: 0 10px;
   }
@@ -185,7 +203,7 @@ export const PostItemWrapper = styled.div`
   min-height: 100%;
   max-width: 210px;
   min-width: 200px;
-  min-height: 300px;
+  min-height: 285px;
 
   img {
     width: 200px;

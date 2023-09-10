@@ -24,6 +24,7 @@ import AppButton from '../button';
 import { ItemDocCourseWrapper } from '../document/style';
 import Image from 'next/image';
 import IconChecked from 'src/assets/icons/IconChecked';
+import globalVariable from 'src/lib/config/env';
 
 interface ChildProps {
   course: Course;
@@ -41,27 +42,27 @@ const CourseItem: React.FC<ChildProps> = (props) => {
   const route = useRouter();
 
   useEffect(() => {
-    if (params.class) {
-      if (currentCourse.course_of_class && !currentCourse.request_status) {
-        setBtnString(BtnString.AVAILABLE_REQUEST);
-      } else if (currentCourse.request_status === RequestStatus.REQUESTED) {
-        setBtnString(BtnString.REQUESTED);
-      } else if (currentCourse.request_status === RequestStatus.AVAILABLE) {
-        setBtnString(BtnString.AVAILABLE_REQUEST);
-      } else if (currentCourse.request_status === RequestStatus.ACCEPTED) {
-        setBtnString(BtnString.ACCEPTED);
-      }
-    } else {
-      if (currentCourse.sale_status === SaleStatusEnum.AVAILABLE) {
-        setBtnString(BtnString.AVAILABLE);
-      } else if (currentCourse.sale_status === SaleStatusEnum.IN_CART) {
-        setBtnString(BtnString.IN_CART);
-      } else if (currentCourse.sale_status === SaleStatusEnum.PENDING) {
-        setBtnString(BtnString.PENDING);
-      } else if (currentCourse.sale_status === SaleStatusEnum.BOUGHT) {
-        setBtnString(BtnString.BOUGHT);
-      }
+    // if (params.class)
+    if (currentCourse.course_of_class && !currentCourse.request_status) {
+      setBtnString(BtnString.AVAILABLE_REQUEST);
+    } else if (currentCourse.request_status === RequestStatus.REQUESTED) {
+      setBtnString(BtnString.REQUESTED);
+    } else if (currentCourse.request_status === RequestStatus.AVAILABLE) {
+      setBtnString(BtnString.AVAILABLE_REQUEST);
+    } else if (currentCourse.request_status === RequestStatus.ACCEPTED) {
+      setBtnString(BtnString.ACCEPTED);
     }
+    // } else {
+    if (currentCourse.sale_status === SaleStatusEnum.AVAILABLE) {
+      setBtnString(BtnString.AVAILABLE);
+    } else if (currentCourse.sale_status === SaleStatusEnum.IN_CART) {
+      setBtnString(BtnString.IN_CART);
+    } else if (currentCourse.sale_status === SaleStatusEnum.PENDING) {
+      setBtnString(BtnString.PENDING);
+    } else if (currentCourse.sale_status === SaleStatusEnum.BOUGHT) {
+      setBtnString(BtnString.BOUGHT);
+    }
+    // }
   }, [currentCourse]);
 
   useEffect(() => {
@@ -78,22 +79,19 @@ const CourseItem: React.FC<ChildProps> = (props) => {
     checkAccountPermission();
     setLoading(true);
     try {
-      if (params.class) {
-        if (currentCourse.request_status !== RequestStatus.ACCEPTED) {
-          const reuqestClass = await CourseService.requestJoinClass(currentCourse.id);
-          setTimeout(() => {
-            setCurrentCourse((prev) => ({ ...prev, request_status: reuqestClass.request_status }));
-          }, 300);
-        }
-      } else {
-        console.log('current', currentCourse);
-        if (currentCourse.sale_status === SaleStatusEnum.AVAILABLE) {
-          const addTo: Course = await CourseService.moveCourse(currentCourse.id, MoveEnum.LIST, MoveEnum.CART);
-          setCurrentCourse(addTo);
-        } else if (currentCourse.sale_status === SaleStatusEnum.IN_CART) {
-          const removeFrom: Course = await CourseService.moveCourse(currentCourse.id, MoveEnum.CART, MoveEnum.LIST);
-          setCurrentCourse(removeFrom);
-        }
+      if (currentCourse.request_status !== RequestStatus.ACCEPTED) {
+        const reuqestClass = await CourseService.requestJoinClass(currentCourse.id);
+        setTimeout(() => {
+          setCurrentCourse((prev) => ({ ...prev, request_status: reuqestClass.request_status }));
+        }, 300);
+        return;
+      }
+      if (currentCourse.sale_status === SaleStatusEnum.AVAILABLE) {
+        const addTo: Course = await CourseService.moveCourse(currentCourse.id, MoveEnum.LIST, MoveEnum.CART);
+        setCurrentCourse(addTo);
+      } else if (currentCourse.sale_status === SaleStatusEnum.IN_CART) {
+        const removeFrom: Course = await CourseService.moveCourse(currentCourse.id, MoveEnum.CART, MoveEnum.LIST);
+        setCurrentCourse(removeFrom);
       }
     } catch (error) {
       console.log('error update cart', error);
@@ -238,18 +236,16 @@ const CourseItem: React.FC<ChildProps> = (props) => {
         </Link>
       </Popover>
       <div>
-        {!params.class ? (
-          <div className="price-tag">
-            <span>
-              <WalletOutlined />
-              {formatCurrency(currentCourse.price || 0)}
-            </span>
+        <div className="contact-us">
+          <Link href={globalVariable.GMAIL_URL} target="_blank">
+            {/* <WalletOutlined />
+              {formatCurrency(currentCourse.price || 0)} */}
+            Liên hệ
+          </Link>
 
-            {currentCourse.sale_status === SaleStatusEnum.BOUGHT && <IconChecked />}
-          </div>
-        ) : (
-          <></>
-        )}
+          {currentCourse.sale_status === SaleStatusEnum.BOUGHT && <IconChecked />}
+        </div>
+
         {!isMyLearn && (
           <AppButton
             className="card-btn class-btn"

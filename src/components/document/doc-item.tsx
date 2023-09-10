@@ -25,6 +25,7 @@ import { ItemDocCourseWrapper } from './style';
 import Image from 'next/image';
 import DefaultDocImage from 'src/assets/images/docDefault.jpg';
 import IconChecked from 'src/assets/icons/IconChecked';
+import globalVariable from 'src/lib/config/env';
 
 interface ChildProps {
   document: Document; // try not to use any.
@@ -218,11 +219,12 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
       </div>
 
       <div>
-        <div className="price-tag">
-          <span>
-            <WalletOutlined />
-            {formatCurrencySymbol(document.price, 'VND')}
-          </span>
+        <div className="contact-us">
+          <Link href={globalVariable.GMAIL_URL} target="_blank">
+            {/* <WalletOutlined />
+              {formatCurrency(currentCourse.price || 0)} */}
+            Liên hệ
+          </Link>
 
           {document.sale_status === SaleStatusEnum.BOUGHT && <IconChecked />}
         </div>
