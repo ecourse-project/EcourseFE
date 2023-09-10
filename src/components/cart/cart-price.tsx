@@ -14,6 +14,7 @@ import { css } from '@emotion/react';
 
 import { TabSettingKey } from '../settings/tabs';
 import CartOrderBill from './cart-order-bill';
+import globalVariable from 'src/lib/config/env';
 
 interface ChildProps {
   docNum: number;
@@ -24,8 +25,8 @@ interface ChildProps {
 const PricingCard: React.FC<ChildProps> = ({ docNum, checkoutList, children, cartData }) => {
   const [btnText, setBtnText] = useState<string>('Thanh toán');
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const handleCharge = () => {
-    setOpenModal(true);
+  const handleCharge = async () => {
+    // setOpenModal(true);
     // AskForSave(
     //   'Thanh toán đơn hàng',
     //   ` Xác nhận đặt đơn hàng trị giá:
@@ -47,16 +48,32 @@ const PricingCard: React.FC<ChildProps> = ({ docNum, checkoutList, children, car
     //     }
     //   },
     // );
+
+    try {
+      const order = await CourseService.createOrder(checkoutList);
+      Swal.fire('Đã đặt đơn thành công!', '', 'success').then((v) => {
+        if (v.isConfirmed) {
+          window.open(globalVariable.GMAIL_URL, '_blank');
+          router.push(`${RoutePaths.SETTINGS}?tab=${TabSettingKey.ORDER}`);
+        }
+        // if (v.isConfirmed) router.push(`${RoutePaths.SETTINGS}?tab=${TabSettingKey.ORDER}`);
+      });
+    } catch (error) {
+      Swal.fire('Đã có lỗi xảy ra!', 'Xin thử lại sau', 'error');
+      console.log('error', error);
+    } finally {
+      setOpenModal(false);
+    }
   };
   const router = useRouter();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    docNum = 10;
     if (docNum === 0) {
       setBtnText('Tiếp tục chọn tài liệu');
     } else {
-      setBtnText('Tạo đơn hàng');
+      // setBtnText('Tạo đơn hàng');
+      setBtnText('Liên hệ');
     }
   }, [docNum]);
 
@@ -177,19 +194,25 @@ const PricingCard: React.FC<ChildProps> = ({ docNum, checkoutList, children, car
               font-weight: 700;
               letter-spacing: 2px;
             }
+            .confirm {
+              min-width: 70px;
+            }
+            .cancel {
+              min-width: 100px;
+            }
           }
         `}
         footer={[
-          <div key="1" className="sum-price">{`Tổng cộng ${formatCurrencySymbol(
-            checkoutList.total_price,
-            'VND',
-            true,
-          )}`}</div>,
+          // <div key="1" className="sum-price">{`Tổng cộng ${formatCurrencySymbol(
+          //   checkoutList.total_price,
+          //   'VND',
+          //   true,
+          // )}`}</div>,
           <div key="2" className="right">
-            <Button key="3" onClick={handleOk}>
+            <Button key="3" className="confirm" onClick={handleOk}>
               OK
             </Button>
-            <Button key="4" onClick={handleCancel}>
+            <Button key="4" className="cancel" onClick={handleCancel}>
               Cancel
             </Button>
           </div>,

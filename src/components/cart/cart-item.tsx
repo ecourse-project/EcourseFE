@@ -33,7 +33,7 @@ const CartItemRow: React.FC<ChildProps> = ({ document, course, isDeleteBtn = tru
         .document-item {
           display: flex;
           justify-content: space-between;
-          flex-direction: column;
+          flex-direction: row;
           .document-content {
             display: flex;
           }
@@ -110,7 +110,7 @@ const CartItemRow: React.FC<ChildProps> = ({ document, course, isDeleteBtn = tru
           <div className="price-group">
             <p className="price">
               {/* <TagOutlined /> */}
-              {formatCurrency(document?.price, true)}
+              {/* {formatCurrency(document?.price, true)} */}
             </p>
 
             {deleteLoading ? (
@@ -151,7 +151,7 @@ const CartItemRow: React.FC<ChildProps> = ({ document, course, isDeleteBtn = tru
           <div className="price-group">
             <p className="price">
               {/* <TagOutlined /> */}
-              {formatCurrency(course.price || '', true)}
+              {/* {formatCurrency(course.price || '', true)} */}
             </p>
             {deleteLoading ? (
               <Spin size="default" />
