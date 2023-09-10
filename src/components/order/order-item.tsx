@@ -156,7 +156,7 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
                             description={item.description}
                             style={{ marginRight: '20px' }}
                           />
-                          <div>{formatCurrency(item.price)}</div>
+                          {/* <div>{formatCurrency(item.price)}</div> */}
                         </Skeleton>
                       </List.Item>
                     )}
