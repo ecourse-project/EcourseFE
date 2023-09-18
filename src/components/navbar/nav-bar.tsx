@@ -1,115 +1,54 @@
-import { Divider, Dropdown, Menu } from 'antd';
+import { HomeFilled, LogoutOutlined, SettingOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
+import { css } from '@emotion/react';
+import { Divider, Dropdown, Space } from 'antd';
 import { isEmpty } from 'lodash';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import { NextRouter, useRouter } from 'next/router';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/lib/reducers/model';
 import { Nav, NavTypeEnum } from 'src/lib/types/backend_modal';
 import RoutePaths from 'src/lib/utils/routes';
-import { v4 as uuidv4 } from 'uuid';
 
-import { HomeFilled, LogoutOutlined, SettingOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
-import { css } from '@emotion/react';
-
-type MenuItem = Required<MenuProps>['items'][number];
-
+import styled from '@emotion/styled';
 import type { MenuProps } from 'antd';
-function getItem(
-  label: React.ReactNode,
-  key?: React.Key | null,
-  icon?: React.ReactNode,
-  children?: MenuItem[],
-  disabled?: boolean,
-  danger?: true,
-): MenuItem {
-  return {
-    key,
-    icon,
-    children,
-    label,
-    danger,
-    disabled,
-  } as MenuItem;
-}
 
-const Nav: React.FC = () => {
+const Nav: React.FC = React.memo(() => {
   const header: Nav[] = useSelector((state: RootState) => state.app.header);
   const router = useRouter();
-  const [listNav, setListNav] = useState<MenuItem[]>();
+  console.log('router :==>>', router);
   const myProfile = useSelector((state: RootState) => state.app.user);
-  const getTargetUrl = (type: string, itemType: string, header: string) => {
-    if (!type) return null;
-    if (type.toLocaleUpperCase() === NavTypeEnum.DOCUMENT)
-      return `${RoutePaths.DOCUMENT}?document=${itemType}&header=${header}&page=1`;
-    else if (type.toLocaleUpperCase() === NavTypeEnum.COURSE)
-      return `${RoutePaths.COURSE}?course=${itemType}&header=${header}&page=1`;
-    else if (type.toLocaleUpperCase() === NavTypeEnum.CLASS)
-      return `${RoutePaths.CLASS}?class=${itemType}&header=${header}&page=1`;
-    else if (type.toLocaleUpperCase() === NavTypeEnum.POST)
-      return `${RoutePaths.POST}?post=${itemType}&header=${header}&page=1`;
+
+  const goToPage = (type, topicValue, navHeader) => {
+    return type === NavTypeEnum.DOCUMENT
+      ? `${RoutePaths.DOCUMENT}?topic=${topicValue}&header=${navHeader}&page=1`
+      : type === NavTypeEnum.COURSE
+      ? `${RoutePaths.COURSE}?topic=${topicValue}&header=${navHeader}&page=1`
+      : type === NavTypeEnum.CLASS
+      ? `${RoutePaths.CLASS}?topic=${topicValue}&header=${navHeader}&page=1`
+      : type === NavTypeEnum.POST
+      ? `${RoutePaths.POST}?topic=${topicValue}&header=${navHeader}&page=1`
+      : '';
+  };
+  const generateItem = (navItem: Nav): MenuProps['items'] => {
+    return navItem.topic.map((v, i) => ({
+      key: i,
+      label: (
+        <Link
+          href={`${goToPage(navItem.type?.toLocaleUpperCase(), v.value || 'ALL', navItem.header)}`}
+          css={css`
+            background-color: ${router.query?.[navItem.type?.toLocaleLowerCase()] === v.label ? '#cdcdcd' : ''};
+          `}
+        >
+          {v.label}
+        </Link>
+      ),
+      icon: '',
+      title: v.label,
+    }));
   };
 
-  const checkTypeHeader = (navItem: Nav) => {
-    return Object.values(NavTypeEnum).includes(navItem.type?.toLocaleUpperCase() as unknown as NavTypeEnum) ? (
-      <Link href={getTargetUrl(navItem.type, 'ALL', navItem.header) || ''}>{navItem.header.toLocaleUpperCase()}</Link>
-    ) : (
-      <Link href={'/'} legacyBehavior>
-        <a className="disabled-nav">{navItem.header.toLocaleUpperCase()}</a>
-      </Link>
-    );
-  };
-
-  const getListHeader = async () => {
-    try {
-      const listItems = header?.map((v, i) => {
-        return getItem(
-          <Link href={getTargetUrl(v.type, 'ALL', v.header) || ''}>{v.header.toLocaleUpperCase()}</Link>,
-          v.header + `id=${uuidv4()}`,
-          '',
-          v.topic?.map((u, n) => {
-            return getItem(
-              <div
-                css={css`
-                  max-width: 100px;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                  .menu-item-link {
-                    color: #fff !important;
-                    &:hover {
-                      text-decoration: none !important;
-                      color: #fff !important;
-                      outline: none !important;
-                    }
-                    &:focus {
-                      text-decoration: none !important;
-                      color: #fff !important;
-                      outline: none !important;
-                    }
-                  }
-                `}
-              >
-                <Link href={getTargetUrl(v.type, u.value, v.header) || ''} title={u.label} className="menu-item-link">
-                  {u.label}
-                </Link>
-              </div>,
-              u.label + `id=${uuidv4()}`,
-            );
-          }),
-          !Object.values(NavTypeEnum).includes(v?.type?.toLocaleUpperCase() as unknown as NavTypeEnum),
-        );
-      });
-      setListNav(listItems);
-    } catch (error) {
-      console.log(' error GetHeader', error);
-    }
-  };
-
-  useEffect(() => {
-    getListHeader();
-  }, []);
-
-  const items: MenuProps['items'] = [
+  const accountItems: MenuProps['items'] = [
     {
       key: '1',
       label: <Link href={RoutePaths.SETTINGS}>Cài đặt</Link>,
@@ -123,208 +62,205 @@ const Nav: React.FC = () => {
   ];
 
   return (
-    <div
-      className="nav-bar"
-      css={css`
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        border-radius: 5px;
-        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-        --bs-gutter-x: 5rem;
-        --bs-gutter-y: 0;
-        background-color: #4c4c4c !important;
-        max-width: 1200px;
-        margin: auto;
-        margin-bottom: 30px;
-        .left-box {
-          display: flex;
-          align-items: center;
-          width: 80%;
-          padding-right: 30px;
-
-          > .ant-menu {
-            width: 100%;
-          }
-        }
-        .right-box {
-          margin-right: 40px;
-          display: flex;
-          justify-content: space-between;
-          gap: 10px;
-          align-items: center;
-          .ant-divider {
-            background: #fff;
-          }
-          & a {
-            width: 20px;
-          }
-          .anticon {
-            color: #fff !important;
-          }
-        }
-        .home {
-          width: 160px;
-          height: 47px;
-          display: flex;
-          align-items: center;
-          background-color: #3a3a3a;
-          border-radius: 5px;
-          .logo {
-            font-weight: 700;
-            font-size: 12px;
-            font-family: 'Montserrat';
-            padding-left: 15px;
-            color: #fff !important;
-            text-decoration: none;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            .anticon-home {
-              position: relative;
-              top: -3px;
-            }
-            &:hover {
-              text-decoration: none;
-              letter-spacing: 0.5px;
-              transition: all 400ms ease-in-out;
-              font-weight: 700;
-            }
-
-            .anticon-home {
-              margin-right: 5px;
-              color: #fff;
-            }
-          }
-        }
-        .ant-menu-overflow {
-          background-color: #4c4c4c;
-          .ant-menu-overflow-item {
-            background-color: #4c4c4c;
-          }
-        }
-        .ant-menu-title-content {
-          a {
-            color: #fff !important;
-          }
-          height: fit-content;
-        }
-        .anticon {
-          font-size: 20px;
-          width: 20px;
-          color: #000;
-          cursor: pointer;
-        }
-        .ant-divider {
-          width: 2px;
-          height: 25px !important;
-          color: #000;
-          background: #000;
-        }
-        .ant-menu-horizontal {
-          border: none;
-        }
-        .ant-menu-submenu-arrow {
-          display: none;
-        }
-        .setting {
-          .ant-menu-vertical {
-            border-right: unset;
-          }
-          .ant-menu-submenu-title {
-            padding: 0;
-            line-height: unset !important;
-            height: unset !important;
-          }
-        }
-        .login-btn {
-          font-weight: 700;
-          color: #fff !important;
-          width: 120px !important;
-          text-decoration: none;
-          &:hover {
-            letter-spacing: 0.5px;
-            transition: all 0.5s ease-in-out;
-            text-decoration: none;
-          }
-        }
-        .setting-btn {
-          text-align: center;
-
-          .setting-icon:hover {
-            font-size: 25px;
-          }
-          transition: all 0.5s ease;
-        }
-        .cart-btn {
-          text-align: center;
-
-          .cart-icon:hover {
-            font-size: 25px;
-          }
-          transition: all 0.5s ease;
-        }
-        .ant-menu,
-        .ant-menu-submenu {
-          a {
-            text-decoration: none;
-            color: #000;
-            font-weight: 700;
-            font-size: 12px;
-            font-family: 'Montserrat';
-            &:hover,
-            &:focus {
-              text-decoration: none;
-              color: #000;
-            }
-          }
-        }
-        /* .ant-menu-item:has(a.disabled-nav) {
-          &:hover {
-            pointer-events: none;
-            cursor: not-allowed;
-          }
-        } */
-        .ant-menu-item-disabled {
-          pointer-events: none;
-        }
-      `}
-    >
-      <div className="left-box">
-        <div className="home">
-          <Link href={'/'} className="logo">
-            <HomeFilled />
-            TRANG CHỦ
-          </Link>
-        </div>
-        <Menu items={listNav} mode="horizontal" className="nav-menu" triggerSubMenuAction="hover" theme="dark" />
-      </div>
-      <div className="right-box">
-        <Link href={RoutePaths.CART} className="cart-btn">
-          <ShoppingCartOutlined className="cart-icon" />
+    <NavStyle id="menu-nav" router={router}>
+      <div className="home">
+        <Link
+          href={RoutePaths.HOME}
+          className="logo"
+          css={css`
+            opacity: ${router.pathname === RoutePaths.HOME ? 1 : 0.6};
+          `}
+        >
+          <HomeFilled />
+          TRANG CHỦ
         </Link>
-        <Divider type="vertical" style={{ height: '100%' }} />
-
-        {!isEmpty(myProfile) ? (
-          <Dropdown
-            menu={{ items }}
-            placement="bottom"
-            arrow
-            className="cuongDropdown"
-            overlayStyle={{ minWidth: 130 }}
-          >
-            <UserOutlined className="setting-icon" />
-          </Dropdown>
-        ) : (
-          <Link href={RoutePaths.LOGIN} className="login-btn">
-            Đăng nhập
-          </Link>
-        )}
       </div>
-    </div>
+      <div className="menu-container">
+        <div className="menu-left">
+          {header.map((v, index) => {
+            const items = generateItem(v);
+
+            return (
+              <Dropdown
+                key={index}
+                menu={{ items }}
+                // disabled={!items?.length}
+                // overlayStyle={{ backgroundColor: '#000' }}
+                open={true}
+                getPopupContainer={() => document.getElementById('menu-nav') as HTMLElement}
+                dropdownRender={(menues) => {
+                  if (!menues) return;
+                  return (
+                    <div
+                      className="dropdown-Cuong"
+                      css={css`
+                        max-width: 200px;
+                        margin-top: 12px;
+                        .ant-dropdown-menu {
+                          span {
+                            width: 100%;
+                            cursor: pointer;
+                            a {
+                              color: #000 !important;
+                              font-weight: 400;
+                              text-overflow: ellipsis;
+                              text-wrap: nowrap;
+                              overflow: hidden;
+                              max-width: 100%;
+                              display: block;
+                            }
+                          }
+                          .ant-dropdown-menu-item {
+                            background-color: ${router.query?.topic === 'AI' ? '#cdcdcd' : ''};
+                          }
+                        }
+                      `}
+                    >
+                      {menues}
+                    </div>
+                  );
+                }}
+              >
+                <Link
+                  href={goToPage(v.type?.toLocaleUpperCase(), 'ALL', v.header)}
+                  css={css`
+                    opacity: ${router.pathname.includes(v.type?.toLocaleLowerCase()) &&
+                    v.header.includes(router.query?.header as string)
+                      ? 1
+                      : 0.6};
+                  `}
+                >
+                  <Space>{v.header}</Space>
+                </Link>
+              </Dropdown>
+            );
+          })}
+        </div>
+        <div className="menu-right">
+          <Link href={RoutePaths.CART} className="cart-btn">
+            <ShoppingCartOutlined className="cart-icon" />
+          </Link>
+          <Divider type="vertical" style={{ height: '100%' }} />
+          <div className="account-group" id="account-dropdown">
+            {!isEmpty(myProfile) ? (
+              <Dropdown
+                menu={{ items: accountItems }}
+                placement="bottomRight"
+                arrow
+                className="cuongDropdown"
+                // open={true}
+                overlayClassName="account-overlay"
+                overlayStyle={{ minWidth: 130 }}
+                // getPopupContainer={() => document.getElementById('account-dropdown') as HTMLElement}
+              >
+                <UserOutlined className="setting-icon" />
+              </Dropdown>
+            ) : (
+              <Link href={RoutePaths.LOGIN} className="login-btn">
+                Đăng nhập
+              </Link>
+            )}
+          </div>
+        </div>
+      </div>
+    </NavStyle>
   );
-};
+});
 
 export default Nav;
+
+type NavProps = {
+  router: NextRouter;
+};
+
+const NavStyle = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  border-radius: 5px;
+  font-size: 13px;
+  height: 47px;
+  max-width: 1200px;
+  margin-right: auto;
+  margin-left: auto;
+
+  border-radius: 5px;
+
+  --bs-gutter-x: 5rem;
+  --bs-gutter-y: 0;
+  .ant-dropdown {
+    margin-top: 12px;
+  }
+  .menu-left,
+  .home {
+    a {
+      font-weight: 700;
+      color: #fff !important;
+    }
+  }
+  .home {
+    border-radius: 3px 0 0 5px;
+    padding: 0 10px;
+    background-color: #3a3a3a;
+    a {
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+  }
+  .ant-space,
+  .account-group,
+  .menu-right .anticon {
+    transition: all 0.2s ease-in-out;
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+  .menu-container {
+    background-color: #4c4c4c;
+    border-radius: 0 5px 5px 0;
+    padding: 0 10px;
+    flex: 1;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    justify-content: space-between;
+    .menu-left {
+      display: flex;
+      gap: 15px;
+    }
+    .ant-dropdown-trigger {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+  }
+  .menu-right {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    gap: 10px;
+    padding-right: 20px;
+    .ant-divider {
+      height: 50% !important;
+      color: #fff;
+      background-color: #fff;
+      width: 2px;
+    }
+    .anticon-shopping-cart,
+    .anticon-user {
+      color: #fff !important;
+      font-size: 17px;
+      font-weight: 700;
+    }
+    .anticon-shopping-cart {
+      opacity: ${(props: NavProps) => (props.router.pathname.includes(RoutePaths.CART) ? 1 : 0.6)};
+    }
+    .anticon-user {
+      opacity: ${(props: NavProps) => (props.router.pathname.includes(RoutePaths.SETTINGS) ? 1 : 0.6)};
+    }
+    .account-overlay {
+      margin-left: 24px;
+    }
+  }
+`;

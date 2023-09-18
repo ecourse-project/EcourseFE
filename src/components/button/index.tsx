@@ -266,7 +266,11 @@ const AppButton: React.FC<AppButtonProps> = React.memo((props) => {
           border-style: none;
           background-color: #666666 !important;
           background-image: none;
-          transition: box-shadow 600ms ease, border-color 600ms ease, color 600ms ease, background-color 600ms ease;
+          transition:
+            box-shadow 600ms ease,
+            border-color 600ms ease,
+            color 600ms ease,
+            background-color 600ms ease;
           color: #fff;
           font-size: 14px;
           line-height: 20px;

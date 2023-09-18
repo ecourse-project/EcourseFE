@@ -3,7 +3,6 @@
 import { Breadcrumb, Card, Col, Divider, Empty, Row } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import DocItem from 'src/components/document/doc-item';
 import { DocCourseWrapper } from 'src/components/document/style';
 import HomeSide from 'src/components/home/homeSide';
@@ -11,21 +10,20 @@ import CustomPagination from 'src/components/order/pagination';
 import DocCourseItemSkeleton from 'src/components/skeleton/document-skeleton';
 import CourseService from 'src/lib/api/course';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
-import { Document, Pagination as PaginationType, PaginationParams } from 'src/lib/types/backend_modal';
+import { Document, PaginationParams, Pagination as PaginationType } from 'src/lib/types/backend_modal';
 import { StorageKeys } from 'src/lib/utils/enum';
 import { UpperCaseFirstLetter } from 'src/lib/utils/format';
 import RoutePaths from 'src/lib/utils/routes';
 
-import { HomeOutlined, Loading3QuartersOutlined, SwapOutlined } from '@ant-design/icons';
+import { HomeOutlined, SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 
 export interface DocumentParams {
   page?: number;
-  document?: string;
+  topic?: string;
   header?: string;
 }
 
-const antIcon = <Loading3QuartersOutlined style={{ fontSize: 40 }} spin />;
 const DocumentUI: React.FC = () => {
   const [listDoc, setListDoc] = useState<PaginationType<Document>>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -36,7 +34,6 @@ const DocumentUI: React.FC = () => {
     page: params?.page || 1,
     limit: 12,
   });
-  const dispatch = useDispatch();
 
   const fetchDocument = async (pagination) => {
     const token = localStorage.getItem(StorageKeys.SESSION_KEY);
@@ -47,14 +44,11 @@ const DocumentUI: React.FC = () => {
       if (!token) {
         const homeDoc = await CourseService.getHomeDocs(
           newPagination,
-          params.document === 'ALL' ? '' : params.document || '',
+          params.topic === 'ALL' ? '' : params.topic || '',
         );
         setListDoc(homeDoc);
       } else {
-        const homeDoc = await CourseService.getAllDocs(
-          newPagination,
-          params.document === 'ALL' ? '' : params.document || '',
-        );
+        const homeDoc = await CourseService.getAllDocs(newPagination, params.topic === 'ALL' ? '' : params.topic || '');
         setListDoc(homeDoc);
       }
     } catch (error) {
@@ -66,7 +60,7 @@ const DocumentUI: React.FC = () => {
   };
   useEffect(() => {
     setPagination({ ...pagination, page: 1 });
-  }, [params.document]);
+  }, [params.topic]);
 
   useEffect(() => {
     setPagination({ ...pagination, page: params.page || 1 });
@@ -77,7 +71,7 @@ const DocumentUI: React.FC = () => {
 
   const onChangePage = (page: number) => {
     setPagination({ ...pagination, page });
-    router.push(`${RoutePaths.DOCUMENT}?document=${params.document}&page=${page}&header=${params.header}`);
+    router.push(`${RoutePaths.DOCUMENT}?document=${params.topic}&page=${page}&header=${params.header}`);
   };
   return (
     <div>
@@ -94,7 +88,7 @@ const DocumentUI: React.FC = () => {
             {params?.header}
           </Breadcrumb.Item>
           <Breadcrumb.Item href={''}>
-            {UpperCaseFirstLetter(params.document === 'ALL' ? '' : params.document || '')}
+            {UpperCaseFirstLetter(params.topic === 'ALL' ? '' : params.topic || '')}
           </Breadcrumb.Item>
         </Breadcrumb>
       </Divider>

@@ -166,7 +166,7 @@ const CourseProgress = () => {
         ({
           quiz_id: v.id,
           answer_choice: AnswerChoiceEnum.NO_CHOICE,
-        } as UserAnswersArgs),
+        }) as UserAnswersArgs,
     );
     dispatch(progressAction.updateCheckedAnswer(initialAnswer));
   };
