@@ -26,7 +26,7 @@ const CreateNewPasswordForm: React.FC<ResetPasswordFormProps> = ({ uid, token, s
       }),
       confirmPassword: Yup.string()
         .required(validation.password.required)
-        .oneOf([Yup.ref('password'), null], validation.confirmPassword.doesNotMatch),
+        .oneOf([Yup.ref('password')], validation.confirmPassword.doesNotMatch),
     }),
   );
   const formik = useFormik<CreateNewPasswordFormFieldData>({

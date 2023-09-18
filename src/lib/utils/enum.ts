@@ -67,7 +67,6 @@ export enum BtnString {
   IN_CART = 'XOÁ',
   PENDING = 'CHỜ DUYỆT',
   BOUGHT = 'VÀO HỌC',
-  ACCEPTED = 'VÀO HỌC',
   REQUESTED = 'HUỶ YÊU CẦU',
   AVAILABLE_REQUEST = 'YÊU CẦU THAM GIA',
 }

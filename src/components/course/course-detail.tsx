@@ -269,7 +269,7 @@ const CourseDetail: React.FC = () => {
       } else if (course.request_status === RequestStatus.AVAILABLE) {
         setBtnString(BtnString.AVAILABLE_REQUEST);
       } else if (course.request_status === RequestStatus.ACCEPTED) {
-        setBtnString(BtnString.ACCEPTED);
+        setBtnString(BtnString.BOUGHT);
       }
     } else {
       if (course.sale_status === SaleStatusEnum.AVAILABLE) {
