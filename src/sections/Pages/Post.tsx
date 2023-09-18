@@ -13,7 +13,7 @@ import RoutePaths from 'src/lib/utils/routes';
 
 export interface DocumentParams {
   page?: number;
-  post?: string;
+  topic?: string;
   header?: string;
 }
 
@@ -33,7 +33,7 @@ const Post: React.FC = () => {
       const res = await CourseService.listPosts(
         pagination.limit,
         pagination.page,
-        params.post === 'ALL' ? '' : params.post || '',
+        params.topic === 'ALL' ? '' : params.topic || '',
         params.header,
       );
       setlistPost(res);
@@ -46,7 +46,7 @@ const Post: React.FC = () => {
 
   useEffect(() => {
     setPagination({ ...pagination, page: 1 });
-  }, [params.post]);
+  }, [params.topic]);
 
   useEffect(() => {
     setPagination({ ...pagination, page: params.page || 1 });
@@ -59,7 +59,7 @@ const Post: React.FC = () => {
 
   const onChangePage = (page: number) => {
     setPagination({ ...pagination, page });
-    router.push(`${RoutePaths.POST}?post=${params.post}&page=${page}`);
+    router.push(`${RoutePaths.POST}?post=${params.topic}&page=${page}`);
   };
 
   return (
@@ -75,7 +75,7 @@ const Post: React.FC = () => {
           </Breadcrumb.Item>
           <Breadcrumb.Item>{params.header}</Breadcrumb.Item>
           <Breadcrumb.Item href={''}>
-            {UpperCaseFirstLetter(params.post === 'ALL' ? '' : params.post || '')}
+            {UpperCaseFirstLetter(params.topic === 'ALL' ? '' : params.topic || '')}
           </Breadcrumb.Item>
         </Breadcrumb>
       </Divider>

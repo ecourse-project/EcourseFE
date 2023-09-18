@@ -15,17 +15,15 @@ import { StorageKeys } from 'src/lib/utils/enum';
 import { UpperCaseFirstLetter } from 'src/lib/utils/format';
 import RoutePaths from 'src/lib/utils/routes';
 
-import { HomeOutlined, Loading3QuartersOutlined, SwapOutlined } from '@ant-design/icons';
+import { HomeOutlined, SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 
 export interface CourseClassParams {
   page?: number;
-  course?: string;
+  topic?: string;
   class?: string;
   header?: string;
 }
-
-const antIcon = <Loading3QuartersOutlined style={{ fontSize: 40 }} spin />;
 
 const CourseUI: React.FC = () => {
   const [listCourse, setListCourse] = useState<Pagination<Course>>();
@@ -41,10 +39,10 @@ const CourseUI: React.FC = () => {
     setLoading(true);
     try {
       if (!token) {
-        if (params.course) {
+        if (params.topic) {
           const homeCourse = await CourseService.getHomeCourses(
             pagination,
-            params.course === 'ALL' ? '' : params.course || '',
+            params.topic === 'ALL' ? '' : params.topic || '',
           );
           setListCourse(homeCourse);
         } else if (params.class) {
@@ -56,10 +54,10 @@ const CourseUI: React.FC = () => {
           setListCourse(homeClass);
         }
       } else {
-        if (params.course) {
+        if (params.topic) {
           const homeCourse = await CourseService.getAllCourses(
             pagination,
-            params.course === 'ALL' ? '' : params.course || '',
+            params.topic === 'ALL' ? '' : params.topic || '',
           );
           setListCourse(homeCourse);
         } else if (params.class) {
@@ -89,15 +87,15 @@ const CourseUI: React.FC = () => {
   // }, [params.page]);
   useEffect(() => {
     setPagination({ ...pagination, page: 1 });
-  }, [params.course, params.class]);
+  }, [params.topic, params.class]);
   useEffect(() => {
     fetCourseClass(pagination);
   }, [pagination]);
 
   const onChangePage = (page: number) => {
     setPagination({ ...pagination, page });
-    // router.push(`${RoutePaths.COURSE}?course=${params.course}&page=${page}`);
-    if (params.course) router.push(`${RoutePaths.COURSE}?course=${params.course}&header=${params.header}`);
+    // router.push(`${RoutePaths.COURSE}?course=${params.topic}&page=${page}`);
+    if (params.topic) router.push(`${RoutePaths.COURSE}?course=${params.topic}&header=${params.header}`);
     else if (params.class) router.push(`${RoutePaths.CLASS}?class=${params.class}&header=${params.header}`);
   };
 
@@ -123,7 +121,7 @@ const CourseUI: React.FC = () => {
             {params.header}
           </Breadcrumb.Item>
 
-          <Breadcrumb.Item>{UpperCaseFirstLetter(params.course === 'ALL' ? '' : params.course || '')}</Breadcrumb.Item>
+          <Breadcrumb.Item>{UpperCaseFirstLetter(params.topic === 'ALL' ? '' : params.topic || '')}</Breadcrumb.Item>
         </Breadcrumb>
       </Divider>
       <Row gutter={16}>
