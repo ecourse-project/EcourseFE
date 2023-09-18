@@ -21,8 +21,8 @@ import { css } from '@emotion/react';
 export interface CourseClassParams {
   page?: number;
   topic?: string;
-  class?: string;
   header?: string;
+  isClass?: boolean;
 }
 
 const CourseUI: React.FC = () => {
@@ -45,11 +45,11 @@ const CourseUI: React.FC = () => {
             params.topic === 'ALL' ? '' : params.topic || '',
           );
           setListCourse(homeCourse);
-        } else if (params.class) {
+        } else if (params.isClass) {
           const homeClass = await CourseService.getHomeClasses(
             pagination.limit,
             pagination.page,
-            params.class === 'ALL' ? '' : params.class || '',
+            params.topic === 'ALL' ? '' : params.topic || '',
           );
           setListCourse(homeClass);
         }
@@ -60,11 +60,11 @@ const CourseUI: React.FC = () => {
             params.topic === 'ALL' ? '' : params.topic || '',
           );
           setListCourse(homeCourse);
-        } else if (params.class) {
+        } else if (params.isClass) {
           const homeCourse = await CourseService.listClasses(
             pagination.limit,
             pagination.page,
-            params.class === 'ALL' ? '' : params.class || '',
+            params.topic === 'ALL' ? '' : params.topic || '',
           );
           setListCourse(homeCourse);
         }
@@ -87,7 +87,7 @@ const CourseUI: React.FC = () => {
   // }, [params.page]);
   useEffect(() => {
     setPagination({ ...pagination, page: 1 });
-  }, [params.topic, params.class]);
+  }, [params.topic]);
   useEffect(() => {
     fetCourseClass(pagination);
   }, [pagination]);
@@ -96,7 +96,7 @@ const CourseUI: React.FC = () => {
     setPagination({ ...pagination, page });
     // router.push(`${RoutePaths.COURSE}?course=${params.topic}&page=${page}`);
     if (params.topic) router.push(`${RoutePaths.COURSE}?course=${params.topic}&header=${params.header}`);
-    else if (params.class) router.push(`${RoutePaths.CLASS}?class=${params.class}&header=${params.header}`);
+    else if (params.isClass) router.push(`${RoutePaths.CLASS}?class=${params.topic}&header=${params.header}`);
   };
 
   return (
@@ -113,7 +113,7 @@ const CourseUI: React.FC = () => {
 
           <Breadcrumb.Item
             href={`${
-              params.class
+              params.isClass
                 ? RoutePaths.CLASS + '?class=ALL&header=' + params.header
                 : RoutePaths.COURSE + '?course=ALL&header=' + params.header
             }`}

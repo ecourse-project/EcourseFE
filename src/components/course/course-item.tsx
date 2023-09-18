@@ -5,26 +5,22 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import DefaultCourseImage from 'src/assets/images/online-course.png';
-import DefaultClassImage from 'src/assets/images/class.jpg';
 import CourseService from 'src/lib/api/course';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { courseAction } from 'src/lib/reducers/course/courseSlice';
 import { Course, MoveEnum, RequestStatus } from 'src/lib/types/backend_modal';
-import { formatCurrency } from 'src/lib/utils/currency';
 import { BtnString, Color, SaleStatusEnum } from 'src/lib/utils/enum';
 import { formatDate } from 'src/lib/utils/format';
 import RoutePaths from 'src/lib/utils/routes';
 import { checkAccountPermission } from 'src/lib/utils/utils';
 import { CourseClassParams } from 'src/sections/Pages/CourseUI';
 
-import { WalletOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 
-import AppButton from '../button';
-import { ItemDocCourseWrapper } from '../document/style';
-import Image from 'next/image';
 import IconChecked from 'src/assets/icons/IconChecked';
 import globalVariable from 'src/lib/config/env';
+import AppButton from '../button';
+import { ItemDocCourseWrapper } from '../document/style';
 
 interface ChildProps {
   course: Course;
@@ -42,7 +38,6 @@ const CourseItem: React.FC<ChildProps> = (props) => {
   const route = useRouter();
 
   useEffect(() => {
-    // if (params.class)
     if (currentCourse.course_of_class && !currentCourse.request_status) {
       setBtnString(BtnString.AVAILABLE_REQUEST);
     } else if (currentCourse.request_status === RequestStatus.REQUESTED) {
@@ -50,7 +45,7 @@ const CourseItem: React.FC<ChildProps> = (props) => {
     } else if (currentCourse.request_status === RequestStatus.AVAILABLE) {
       setBtnString(BtnString.AVAILABLE_REQUEST);
     } else if (currentCourse.request_status === RequestStatus.ACCEPTED) {
-      setBtnString(BtnString.ACCEPTED);
+      setBtnString(BtnString.BOUGHT);
     }
     // } else {
     if (currentCourse.sale_status === SaleStatusEnum.AVAILABLE) {
@@ -74,7 +69,7 @@ const CourseItem: React.FC<ChildProps> = (props) => {
       (currentCourse?.course_of_class && currentCourse.request_status === RequestStatus.ACCEPTED) ||
       currentCourse.sale_status === SaleStatusEnum.BOUGHT
     ) {
-      route.push(`${RoutePaths.COURSE_PROGRESS}?id=${currentCourse.id}&isClass=${params.class ? 'true' : 'false'}`);
+      route.push(`${RoutePaths.COURSE_PROGRESS}?id=${currentCourse.id}&isClass=${params.topic ? 'true' : 'false'}`);
     }
     checkAccountPermission();
     setLoading(true);
@@ -192,7 +187,7 @@ const CourseItem: React.FC<ChildProps> = (props) => {
         }
         trigger="hover"
       >
-        <Link href={`${params.class ? RoutePaths.CLASS_DETAIL : RoutePaths.COURSE_DETAIL}?id=${currentCourse.id}`}>
+        <Link href={`${params.topic ? RoutePaths.CLASS_DETAIL : RoutePaths.COURSE_DETAIL}?id=${currentCourse.id}`}>
           <div className="doc--image">
             <img
               className="doc-img"

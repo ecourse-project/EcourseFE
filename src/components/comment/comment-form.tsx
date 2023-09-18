@@ -27,7 +27,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ onAddComment }) => {
       }),
       confirmPassword: Yup.string()
         .required(validation.password.required)
-        .oneOf([Yup.ref('password'), null], validation.confirmPassword.doesNotMatch),
+        .oneOf([Yup.ref('password')], validation.confirmPassword.doesNotMatch),
     }),
   );
   const formik = useFormik<CommentProps>({

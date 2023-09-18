@@ -23,7 +23,7 @@ const ChangePasswordForm: React.FC = () => {
       }),
       confirmPassword: Yup.string()
         .required(validation.confirmPassword.required)
-        .oneOf([Yup.ref('changePassword'), null], validation.confirmPassword.doesNotMatch),
+        .oneOf([Yup.ref('changePassword')], validation.confirmPassword.doesNotMatch),
     }),
   );
 

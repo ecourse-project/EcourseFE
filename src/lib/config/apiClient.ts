@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosRequestHeaders } from 'axios';
 import { isEmpty } from 'lodash';
 import { StorageKeys } from 'src/lib/utils/enum';
 
@@ -63,7 +63,7 @@ apiClient.interceptors.request.use(
         : ({} as OToken);
     if (token.access) {
       if (config.headers === undefined) {
-        config.headers = {};
+        config.headers = {} as AxiosRequestHeaders;
       } else config.headers.Authorization = `Bearer ${token?.access}`;
     }
     return config;

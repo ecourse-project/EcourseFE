@@ -25,7 +25,7 @@ const Nav: React.FC = React.memo(() => {
       : type === NavTypeEnum.COURSE
       ? `${RoutePaths.COURSE}?topic=${topicValue}&header=${navHeader}&page=1`
       : type === NavTypeEnum.CLASS
-      ? `${RoutePaths.CLASS}?topic=${topicValue}&header=${navHeader}&page=1`
+      ? `${RoutePaths.CLASS}?topic=${topicValue}&header=${navHeader}&page=1&isClass=true`
       : type === NavTypeEnum.POST
       ? `${RoutePaths.POST}?topic=${topicValue}&header=${navHeader}&page=1`
       : '';
@@ -84,8 +84,6 @@ const Nav: React.FC = React.memo(() => {
               <Dropdown
                 key={index}
                 menu={{ items }}
-                // disabled={!items?.length}
-                // overlayStyle={{ backgroundColor: '#000' }}
                 open={true}
                 getPopupContainer={() => document.getElementById('menu-nav') as HTMLElement}
                 dropdownRender={(menues) => {
