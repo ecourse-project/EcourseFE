@@ -16,7 +16,6 @@ import type { MenuProps } from 'antd';
 const Nav: React.FC = React.memo(() => {
   const header: Nav[] = useSelector((state: RootState) => state.app.header);
   const router = useRouter();
-  console.log('router :==>>', router);
   const myProfile = useSelector((state: RootState) => state.app.user);
 
   const goToPage = (type, topicValue, navHeader) => {
@@ -84,7 +83,6 @@ const Nav: React.FC = React.memo(() => {
               <Dropdown
                 key={index}
                 menu={{ items }}
-                open={true}
                 getPopupContainer={() => document.getElementById('menu-nav') as HTMLElement}
                 dropdownRender={(menues) => {
                   if (!menues) return;
