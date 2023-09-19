@@ -242,7 +242,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
     >
       <List.Item>
         <Collapse defaultActiveKey={['1']} destroyInactivePanel className="course_lesson">
-          <Panel header={`Bài ${lesson.lesson_number} ${lesson?.name}`} key="1">
+          <Panel header={`${lesson?.name}`} key="1">
             {isShowLessonDetail ? (
               <>
                 <Collapse defaultActiveKey={['1']}>

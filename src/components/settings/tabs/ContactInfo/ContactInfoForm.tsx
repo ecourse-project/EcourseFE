@@ -29,9 +29,10 @@ const ContactSettingForm: React.FC<ContactSettingsFormProps> = () => {
 
   const validationSchema = React.useRef(
     Yup.object().shape({
-      full_name: Yup.string().required(validation.firstName.required).matches(regex.alphabet, {
-        message: 'First name cannot accept numeric and special characters.',
-      }),
+      // full_name: Yup.string().required(validation.firstName.required).matches(regex.alphabet, {
+      //   message: 'First name cannot accept numeric and special characters.',
+      // }),
+      full_name: Yup.string().required(validation.firstName.required),
       email: Yup.string().required(validation.email.required),
       phone: Yup.string().required(validation.country.required).matches(regex.phoneNumberVN, {
         message: validation.phone.invalid,
@@ -138,7 +139,7 @@ const ContactSettingForm: React.FC<ContactSettingsFormProps> = () => {
         <div className="form-item-half">
           <AppInput
             className="field name-field"
-            label="Tên"
+            label="Họ và Tên"
             name="full_name"
             type="text"
             placeholder="Nhập tên của bạn"

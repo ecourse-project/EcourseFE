@@ -119,6 +119,10 @@ export const ItemDocCourseWrapper = styled.div`
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    align-items: center;
     a {
       box-shadow: inset 0 0 0 0 #54b3d6;
       color: #54b3d6;

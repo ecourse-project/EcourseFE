@@ -24,14 +24,13 @@ const RegisterForm: React.FC = () => {
   const [errorUploadImg, setErrorUploadImg] = React.useState<boolean>(false);
   const validationSchema = React.useRef(
     Yup.object().shape({
-      full_name: Yup.string()
-        .required(validation.fullName.required)
-        .test('alphabet', validation.fullName.format, (value: any) => {
-          if (value && value.length > 0) {
-            return regex.alphabet.test(value.trim());
-          }
-          return false;
-        }),
+      full_name: Yup.string().required(validation.fullName.required),
+      // .test('alphabet', validation.fullName.format, (value: any) => {
+      //   if (value && value.length > 0) {
+      //     return regex.alphabet.test(value.trim());
+      //   }
+      //   return false;
+      // }),
 
       email: Yup.string()
         .required(validation.email.required)

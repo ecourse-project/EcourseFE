@@ -63,13 +63,13 @@ const CourseItem: React.FC<ChildProps> = (props) => {
   useEffect(() => {
     setCurrentCourse(course);
   }, [course]);
-
+  console.log('params.isClass  :==>>', params.isClass);
   const handleClick = async () => {
     if (
       (currentCourse?.course_of_class && currentCourse.request_status === RequestStatus.ACCEPTED) ||
       currentCourse.sale_status === SaleStatusEnum.BOUGHT
     ) {
-      route.push(`${RoutePaths.COURSE_PROGRESS}?id=${currentCourse.id}&isClass=${params.topic ? 'true' : 'false'}`);
+      route.push(`${RoutePaths.COURSE_PROGRESS}?id=${currentCourse.id}&isClass=${params.isClass ? 'true' : 'false'}`);
     }
     checkAccountPermission();
     setLoading(true);

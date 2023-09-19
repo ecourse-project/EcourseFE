@@ -39,7 +39,7 @@ const CourseUI: React.FC = () => {
     setLoading(true);
     try {
       if (!token) {
-        if (params.topic) {
+        if (!params.isClass) {
           const homeCourse = await CourseService.getHomeCourses(
             pagination,
             params.topic === 'ALL' ? '' : params.topic || '',
@@ -54,7 +54,7 @@ const CourseUI: React.FC = () => {
           setListCourse(homeClass);
         }
       } else {
-        if (params.topic) {
+        if (!params.isClass) {
           const homeCourse = await CourseService.getAllCourses(
             pagination,
             params.topic === 'ALL' ? '' : params.topic || '',
