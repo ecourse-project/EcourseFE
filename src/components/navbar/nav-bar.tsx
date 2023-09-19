@@ -259,4 +259,8 @@ const NavStyle = styled.div`
       margin-left: 24px;
     }
   }
+  .login-btn {
+    color: #fff !important;
+    font-weight: 700;
+  }
 `;

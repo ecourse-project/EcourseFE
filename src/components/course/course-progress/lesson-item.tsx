@@ -298,7 +298,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                           />
                         )}
                         <div className="item_info">
-                          <p className="subject-name" title={v?.file_name}>{`${i + 1}. ${v?.file_name}`}</p>
+                          <p className="subject-name" title={v?.file_name}>{`${v?.file_name}`}</p>
                           {!v?.use_embedded_url && (
                             <div className="video_duration">
                               <PlayCircleFilled />
@@ -354,7 +354,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                           />
                         )}
                         <div className="item_info">
-                          <div className="subject-name" title={v.name}>{`${i + 1}. ${v.name}`}</div>
+                          <div className="subject-name" title={v.name}>{`${v.name}`}</div>
                           <div className="video_duration doc">
                             <FileTextOutlined />
                             {`${(v?.file?.file_size / 1000000).toFixed(2)} MB`}

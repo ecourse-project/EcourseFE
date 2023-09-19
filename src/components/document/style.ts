@@ -32,7 +32,7 @@ export const ItemDocCourseWrapper = styled.div`
     margin: 0.5rem 0;
     font-family: 'Montserrat';
     text-align: left;
-    font-size: 17px;
+    font-size: 14px;
     font-weight: 600;
     height: fit-content;
     text-decoration: none;

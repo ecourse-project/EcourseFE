@@ -1,6 +1,6 @@
 import { Image } from 'antd';
 import Link from 'next/link';
-import BannerImg from 'src/assets/images/app-banner.png';
+import BannerImg from 'src/assets/images/banner.png';
 import Logo from 'src/assets/images/logo.png';
 import RoutePaths from 'src/lib/utils/routes';
 

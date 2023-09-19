@@ -156,8 +156,8 @@ export default function HomeData(props: IHomeData) {
               ) : (
                 <></>
               )}
-            </DocCourseWrapper>
-            <DocCourseWrapper>
+              {/* </DocCourseWrapper>
+            <DocCourseWrapper> */}
               {listCourse?.results?.length ? (
                 listCourse?.results?.map((e, i) => {
                   return (
@@ -169,8 +169,8 @@ export default function HomeData(props: IHomeData) {
               ) : (
                 <></>
               )}
-            </DocCourseWrapper>
-            <DocCourseWrapper>
+              {/* </DocCourseWrapper>
+            <DocCourseWrapper> */}
               {listClass?.results?.length ? (
                 listClass?.results?.map((e, i) => {
                   return (
@@ -182,8 +182,8 @@ export default function HomeData(props: IHomeData) {
               ) : (
                 <></>
               )}
-            </DocCourseWrapper>
-            <DocCourseWrapper>
+              {/* </DocCourseWrapper>
+            <DocCourseWrapper> */}
               {listPost?.results?.length ? (
                 listPost?.results?.map((e, i) => {
                   return (
