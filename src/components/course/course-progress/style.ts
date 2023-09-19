@@ -203,7 +203,7 @@ export const CourseProgressWrapper = styled.div`
     width: 100%;
   }
   @media (min-width: 1500px) {
-    max-width: 90%;
+    /* max-width: 90%; */
     .video_wrapper {
       width: 100%;
       height: 16.7%;
