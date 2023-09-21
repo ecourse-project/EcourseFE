@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 export const CourseProgressWrapper = styled.div`
   .course_header_wrapper {
     height: 60px;
-    background-color: #000;
+    background-color: #bdd7ee;
     color: #fff;
     width: 100%;
     display: flex;
@@ -50,7 +50,7 @@ export const CourseProgressWrapper = styled.div`
       display: flex;
       height: 100%;
       align-items: center;
-      background: #000;
+      background: #bdd7ee;
       width: unset;
       .progress_circle {
         .ant-progress-inner {
@@ -60,7 +60,7 @@ export const CourseProgressWrapper = styled.div`
 
           .ant-progress-text {
             font-weight: 600;
-            color: #fff;
+            color: #000;
           }
         }
       }
@@ -69,6 +69,7 @@ export const CourseProgressWrapper = styled.div`
         font-size: 15px;
         font-weight: 500;
         cursor: pointer;
+        color: #000;
         .anticon-down {
           vertical-align: baseline;
         }
@@ -80,8 +81,12 @@ export const CourseProgressWrapper = styled.div`
       justify-content: space-evenly;
       align-items: baseline;
       gap: 10px;
+      .anticon-swap,
+      .course_header {
+        color: #000 !important;
+      }
       .home_header {
-        color: #fff !important;
+        color: #000 !important;
         font-size: 26px;
         font-weight: 600;
       }

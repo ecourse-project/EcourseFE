@@ -34,7 +34,7 @@ const ContactSettingForm: React.FC<ContactSettingsFormProps> = () => {
       // }),
       full_name: Yup.string().required(validation.firstName.required),
       email: Yup.string().required(validation.email.required),
-      phone: Yup.string().required(validation.country.required).matches(regex.phoneNumberVN, {
+      phone: Yup.string().notRequired().matches(regex.phoneNumberVN, {
         message: validation.phone.invalid,
       }),
     }),
