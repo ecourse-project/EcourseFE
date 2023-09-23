@@ -106,9 +106,6 @@ const Nav: React.FC = React.memo(() => {
                               display: block;
                             }
                           }
-                          .ant-dropdown-menu-item {
-                            background-color: ${router.query?.topic === 'AI' ? '#cdcdcd' : ''};
-                          }
                         }
                       `}
                     >

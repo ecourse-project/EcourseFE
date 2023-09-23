@@ -23,7 +23,6 @@ const PublicProvider: React.FC<{ children?: ReactNode }> = ({ children }) => {
     try {
       if (isEmpty(header)) {
         const header = await CourseService.listHeaders();
-        // console.log('header :>> ', header);
         dispatch(appActions.setAppHeader(header));
       }
       if (isEmpty(myProfile) && token) {

@@ -454,9 +454,7 @@ export const formatDurationTime = (durationTime: string | number) => {
 
 export const checkAccountPermission = async () => {
   const token = localStorage.getItem(StorageKeys.SESSION_KEY);
-  // console.log('token', token);
   if (!token) {
-    // console.log('force logout');
     forceLogout();
   }
 };

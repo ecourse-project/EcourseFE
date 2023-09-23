@@ -64,8 +64,6 @@ const CommentForm: React.FC<CommentFormProps> = ({ onAddComment }) => {
           display: flex;
           justify-content: flex-end;
           margin-top: 20px;
-          position: relative;
-          right: -50px;
           .ant-btn {
             font-size: 14px;
           }

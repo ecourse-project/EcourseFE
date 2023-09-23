@@ -50,7 +50,7 @@ const MyLearning: React.FC = () => {
     }
   };
   const onChange = (key: string) => {
-    console.log(key);
+    //console.log(key);
   };
 
   const tabDataLearning: TypeTabPanel[] = [

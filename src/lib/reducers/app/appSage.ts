@@ -15,8 +15,6 @@ import AppAction from '../actions';
 import { appActions, LoadingEnum } from './appSlice';
 
 function* fetchListCart() {
-  console.log('trigger saga fetchlistcart');
-
   try {
     yield put(appActions.setAppLoading(LoadingEnum.INCREMENT));
 
@@ -30,8 +28,6 @@ function* fetchListCart() {
 }
 
 function* fetchOrder(action: PayloadAction<PaginationParams>) {
-  console.log('trigger saga', action.type);
-
   try {
     const result: Pagination<OutputOrder> = yield CourseService.getAllOrders(action.payload);
     yield put(appActions.fetchListOrder(result));
@@ -40,7 +36,6 @@ function* fetchOrder(action: PayloadAction<PaginationParams>) {
   }
 }
 function* createOrder(action: PayloadAction<CreateOrderArg>) {
-  console.log('trigger saga', action.type);
   try {
     const result: OutputOrder = yield CourseService.createOrder(action.payload);
     yield put(appActions.createOrder(result));
@@ -51,7 +46,6 @@ function* createOrder(action: PayloadAction<CreateOrderArg>) {
   }
 }
 function* cancelOrder(action: PayloadAction<OutputOrder>) {
-  console.log('trigger saga', action.type);
   try {
     const result: OutputCancel = yield CourseService.cancelOrder(action.payload.id);
     yield put(appActions.cancelOrder(action.payload));
@@ -61,11 +55,9 @@ function* cancelOrder(action: PayloadAction<OutputOrder>) {
 }
 
 function* fetchAllData(action: PayloadAction<PaginationParams>) {
-  console.log('trigger saga', action.type);
   try {
     yield put(appActions.setAppLoading(LoadingEnum.INCREMENT));
     const [orders, carts] = yield all([call(CourseService.getAllOrders, action.payload), call(CourseService.getCart)]);
-    console.log('cart fetch all', carts);
     yield put(appActions.fetchListOrder(orders));
     yield put(appActions.fetchListCartSuccess(carts));
   } catch (error) {

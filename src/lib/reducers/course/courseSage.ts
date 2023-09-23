@@ -9,8 +9,6 @@ import { appActions } from '../app/appSlice';
 import { courseAction } from './courseSlice';
 
 function* fetchCourse(action: PayloadAction<PaginationParams>) {
-  console.log('trigger saga', action.type);
-
   try {
     const result: Pagination<Course> = yield CourseService.getAllCourses(action.payload);
     yield put(courseAction.fetchListCourse(result));
@@ -20,7 +18,6 @@ function* fetchCourse(action: PayloadAction<PaginationParams>) {
 }
 
 function* watchUpdateCart(action: PayloadAction<Course>) {
-  console.log('trigger saga', action.type);
   try {
     // yield put(courseAction.updateLoading(LoadingEnum.INCREMENT));
     if (action.payload.sale_status === SaleStatusEnum.AVAILABLE) {

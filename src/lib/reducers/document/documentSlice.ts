@@ -33,7 +33,7 @@ export const documentSlice = createSlice({
       state.mostDownDoc = action.payload;
     },
     updateCart: (state, action: PayloadAction<Document>) => {
-      // console.log('curernte', current(state));
+      // //console.log('curernte', current(state));
     },
     updateLoading: (state, action) => {
       state.updateLoading =

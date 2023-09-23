@@ -80,7 +80,7 @@ const CourseUI: React.FC = () => {
   // useEffect(() => {
   //   if (params?.page) {
   //     if (Number(pagination.page) !== Number(params.page)) {
-  //       console.log('pagination :>> ', pagination);
+  //       //console.log('pagination :>> ', pagination);
   //       setPagination({ ...pagination, page: params?.page });
   //     }
   //   }
@@ -95,8 +95,9 @@ const CourseUI: React.FC = () => {
   const onChangePage = (page: number) => {
     setPagination({ ...pagination, page });
     // router.push(`${RoutePaths.COURSE}?course=${params.topic}&page=${page}`);
-    if (params.topic) router.push(`${RoutePaths.COURSE}?course=${params.topic}&header=${params.header}`);
-    else if (params.isClass) router.push(`${RoutePaths.CLASS}?class=${params.topic}&header=${params.header}`);
+    if (!params.isClass) router.push(`${RoutePaths.COURSE}?course=${params.topic}&header=${params.header}`);
+    else if (params.isClass)
+      router.push(`${RoutePaths.CLASS}?class=${params.topic}&header=${params.header}&isClass=true`);
   };
 
   return (

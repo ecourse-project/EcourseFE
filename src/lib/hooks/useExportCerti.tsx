@@ -27,18 +27,17 @@ export const useExportCertificate = ({
 
   const { user: profile } = useSelector((state: RootState) => state.app);
   const getFileName = (name: string) => {
-    console.log('profile.full_name :>> ', profile.full_name);
     return `${name.split(' ').join('_')}_${profile?.full_name}_certificate.pdf`;
   };
 
   // const downloadPDF = async (id: string, name: string) => {
   //   try {
   //     const blobContent = await certificateExport(id);
-  //     // console.log('blobContent :>> ', blobContent);
+  //     // //console.log('blobContent :>> ', blobContent);
   //     const blob = new Blob([blobContent as string], { type: 'application/pdf' });
   //     const url = window.URL.createObjectURL(blob);
   //     const fileName = getFileName(name);
-  //     console.log('url :>> ', url);
+  //     //console.log('url :>> ', url);
   //     setDownloadUrl(url);
   //     setFilename(fileName);
   //     ref.current?.click();
@@ -62,7 +61,7 @@ export const useExportCertificate = ({
   //     })
   //       .then((res) => {
   //         const contentType = res.headers.get('Content-Type');
-  //         console.log('contentType :>> ', contentType);
+  //         //console.log('contentType :>> ', contentType);
   //         return res.blob();
   //       })
   //       .then((blobContent) => {

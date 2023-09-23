@@ -24,11 +24,11 @@ const App = () => {
 
     // You can handle player events here, for example:
     player.on('waiting', () => {
-      console.log('player is waiting');
+      //console.log('player is waiting');
     });
 
     player.on('dispose', () => {
-      console.log('player will dispose');
+      //console.log('player will dispose');
     });
   };
 

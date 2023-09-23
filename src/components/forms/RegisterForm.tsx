@@ -96,10 +96,7 @@ const RegisterForm: React.FC = () => {
       }
     },
   });
-  useEffect(() => {
-    console.log('error', formik.errors);
-  }, [formik.errors]);
-  // const debounceCheckExist = debounce(UserService.existEmail, 1000);
+
   const debouncedApi = debounce(UserService.existEmail, 500, {
     trailing: true,
   });

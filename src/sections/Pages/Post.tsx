@@ -54,7 +54,6 @@ const Post: React.FC = () => {
 
   useEffect(() => {
     getListPost(pagination);
-    console.log('params.header :==>>', params.header);
   }, [pagination, params.header]);
 
   const onChangePage = (page: number) => {

@@ -255,7 +255,7 @@ const CourseDetail: React.FC = () => {
   //     setMyRate(rate);
   //     course.rating_detail?.push(rate);
   //   } catch (error) {
-  //     console.log('error', error);
+  //     //console.log('error', error);
   //   }
   // };
   // const handleSaveRating = () => {
@@ -500,7 +500,7 @@ const CourseDetail: React.FC = () => {
                   isCourseDetail={true}
                   index={index}
                   isShowLessonDetail={course.sale_status === SaleStatusEnum.BOUGHT || !!course.request_status}
-                  // onUpdate={(data) => console.log('')}
+                  // onUpdate={(data) => //console.log('')}
                 />
               )}
             />
@@ -515,7 +515,9 @@ const CourseDetail: React.FC = () => {
           }}
         /> */}
       </PageHeader>
-      <Tabs items={items} className="tab-section" />
+      {(course.request_status === RequestStatus.ACCEPTED || course.sale_status === SaleStatusEnum.BOUGHT) && (
+        <Tabs items={items} className="tab-section" />
+      )}
 
       {/* {course.sale_status === SaleStatusEnum.BOUGHT && (
 				<div>

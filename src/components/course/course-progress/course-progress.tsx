@@ -237,9 +237,6 @@ const CourseProgress = () => {
     }
   }, [state.selectedDoc, state.selectedVideo, isShowQuiz]);
 
-  // useEffect(() => {
-  //   console.log('router.query :>> ', router.query);
-  // }, [router.query]);
   useEffect(() => {
     setVideoLoading(true);
   }, [state.selectedVideo]);
@@ -316,19 +313,6 @@ const CourseProgress = () => {
         type: 'video/mp4',
       },
     ],
-  };
-
-  const handlePlayerReady = (player) => {
-    playerRef.current = player;
-
-    // You can handle player events here, for example:
-    player.on('waiting', () => {
-      console.log('player is waiting');
-    });
-
-    player.on('dispose', () => {
-      console.log('player will dispose');
-    });
   };
 
   function onDocumentLoadSuccess({ numPages }) {
@@ -431,8 +415,6 @@ const CourseProgress = () => {
                       onReady={() => {
                         setVideoLoading(false);
                       }}
-                      // onBuffer={() => console.log('buffer')}
-                      // onBufferEnd={() => console.log('buffer end')}
                       config={{
                         file: {
                           attributes: {
@@ -444,7 +426,6 @@ const CourseProgress = () => {
                       onEnded={() => {
                         dispatch(progressAction.setCompleteVideo());
                       }}
-                      // onProgress={(v) => console.log('progress', v)}
                       onError={(e) => console.log('video loader error', e)}
                       playing={false}
                       playsinline
