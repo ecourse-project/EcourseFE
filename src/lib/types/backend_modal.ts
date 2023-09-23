@@ -64,6 +64,7 @@ export interface User {
   full_name: string;
   avatar: string;
   phone: string;
+  role: RoleEnum;
 }
 
 export interface OIsExist {
@@ -421,7 +422,6 @@ export enum NavTypeEnum {
   CLASS = 'CLASS',
   POST = 'POST',
 }
-
 export interface Topic {
   label: string;
   value: string;
@@ -462,4 +462,8 @@ export interface PaymentInfo {
   method: string;
   payment_info: string;
   content: string;
+}
+export enum RoleEnum {
+  MANAGER = 'MANAGER',
+  STUDENT = 'STUDENT',
 }

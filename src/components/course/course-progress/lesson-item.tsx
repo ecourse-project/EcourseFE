@@ -84,9 +84,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
 
   const debounceCheckedItem = useCallback(
     debounce((videos, docs) => {
-      console.log('videos :==>>', videos);
       const cloneUpdateParams = cloneDeep(updateParams);
-      // console.log('cloneUpdateParams :>> ', cloneUpdateParams);
       const idx = cloneUpdateParams.lessons.findIndex((v) => v.lesson_id === lesson.id);
       if (~idx) {
         const updateParamsObject = {
@@ -94,10 +92,8 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
           completed_videos: [...(uniqueArr(videos) || [])],
           completed_docs: [...(uniqueArr(docs) || [])],
         } as UpdateLessonArgs;
-        // console.log('updateParamsObject :>> ', updateParamsObject);
         cloneUpdateParams.lessons.splice(idx, 1, updateParamsObject);
       }
-      // console.log('cloneUpdateParams after splice :>> ', cloneUpdateParams);
       dispatch(progressAction.updateProgress(cloneUpdateParams));
     }, 1000),
     [],
@@ -105,20 +101,20 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
 
   const debounceCheckedItem2 = useCallback((videos, docs) => {
     // const cloneUpdateParams = cloneDeep(updateParams);
-    // // console.log('cloneUpdateParams :>> ', cloneUpdateParams);/
+    // // //console.log('cloneUpdateParams :>> ', cloneUpdateParams);/
     // const idx = cloneUpdateParams.findIndex((v) => v.lesson_id === lesson.id);
-    // console.log('idx :>> ', idx);
+    // //console.log('idx :>> ', idx);
     // if (~idx) {
     //   const updateParamsObject = {
     //     lesson_id: lesson.id,
     //     completed_videos: [...(uniqueArr(videos) || [])],
     //     completed_docs: [...(uniqueArr(docs) || [])],
     //   } as UpdateLessonArgs;
-    //   console.log('updateParamsObject :>> ', cloneUpdateParams);
+    //   //console.log('updateParamsObject :>> ', cloneUpdateParams);
     //   cloneUpdateParams.splice(idx, 1, updateParamsObject);
-    //   console.log('updateParamsObject after splice :>> ', cloneUpdateParams);
+    //   //console.log('updateParamsObject after splice :>> ', cloneUpdateParams);
     // }
-    // console.log('cloneUpdateParams after splice out side:>> ', cloneUpdateParams);
+    // //console.log('cloneUpdateParams after splice out side:>> ', cloneUpdateParams);
     // dispatch(progressAction.updateProgress(cloneUpdateParams));
     dispatch(
       progressAction.updateProgress({

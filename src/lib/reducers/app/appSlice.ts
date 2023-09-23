@@ -47,7 +47,6 @@ export const appSlice = createSlice({
       state.header = action.payload;
     },
     addDocToCart: (state, action: PayloadAction<Document>) => {
-      console.log('add doc to cart ');
       state.appCart.documents.push({
         ...action.payload,
       });
@@ -76,8 +75,6 @@ export const appSlice = createSlice({
       }
     },
     addCourseToCart: (state, action: PayloadAction<Course>) => {
-      console.log('add doc to cart', action.payload);
-
       state.appCart.courses.push({
         ...action.payload,
       });

@@ -63,7 +63,6 @@ const CourseItem: React.FC<ChildProps> = (props) => {
   useEffect(() => {
     setCurrentCourse(course);
   }, [course]);
-  console.log('params.isClass  :==>>', params.isClass);
   const handleClick = async () => {
     if (
       (currentCourse?.course_of_class && currentCourse.request_status === RequestStatus.ACCEPTED) ||
@@ -187,7 +186,7 @@ const CourseItem: React.FC<ChildProps> = (props) => {
         }
         trigger="hover"
       >
-        <Link href={`${params.topic ? RoutePaths.CLASS_DETAIL : RoutePaths.COURSE_DETAIL}?id=${currentCourse.id}`}>
+        <Link href={`${params.isClass ? RoutePaths.CLASS_DETAIL : RoutePaths.COURSE_DETAIL}?id=${currentCourse.id}`}>
           <div className="doc--image">
             <img
               className="doc-img"

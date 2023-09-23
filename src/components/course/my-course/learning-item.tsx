@@ -93,7 +93,7 @@ export const LearningItem: React.FC<LearningItem> = (props) => {
   //     setMyRate(rate);
   //     course?.rating_detail?.push(rate);
   //   } catch (error) {
-  //     console.log('error', error);
+  //     //console.log('error', error);
   //   }
   // };
 

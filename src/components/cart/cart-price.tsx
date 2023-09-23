@@ -42,7 +42,7 @@ const PricingCard: React.FC<ChildProps> = ({ docNum, checkoutList, children, car
     //           if (v.isConfirmed) router.push(`${RoutePaths.SETTINGS}?tab=${TabSettingKey.ORDER}`);
     //         });
     //       } catch (error) {
-    //         console.log('error', error);
+    //         //console.log('error', error);
     //         Swal.fire('Đã có lỗi xảy ra!', 'Xin thử lại sau', 'error');
     //       }
     //     }

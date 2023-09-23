@@ -149,7 +149,7 @@ const DocDetail: React.FC = () => {
   //     setMyRate(rate);
   //     doc.rating_detail?.push(rate);
   //   } catch (error) {
-  //     console.log('error', error);
+  //     //console.log('error', error);
   //   }
   // };
 

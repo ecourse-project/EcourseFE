@@ -92,7 +92,7 @@ const CartUI: React.FC = () => {
   };
 
   useEffect(() => {
-    // console.log('call debounce');
+    // //console.log('call debounce');
     // debounceSetCheckList(checkedListDoc, checkedListCourse);
     // setCheckAllCourse(Boolean(checkedListCourse.length));
     // setCheckAllDoc(Boolean(checkedListDoc.length));
@@ -104,9 +104,9 @@ const CartUI: React.FC = () => {
 
   // const debounceSetCheckList = useCallback(
   // 	(checkedListDoc, checkedListCourse) => {
-  // 		console.log('before call debounce');
+  // 		//console.log('before call debounce');
   // 		debounce((checkedListDoc, checkedListCourse) => {
-  // 			console.log('set again');
+  // 			//console.log('set again');
   // 			// setCheckedList({
   // 			// 	documents: checkedListDoc?.map((v) => v.toString()),
   // 			// 	courses: checkedListCourse?.map((v) => v.id),

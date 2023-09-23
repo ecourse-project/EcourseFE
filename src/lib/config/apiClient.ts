@@ -69,8 +69,6 @@ apiClient.interceptors.request.use(
     return config;
   },
   function (error) {
-    // console.log('71', error);
-
     return Promise.reject(error.response.data);
   },
 );

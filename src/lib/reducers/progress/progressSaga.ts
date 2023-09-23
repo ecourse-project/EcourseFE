@@ -27,12 +27,12 @@ function* watchUpdateProgress(action: PayloadAction<Course>) {
   yield put(progressAction.setCourse(results));
   // yield debounce(function* () {
   //   try {
-  //     console.log('ab');
+  //     //console.log('ab');
   //     const results: Course = yield CourseService.updateClassProgress(state.updateParams);
   //     const updateParams = convertDataToUpdateParams(results.lessons || []);
   //     yield put(progressAction.setUpdateParams(updateParams));
   //   } catch (error) {
-  //     console.log('error', error);
+  //     //console.log('error', error);
   //   }
   // }, 500)();
 }

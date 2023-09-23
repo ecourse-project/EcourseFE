@@ -41,7 +41,7 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
   const { orderItem, cancelOrder, paymentInfo } = props;
 
   const onChange = (key: string | string[]) => {
-    console.log(key);
+    //console.log(key);
   };
 
   const genExtra = () => <InfoOutlined />;
