@@ -15,6 +15,17 @@ interface CommentItemProps {
   item: CourseComment;
   onAddReply: (value) => void;
 }
+
+const ManagerTag = (
+  <Tag
+    css={css`
+      color: #b50000 !important;
+    `}
+  >
+    Manager
+  </Tag>
+);
+
 const CommentItem: React.FC<CommentItemProps> = (props) => {
   const [showReplyBox, setShowReplyBox] = useState<boolean>(false);
   const user = useSelector((state: RootState) => state.app.user);
@@ -43,19 +54,13 @@ const CommentItem: React.FC<CommentItemProps> = (props) => {
             css={css`
               font-size: 13px;
               font-weight: 700;
-              color: ${user?.role === RoleEnum.MANAGER ? '#b50000 !important' : ''};
+              color: #000 !important;
               letter-spacing: 0.7px;
             `}
           >
             {item?.user?.full_name}
             {'  '}
-            {user?.role === RoleEnum.MANAGER ? (
-              <span>
-                <Tag>Manager</Tag>
-              </span>
-            ) : (
-              <></>
-            )}
+            {item.user.role === RoleEnum.MANAGER ? <span>{ManagerTag}</span> : <></>}
           </div>
         }
         // avatar={item?.user?.avatar || <Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />}
@@ -91,19 +96,13 @@ const CommentItem: React.FC<CommentItemProps> = (props) => {
                       css={css`
                         font-size: 13px;
                         font-weight: 700;
-                        color: ${user?.role === RoleEnum.MANAGER ? '#b50000 !important' : ''};
+                        color: #000 !important;
                         letter-spacing: 0.7px;
                       `}
                     >
                       {v?.user?.full_name}
                       {'  '}
-                      {v?.user?.role === RoleEnum.MANAGER ? (
-                        <span>
-                          <Tag>Manager</Tag>
-                        </span>
-                      ) : (
-                        <></>
-                      )}
+                      {v?.user?.role === RoleEnum.MANAGER ? <span>{ManagerTag}</span> : <></>}
                     </div>
                   }
                   // avatar={v?.user?.avatar || <Avatar src="https://i.pravatar.cc/300" alt="Han Solo" />}
