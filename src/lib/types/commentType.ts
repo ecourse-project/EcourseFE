@@ -57,7 +57,7 @@ export interface SettingFieldData {
   full_name: string;
   phone: string;
   email: string;
-  doB: string;
+  avatar: string;
 }
 export interface LockFieldData {
   password: string;

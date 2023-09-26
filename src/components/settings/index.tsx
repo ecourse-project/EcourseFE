@@ -30,6 +30,7 @@ export const TabPaneSettingsSection: React.FC<TabPaneProps> = React.memo((props:
     <div
       className={className ?? ''}
       css={css`
+        margin-top: 15px;
         .flex {
           display: flex;
           justify-content: space-between;

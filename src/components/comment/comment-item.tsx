@@ -63,9 +63,7 @@ const CommentItem: React.FC<CommentItemProps> = (props) => {
             {item.user.role === RoleEnum.MANAGER ? <span>{ManagerTag}</span> : <></>}
           </div>
         }
-        // avatar={item?.user?.avatar || <Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />}
-        // avatar={<Avatar src="https://i.pravatar.cc/300" alt="Han Solo" />}
-        avatar={<Avatar src={<UserOutlined />} alt="avata" shape="square" />}
+        avatar={<Avatar src={item?.user?.avatar || <UserOutlined />} alt="avata" shape="square" />}
         content={
           <pre>
             {item.content}
@@ -105,8 +103,7 @@ const CommentItem: React.FC<CommentItemProps> = (props) => {
                       {v?.user?.role === RoleEnum.MANAGER ? <span>{ManagerTag}</span> : <></>}
                     </div>
                   }
-                  // avatar={v?.user?.avatar || <Avatar src="https://i.pravatar.cc/300" alt="Han Solo" />}
-                  avatar={<Avatar src={<UserOutlined />} alt="avata" shape="square" />}
+                  avatar={<Avatar src={v?.user?.avatar || <UserOutlined />} alt="avata" shape="square" />}
                   content={<div>{v.content}</div>}
                   datetime={
                     <Tooltip title={moment(v.created).format('dddd, MMMM Do YYYY, h:mm:ss a')}>

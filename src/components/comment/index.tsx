@@ -83,7 +83,7 @@ const CommentSection: React.FC<{ course_class_id?: string }> = ({ course_class_i
       <Row className="comment_group">
         <div className="comment_list">
           <Comment
-            avatar={<Avatar src={<UserOutlined />} alt="avata" shape="square" />}
+            avatar={<Avatar src={userProfile?.avatar || <UserOutlined />} alt="avatar" shape="square" />}
             content={<CommentForm onAddComment={onAddComment} />}
           />
           {comment?.length ? (
