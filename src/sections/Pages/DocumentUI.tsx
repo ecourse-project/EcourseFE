@@ -84,9 +84,8 @@ const DocumentUI: React.FC = () => {
               `}
             />
           </Breadcrumb.Item>
-          <Breadcrumb.Item href={`${RoutePaths.DOCUMENT}?document=ALL&page=${1}&header=${params.header}`}>
-            {params?.header}
-          </Breadcrumb.Item>
+          {/* <Breadcrumb.Item href={`${RoutePaths.DOCUMENT}?document=ALL&page=${1}&header=${params.header}`}> */}
+          <Breadcrumb.Item>{params?.header}</Breadcrumb.Item>
           <Breadcrumb.Item href={''}>
             {UpperCaseFirstLetter(params.topic === 'ALL' ? '' : params.topic || '')}
           </Breadcrumb.Item>

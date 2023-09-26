@@ -78,6 +78,11 @@ const CommentSection: React.FC<{ course_class_id?: string }> = ({ course_class_i
         .ant-tooltip-content {
           min-width: 280px;
         }
+        .ant-avatar {
+          img {
+            border-radius: 0px !important;
+          }
+        }
       `}
     >
       <Row className="comment_group">

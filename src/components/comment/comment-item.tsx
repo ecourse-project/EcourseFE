@@ -63,7 +63,7 @@ const CommentItem: React.FC<CommentItemProps> = (props) => {
             {item.user.role === RoleEnum.MANAGER ? <span>{ManagerTag}</span> : <></>}
           </div>
         }
-        avatar={<Avatar src={item?.user?.avatar || <UserOutlined />} alt="avata" shape="square" />}
+        avatar={<Avatar src={item?.user?.avatar || <UserOutlined />} alt="avatar" shape="square" />}
         content={
           <pre>
             {item.content}
