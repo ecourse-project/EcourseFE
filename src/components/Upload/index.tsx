@@ -92,12 +92,12 @@ const UploadImage: React.FC<UploadImageProps> = ({ setAvatar, avatar }) => {
                         display: flex;
                         align-items: center;
                         svg {
-                          font-size: 15px;
+                          font-size: 32px;
                         }
                       `}
+                      title="Update Profile Picture"
                     >
                       <MdOutlineModeEditOutline />
-                      Update
                     </div>
                   ),
                   visible: false,
