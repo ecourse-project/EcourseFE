@@ -438,6 +438,9 @@ import moment from 'moment';
 
 import { forceLogout } from './auth';
 import { StorageKeys } from './enum';
+import { RcFile } from 'antd/es/upload';
+import { message } from 'antd';
+import { UploadFile } from 'antd/lib';
 
 export interface DurationTime {
   days: number;
@@ -476,4 +479,31 @@ export const getFormatDate = (dateInput) => {
 
   const formattedDate = date.toLocaleString('en-US', options as any);
   return formattedDate;
+};
+export const getBase64 = (img: RcFile, callback: (url: string) => void) => {
+  const reader = new FileReader();
+  reader.addEventListener('load', () => callback(reader.result as string));
+  reader.readAsDataURL(img);
+};
+
+export const beforeUpload = (file: RcFile) => {
+  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+  if (!isJpgOrPng) {
+    message.error('You can only upload JPG/PNG file!');
+  }
+  // const isLt2M = file.size / 1024 / 1024 < 2;
+  // if (!isLt2M) {
+  //   message.error('Image must smaller than 2MB!');
+  // }
+  return isJpgOrPng;
+};
+export const onPreview = async (file: UploadFile) => {
+  let src = file.url as string;
+  if (!src) {
+    src = await new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file.originFileObj as RcFile);
+      reader.onload = () => resolve(reader.result as string);
+    });
+  }
 };

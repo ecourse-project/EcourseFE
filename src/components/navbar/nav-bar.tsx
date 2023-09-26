@@ -1,6 +1,6 @@
 import { HomeFilled, LogoutOutlined, SettingOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
-import { Divider, Dropdown, Space } from 'antd';
+import { Avatar, Divider, Dropdown, Space } from 'antd';
 import { isEmpty } from 'lodash';
 import Link from 'next/link';
 import { NextRouter, useRouter } from 'next/router';
@@ -146,7 +146,11 @@ const Nav: React.FC = React.memo(() => {
                 overlayStyle={{ minWidth: 130 }}
                 // getPopupContainer={() => document.getElementById('account-dropdown') as HTMLElement}
               >
-                <UserOutlined className="setting-icon" />
+                {myProfile.avatar ? (
+                  <Avatar shape="square" src={myProfile.avatar} icon={<UserOutlined />} />
+                ) : (
+                  <UserOutlined className="setting-icon" />
+                )}
               </Dropdown>
             ) : (
               <Link href={RoutePaths.LOGIN} className="login-btn">

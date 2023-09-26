@@ -16,6 +16,7 @@ import Swal from 'sweetalert2';
 import * as Yup from 'yup';
 
 import { css } from '@emotion/react';
+import UploadImage from 'src/components/Upload';
 
 interface ContactSettingsFormProps {
   myProfile?: any;
@@ -42,23 +43,22 @@ const ContactSettingForm: React.FC<ContactSettingsFormProps> = () => {
   const formik = useFormik<SettingFieldData>({
     initialValues: {
       ...myProfile,
-      doB: '',
     },
     validationSchema: validationSchema.current,
     validateOnChange: true,
     validateOnBlur: true,
     onSubmit: async (values) => {
-      const { full_name, email, phone } = values;
+      const { full_name, email, phone, avatar } = values;
       const obj = {
         full_name: full_name,
         email: email,
         phone: phone,
-        // avatar: avatar ? avatar : myProfile?.avatar,
+        avatar: avatar,
       };
       AskForSave('Lưu Thay Đổi', '', 'Lưu', 'Huỷ', '', async (result) => {
         if (result.isConfirmed) {
           try {
-            const newInfo = await CourseService.updateInfo(phone, full_name);
+            const newInfo = await CourseService.updateInfo(phone, full_name, avatar);
             dispatch(appActions.setMyProfile(newInfo));
             Swal.fire('Đã lưu thay đổi!', '', 'success');
           } catch (error) {
@@ -120,6 +120,10 @@ const ContactSettingForm: React.FC<ContactSettingsFormProps> = () => {
     >
       <h2>Thông tin cá nhân</h2>
       <div className="form-container">
+        <UploadImage
+          avatar={myProfile.avatar}
+          setAvatar={(avatar) => formik.setFieldValue('avatar', avatar.image_short_path)}
+        />
         <div className="form-item-full">
           <AppInput
             className="field name-field"

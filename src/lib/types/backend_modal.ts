@@ -467,3 +467,12 @@ export enum RoleEnum {
   MANAGER = 'MANAGER',
   STUDENT = 'STUDENT',
 }
+
+export interface UploadImageSuccess {
+  id: string;
+  image_path: string;
+  image_short_path: string;
+  image_size: number;
+  image_type: string;
+  is_avatar: boolean;
+}

@@ -152,6 +152,7 @@ export const apiURL = {
   listPostTopics: () => `api/posts/topics/`,
 
   getPaymentInfo: () => `api/configuration/payment-info/`,
+  uploadImage: () => 'api/upload/upload-images/',
 };
 
 class CourseService {
@@ -159,10 +160,11 @@ class CourseService {
     return apiClient.get(apiURL.me());
   }
 
-  static updateInfo(phone?: string, full_name?: string): Promise<User> {
+  static updateInfo(phone?: string, full_name?: string, avatar?: string): Promise<User> {
     return apiClient.patch(apiURL.me(), {
       phone: phone,
       full_name: full_name,
+      avatar: avatar,
     });
   }
 
@@ -384,6 +386,10 @@ class CourseService {
 
   static getPaymentInfo(): Promise<PaymentInfo> {
     return apiClient.get(apiURL.getPaymentInfo());
+  }
+
+  static uploadImage(data: any): Promise<any> {
+    return apiClient.post(apiURL.uploadImage(), data);
   }
 }
 export default CourseService;
