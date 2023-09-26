@@ -7,6 +7,7 @@ import { OToken, UploadImageSuccess } from 'src/lib/types/backend_modal';
 import { StorageKeys } from 'src/lib/utils/enum';
 import { MdOutlineModeEditOutline } from 'react-icons/md';
 import { css } from '@emotion/react';
+import globalVariable from 'src/lib/config/env';
 
 const getBase64 = (file: RcFile): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -36,7 +37,7 @@ const UploadImage: React.FC<UploadImageProps> = ({ setAvatar, avatar }) => {
       typeof window !== 'undefined'
         ? (JSON.parse(localStorage.getItem(StorageKeys.SESSION_KEY) || '{}') as OToken)
         : ({} as OToken);
-    fetch('http://localhost:4000/' + apiURL.uploadImage(), {
+    fetch(globalVariable.API_URL + apiURL.uploadImage(), {
       method: 'POST',
       body: formData,
       headers: {
