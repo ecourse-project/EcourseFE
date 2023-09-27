@@ -100,7 +100,7 @@ const Nav: React.FC = React.memo(() => {
                               color: #000 !important;
                               font-weight: 400;
                               text-overflow: ellipsis;
-                              text-wrap: nowrap;
+                              text-overflow: nowrap;
                               overflow: hidden;
                               max-width: 100%;
                               display: block;

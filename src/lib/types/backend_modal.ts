@@ -58,6 +58,12 @@ export interface OVerifyToken {
 }
 
 // ===========================================Users===========================================
+
+export enum RoleEnum {
+  MANAGER = 'MANAGER',
+  STUDENT = 'STUDENT',
+}
+
 export interface User {
   id: string;
   email: string;
@@ -104,16 +110,18 @@ export interface OFileUpload {
   file_embedded_url?: string;
   use_embedded_url?: boolean;
 }
-
 export interface IImageUpload {
-  file: string;
+  image: string;
+  is_avatar?: boolean;
 }
 
 export interface OImageUpload {
   id: string;
   image_size: number;
   image_path: string;
+  image_short_path: string;
   image_type: string;
+  is_avatar: boolean;
 }
 
 // ===========================================Documents===========================================
@@ -462,10 +470,6 @@ export interface PaymentInfo {
   method: string;
   payment_info: string;
   content: string;
-}
-export enum RoleEnum {
-  MANAGER = 'MANAGER',
-  STUDENT = 'STUDENT',
 }
 
 export interface UploadImageSuccess {
