@@ -1,7 +1,7 @@
 import { Avatar, Breadcrumb, Button, Col, Divider, List, Row, Statistic, Tabs, Tag, Typography } from 'antd';
 import { isEmpty } from 'lodash';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import CourseService from 'src/lib/api/course';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
@@ -147,7 +147,10 @@ const CourseDetail: React.FC = () => {
   const [feedback, setFeedback] = useState<string>('');
   const listCourse = useSelector((state: RootState) => state.course.listCourse.results);
   const router = useRouter();
-  const isClass = router.pathname.includes(RoutePaths.CLASS_DETAIL);
+  console.log('router :==>>', router);
+  const courseId = router.query?.id?.toString?.() ?? '';
+  console.log('courseId :==>>', courseId);
+  const isClass = router.pathname.includes(RoutePaths.CLASS);
   const userProfile = useSelector((state: RootState) => state.app.user);
   const [btnString, setBtnString] = useState<string>(BtnString.AVAILABLE);
 
@@ -165,18 +168,17 @@ const CourseDetail: React.FC = () => {
     }
   };
 
-  const fetchComment = async (id: string) => {
-    try {
-      const cmt: Pagination<CourseComment> = await CourseService.listComments(id, 1000, 1);
-      cmt && setComment(cmt.results);
-    } catch (error) {
-      console.log('error get cmt', error);
-    }
-  };
+  // const fetchComment = async (id: string) => {
+  //   try {
+  //     const cmt: Pagination<CourseComment> = await CourseService.listComments(id, 1000, 1);
+  //     cmt && setComment(cmt.results);
+  //   } catch (error) {
+  //     console.log('error get cmt', error);
+  //   }
+  // };
 
   useEffect(() => {
-    fetchCourseDetail(params.id);
-    fetchComment(params.id);
+    fetchCourseDetail(courseId);
   }, []);
 
   const content = (
@@ -199,7 +201,7 @@ const CourseDetail: React.FC = () => {
       setLoading(true);
       try {
         if (isClass) {
-          const request = await CourseService.requestJoinClass(params?.id);
+          const request = await CourseService.requestJoinClass(courseId);
           setCourse((prev) => ({ ...prev, request_status: request.request_status }));
         } else {
           let newCourse = {} as Course;
@@ -221,23 +223,23 @@ const CourseDetail: React.FC = () => {
     }
   };
 
-  const onAddComment = async (value) => {
-    if (!value) return;
-    try {
-      const cmt = await CourseService.createComment('', course.id, userProfile.id, value);
-      cmt && fetchComment(params.id);
-    } catch (error) {
-      console.log('error :>> ', error);
-    }
-  };
-  const handleReply = async (content: string, item: CourseComment) => {
-    try {
-      const reply = await CourseService.createComment(item.id, course.id, userProfile.id, content);
-      reply && fetchComment(params.id);
-    } catch (error) {
-      console.log('error :>> ', error);
-    }
-  };
+  // const onAddComment = async (value) => {
+  //   if (!value) return;
+  //   try {
+  //     const cmt = await CourseService.createComment('', course.id, userProfile.id, value);
+  //     cmt && fetchComment(courseId);
+  //   } catch (error) {
+  //     console.log('error :>> ', error);
+  //   }
+  // };
+  // const handleReply = async (content: string, item: CourseComment) => {
+  //   try {
+  //     const reply = await CourseService.createComment(item.id, course.id, userProfile.id, content);
+  //     reply && fetchComment(courseId);
+  //   } catch (error) {
+  //     console.log('error :>> ', error);
+  //   }
+  // };
 
   // const rateCourse = async (course_id: string, rating: number, comment: string) => {
   //   try {

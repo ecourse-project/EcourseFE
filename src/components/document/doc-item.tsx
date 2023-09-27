@@ -172,7 +172,7 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
           }
           trigger="hover"
         >
-          <Link href={`${RoutePaths.DOCUMENT_DETAIL}?document=${params?.topic}&id=${document.id}`}>
+          <Link href={`${RoutePaths.DOCUMENT}/${document.id}`}>
             <div className="doc--image">
               <img
                 className="doc-img"

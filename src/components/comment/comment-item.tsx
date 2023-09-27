@@ -60,7 +60,7 @@ const CommentItem: React.FC<CommentItemProps> = (props) => {
           >
             {item?.user?.full_name}
             {'  '}
-            {item.user.role === RoleEnum.MANAGER ? <span>{ManagerTag}</span> : <></>}
+            {item?.user?.role === RoleEnum.MANAGER ? <span>{ManagerTag}</span> : <></>}
           </div>
         }
         avatar={<Avatar src={item?.user?.avatar || <UserOutlined />} alt="avatar" shape="square" />}

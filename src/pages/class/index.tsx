@@ -2,22 +2,22 @@ import React from 'react';
 import Loadable from 'react-loadable';
 import Layout from 'src/components/common/Layout';
 import { LoadingPage } from 'src/components/loading/loadingBase';
-import PrivateProvider from 'src/components/providers/PrivateProvider';
+import PublicProvider from 'src/components/providers/PublicProvider';
 
-const CourseDetailLoadable = Loadable({
-  loader: () => import('src/sections/Pages/CourseDetailUI'),
+const ClassLoadable = Loadable({
+  loader: () => import('src/sections/Pages/CourseUI'),
   loading: () => <LoadingPage isLoading={true} />,
 });
-const CourseDetail: React.FC = () => {
+const Class: React.FC = () => {
   return (
     <React.Fragment>
-      <PrivateProvider>
+      <PublicProvider>
         <Layout>
-          <CourseDetailLoadable />
+          <ClassLoadable />
         </Layout>
-      </PrivateProvider>
+      </PublicProvider>
     </React.Fragment>
   );
 };
 
-export default CourseDetail;
+export default Class;
