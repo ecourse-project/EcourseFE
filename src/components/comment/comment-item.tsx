@@ -1,15 +1,16 @@
 import { Avatar, Tag, Tooltip } from 'antd';
 import moment from 'moment';
 import React, { useState } from 'react';
-import { CourseComment, RoleEnum } from 'src/lib/types/backend_modal';
+import { CourseComment, RoleEnum, User } from 'src/lib/types/backend_modal';
 
 import { Comment } from '@ant-design/compatible';
 import { UserOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 
-import CommentForm from './comment-form';
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/lib/reducers/model';
+import InfoModal from '../modal/info-modal';
+import CommentForm from './comment-form';
 
 interface CommentItemProps {
   item: CourseComment;
@@ -28,6 +29,13 @@ const ManagerTag = (
 
 const CommentItem: React.FC<CommentItemProps> = (props) => {
   const [showReplyBox, setShowReplyBox] = useState<boolean>(false);
+  const [infoDataState, setInfoDataState] = useState<{
+    visible: boolean;
+    data: User;
+  }>({
+    visible: false,
+    data: {} as User,
+  });
   const user = useSelector((state: RootState) => state.app.user);
   const { item, onAddReply } = props;
   return (
@@ -63,7 +71,19 @@ const CommentItem: React.FC<CommentItemProps> = (props) => {
             {item?.user?.role === RoleEnum.MANAGER ? <span>{ManagerTag}</span> : <></>}
           </div>
         }
-        avatar={<Avatar src={item?.user?.avatar || <UserOutlined />} alt="avatar" shape="square" />}
+        avatar={
+          <div
+            onClick={() => {
+              if (user.email === item.user.email) return;
+              setInfoDataState({
+                visible: true,
+                data: item.user,
+              });
+            }}
+          >
+            <Avatar src={item?.user?.avatar || <UserOutlined />} alt="avatar" shape="square" />
+          </div>
+        }
         content={
           <pre>
             {item.content}
@@ -103,7 +123,19 @@ const CommentItem: React.FC<CommentItemProps> = (props) => {
                       {v?.user?.role === RoleEnum.MANAGER ? <span>{ManagerTag}</span> : <></>}
                     </div>
                   }
-                  avatar={<Avatar src={v?.user?.avatar || <UserOutlined />} alt="avata" shape="square" />}
+                  avatar={
+                    <div
+                      onClick={() => {
+                        if (user.email === v.user.email) return;
+                        setInfoDataState({
+                          visible: true,
+                          data: v.user,
+                        });
+                      }}
+                    >
+                      <Avatar src={v?.user?.avatar || <UserOutlined />} alt="avata" shape="square" />
+                    </div>
+                  }
                   content={<div>{v.content}</div>}
                   datetime={
                     <Tooltip title={moment(v.created).format('dddd, MMMM Do YYYY, h:mm:ss a')}>
@@ -115,6 +147,16 @@ const CommentItem: React.FC<CommentItemProps> = (props) => {
             })
           : ''}
       </Comment>
+      <InfoModal
+        visible={infoDataState.visible}
+        userInfo={infoDataState.data}
+        onClose={function (): void {
+          setInfoDataState({
+            visible: false,
+            data: {} as User,
+          });
+        }}
+      />
     </div>
   );
 };
