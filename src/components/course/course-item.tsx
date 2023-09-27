@@ -186,7 +186,7 @@ const CourseItem: React.FC<ChildProps> = (props) => {
         }
         trigger="hover"
       >
-        <Link href={`${params.isClass ? RoutePaths.CLASS_DETAIL : RoutePaths.COURSE_DETAIL}?id=${currentCourse.id}`}>
+        <Link href={`${params.isClass ? RoutePaths.CLASS : RoutePaths.COURSE}/${currentCourse.id}`}>
           <div className="doc--image">
             <img
               className="doc-img"

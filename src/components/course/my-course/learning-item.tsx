@@ -102,8 +102,8 @@ export const LearningItem: React.FC<LearningItem> = (props) => {
   //   setOpenRatingModal(false);
   // };
   const handleLearn = (type) => {
-    if (type === ItemType.COURESE) router.push(`${RoutePaths.COURSE_DETAIL}/?id=${course?.id}`);
-    if (type === ItemType.DOC) router.push(`${RoutePaths.DOCUMENT_DETAIL}/?id=${doc?.id}`);
+    if (type === ItemType.COURESE) router.push(`${RoutePaths.COURSE}/${course?.id}`);
+    if (type === ItemType.DOC) router.push(`${RoutePaths.DOCUMENT}/${doc?.id}`);
   };
 
   return (

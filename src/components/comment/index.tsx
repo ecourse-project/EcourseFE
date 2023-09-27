@@ -2,7 +2,6 @@ import { Avatar, List, Row } from 'antd';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import CourseService from 'src/lib/api/course';
-import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { RootState } from 'src/lib/reducers/model';
 import { CourseComment, Pagination, PaginationParams } from 'src/lib/types/backend_modal';
 
@@ -10,31 +9,23 @@ import { Comment } from '@ant-design/compatible';
 import { UserOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 
-import { CourseParams } from '../course/course-progress/course-progress';
+import { useRouter } from 'next/router';
 import CustomPagination from '../order/pagination';
 import CommentForm from './comment-form';
 import CommentItem from './comment-item';
 
-// interface CommentProps {
-// 	onAddComment: (value) => void;
-// 	handleReply: (value, item) => void;
-// 	totalCmnt: number;
-// }
-
-const CommentSection: React.FC<{ course_class_id?: string }> = ({ course_class_id }) => {
-  // const {  onAddComment, handleReply, totalCmnt } = props;
+const CommentSection: React.FC = () => {
   const [comment, setComment] = useState<CourseComment[]>([]);
   const [totalCmt, setTotalCmt] = useState<number>(0);
-  const params: CourseParams = useQueryParam();
   const userProfile = useSelector((state: RootState) => state.app.user);
-
+  const router = useRouter();
   const [pagination, setPagination] = useState<PaginationParams>({
     page: 1,
-    limit: 5,
+    limit: 1000,
   });
   const fetchComment = async (id: string, limit, page) => {
     try {
-      const cmt: Pagination<CourseComment> = await CourseService.listComments(course_class_id || id, limit, page);
+      const cmt: Pagination<CourseComment> = await CourseService.listComments(id, limit, page);
       cmt && setComment(cmt.results);
       setTotalCmt(cmt.count);
     } catch (error) {
@@ -43,7 +34,8 @@ const CommentSection: React.FC<{ course_class_id?: string }> = ({ course_class_i
   };
 
   useEffect(() => {
-    fetchComment(params.id, pagination.limit, pagination.page);
+    console.log('router.query?.id?.toString() :==>>', router.query?.id?.toString());
+    fetchComment(router.query?.id?.toString() || '', pagination.limit, pagination.page);
   }, [pagination]);
   const onChangePage = (page: number) => {
     setPagination({ ...pagination, page });
@@ -52,9 +44,9 @@ const CommentSection: React.FC<{ course_class_id?: string }> = ({ course_class_i
   const onAddComment = async (value) => {
     if (!value) return;
     try {
-      const cmt = await CourseService.createComment('', params.id || '', userProfile.id, value);
+      const cmt = await CourseService.createComment('', router.query?.id?.toString() || '', userProfile.id, value);
       setPagination({ ...pagination, page: 1 });
-      cmt && fetchComment(params.id, pagination.limit, pagination.page);
+      cmt && fetchComment(router.query?.id?.toString() || '', pagination.limit, pagination.page);
     } catch (error) {
       console.log('error :>> ', error);
     }
@@ -62,9 +54,14 @@ const CommentSection: React.FC<{ course_class_id?: string }> = ({ course_class_i
 
   const handleReply = async (content: string, item: CourseComment) => {
     try {
-      const reply = await CourseService.createComment(item.id, params.id || '', userProfile.id, content);
+      const reply = await CourseService.createComment(
+        item.id,
+        router.query?.id?.toString() || '',
+        userProfile.id,
+        content,
+      );
       // setPagination({ ...pagination, page: 1 });
-      reply && fetchComment(params.id, pagination.limit, pagination.page);
+      reply && fetchComment(router.query?.id?.toString() || '', pagination.limit, pagination.page);
     } catch (error) {
       console.log('error :>> ', error);
     }
@@ -77,6 +74,11 @@ const CommentSection: React.FC<{ course_class_id?: string }> = ({ course_class_i
         }
         .ant-tooltip-content {
           min-width: 280px;
+        }
+        .ant-avatar {
+          img {
+            border-radius: 0px !important;
+          }
         }
       `}
     >

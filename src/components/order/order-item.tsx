@@ -152,7 +152,7 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
                       <List.Item>
                         <Skeleton avatar title={false} active loading={false}>
                           <List.Item.Meta
-                            title={<a href={`${RoutePaths.DOCUMENT_DETAIL}/?id=${item.id}`}>{item.name}</a>}
+                            title={<a href={`${RoutePaths.DOCUMENT}/${item.id}`}>{item.name}</a>}
                             description={item.description}
                             style={{ marginRight: '20px' }}
                           />
@@ -176,7 +176,7 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
                       <List.Item>
                         <Skeleton avatar title={false} active loading={false}>
                           <List.Item.Meta
-                            title={<a href={`${RoutePaths.COURSE_DETAIL}/?id=${item.id}`}>{item.name}</a>}
+                            title={<a href={`${RoutePaths.COURSE}/${item.id}`}>{item.name}</a>}
                             description={item.description}
                             style={{ marginRight: '20px' }}
                           />

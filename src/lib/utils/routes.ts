@@ -11,9 +11,9 @@ const RoutePaths = {
   SETUP_MANAGER: '/setup-manager',
 
   HOME: '/',
-  DOCUMENT: '/documents',
-  COURSE: '/courses',
-  CLASS: '/classes',
+  DOCUMENT: '/document',
+  COURSE: '/course',
+  CLASS: '/class',
   MY_COURSES: '/my-learning',
   CART: '/cart',
   ORDER_CART: '/order-cart',

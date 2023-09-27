@@ -112,15 +112,14 @@ const CourseUI: React.FC = () => {
             />
           </Breadcrumb.Item>
 
-          <Breadcrumb.Item
+          {/* <Breadcrumb.Item
             href={`${
               params.isClass
                 ? RoutePaths.CLASS + '?class=ALL&header=' + params.header
                 : RoutePaths.COURSE + '?course=ALL&header=' + params.header
             }`}
-          >
-            {params.header}
-          </Breadcrumb.Item>
+          > */}
+          <Breadcrumb.Item>{params.header}</Breadcrumb.Item>
 
           <Breadcrumb.Item>{UpperCaseFirstLetter(params.topic === 'ALL' ? '' : params.topic || '')}</Breadcrumb.Item>
         </Breadcrumb>
