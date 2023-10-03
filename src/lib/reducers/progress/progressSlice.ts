@@ -2,6 +2,7 @@ import {
   Course,
   CourseDocument,
   OFileUpload,
+  Quiz,
   UpdateLessonArgs,
   UpdateProgressArgs,
   UserAnswersArgs,
@@ -19,6 +20,7 @@ export interface ProgressState {
   answerSheet: UserAnswersArgs[];
   loading: boolean;
   error: string | null;
+  selectedQuiz: Quiz[];
 }
 
 const initialState: ProgressState = {
@@ -31,6 +33,7 @@ const initialState: ProgressState = {
   answerSheet: [],
   loading: false,
   error: null,
+  selectedQuiz: [] as Quiz[],
 };
 
 export const progressSlice = createSlice({
@@ -40,10 +43,18 @@ export const progressSlice = createSlice({
     setSelectedDoc: (state, action: PayloadAction<any>) => {
       state.selectedDoc = action.payload;
       state.selectedVideo = {} as OFileUpload;
+      state.selectedQuiz = [] as Quiz[];
       state.isDoneVideo = false;
     },
     setSelectedVideo: (state, action: PayloadAction<any>) => {
       state.selectedVideo = action.payload;
+      state.selectedDoc = {} as CourseDocument;
+      state.selectedQuiz = [] as Quiz[];
+      state.isDoneVideo = false;
+    },
+    setSelectedQuiz: (state, action: PayloadAction<Quiz[]>) => {
+      state.selectedQuiz = action.payload;
+      state.selectedVideo = {} as OFileUpload;
       state.selectedDoc = {} as CourseDocument;
       state.isDoneVideo = false;
     },
