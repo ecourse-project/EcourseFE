@@ -115,7 +115,7 @@ export const apiURL = {
   documentRatingFilter: (document_id, score) => `document/rating/filter/?document_id=${document_id}&score=${score}`,
   courseRatingFilter: (course_id, score) => `course/rating/filter/?course_id=${course_id}&score=${score}`,
 
-  listQuiz: (course_id, lesson_id) => `api/quiz/?course_id=${course_id}&lesson_id=${lesson_id}`,
+  listQuiz: (id) => `api/quiz/?course_id=${id}`,
   getQuizResult: () => `api/quiz/result/`,
   downloadCerti: (course_id) => `api/quiz/certi/?course_id=${course_id}`,
 
@@ -161,10 +161,11 @@ class CourseService {
     return apiClient.get(apiURL.me());
   }
 
-  static updateInfo(phone?: string, full_name?: string): Promise<User> {
+  static updateInfo(phone?: string, full_name?: string, avatar?: string): Promise<User> {
     return apiClient.patch(apiURL.me(), {
       phone: phone,
       full_name: full_name,
+      avatar: avatar,
     });
   }
 
@@ -322,8 +323,8 @@ class CourseService {
     return apiClient.get(apiURL.courseRatingFilter(course_id, score));
   }
 
-  static listQuiz(course_id: string, lesson_id: string): Promise<Quiz[]> {
-    return apiClient.get(apiURL.listQuiz(course_id, lesson_id));
+  static listQuiz(id: string): Promise<Quiz[]> {
+    return apiClient.get(apiURL.listQuiz(id));
   }
 
   static getQuizResult(params: QuizResultArgs): Promise<QuizResult> {
