@@ -236,9 +236,6 @@ export interface Lesson {
   documents: CourseDocument[];
   docs_completed?: string[];
   videos_completed?: string[];
-  quiz_detail?: QuizResult;
-  list_quiz: Quiz[];
-  is_done_quiz: boolean;
 }
 
 export interface Course {
@@ -262,6 +259,7 @@ export interface Course {
   is_favorite?: boolean;
   // rating_detail?: Rating[];
   // my_rating?: Rating;
+  quiz_detail?: QuizResult;
   // rating_stats?: RatingStats;
   request_status?: RequestStatus;
   course_of_class?: boolean;
@@ -394,6 +392,15 @@ export interface RatingStats {
 }
 
 // ===========================================Quiz===========================================
+
+export enum AnswerChoiceEnum {
+  A = 'A',
+  B = 'B',
+  C = 'C',
+  D = 'D',
+  NO_CHOICE = '-1',
+}
+
 export enum QuestionTypeEnum {
   CHOICES = 'CHOICES',
   MATCH = 'MATCH',
@@ -423,26 +430,28 @@ export interface ChoicesQuestion {
 
 export interface Quiz {
   id: string;
-  order: number;
-  time_limit?: number;
-  question_type: QuestionTypeEnum;
-  choices_question?: ChoicesQuestion;
-  match_question?: MatchQuestion;
-  fill_blank_question?: FillBlankQuestion;
+  course: string;
+  question: string;
+  A: string;
+  B: string;
+  C: string;
+  D: string;
 }
 
 export interface UserAnswersArgs {
   quiz_id: string;
-  question_type: QuestionTypeEnum;
-  answer: string | Array<string> | Array<Array<string>>;
+  answer_choice: AnswerChoiceEnum;
+  correct_answer?: AnswerChoiceEnum;
 }
 
 export interface QuizResultArgs {
   course_id: string;
-  lesson_id: string;
-  user_answers: UserAnswersArgs[];
+  answers: UserAnswersArgs[];
 }
-
+export interface CorrectAnswer {
+  id: string;
+  correct_answer: AnswerChoiceEnum;
+}
 export interface ChoicesQuizAnswer {
   correct: number;
   total: number;
@@ -467,9 +476,9 @@ export interface FillQuizAnswer {
 
 export interface QuizResult {
   mark?: number;
-  choices_quiz: ChoicesQuizAnswer;
-  match_quiz: MatchQuizAnswer[];
-  fill_quiz: FillQuizAnswer[];
+  correct_answers: number;
+  total_quiz: number;
+  quiz_answers: UserAnswersArgs[];
 }
 
 // ===========================================Setting===========================================
