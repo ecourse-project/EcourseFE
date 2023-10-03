@@ -245,11 +245,11 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                   <Panel
                     header={
                       <>
-                        <div>Video</div>
+                        <div>Bài học</div>
                         {!isCourseDetail ? (
                           <div>{`${checkedVideo.length} / ${lesson?.videos.length}`}</div>
                         ) : (
-                          <div>{`${lesson?.videos.length} Video`}</div>
+                          <div>{`${lesson?.videos.length} Bài học`}</div>
                         )}
                       </>
                     }
@@ -310,11 +310,11 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                   <Panel
                     header={
                       <>
-                        <div>Tệp</div>
+                        <div>Tài liệu bài giảng</div>
                         {!isCourseDetail ? (
                           <div>{`${checkedDoc.length} / ${lesson?.documents.length}`}</div>
                         ) : (
-                          <div>{`${lesson?.documents.length} Tệp`}</div>
+                          <div>{`${lesson?.documents.length} Tài liệu bài giảng`}</div>
                         )}
                       </>
                     }
