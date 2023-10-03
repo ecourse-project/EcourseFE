@@ -6,7 +6,6 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { useDispatch, useSelector } from 'react-redux';
-import ExamImg from 'src/assets/images/exam.png';
 import NotFile from 'src/assets/images/notfoundfile.png';
 import CommentSection from 'src/components/comment';
 import CourseService from 'src/lib/api/course';
@@ -17,7 +16,6 @@ import { RootState } from 'src/lib/reducers/model';
 // import reducer, { CourseProgressAction, CourseProgressContextType } from './context/reducer';
 import { progressAction } from 'src/lib/reducers/progress/progressSlice';
 import {
-  AnswerChoiceEnum,
   Course,
   CourseDocument,
   Lesson,
@@ -35,12 +33,12 @@ import RoutePaths from 'src/lib/utils/routes';
 import { DownOutlined, HomeOutlined, PlayCircleOutlined, SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 import LessonItem from './lesson-item';
-import QuizSection from './quiz';
 import PdfViewer from 'src/components/pdf';
 import { useExportCertificate } from 'src/lib/hooks/useExportCerti';
 import { CourseProgressWrapper } from './style';
 import { AlertTextError } from 'src/components/alert/SweetAlert';
 import { isIframeOrUrl } from 'src/lib/utils/utils';
+import QuizSection from './Quiz';
 
 const { Panel } = Collapse;
 export interface CourseParams {
@@ -51,6 +49,7 @@ export interface CourseParams {
   tab?: string;
   exam?: boolean;
   isClass?: boolean;
+  quiz?: string;
 }
 
 interface IProgress {
@@ -87,7 +86,7 @@ const CourseProgress = () => {
   const [star, setStar] = useState<number>(0);
   const userProfile = useSelector((state: RootState) => state.app.user);
   const [myRate, setMyRate] = useState<Rating>({} as Rating);
-  const [isShowQuiz, setIsShowQuiz] = useState<boolean>(params?.exam || false);
+  const [isShowQuiz, setIsShowQuiz] = useState<boolean>(true || params?.exam || false);
   // const [isShowQuiz, setIsShowQuiz] = useState<boolean>(true);
 
   const [listQuiz, setListQuiz] = useState<Quiz[]>([]);
@@ -104,7 +103,7 @@ const CourseProgress = () => {
   const { downloadPDF, DownloadAnchor } = useExportCertificate({
     certificateExport: CourseService.downloadCerti,
     onFailed: (err) => {
-      AlertTextError('Download Error', err.message);
+      AlertTextError('Download Error', err.message, () => {});
     },
   });
 
@@ -134,10 +133,10 @@ const CourseProgress = () => {
           dispatch(progressAction.setSelectedDoc(courseDetail.lessons[idxLesson].documents[idxVid]));
         }
       } //if there is not any current => assign first video by default
-    } else if (courseDetail.lessons && !params.exam) {
+    } else if (courseDetail.lessons && !params.quiz) {
       dispatch(progressAction.setCurrentLesson(courseDetail.lessons[0].id));
       dispatch(progressAction.setSelectedVideo(courseDetail.lessons[0].videos[0]));
-    } else if (params.exam) {
+    } else if (params.quiz) {
       //doing quiz
       setIsShowQuiz(true);
     }
@@ -160,16 +159,15 @@ const CourseProgress = () => {
 
     setCheckedItems(res || []);
     dispatch(progressAction.setUpdateParams({ course_id: courseDetail.id, lessons: res }));
-    const quizList = await CourseService.listQuiz(courseDetail.id);
-    setListQuiz(quizList);
-    const initialAnswer = quizList?.map(
-      (v) =>
-        ({
-          quiz_id: v.id,
-          answer_choice: AnswerChoiceEnum.NO_CHOICE,
-        }) as UserAnswersArgs,
-    );
-    dispatch(progressAction.updateCheckedAnswer(initialAnswer));
+
+    // const initialAnswer = quizList?.map(
+    //   (v) =>
+    //     ({
+    //       quiz_id: v.id,
+    //       answer_choice: AnswerChoiceEnum.NO_CHOICE,
+    //     }) as UserAnswersArgs,
+    // );
+    // dispatch(progressAction.updateCheckedAnswer(initialAnswer));
   };
 
   const getCourseDetail = async (id: string) => {
@@ -191,7 +189,7 @@ const CourseProgress = () => {
       // set initial checked item and checked answer
       await setInitialCheck(courseDetail);
     } catch (error: any) {
-      AlertTextError('Error', error?.response?.data?.detail, () => router.back());
+      // AlertTextError('Error', error?.response?.data?.detail, () => router.back());
     } finally {
       setLoading(false);
     }
@@ -484,12 +482,12 @@ const CourseProgress = () => {
                     sandbox="allow-scripts allow-same-origin"
                   />
                 )
-              ) : isShowQuiz ? (
+              ) : state.selectedQuiz.length ? (
                 /* if user unchecked a video while doing quiz, show modal to warn that the quiz will hide if they continue unchecking that video */
 
                 <>
                   <QuizSection
-                    listQuiz={listQuiz}
+                    listQuiz={state.selectedQuiz}
                     onSubmit={onSubmitQuiz}
                     result={course?.quiz_detail}
                     isDone={course?.is_done_quiz || false}
@@ -507,21 +505,6 @@ const CourseProgress = () => {
             <Tabs items={items} defaultActiveKey={params.tab} className="tab-section" />
           </Col>
           <Col span={8} className="course_list">
-            {calculateProgress().progress_num === 100 ? (
-              <Collapse defaultActiveKey={['1']} collapsible="disabled">
-                <Panel header="Bài kiểm tra" key="1" showArrow={false} className="quiz_header">
-                  <div className="quiz_name" onClick={showQuiz}>
-                    <Image src={ExamImg} alt="quiz-img" width={30} height={30} />
-                    <span>{`   Bài kiểm tra cuối khoá `}</span>
-                    <p>
-                      <strong>{course?.name}</strong>
-                    </p>
-                  </div>
-                </Panel>
-              </Collapse>
-            ) : (
-              <div></div>
-            )}
             <List
               itemLayout="horizontal"
               dataSource={course?.lessons}

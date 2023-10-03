@@ -6,7 +6,8 @@ import { RootState } from 'src/lib/reducers/model';
 import { progressAction } from 'src/lib/reducers/progress/progressSlice';
 import { Lesson, UpdateLessonArgs } from 'src/lib/types/backend_modal';
 import { DurationTime, formatDurationTime, uniqueArr } from 'src/lib/utils/utils';
-
+import ExamImg from 'src/assets/images/exam.png';
+import Image from 'next/image';
 import { FileTextOutlined, PlayCircleFilled } from '@ant-design/icons';
 import { css } from '@emotion/react';
 
@@ -218,6 +219,17 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
           width: 18px;
           height: 18px;
         }
+        .quiz-name {
+          padding-left: 30px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          cursor: pointer;
+          &.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+          }
+        }
         /* .ant-checkbox-wrapper {
           &:hover {
             border-color: #000 !important;
@@ -358,6 +370,23 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                         </div>
                       </div>
                     ))}
+                  </Panel>
+                </Collapse>
+                <Collapse defaultActiveKey={['1']} collapsible="disabled">
+                  <Panel key="1" showArrow={false} className="quiz_header" header={undefined}>
+                    <div
+                      className={`quiz-name ${lesson.list_quiz.length ? '' : 'disabled'}`}
+                      onClick={() => {
+                        if (!lesson.list_quiz.length) return;
+                        dispatch(progressAction.setSelectedQuiz(lesson.list_quiz));
+                      }}
+                    >
+                      <Image src={ExamImg} alt="quiz-img" width={30} height={30} />
+                      <span>
+                        {`Bài tập - `}
+                        <strong>{lesson?.name}</strong>
+                      </span>
+                    </div>
                   </Panel>
                 </Collapse>
               </>
