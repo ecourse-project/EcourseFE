@@ -110,6 +110,7 @@ export interface OFileUpload {
   file_embedded_url?: string;
   use_embedded_url?: boolean;
 }
+
 export interface IImageUpload {
   image: string;
   is_avatar?: boolean;
@@ -120,6 +121,15 @@ export interface OImageUpload {
   image_size: number;
   image_path: string;
   image_short_path: string;
+  image_type: string;
+  is_avatar: boolean;
+}
+
+export interface UploadImageSuccess {
+  id: string;
+  image_path: string;
+  image_short_path: string;
+  image_size: number;
   image_type: string;
   is_avatar: boolean;
 }
@@ -226,6 +236,9 @@ export interface Lesson {
   documents: CourseDocument[];
   docs_completed?: string[];
   videos_completed?: string[];
+  quiz_detail?: QuizResult;
+  list_quiz: Quiz[];
+  is_done_quiz: boolean;
 }
 
 export interface Course {
@@ -249,7 +262,6 @@ export interface Course {
   is_favorite?: boolean;
   // rating_detail?: Rating[];
   // my_rating?: Rating;
-  quiz_detail?: QuizResult;
   // rating_stats?: RatingStats;
   request_status?: RequestStatus;
   course_of_class?: boolean;
@@ -382,45 +394,82 @@ export interface RatingStats {
 }
 
 // ===========================================Quiz===========================================
-export enum AnswerChoiceEnum {
-  A = 'A',
-  B = 'B',
-  C = 'C',
-  D = 'D',
-  NO_CHOICE = '-1',
+export enum QuestionTypeEnum {
+  CHOICES = 'CHOICES',
+  MATCH = 'MATCH',
+  FILL = 'FILL',
+}
+
+export enum ContentTypeEnum {
+  TEXT = 'TEXT',
+  IMAGE = 'IMAGE',
+}
+
+export interface MatchQuestion {
+  content: string;
+  first_column: Array<{ id: string; content_type: ContentTypeEnum; content: string }>;
+  second_column: Array<{ id: string; content_type: ContentTypeEnum; content: string }>;
+}
+
+export interface FillBlankQuestion {
+  content: string;
+}
+
+export interface ChoicesQuestion {
+  content: string;
+  content_type: ContentTypeEnum;
+  choices: Array<{ choice: string; choice_name: string; answer_type: ContentTypeEnum; answer: string }>;
 }
 
 export interface Quiz {
   id: string;
-  course: string;
-  question: string;
-  A: string;
-  B: string;
-  C: string;
-  D: string;
+  order: number;
+  time_limit?: number;
+  question_type: QuestionTypeEnum;
+  choices_question?: ChoicesQuestion;
+  match_question?: MatchQuestion;
+  fill_blank_question?: FillBlankQuestion;
 }
 
 export interface UserAnswersArgs {
   quiz_id: string;
-  answer_choice: AnswerChoiceEnum;
-  correct_answer?: AnswerChoiceEnum;
+  question_type: QuestionTypeEnum;
+  answer: string | Array<string> | Array<Array<string>>;
 }
 
 export interface QuizResultArgs {
   course_id: string;
-  answers: UserAnswersArgs[];
+  lesson_id: string;
+  user_answers: UserAnswersArgs[];
 }
 
-export interface CorrectAnswer {
-  id: string;
-  correct_answer: AnswerChoiceEnum;
+export interface ChoicesQuizAnswer {
+  correct: number;
+  total: number;
+  result: Array<{ quiz_id: string; user_answer: string; correct_answer?: string }>;
+}
+
+export interface MatchQuizAnswer {
+  quiz_id: string;
+  correct: number;
+  total: number;
+  user_answer: Array<Array<string>>;
+  correct_answer?: Array<Array<string>>;
+}
+
+export interface FillQuizAnswer {
+  quiz_id: string;
+  correct: number;
+  total: number;
+  user_answer: Array<string>;
+  correct_answer?: string;
 }
 
 export interface QuizResult {
   mark?: number;
-  correct_answers: number;
-  total_quiz: number;
-  quiz_answers: UserAnswersArgs[];
+  choices_quiz: ChoicesQuizAnswer;
+  match_quiz: MatchQuizAnswer[];
+  fill_quiz: FillQuizAnswer[];
 }
 
 // ===========================================Setting===========================================
@@ -430,6 +479,7 @@ export enum NavTypeEnum {
   CLASS = 'CLASS',
   POST = 'POST',
 }
+
 export interface Topic {
   label: string;
   value: string;
@@ -470,13 +520,4 @@ export interface PaymentInfo {
   method: string;
   payment_info: string;
   content: string;
-}
-
-export interface UploadImageSuccess {
-  id: string;
-  image_path: string;
-  image_short_path: string;
-  image_size: number;
-  image_type: string;
-  is_avatar: boolean;
 }
