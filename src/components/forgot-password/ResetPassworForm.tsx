@@ -80,7 +80,7 @@ const ResetPasswordForm: React.FC<ResetPasswordProps> = ({ setEmailSent }) => {
     >
       <div className="form-item">
         <AppInput
-          className="field email-field"
+          className="field login-field"
           label="Email*"
           name="email"
           disabled={isLoading}

@@ -10,6 +10,7 @@ import { css } from '@emotion/react';
 import AppButton from '../button';
 import ResetPasswordForm from './ResetPassworForm';
 
+import { TiArrowBack } from 'react-icons/ti';
 const ResetPassword: React.FC = () => {
   const router = useRouter();
   const [emailSent, setEmailSent] = useState<string>('');
@@ -48,7 +49,7 @@ const ResetPassword: React.FC = () => {
           position: relative;
           .left-out {
             position: absolute;
-            color: #fff;
+            color: #000;
             z-index: 999;
             top: 20px;
             left: 28px;
@@ -59,13 +60,14 @@ const ResetPassword: React.FC = () => {
           .container {
             padding: 50px 35px;
             border-radius: 20px;
-            background-color: #051d29;
+            background-color: #fff;
+            box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
             background-image: none;
             backdrop-filter: blur(14px);
-            color: #fff;
+            color: #000;
             > h2 {
               font-family: FiraSans;
-              color: #fff;
+              color: #000;
               text-align: center;
               margin-bottom: 20px;
               font-size: 30px;
@@ -73,7 +75,7 @@ const ResetPassword: React.FC = () => {
             }
             > p {
               font-size: 17px;
-              color: #fff;
+              color: #000;
               text-align: center;
               > span {
                 font-weight: 700;
@@ -93,8 +95,9 @@ const ResetPassword: React.FC = () => {
       `}
     >
       <div className="wrapper">
-        <div className="left-out" onClick={() => router.push(RoutePaths.LOGOUT)}>
-          <Image src={ArrowLeft} preview={false} />
+        <div className="left-out" onClick={() => router.push(RoutePaths.HOME)}>
+          {/* <Image src={<LuTimerReset />} preview={false} /> */}
+          <TiArrowBack />
         </div>
 
         <div className="container">

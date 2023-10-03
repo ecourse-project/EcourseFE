@@ -91,7 +91,6 @@ const LoginUI: React.FC = () => {
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 20px;
             margin-top: 10px;
             .forgot-pwd {
               width: 100%;
@@ -161,9 +160,9 @@ const LoginUI: React.FC = () => {
           <LoginForm />
           <Divider className="divider" />
           <div className="form-item-bot">
-            {/* <Link className="forgot-pwd" href={RoutePaths.FORGOT_PASSWORD}>
+            <Link className="forgot-pwd" href={RoutePaths.FORGOT_PASSWORD}>
               Quên mật khẩu?
-            </Link> */}
+            </Link>
             <div className="login-text">
               <p>Chưa có tài khoản?</p>
               <Link className="register-here" href={RoutePaths.REGISTER}>
