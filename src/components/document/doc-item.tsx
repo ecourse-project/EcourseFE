@@ -122,6 +122,7 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
             border-color: ${btnString === BtnString.AVAILABLE ? Color.AVAILABLE : Color.IN_CART};
             color: ${btnString === BtnString.AVAILABLE ? Color.AVAILABLE : Color.IN_CART};
             letter-spacing: 8px;
+            transition: all 0.5s ease;
           }
         }
 
