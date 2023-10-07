@@ -535,7 +535,7 @@ const htmlsToReplace = {
 
 const removeHTMLCharacters = (string) => {
   let modifiedString = string;
-  for (let [html, replacementString] of Object.entries(htmlsToReplace)) {
+  for (const [html, replacementString] of Object.entries(htmlsToReplace)) {
     modifiedString = _.replace(modifiedString, new RegExp(html, 'g'), replacementString);
   }
   return modifiedString;
@@ -549,3 +549,29 @@ export const convertToRegularString = (string) => {
       }),
   );
 };
+
+export const updateURLParams = (router, myNewParams) => {
+  const { query } = router;
+  const updatedQueryParams = { ...query, ...myNewParams };
+  const newUrl = {
+    pathname: router.pathname,
+    query: updatedQueryParams,
+  };
+  router.push(newUrl, undefined, { shallow: true });
+};
+
+export function isIframeOrUrl(str) {
+  console.log('str', str);
+  // Regex pattern to match an iframe tag
+  const iframeRegex = /<iframe.*>.*<\/iframe>/i;
+
+  // Regex pattern to validate a URL
+  const urlRegex = /^(https?:\/\/)?([\w.-]+)\.([a-z]{2,})(\/.*)?$/i;
+
+  if (iframeRegex.test(str)) {
+    console.log('iframe');
+    return true;
+  }
+  console.log('not iframe');
+  return false;
+}

@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 
-import { Breadcrumb, Card, Col, Divider, Empty, Row } from 'antd';
+import { Breadcrumb, Card, Col, Divider, Empty, Pagination as AntPagination, Row } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import CourseItem from 'src/components/course/course-item';
@@ -17,6 +17,7 @@ import RoutePaths from 'src/lib/utils/routes';
 
 import { HomeOutlined, SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
+import { DEFAULT_PAGE_SIZE } from 'src/lib/utils/constant';
 
 export interface CourseClassParams {
   page?: number;
@@ -32,7 +33,7 @@ const CourseUI: React.FC = () => {
   const params: CourseClassParams = useQueryParam();
   const [pagination, setPagination] = useState<PaginationParams>({
     page: 1,
-    limit: 12,
+    limit: DEFAULT_PAGE_SIZE,
   });
   const fetCourseClass = async (pagination: PaginationParams) => {
     const token = localStorage.getItem(StorageKeys.SESSION_KEY);
@@ -77,17 +78,6 @@ const CourseUI: React.FC = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (params?.page) {
-  //     if (Number(pagination.page) !== Number(params.page)) {
-  //       //console.log('pagination :>> ', pagination);
-  //       setPagination({ ...pagination, page: params?.page });
-  //     }
-  //   }
-  // }, [params.page]);
-  useEffect(() => {
-    setPagination({ ...pagination, page: 1 });
-  }, [params.topic]);
   useEffect(() => {
     fetCourseClass(pagination);
   }, [pagination]);
@@ -95,9 +85,9 @@ const CourseUI: React.FC = () => {
   const onChangePage = (page: number) => {
     setPagination({ ...pagination, page });
     // router.push(`${RoutePaths.COURSE}?course=${params.topic}&page=${page}`);
-    if (!params.isClass) router.push(`${RoutePaths.COURSE}?course=${params.topic}&header=${params.header}`);
+    if (!params.isClass) router.push(`${RoutePaths.COURSE}?topic=${params.topic}&header=${params.header}`);
     else if (params.isClass)
-      router.push(`${RoutePaths.CLASS}?class=${params.topic}&header=${params.header}&isClass=true`);
+      router.push(`${RoutePaths.CLASS}?topic=${params.topic}&header=${params.header}&isClass=true`);
   };
 
   return (
@@ -150,11 +140,12 @@ const CourseUI: React.FC = () => {
               text-align: center;
             `}
           >
-            <CustomPagination
+            <AntPagination
               current={pagination.page}
               pageSize={pagination.limit}
-              total={listCourse?.count || 10}
+              total={listCourse?.count || 0}
               showSizeChanger={false}
+              hideOnSinglePage
               onChange={onChangePage}
             />
           </div>

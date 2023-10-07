@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { Button, Tag, Typography } from 'antd';
 import React, { useMemo, useState } from 'react';
-import { Quiz } from 'src/lib/types/backend_modal';
+import { QuestionTypeEnum, Quiz } from 'src/lib/types/backend_modal';
 import { GrConnect } from 'react-icons/gr';
 import { isEmpty } from 'lodash';
 const { Text, Link } = Typography;
@@ -17,17 +17,21 @@ const Column = ({ data, onRowClick, selectedRow, matchedPair }) => {
           border-radius: 5px;
           margin: 10px;
           cursor: pointer;
+          max-width: 250px;
           &:hover {
-            border-width: 2px;
-            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+            box-shadow:
+              rgba(0, 0, 0, 0.3) 0px 19px 38px,
+              rgba(0, 0, 0, 0.22) 0px 15px 12px;
           }
         }
         .selecting {
           border-color: green;
+          box-shadow:
+            rgba(0, 0, 0, 0.3) 0px 19px 38px,
+            rgba(0, 0, 0, 0.22) 0px 15px 12px;
           border-width: 2px;
         }
         .disabled {
-          border-width: 2px;
           cursor: not-allowed;
           opacity: 0.3;
         }
@@ -53,9 +57,14 @@ const Column = ({ data, onRowClick, selectedRow, matchedPair }) => {
 
 interface ColumnQuiz {
   quiz: Quiz;
+  onChange: (
+    quiz_id: string,
+    question_type: QuestionTypeEnum,
+    answer: string | Array<string> | Array<Array<string>>,
+  ) => void;
 }
 
-const ColumnQuiz: React.FC<ColumnQuiz> = ({ quiz }) => {
+const ColumnQuiz: React.FC<ColumnQuiz> = ({ quiz, onChange }) => {
   const quizData = quiz.match_question;
   const firstColId = useMemo(() => {
     return quizData?.first_column.map((v) => v.id);
@@ -79,6 +88,10 @@ const ColumnQuiz: React.FC<ColumnQuiz> = ({ quiz }) => {
     setMatchPair((prev) => {
       return [...prev.filter((v) => !isEmpty(v)), { first: leftId, second: rightId }];
     });
+    onChange(quiz.id, quiz.question_type, [
+      ...matchPair.filter((v) => !isEmpty(v)).map((pair) => [pair.first, pair.second]),
+      [leftId, rightId],
+    ]);
     setSelectPair({ first: '', second: '' });
   };
 
@@ -86,15 +99,20 @@ const ColumnQuiz: React.FC<ColumnQuiz> = ({ quiz }) => {
     setMatchPair((prev) => {
       return prev.filter((pair) => pair.first !== firstId);
     });
+    onChange(quiz.id, quiz.question_type, [
+      ...matchPair.filter((v) => v.first !== firstId).map((pair) => [pair.first, pair.second]),
+    ]);
   };
 
   return (
-    <>
-      <div
-        className="column-quiz"
-        css={css`
+    <div
+      css={css`
+        max-width: 80%;
+        .column-quiz {
           display: flex;
+          flex-direction: column;
           justify-content: space-evenly;
+          align-items: center;
           .connect {
             display: flex;
             align-items: center;
@@ -113,41 +131,15 @@ const ColumnQuiz: React.FC<ColumnQuiz> = ({ quiz }) => {
               }
             }
           }
-        `}
-      >
-        <Text className="question">{quizData?.content}</Text>
-        <div className="first-col">
-          <Column
-            data={quizData.first_column}
-            onRowClick={handleRowClick}
-            selectedRow={selectPair}
-            matchedPair={matchPair}
-          />
-        </div>
-        <div className="connect">
-          <Button
-            shape="circle"
-            disabled={!(selectPair.first && selectPair.second)}
-            onClick={() => handleConnect(selectPair.first, selectPair.second)}
-          >
-            <GrConnect />
-          </Button>
-        </div>
-        <div className="second-col">
-          <Column
-            data={quizData.second_column}
-            onRowClick={handleRowClick}
-            selectedRow={selectPair}
-            matchedPair={matchPair}
-          />
-        </div>
-      </div>
-      <div
-        className="matched-pair-tag"
-        css={css`
+          .column {
+            display: flex;
+          }
+        }
+        .matched-pair-tag {
           display: flex;
           flex-wrap: wrap;
           gap: 10px;
+          justify-content: center;
           .ant-tag {
             display: flex;
             justify-content: space-between;
@@ -161,8 +153,40 @@ const ColumnQuiz: React.FC<ColumnQuiz> = ({ quiz }) => {
               margin: 3px 0;
             }
           }
-        `}
-      >
+        }
+      `}
+    >
+      <div className="column-quiz">
+        <Text className="question">{quizData?.content}</Text>
+        <div className="column">
+          <div className="first-col">
+            <Column
+              data={quizData.first_column}
+              onRowClick={handleRowClick}
+              selectedRow={selectPair}
+              matchedPair={matchPair}
+            />
+          </div>
+          <div className="connect">
+            <Button
+              shape="circle"
+              disabled={!(selectPair.first && selectPair.second)}
+              onClick={() => handleConnect(selectPair.first, selectPair.second)}
+            >
+              <GrConnect />
+            </Button>
+          </div>
+          <div className="second-col">
+            <Column
+              data={quizData.second_column}
+              onRowClick={handleRowClick}
+              selectedRow={selectPair}
+              matchedPair={matchPair}
+            />
+          </div>
+        </div>
+      </div>
+      <div className="matched-pair-tag">
         {matchPair?.map((pair) => {
           if (isEmpty(pair)) return;
           const firstContent = quizData.first_column.find((v) => v.id === pair.first)?.content;
@@ -183,7 +207,7 @@ const ColumnQuiz: React.FC<ColumnQuiz> = ({ quiz }) => {
           );
         })}
       </div>
-    </>
+    </div>
   );
 };
 

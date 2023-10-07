@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 
-import { Breadcrumb, Card, Col, Divider, Empty, Row } from 'antd';
+import { Breadcrumb, Card, Col, Divider, Empty, Pagination, Row } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import DocItem from 'src/components/document/doc-item';
@@ -17,6 +17,7 @@ import RoutePaths from 'src/lib/utils/routes';
 
 import { HomeOutlined, SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
+import { DEFAULT_PAGE_SIZE } from 'src/lib/utils/constant';
 
 export interface DocumentParams {
   page?: number;
@@ -32,7 +33,7 @@ const DocumentUI: React.FC = () => {
   const params: DocumentParams = useQueryParam();
   const [pagination, setPagination] = useState<PaginationParams>({
     page: params?.page || 1,
-    limit: 12,
+    limit: DEFAULT_PAGE_SIZE,
   });
 
   const fetchDocument = async (pagination) => {
@@ -63,15 +64,12 @@ const DocumentUI: React.FC = () => {
   }, [params.topic]);
 
   useEffect(() => {
-    setPagination({ ...pagination, page: params.page || 1 });
-  }, [params.page]);
-  useEffect(() => {
     fetchDocument(pagination);
   }, [pagination]);
 
   const onChangePage = (page: number) => {
     setPagination({ ...pagination, page });
-    router.push(`${RoutePaths.DOCUMENT}?document=${params.topic}&page=${page}&header=${params.header}`);
+    router.push(`${RoutePaths.DOCUMENT}?topic=${params.topic}&page=${page}&header=${params.header}`);
   };
   return (
     <div>
@@ -126,11 +124,12 @@ const DocumentUI: React.FC = () => {
               onChange={onChangePage}
               hideOnSinglePage
             /> */}
-            <CustomPagination
-              current={params.page || pagination.page}
+            <Pagination
+              current={pagination.page}
               pageSize={pagination.limit}
-              total={listDoc?.count || 10}
+              total={listDoc?.count || 0}
               showSizeChanger={false}
+              hideOnSinglePage
               onChange={onChangePage}
             />
           </div>

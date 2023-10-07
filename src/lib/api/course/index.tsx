@@ -118,6 +118,8 @@ export const apiURL = {
   listQuiz: (id) => `api/quiz/?course_id=${id}`,
   getQuizResult: () => `api/quiz/result/`,
   downloadCerti: (course_id) => `api/quiz/certi/?course_id=${course_id}`,
+  quizStartTime: (course_id, lesson_id, is_start) =>
+    `api/quiz/start-time/?course_id=${course_id}&lesson_id=${lesson_id}&is_start=${is_start}`,
 
   listHeaders: () => `api/settings/headers/`,
   getHome: () => `api/settings/home/`,
@@ -333,6 +335,10 @@ class CourseService {
 
   static downloadCerti(course_id: string): Promise<any> {
     return apiClient.get(apiURL.downloadCerti(course_id));
+  }
+
+  static quizStartTime(course_id: string, lesson_id: string, is_start: boolean): Promise<{ start_time?: string }> {
+    return apiClient.get(apiURL.quizStartTime(course_id, lesson_id, is_start));
   }
 
   static listHeaders(): Promise<Nav[]> {

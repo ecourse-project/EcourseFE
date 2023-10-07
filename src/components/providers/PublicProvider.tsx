@@ -20,6 +20,7 @@ const PublicProvider: React.FC<{ children?: ReactNode }> = ({ children }) => {
 
   const getUserProfile = async () => {
     const token = localStorage.getItem(StorageKeys.SESSION_KEY);
+    console.log('token :==>>', token);
     try {
       if (isEmpty(header)) {
         const header = await CourseService.listHeaders();
@@ -47,6 +48,20 @@ const PublicProvider: React.FC<{ children?: ReactNode }> = ({ children }) => {
   React.useEffect(() => {
     getUserProfile();
     setTimeout(() => setIsLoading(false), 1000);
+  }, []);
+  React.useEffect(() => {
+    const handleStart = () => setIsLoading(true);
+    const handleComplete = () => setIsLoading(false);
+
+    router.events.on('routeChangeStart', handleStart);
+    router.events.on('routeChangeComplete', handleComplete);
+    router.events.on('routeChangeError', handleComplete);
+
+    return () => {
+      router.events.off('routeChangeStart', handleStart);
+      router.events.off('routeChangeComplete', handleComplete);
+      router.events.off('routeChangeError', handleComplete);
+    };
   }, []);
 
   return <React.Fragment>{!isLoading ? children : <LoadingPage isLoading={true} />}</React.Fragment>;

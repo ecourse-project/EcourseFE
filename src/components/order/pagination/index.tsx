@@ -97,7 +97,7 @@ const CustomPagination: FC<CustomPaginationProps> = ({
         responsive={responsive}
         showSizeChanger={showSizeChanger}
         onChange={onChange}
-        itemRender={itemRender}
+        // itemRender={itemRender}
         hideOnSinglePage
         {...rest}
       />
