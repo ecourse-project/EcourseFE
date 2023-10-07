@@ -61,9 +61,6 @@ const DocumentUI: React.FC = () => {
   };
 
   useEffect(() => {
-    setPagination({ ...pagination, page: params.page || 1 });
-  }, [params.page]);
-  useEffect(() => {
     fetchDocument(pagination);
   }, [pagination]);
 

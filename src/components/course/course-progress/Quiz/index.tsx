@@ -1,45 +1,43 @@
-import { Button, Collapse, Empty, Progress, Radio, RadioChangeEvent, Spin, Typography } from 'antd';
+import { Button, Empty, Progress } from 'antd';
 import _, { isEmpty } from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import AppButton from 'src/components/button';
-import { RootState } from 'src/lib/reducers/model';
-import { progressAction } from 'src/lib/reducers/progress/progressSlice';
-import { QuestionTypeEnum, Quiz, QuizResult, UserAnswersArgs } from 'src/lib/types/backend_modal';
-import { antIcon } from 'src/lib/utils/animations';
+import { UserAnswersArgs } from 'src/lib/types/backend_modal';
 
 import { css } from '@emotion/react';
-import Skeleton from 'react-loading-skeleton';
 import styled from '@emotion/styled';
-import ChoiceQuiz from './choice-quiz';
-import ColumnQuiz from './collum-quiz';
+import Skeleton from 'react-loading-skeleton';
+import CourseService from 'src/lib/api/course';
+import { SelectedQuizType } from 'src/lib/types/commentType';
 import QuizSlide from './quiz-slide';
 
-const { Panel } = Collapse;
-
-const { Text, Link } = Typography;
-
 interface QuizProps {
-  listQuiz: Quiz[];
-  onSubmit: () => void;
-  result: QuizResult | undefined;
-  isDone: boolean;
-  loading: boolean;
+  onSubmit: (answer: UserAnswersArgs[]) => void;
+  loading?: boolean;
+  lessonQuiz: SelectedQuizType;
   courseId: string;
-  mark: number;
 }
 
-const notDoEx = false;
 const QuizSection: React.FC<QuizProps> = (props) => {
-  const { listQuiz, onSubmit, result, loading, isDone, courseId, mark } = props;
-  console.log('lizQuiz :==>>', listQuiz);
-  const answerSheet = useSelector((state: RootState) => state.progress.answerSheet);
+  const { onSubmit, loading = false, lessonQuiz, courseId } = props;
   const [isSubmit, setIsSubmit] = useState<boolean>(false);
-  const [customResult, setCustomResult] = useState<any>([]);
-
-  const [value, setValue] = useState(0);
-  const dispatch = useDispatch();
-
+  const [answer, setAnswer] = useState<UserAnswersArgs[]>([]);
+  const [startTime, setStartTime] = useState<string | null>(null);
+  const totalTime = lessonQuiz.quiz.reduce((total, current) => {
+    return total + (current?.time_limit || 0);
+  }, 0);
+  console.log('totalTime :==>>', totalTime);
+  const setTimeDoingQuiz = async (isStart) => {
+    try {
+      const startTime = await CourseService.quizStartTime(courseId, lessonQuiz.lessonId, isStart);
+      setStartTime(startTime?.start_time || null);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    // setTimeDoingQuiz(false);
+  }, []);
   return (
     <QuizStyled>
       {loading ? (
@@ -49,11 +47,11 @@ const QuizSection: React.FC<QuizProps> = (props) => {
       ) : (
         <></>
       )}
-      {!loading && isDone ? (
+      {!loading && lessonQuiz.isDone ? (
         <Progress
           type="circle"
           className="mark"
-          percent={(mark || 0) * 10}
+          percent={(lessonQuiz.result.mark || 0) * 10}
           format={(percent) => `${percent && parseFloat(percent.toFixed(2)) / 10}/10`}
           status="exception"
           strokeColor={{
@@ -64,17 +62,21 @@ const QuizSection: React.FC<QuizProps> = (props) => {
       ) : (
         <></>
       )}
-      {notDoEx ? (
-        <div>
+      {!startTime ? (
+        <div
+          css={css`
+            padding: 50px;
+          `}
+        >
           <p>Bài tập được làm 1 lần và không được dừng sau khi bắt đầu.</p>
           <p>
-            Thời gian làm bài là 60 phút. Được tính sau khi "<strong>Bắt đầu làm bài</strong>"
+            Thời gian làm bài là {totalTime / 60} phút. Được tính sau khi "<strong>Bắt đầu làm bài</strong>"
           </p>
-          <Button>
+          <Button onClick={() => setTimeDoingQuiz(true)}>
             <strong>Bắt đầu làm bài</strong>
           </Button>
         </div>
-      ) : listQuiz.length ? (
+      ) : lessonQuiz.quiz?.length ? (
         // listQuiz?.map((quiz, i) => {
         //   if (quiz.question_type === QuestionTypeEnum.CHOICES) {
         //     //trac ngiem
@@ -94,11 +96,24 @@ const QuizSection: React.FC<QuizProps> = (props) => {
         //     //fill
         //   }
         // })
-        <QuizSlide listQuiz={listQuiz} />
+        <QuizSlide
+          listQuiz={lessonQuiz.quiz}
+          onChangeQuiz={(v) => {
+            setAnswer((prev) => {
+              const idx = prev.findIndex((ans) => ans.quiz_id === v.quiz_id);
+              if (idx >= 0) {
+                prev.splice(idx, 1, v);
+                return prev;
+              } else {
+                return [...prev, v];
+              }
+            });
+          }}
+        />
       ) : (
         <Empty className="empty-data" image={Empty.PRESENTED_IMAGE_SIMPLE} />
       )}
-      {!loading && !isEmpty(listQuiz) && (
+      {!loading && !isEmpty(lessonQuiz.quiz) && answer?.length === lessonQuiz.quiz?.length && (
         <AppButton
           className="done-btn"
           btnTextColor={'black'}
@@ -108,10 +123,10 @@ const QuizSection: React.FC<QuizProps> = (props) => {
           // disabled={!isDone ? (listAnswer.length < listQuiz.length ? true : false) : false/}
           onClick={() => {
             setIsSubmit(true);
-            onSubmit();
+            onSubmit(answer);
           }}
         >
-          {!isDone ? 'NỘP BÀI' : 'CHỨNG CHỈ'}
+          {'NỘP BÀI'}
         </AppButton>
       )}
     </QuizStyled>
@@ -206,16 +221,20 @@ const QuizStyled = styled.div`
     background-color: #faad14 !important;
     border-color: #faad14 !important;
     font-weight: 700;
-    border-radius: 10px;
     width: 150px;
     letter-spacing: 1px;
+    margin: auto;
+    border-radius: 5px;
+
     &:hover {
       letter-spacing: 3px;
-      color: #000;
+      color: #000 !important;
+      box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
     }
     &[disabled] {
       cursor: not-allowed;
     }
+    transition: all 400ms ease;
   }
 
   .ant-radio-disabled .ant-radio-inner:after {

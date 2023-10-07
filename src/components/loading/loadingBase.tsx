@@ -4,7 +4,7 @@ import React, { ReactNode } from 'react';
 import { LoadingOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-
+import Loading from 'src/assets/icons/loading.gif';
 export interface ILoadingPageProps {
   isLoading: boolean;
   cssName?: string;
@@ -43,11 +43,6 @@ export const LoadingPage: React.FC<ILoadingPageProps> = (props: ILoadingPageProp
 
   return (
     <LoadingPageWrapper className={`${cssName}`}>
-      {/* <div className="spiner-first-team">
-        <div></div>
-        <div></div>
-        <div></div>
-      </div> */}
       <div className="loader">
         <div id="ld3"></div>
       </div>

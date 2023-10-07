@@ -1,15 +1,17 @@
-import { Checkbox, Collapse, List } from 'antd';
+import { Card, Checkbox, Collapse, List } from 'antd';
 import { cloneDeep, debounce } from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/lib/reducers/model';
 import { progressAction } from 'src/lib/reducers/progress/progressSlice';
-import { Lesson, UpdateLessonArgs } from 'src/lib/types/backend_modal';
-import { DurationTime, formatDurationTime, uniqueArr } from 'src/lib/utils/utils';
+import { Lesson, Quiz, QuizResult, UpdateLessonArgs } from 'src/lib/types/backend_modal';
+import { DurationTime, formatDurationTime, uniqueArr, updateURLParams } from 'src/lib/utils/utils';
 import ExamImg from 'src/assets/images/exam.png';
 import Image from 'next/image';
 import { FileTextOutlined, PlayCircleFilled } from '@ant-design/icons';
 import { css } from '@emotion/react';
+import { SelectedQuizType } from 'src/lib/types/commentType';
+import { useRouter } from 'next/router';
 
 const { Panel } = Collapse;
 
@@ -18,6 +20,7 @@ interface LessonItemProps {
   isCourseDetail?: boolean;
   index?: number;
   isShowLessonDetail: boolean;
+  newParams?: any;
   // onUpdate: (data: UpdateLessonArgs) => void;
 }
 
@@ -52,7 +55,7 @@ const DisplayDurationTime = (duration) => {
 };
 
 const LessonItem: React.FC<LessonItemProps> = (props) => {
-  const { lesson, isCourseDetail = false, index, isShowLessonDetail } = props;
+  const { lesson, isCourseDetail = false, index, isShowLessonDetail, newParams } = props;
   const selectedDoc = useSelector((state: RootState) => state.progress.selectedDoc);
   const selectedVideo = useSelector((state: RootState) => state.progress.selectedVideo);
   const isDoneVideo = useSelector((state: RootState) => state.progress.isDoneVideo);
@@ -60,7 +63,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
   const [checkedDoc, setCheckedDoc] = useState<string[]>(lesson.docs_completed || []);
   const updateParams = useSelector((state: RootState) => state.progress.updateParams);
   const dispatch = useDispatch();
-
+  const router = useRouter();
   const handleCheckedDoc = (e) => {
     if (checkedDoc.includes(e.target.value)) {
       const newChecked = checkedDoc.filter((v) => v !== e.target.value);
@@ -273,8 +276,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                         key={i}
                         className={`course_video_item video_${v.id}`}
                         onClick={() => {
-                          dispatch(progressAction.setSelectedVideo(v));
-                          dispatch(progressAction.setCurrentLesson(lesson.id));
+                          newParams({ lesson: lesson.id, doc: '', video: v.id, quiz: '' });
                         }}
                       >
                         {!isCourseDetail && (
@@ -338,6 +340,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                         key={i}
                         className={`course_video_item video_${v.id}`}
                         onClick={() => {
+                          newParams({ doc: v.id, video: '', quiz: '', lesson: lesson.id });
                           dispatch(progressAction.setSelectedDoc(v));
                           dispatch(progressAction.setCurrentLesson(lesson.id));
                         }}
@@ -372,23 +375,44 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                     ))}
                   </Panel>
                 </Collapse>
-                <Collapse defaultActiveKey={['1']} collapsible="disabled">
-                  <Panel key="1" showArrow={false} className="quiz_header" header={undefined}>
-                    <div
-                      className={`quiz-name ${lesson.list_quiz.length ? '' : 'disabled'}`}
-                      onClick={() => {
-                        if (!lesson.list_quiz.length) return;
-                        dispatch(progressAction.setSelectedQuiz(lesson.list_quiz));
-                      }}
-                    >
-                      <Image src={ExamImg} alt="quiz-img" width={30} height={30} />
-                      <span>
-                        {`Bài tập - `}
-                        <strong>{lesson?.name}</strong>
-                      </span>
-                    </div>
-                  </Panel>
-                </Collapse>
+
+                <Card
+                  className="quiz_header"
+                  css={css`
+                    .ant-card-body {
+                      padding: 11px;
+                    }
+                  `}
+                >
+                  <div
+                    className={`quiz-name ${lesson.list_quiz.length ? '' : 'disabled'}`}
+                    onClick={() => {
+                      if (!lesson.list_quiz.length) return;
+                      newParams({ doc: '', video: '', lesson: lesson.id, quiz: lesson.id });
+                      // router.push(
+                      //   {
+                      //     pathname: '/course-progress',
+                      //     query: {
+                      //       ...router.query,
+                      //       doc: undefined,
+                      //       video: undefined,
+                      //       lesson: lesson.id,
+                      //       quiz: lesson.id,
+                      //       // exam: !videoId && !docId ? 'true' : '',
+                      //     },
+                      //   },
+                      //   undefined,
+                      //   { shallow: true },
+                      // );
+                    }}
+                  >
+                    <Image src={ExamImg} alt="quiz-img" width={30} height={30} />
+                    <span>
+                      {`Bài tập - `}
+                      <strong>{lesson?.name}</strong>
+                    </span>
+                  </div>
+                </Card>
               </>
             ) : (
               <div></div>

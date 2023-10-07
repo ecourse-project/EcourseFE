@@ -20,6 +20,7 @@ const PublicProvider: React.FC<{ children?: ReactNode }> = ({ children }) => {
 
   const getUserProfile = async () => {
     const token = localStorage.getItem(StorageKeys.SESSION_KEY);
+    console.log('token :==>>', token);
     try {
       if (isEmpty(header)) {
         const header = await CourseService.listHeaders();
@@ -62,6 +63,7 @@ const PublicProvider: React.FC<{ children?: ReactNode }> = ({ children }) => {
   //     router.events.off('routeChangeError', handleComplete);
   //   };
   // }, []);
+
   return <React.Fragment>{!isLoading ? children : <LoadingPage isLoading={true} />}</React.Fragment>;
 };
 
