@@ -1,6 +1,6 @@
 import { HomeOutlined, SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
-import { Breadcrumb, Card, Divider, Pagination as AntPagination, Empty } from 'antd';
+import { Breadcrumb, Card, Divider, Empty, Pagination as AntPagination } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import HomeTopicCard from 'src/components/home/homeTopicCard';
