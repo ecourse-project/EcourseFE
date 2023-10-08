@@ -40,7 +40,7 @@ import PdfViewer from 'src/components/pdf';
 import { useExportCertificate } from 'src/lib/hooks/useExportCerti';
 import { CourseProgressWrapper } from './style';
 import { AlertTextError } from 'src/components/alert/SweetAlert';
-import { isIframeOrUrl } from 'src/lib/utils/utils';
+import { isIframeOrUrl, isURL } from 'src/lib/utils/utils';
 
 const { Panel } = Collapse;
 export interface CourseParams {
@@ -439,7 +439,8 @@ const CourseProgress = () => {
                   </div>
                 </>
               ) : state.selectedVideo?.use_embedded_url ? (
-                isIframeOrUrl(state.selectedVideo?.file_embedded_url) ? (
+                isIframeOrUrl(state.selectedVideo?.file_embedded_url) ||
+                !isURL(state.selectedVideo?.file_embedded_url) ? (
                   <div
                     className="video_wrapper"
                     dangerouslySetInnerHTML={{ __html: state.selectedVideo?.file_embedded_url || '' }}
@@ -470,7 +471,8 @@ const CourseProgress = () => {
                   </p> */}
                 </div>
               ) : state.selectedDoc?.file?.use_embedded_url ? (
-                isIframeOrUrl(state.selectedDoc?.file?.file_embedded_url) ? (
+                isIframeOrUrl(state.selectedDoc?.file?.file_embedded_url) ||
+                !isURL(state.selectedDoc?.file?.file_embedded_url) ? (
                   <div
                     className="pdf_wrapper"
                     dangerouslySetInnerHTML={{ __html: state.selectedDoc?.file?.file_embedded_url || '' }}
