@@ -18,13 +18,13 @@ class MyDocument extends Document {
           <meta name="google" content="notranslate" />
           <meta name="mobile-web-app-capable" content="yes" />
           <meta name="apple-mobile-web-app-capable" content="yes" />
-          <meta name="keywords" content="nextjs, ecourse" />
+          <meta name="keywords" content="creative,creativeteaching,teaching,chemistry, ecourse" />
           <meta property="og:locale" content="en_US" />
-          <meta property="og:site_name" content="next-ecourse" />
-          <meta property="og:title" content="Next.js ecourse app" />
+          <meta property="og:site_name" content="Creativeteaching" />
+          <meta property="og:title" content="Creativeteaching" />
           <meta property="og:description" content="Next.js + SWR codebase containing ecourse" />
           <meta property="og:url" content="https://next-ecourse.now.sh/" />
-          <meta property="og:image" content="https://next-ecourse.now.sh/images/share-link.png" />
+          <meta property="og:image" content="/logo.png" />
           <meta name="msapplication-TileColor" content="#000" />
           <meta name="msapplication-TileImage" content="/images/ms-icon-144x144.png" />
           <meta name="theme-color" content="#000" />
