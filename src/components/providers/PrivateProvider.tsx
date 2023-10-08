@@ -47,9 +47,9 @@ const PrivateProvider: React.FC<{ children?: ReactNode }> = ({ children }) => {
   React.useEffect(() => {
     checkAccountPermission();
   }, []);
-  React.useEffect(() => {
-    const handleStart = () => setIsLoading(true);
-    const handleComplete = () => setIsLoading(false);
+  // React.useEffect(() => {
+  //   const handleStart = () => setIsLoading(true);
+  //   const handleComplete = () => setIsLoading(false);
 
   // React.useEffect(() => {
   //   const handleStart = () => setIsLoading(true);

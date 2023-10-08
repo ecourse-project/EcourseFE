@@ -186,7 +186,7 @@ const CourseProgress = () => {
         setProgressNumber(courseDetail.progress || 0);
       }
       // set current doc when reload page
-      // setCurrentDocReloadPage(courseDetail);
+      setCurrentDocReloadPage(courseDetail);
       dispatch(progressAction.setCourse(courseDetail));
       // set initial checked item and checked answer
       await setInitialCheck(courseDetail);
@@ -238,9 +238,9 @@ const CourseProgress = () => {
   // }, [state.selectedDoc, state.selectedVideo]);
 
   useEffect(() => {
-    console.log('123');
     if (!course) getCourseDetail(params.id);
-  }, []);
+    else setCurrentDocReloadPage(course);
+  }, [params.doc, params.video, params.quiz]);
 
   const debounceUpdateProgress = useDebouncedCallback(async (params: UpdateProgressArgs) => {
     try {
@@ -515,24 +515,7 @@ const CourseProgress = () => {
                   lesson={item}
                   index={i}
                   isShowLessonDetail={true}
-                  newParams={(newparams) => {
-                    console.log('newParams', newparams);
-                    // router.push(
-                    //   {
-                    //     pathname: '/course-progress',
-                    //     query: {
-                    //       ...router.query,
-                    //       ...newparams,
-                    //       // exam: !videoId && !docId ? 'true' : '',
-                    //     },
-                    //   },
-                    //   undefined,
-                    //   { shallow: true },
-                    // );
-                    dispatch(progressAction.setSelectedDoc({ file: { id: newparams.doc } }));
-                    // dispatch(progressAction.setSelectedVideo({ id: newparams.video }));
-                    // setQury(newparams);
-                  }}
+
                   // courseDetail={course || ({} as Course)}
                   // onUpdate={(data) => onUpdate(data, JSON.parse(JSON.stringify(checkedItems)))}
                 />

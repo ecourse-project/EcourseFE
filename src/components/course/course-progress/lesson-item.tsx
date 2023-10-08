@@ -20,7 +20,6 @@ interface LessonItemProps {
   isCourseDetail?: boolean;
   index?: number;
   isShowLessonDetail: boolean;
-  newParams?: any;
   // onUpdate: (data: UpdateLessonArgs) => void;
 }
 
@@ -55,7 +54,7 @@ const DisplayDurationTime = (duration) => {
 };
 
 const LessonItem: React.FC<LessonItemProps> = (props) => {
-  const { lesson, isCourseDetail = false, index, isShowLessonDetail, newParams } = props;
+  const { lesson, isCourseDetail = false, index, isShowLessonDetail } = props;
   const selectedDoc = useSelector((state: RootState) => state.progress.selectedDoc);
   const selectedVideo = useSelector((state: RootState) => state.progress.selectedVideo);
   const isDoneVideo = useSelector((state: RootState) => state.progress.isDoneVideo);
@@ -276,7 +275,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                         key={i}
                         className={`course_video_item video_${v.id}`}
                         onClick={() => {
-                          newParams({ lesson: lesson.id, doc: '', video: v.id, quiz: '' });
+                          updateURLParams(router, { lesson: lesson.id, doc: '', video: v.id, quiz: '' });
                         }}
                       >
                         {!isCourseDetail && (
@@ -340,9 +339,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                         key={i}
                         className={`course_video_item video_${v.id}`}
                         onClick={() => {
-                          newParams({ doc: v.id, video: '', quiz: '', lesson: lesson.id });
-                          dispatch(progressAction.setSelectedDoc(v));
-                          dispatch(progressAction.setCurrentLesson(lesson.id));
+                          updateURLParams(router, { doc: v.id, video: '', quiz: '', lesson: lesson.id });
                         }}
                       >
                         {!isCourseDetail && (
@@ -385,25 +382,10 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                   `}
                 >
                   <div
-                    className={`quiz-name ${lesson.list_quiz.length ? '' : 'disabled'}`}
+                    className={`quiz-name ${lesson.list_quiz?.length ? '' : 'disabled'}`}
                     onClick={() => {
                       if (!lesson.list_quiz.length) return;
-                      newParams({ doc: '', video: '', lesson: lesson.id, quiz: lesson.id });
-                      // router.push(
-                      //   {
-                      //     pathname: '/course-progress',
-                      //     query: {
-                      //       ...router.query,
-                      //       doc: undefined,
-                      //       video: undefined,
-                      //       lesson: lesson.id,
-                      //       quiz: lesson.id,
-                      //       // exam: !videoId && !docId ? 'true' : '',
-                      //     },
-                      //   },
-                      //   undefined,
-                      //   { shallow: true },
-                      // );
+                      updateURLParams(router, { doc: '', video: '', lesson: lesson.id, quiz: lesson.id });
                     }}
                   >
                     <Image src={ExamImg} alt="quiz-img" width={30} height={30} />
