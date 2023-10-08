@@ -522,3 +522,7 @@ export function isIframeOrUrl(str) {
   console.log('not iframe');
   return false;
 }
+export function isURL(str) {
+  const pattern = /^(?:\w+:)?\/\/([^\s.]+\.\S{2}|localhost[:?\d]*)\S*$/;
+  return pattern.test(str);
+}
