@@ -40,6 +40,7 @@ import PdfViewer from 'src/components/pdf';
 import { useExportCertificate } from 'src/lib/hooks/useExportCerti';
 import { CourseProgressWrapper } from './style';
 import { AlertTextError } from 'src/components/alert/SweetAlert';
+import { isIframeOrUrl } from 'src/lib/utils/utils';
 
 const { Panel } = Collapse;
 export interface CourseParams {
@@ -438,10 +439,20 @@ const CourseProgress = () => {
                   </div>
                 </>
               ) : state.selectedVideo?.use_embedded_url ? (
-                <div
-                  className="video_wrapper"
-                  dangerouslySetInnerHTML={{ __html: state.selectedVideo?.file_embedded_url || '' }}
-                ></div>
+                isIframeOrUrl(state.selectedVideo?.file_embedded_url) ? (
+                  <div
+                    className="video_wrapper"
+                    dangerouslySetInnerHTML={{ __html: state.selectedVideo?.file_embedded_url || '' }}
+                  ></div>
+                ) : (
+                  <iframe
+                    src={state.selectedVideo?.file_embedded_url || ''}
+                    title={state.selectedVideo.file_name}
+                    width="100%"
+                    height="500px"
+                    sandbox="allow-scripts allow-same-origin"
+                  />
+                )
               ) : (!_.isEmpty(state.selectedDoc) &&
                   !state.selectedDoc.file?.use_embedded_url &&
                   state.selectedDoc?.file?.file_path) ||
@@ -459,10 +470,20 @@ const CourseProgress = () => {
                   </p> */}
                 </div>
               ) : state.selectedDoc?.file?.use_embedded_url ? (
-                <div
-                  className="pdf_wrapper"
-                  dangerouslySetInnerHTML={{ __html: state.selectedDoc?.file?.file_embedded_url || '' }}
-                ></div>
+                isIframeOrUrl(state.selectedDoc?.file?.file_embedded_url) ? (
+                  <div
+                    className="pdf_wrapper"
+                    dangerouslySetInnerHTML={{ __html: state.selectedDoc?.file?.file_embedded_url || '' }}
+                  />
+                ) : (
+                  <iframe
+                    src={state.selectedDoc?.file?.file_embedded_url || ''}
+                    title={state.selectedDoc.name}
+                    width="100%"
+                    height="500px"
+                    sandbox="allow-scripts allow-same-origin"
+                  />
+                )
               ) : isShowQuiz ? (
                 /* if user unchecked a video while doing quiz, show modal to warn that the quiz will hide if they continue unchecking that video */
 

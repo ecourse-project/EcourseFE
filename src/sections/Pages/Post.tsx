@@ -1,6 +1,6 @@
 import { HomeOutlined, SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
-import { Breadcrumb, Card, Divider } from 'antd';
+import { Breadcrumb, Card, Divider, Pagination as AntPagination, Empty } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import HomeTopicCard from 'src/components/home/homeTopicCard';
@@ -8,6 +8,7 @@ import CustomPagination from 'src/components/order/pagination';
 import CourseService from 'src/lib/api/course';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { Pagination, PaginationParams, Post } from 'src/lib/types/backend_modal';
+import { DEFAULT_PAGE_SIZE } from 'src/lib/utils/constant';
 import { UpperCaseFirstLetter } from 'src/lib/utils/format';
 import RoutePaths from 'src/lib/utils/routes';
 
@@ -25,7 +26,7 @@ const Post: React.FC = () => {
 
   const [pagination, setPagination] = useState<PaginationParams>({
     page: params?.page || 1,
-    limit: 12,
+    limit: DEFAULT_PAGE_SIZE * 2,
   });
   const getListPost = async (pagination: PaginationParams) => {
     try {
@@ -58,7 +59,7 @@ const Post: React.FC = () => {
 
   const onChangePage = (page: number) => {
     setPagination({ ...pagination, page });
-    router.push(`${RoutePaths.POST}?post=${params.topic}&page=${page}`);
+    router.push(`${RoutePaths.POST}?topic=${params.topic}&header=${params.header}&page=${page}`);
   };
 
   return (
@@ -81,17 +82,36 @@ const Post: React.FC = () => {
       <div
         className=""
         css={css`
-          display: flex;
-          flex-wrap: wrap;
-          gap: 30px;
+          .ant-card-body {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            padding: 12px;
+            &::before {
+              display: none !important;
+            }
+            .ant-card {
+              /* flex: 0 0 calc(25% - 20px); */
+              box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+              &:hover {
+                box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+              }
+              transition: all 1s ease;
+            }
+          }
+          .ant-empty {
+            grid-column: 1 / -1;
+          }
         `}
       >
         <Card>
-          {listPost?.results.map((v) => (
-            <Card key={v.id} style={{ width: 380 }}>
-              <HomeTopicCard post={v} />
-            </Card>
-          ))}
+          {!!listPost?.results?.length &&
+            listPost?.results?.map((v) => (
+              <Card key={v.id}>
+                <HomeTopicCard post={v} />
+              </Card>
+            ))}
+          {!listPost?.results?.length && <Empty />}
         </Card>
       </div>
       <div
@@ -108,11 +128,12 @@ const Post: React.FC = () => {
               onChange={onChangePage}
               hideOnSinglePage
             /> */}
-        <CustomPagination
+        <AntPagination
           current={params.page || pagination.page}
           pageSize={pagination.limit}
-          total={listPost?.count || 10}
+          total={listPost?.count || 0}
           showSizeChanger={false}
+          hideOnSinglePage
           onChange={onChangePage}
         />
       </div>
