@@ -28,6 +28,7 @@ const HomeTopicCardWrapper = styled.div`
   }
   .post-name {
     font-weight: 700;
+    min-height: 170px;
   }
   .post-sumary {
     font-style: italic;

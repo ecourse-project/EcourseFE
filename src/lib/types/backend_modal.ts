@@ -69,7 +69,7 @@ export interface User {
   email: string;
   full_name: string;
   avatar: string;
-  phone: string;
+  phone?: string;
   role: RoleEnum;
 }
 
@@ -462,7 +462,7 @@ export interface FillQuizAnswer {
   correct: number;
   total: number;
   user_answer: Array<string>;
-  correct_answer?: string;
+  correct_answer?: Array<string>;
 }
 
 export interface QuizResult {

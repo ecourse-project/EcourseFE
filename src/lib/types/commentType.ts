@@ -78,6 +78,7 @@ export interface NeighbourhoodModels {
   name: string;
 }
 import { ReactElement, ReactNode } from 'react';
+import { Quiz, QuizResult } from './backend_modal';
 
 // export interface PaginationParams {
 // 	_limit: number;
@@ -156,4 +157,11 @@ export type TypeTabPanel = {
   content: ReactNode | string;
   icon?: ReactElement;
   key: string;
+};
+
+export type SelectedQuizType = {
+  quiz: Quiz[];
+  lessonId: string;
+  result: QuizResult;
+  isDone: boolean;
 };
