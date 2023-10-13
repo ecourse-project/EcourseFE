@@ -33,6 +33,7 @@ import { useExportCertificate } from 'src/lib/hooks/useExportCerti';
 import QuizSection from './Quiz';
 import LessonItem from './lesson-item';
 import { CourseProgressWrapper } from './style';
+
 import { isIframeOrUrl, isURL, updateURLParams } from 'src/lib/utils/utils';
 
 const { Panel } = Collapse;
@@ -86,7 +87,10 @@ const CourseProgress = () => {
   const { downloadPDF, DownloadAnchor } = useExportCertificate({
     certificateExport: CourseService.downloadCerti,
     onFailed: (err) => {
-      AlertTextError('Download Error', err.message, () => {});
+      
+      
+      
+      ('Download Error', err.message, () => {});
     },
   });
 

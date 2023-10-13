@@ -139,7 +139,7 @@ export function isIframeOrUrl(str) {
 }
 export function isURL(str) {
   const pattern = /^(?:\w+:)?\/\/([^\s.]+\.\S{2}|localhost[:?\d]*)\S*$/;
-  return pattern.test(str);
+  return pattern.test(str.replaceAll(' ', '%20'));
 }
 
 export const getReturnValues = (countDown) => {
@@ -151,3 +151,6 @@ export const getReturnValues = (countDown) => {
   const seconds = Math.floor((countDown % (1000 * 60)) / 1000);
   return [days, hours, minutes, seconds];
 };
+
+
+
