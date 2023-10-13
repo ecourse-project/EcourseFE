@@ -223,7 +223,6 @@ export const PostItemWrapper = styled.div`
   flex-direction: column;
   justify-content: space-between;
   min-height: 100%;
-  max-width: 210px;
   min-width: 200px;
   min-height: 285px;
 
