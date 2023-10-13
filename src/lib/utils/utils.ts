@@ -137,3 +137,17 @@ export function isIframeOrUrl(str) {
   console.log('not iframe');
   return false;
 }
+export function isURL(str) {
+  const pattern = /^(?:\w+:)?\/\/([^\s.]+\.\S{2}|localhost[:?\d]*)\S*$/;
+  return pattern.test(str);
+}
+
+export const getReturnValues = (countDown) => {
+  console.log('countDown :==>>', countDown);
+  // calculate time left
+  const days = Math.floor(countDown / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((countDown % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((countDown % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((countDown % (1000 * 60)) / 1000);
+  return [days, hours, minutes, seconds];
+};

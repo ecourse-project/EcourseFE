@@ -7,8 +7,10 @@ import { UserAnswersArgs } from 'src/lib/types/backend_modal';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import Skeleton from 'react-loading-skeleton';
+import CountdownTimer from 'src/components/count-down';
 import CourseService from 'src/lib/api/course';
 import { SelectedQuizType } from 'src/lib/types/commentType';
+import { getReturnValues } from 'src/lib/utils/utils';
 import QuizSlide from './quiz-slide';
 
 interface QuizProps {
@@ -23,31 +25,51 @@ const QuizSection: React.FC<QuizProps> = (props) => {
   const [isSubmit, setIsSubmit] = useState<boolean>(false);
   const [answer, setAnswer] = useState<UserAnswersArgs[]>([]);
   const [startTime, setStartTime] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const totalTime = lessonQuiz.quiz.reduce((total, current) => {
     return total + (current?.time_limit || 0);
   }, 0);
-  console.log('totalTime :==>>', totalTime);
+  const [isExpiredTime, setIsExpiredTime] = useState<boolean>(false);
+  const targetDateTime = totalTime * 1000 + new Date(startTime || '').getTime();
+  // const targetDateTime = 5 * 1000 + new Date().getTime();
+  const showTime = (seconds) => {
+    const [day, hour, minute, second] = getReturnValues(seconds * 1000);
+
+    return !day
+      ? !hour
+        ? !minute
+          ? `${second} giây`
+          : `${minute} phút ${second} giây`
+        : `${hour} giờ ${minute} phút ${second} giây`
+      : `${day} ngày ${hour} giờ ${minute} phút ${second} giây`;
+  };
   const setTimeDoingQuiz = async (isStart) => {
     try {
+      setIsLoading(true);
       const startTime = await CourseService.quizStartTime(courseId, lessonQuiz.lessonId, isStart);
       setStartTime(startTime?.start_time || null);
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
   useEffect(() => {
-    // setTimeDoingQuiz(false);
+    setTimeDoingQuiz(false);
   }, []);
+  useEffect(() => {
+    console.log('answer :==>>', answer);
+  }, [answer]);
   return (
     <QuizStyled>
-      {loading ? (
+      {isLoading ? (
         <div style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <QuizSkeleton />
         </div>
       ) : (
         <></>
       )}
-      {!loading && lessonQuiz.isDone ? (
+      {!isLoading && lessonQuiz.isDone ? (
         <Progress
           type="circle"
           className="mark"
@@ -63,53 +85,54 @@ const QuizSection: React.FC<QuizProps> = (props) => {
         <></>
       )}
       {!startTime ? (
-        <div
-          css={css`
-            padding: 50px;
-          `}
-        >
-          <p>Bài tập được làm 1 lần và không được dừng sau khi bắt đầu.</p>
-          <p>
-            Thời gian làm bài là {totalTime / 60} phút. Được tính sau khi "<strong>Bắt đầu làm bài</strong>"
-          </p>
-          <Button onClick={() => setTimeDoingQuiz(true)}>
-            <strong>Bắt đầu làm bài</strong>
-          </Button>
-        </div>
+        <>
+          <div
+            css={css`
+              padding: 50px;
+            `}
+          >
+            <p>Bài tập được làm 1 lần và không được dừng sau khi bắt đầu.</p>
+            <p>
+              Thời gian làm bài là <strong>{showTime(totalTime)}</strong>. Thời gian được tính sau khi "
+              <strong>Bắt đầu làm bài</strong>"
+            </p>
+            <Button onClick={() => setTimeDoingQuiz(true)}>
+              <strong>Bắt đầu làm bài</strong>
+            </Button>
+          </div>
+        </>
       ) : lessonQuiz.quiz?.length ? (
-        // listQuiz?.map((quiz, i) => {
-        //   if (quiz.question_type === QuestionTypeEnum.CHOICES) {
-        //     //trac ngiem
-        //     return (
-        //       <div className="quiz-item" key={i}>
-        //         <ChoiceQuiz quiz={quiz} />
-        //       </div>
-        //     );
-        //   } else if (quiz.question_type === QuestionTypeEnum.MATCH) {
-        //     //column
-        //     return (
-        //       <div className="quiz-item" key={i}>
-        //         <ColumnQuiz quiz={quiz} />
-        //       </div>
-        //     );
-        //   } else if (quiz.question_type === QuestionTypeEnum.FILL) {
-        //     //fill
-        //   }
-        // })
-        <QuizSlide
-          listQuiz={lessonQuiz.quiz}
-          onChangeQuiz={(v) => {
-            setAnswer((prev) => {
-              const idx = prev.findIndex((ans) => ans.quiz_id === v.quiz_id);
-              if (idx >= 0) {
-                prev.splice(idx, 1, v);
-                return prev;
-              } else {
-                return [...prev, v];
-              }
-            });
-          }}
-        />
+        <>
+          {!lessonQuiz.isDone && (
+            <CountdownTimer
+              expired={() => {
+                console.log('110');
+                setTimeout(() => {
+                  console.log('112');
+                  setIsSubmit(true);
+                  onSubmit(answer);
+                }, 1000);
+              }}
+              targetDate={targetDateTime}
+            />
+          )}
+          <QuizSlide
+            listQuiz={lessonQuiz.quiz}
+            onChangeQuiz={(v) => {
+              console.log('v :==>>', v);
+              setAnswer((prev) => {
+                const idx = prev.findIndex((ans) => ans.quiz_id === v.quiz_id);
+                if (idx >= 0) {
+                  prev.splice(idx, 1, v);
+                  return prev;
+                } else {
+                  return [...prev, v];
+                }
+              });
+            }}
+            quizResult={lessonQuiz.isDone ? lessonQuiz.result : null}
+          />
+        </>
       ) : (
         <Empty className="empty-data" image={Empty.PRESENTED_IMAGE_SIMPLE} />
       )}
@@ -140,7 +163,7 @@ const QuizSkeleton = () => {
         width: 100%;
       `}
     >
-      {_.times(10).map((v) => (
+      {_.times(2).map((v) => (
         <div
           key={v}
           css={css`

@@ -1,30 +1,119 @@
-import 'swiper/css';
-import 'swiper/css/effect-fade';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import 'swiper/css/scrollbar';
-import { A11y, Navigation, Pagination, Scrollbar } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import React, { useEffect, useMemo } from 'react';
+import useCountDown from './hooks/useCountDown';
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
 
-const CountDown = () => {
+const DateTimeDisplay = ({ value, type, isDanger }) => {
   return (
-    <Swiper
-      // install Swiper modules
-      modules={[Navigation, Pagination, Scrollbar, A11y]}
-      spaceBetween={50}
-      slidesPerView={1}
-      navigation
-      pagination={{ clickable: true }}
-      scrollbar={{ draggable: true }}
-      onSwiper={(swiper) => console.log(swiper)}
-      onSlideChange={() => console.log('slide change')}
-    >
-      <SwiperSlide>Slide 1</SwiperSlide>
-      <SwiperSlide>Slide 2</SwiperSlide>
-      <SwiperSlide>Slide 3</SwiperSlide>
-      <SwiperSlide>Slide 4</SwiperSlide>
-      ...
-    </Swiper>
+    <div className={isDanger ? 'countdown danger' : 'countdown'}>
+      <p>{value}</p>
+      <span>{type}</span>
+    </div>
   );
 };
-export default CountDown;
+
+const ExpiredNotice = () => {
+  return (
+    <div className="expired-notice">
+      <span>Expired!!!</span>
+      <p>Please select a future date and time.</p>
+    </div>
+  );
+};
+
+const ShowCounter = ({ days, hours, minutes, seconds }) => {
+  return (
+    <div className="show-counter">
+      <a href="https://tapasadhikary.com" target="_blank" rel="noopener noreferrer" className="countdown-link">
+        {/* <DateTimeDisplay value={days} type={'Days'} isDanger={days <= 3} />
+        <p>:</p> */}
+        <DateTimeDisplay value={hours} type={'Hours'} isDanger={hours > 0} />
+        <p>:</p>
+        <DateTimeDisplay value={minutes} type={'Mins'} isDanger={minutes > 0 && hours <= 0} />
+        <p>:</p>
+        <DateTimeDisplay value={seconds} type={'Seconds'} isDanger={seconds > 0 && minutes <= 0 && hours <= 0} />
+      </a>
+    </div>
+  );
+};
+
+const CountdownTimer = ({ targetDate, expired }) => {
+  const [days, hours, minutes, seconds] = useCountDown(targetDate);
+  if (days + hours + minutes + seconds <= 0) {
+    if (seconds === 0 && hours === 0 && minutes === 0 && hours === 0) expired(true);
+    return (
+      <CountDownStyled>
+        <ExpiredNotice />
+      </CountDownStyled>
+    );
+  } else {
+    return (
+      <CountDownStyled>
+        <ShowCounter days={days} hours={hours} minutes={minutes} seconds={seconds} />;
+      </CountDownStyled>
+    );
+  }
+};
+
+export default CountdownTimer;
+
+const CountDownStyled = styled.div`
+  .expired-notice {
+    text-align: center;
+    padding: 2rem;
+    border: 1px solid #ebebeb;
+    border-radius: 0.25rem;
+    margin: 0.5rem;
+  }
+
+  .expired-notice > span {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: red;
+  }
+
+  .expired-notice > p {
+    font-size: 1.5rem;
+  }
+
+  .show-counter {
+    padding: 0.5rem;
+  }
+
+  .show-counter .countdown-link {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    padding: 0.5rem;
+    border: 1px solid #ebebeb;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    color: #000;
+  }
+
+  .show-counter .countdown {
+    line-height: 1.25rem;
+    padding: 0 0.75rem 0 0.75rem;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .show-counter .countdown.danger {
+    color: #ff0000;
+  }
+
+  .show-counter .countdown > p {
+    margin: 0;
+  }
+
+  .show-counter .countdown > span {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+`;

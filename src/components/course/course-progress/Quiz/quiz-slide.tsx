@@ -1,4 +1,4 @@
-import { QuestionTypeEnum, Quiz, QuizResultArgs, UserAnswersArgs } from 'src/lib/types/backend_modal';
+import { QuestionTypeEnum, Quiz, QuizResult, QuizResultArgs, UserAnswersArgs } from 'src/lib/types/backend_modal';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
 import 'swiper/css/navigation';
@@ -9,15 +9,21 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import ChoiceQuiz from './choice-quiz';
 import ColumnQuiz from './collum-quiz';
 import { css } from '@emotion/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from 'antd';
+import FillQuiz from './fill-quiz';
 
 interface QuizSwiperProps {
   listQuiz: Quiz[];
   onChangeQuiz: (value: UserAnswersArgs) => void;
+  quizResult: QuizResult | null;
 }
-const QuizSlide: React.FC<QuizSwiperProps> = ({ listQuiz, onChangeQuiz }) => {
+const QuizSlide: React.FC<QuizSwiperProps> = ({ listQuiz, onChangeQuiz, quizResult }) => {
   const [isShowSubmitBtn, setIsShowSubmitBtn] = useState<boolean>(false);
+  const [swiper, setSwiper] = useState<any>(null);
+  useEffect(() => {
+    if (quizResult) swiper?.slideTo(0);
+  }, [quizResult]);
   return (
     <div>
       <Swiper
@@ -31,7 +37,7 @@ const QuizSlide: React.FC<QuizSwiperProps> = ({ listQuiz, onChangeQuiz }) => {
         onReachEnd={() => {
           setIsShowSubmitBtn(true);
         }}
-        onSwiper={(swiper) => console.log(swiper)}
+        onSwiper={(swiper) => setSwiper(swiper)}
         onSlideChange={(swipper) => {
           if (swipper.activeIndex !== listQuiz?.length - 1) setIsShowSubmitBtn(false);
         }}
@@ -51,11 +57,12 @@ const QuizSlide: React.FC<QuizSwiperProps> = ({ listQuiz, onChangeQuiz }) => {
           if (quiz.question_type === QuestionTypeEnum.CHOICES) {
             //trac ngiem
             return (
-              <div className="quiz-item" key={i}>
+              <div className="quiz-item" key={quiz.id}>
                 <SwiperSlide>
                   <ChoiceQuiz
                     quiz={quiz}
                     onChange={(quiz_id, question_type, answer) => onChangeQuiz({ quiz_id, question_type, answer })}
+                    result={quizResult?.choices_quiz.result?.find((v) => v.quiz_id === quiz.id)}
                   />
                 </SwiperSlide>
               </div>
@@ -63,18 +70,29 @@ const QuizSlide: React.FC<QuizSwiperProps> = ({ listQuiz, onChangeQuiz }) => {
           } else if (quiz.question_type === QuestionTypeEnum.MATCH) {
             //column
             return (
-              <div className="quiz-item" key={i}>
+              <div className="quiz-item" key={quiz.id}>
                 <SwiperSlide>
                   <ColumnQuiz
                     quiz={quiz}
                     onChange={(quiz_id, question_type, answer) => onChangeQuiz({ quiz_id, question_type, answer })}
+                    result={quizResult?.match_quiz?.find((v) => v.quiz_id === quiz.id)}
                   />
                 </SwiperSlide>
               </div>
             );
           } else if (quiz.question_type === QuestionTypeEnum.FILL) {
             //fill
-            return <></>;
+            return (
+              <div className="quiz-item" key={quiz.id}>
+                <SwiperSlide>
+                  <FillQuiz
+                    quiz={quiz}
+                    onChange={(quiz_id, question_type, answer) => onChangeQuiz({ quiz_id, question_type, answer })}
+                    result={quizResult?.fill_quiz?.find((v) => v.quiz_id === quiz.id)}
+                  />
+                </SwiperSlide>
+              </div>
+            );
           }
         })}
       </Swiper>

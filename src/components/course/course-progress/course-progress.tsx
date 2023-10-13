@@ -1,5 +1,5 @@
 import { Col, Collapse, Divider, List, Popover, Progress, Row, Tabs } from 'antd';
-import _ from 'lodash';
+import _, { cloneDeep } from 'lodash';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -33,7 +33,7 @@ import { useExportCertificate } from 'src/lib/hooks/useExportCerti';
 import QuizSection from './Quiz';
 import LessonItem from './lesson-item';
 import { CourseProgressWrapper } from './style';
-import { isIframeOrUrl, updateURLParams } from 'src/lib/utils/utils';
+import { isIframeOrUrl, isURL, updateURLParams } from 'src/lib/utils/utils';
 
 const { Panel } = Collapse;
 export interface CourseParams {
@@ -124,7 +124,7 @@ const CourseProgress = () => {
             isDone: currentLesson.is_done_quiz,
             lessonId: currentLesson.id,
             quiz: currentLesson.list_quiz,
-            result: currentLesson.quiz_detail || ({} as QuizResult),
+            result: cloneDeep(currentLesson.quiz_detail || ({} as QuizResult)),
           }),
         );
       }
@@ -443,7 +443,8 @@ const CourseProgress = () => {
                   </div>
                 </>
               ) : state.selectedVideo?.use_embedded_url ? (
-                isIframeOrUrl(state.selectedVideo?.file_embedded_url) ? (
+                isIframeOrUrl(state.selectedVideo?.file_embedded_url) ||
+                !isURL(state.selectedVideo?.file_embedded_url) ? (
                   <div
                     className="video_wrapper"
                     dangerouslySetInnerHTML={{ __html: state.selectedVideo?.file_embedded_url || '' }}
@@ -474,7 +475,8 @@ const CourseProgress = () => {
                   </p> */}
                 </div>
               ) : state.selectedDoc?.file?.use_embedded_url ? (
-                isIframeOrUrl(state.selectedDoc?.file?.file_embedded_url) ? (
+                isIframeOrUrl(state.selectedDoc?.file?.file_embedded_url) ||
+                !isURL(state.selectedDoc?.file?.file_embedded_url) ? (
                   <div
                     className="pdf_wrapper"
                     dangerouslySetInnerHTML={{ __html: state.selectedDoc?.file?.file_embedded_url || '' }}

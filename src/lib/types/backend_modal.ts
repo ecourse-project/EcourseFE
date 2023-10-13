@@ -462,7 +462,7 @@ export interface FillQuizAnswer {
   correct: number;
   total: number;
   user_answer: Array<string>;
-  correct_answer?: string;
+  correct_answer?: Array<string>;
 }
 
 export interface QuizResult {
