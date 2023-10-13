@@ -7,11 +7,11 @@ export const ItemDocCourseWrapper = styled.div`
   flex-direction: column;
   justify-content: space-between;
   min-height: 100%;
-  max-width: 210px;
+  /* max-width: 210px; */
   min-width: 200px;
   min-height: 300px;
   &:hover {
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
     transition: all 1s ease;
   }
 
@@ -102,6 +102,8 @@ export const ItemDocCourseWrapper = styled.div`
     width: 100%;
     color: #000;
     border-color: #000;
+    border-radius: 4px;
+    font-weight: 700 !important;
   }
 
   .price-tag {
@@ -181,6 +183,20 @@ export const DocCourseWrapper = styled.div`
   .ant-empty {
     margin: auto;
   }
+  .ant-col {
+    flex: 0 0 calc(33.33% - 20px);
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    border-radius: 8px;
+    padding: 8px;
+    &:hover {
+      box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    }
+    transition: all 1s ease;
+  }
+  .ant-card-head {
+    background-color: #e8e8e8;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  }
 `;
 
 export const PostWrapper = styled.div`
@@ -207,7 +223,6 @@ export const PostItemWrapper = styled.div`
   flex-direction: column;
   justify-content: space-between;
   min-height: 100%;
-  max-width: 210px;
   min-width: 200px;
   min-height: 285px;
 

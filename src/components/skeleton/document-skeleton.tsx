@@ -17,7 +17,7 @@ function DocCourseItemSkeleton(props) {
         }
       `}
     >
-      {times(9).map((e, i) => {
+      {times(6).map((e, i) => {
         return (
           <div key={i} className="doc-skeleton">
             <Skeleton height={130} width={200} />

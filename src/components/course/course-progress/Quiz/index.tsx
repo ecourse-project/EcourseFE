@@ -1,59 +1,79 @@
-import { Button, Collapse, Empty, Progress, Radio, RadioChangeEvent, Spin, Typography } from 'antd';
+import { Button, Empty, Progress } from 'antd';
 import _, { isEmpty } from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import AppButton from 'src/components/button';
-import { RootState } from 'src/lib/reducers/model';
-import { progressAction } from 'src/lib/reducers/progress/progressSlice';
-import { QuestionTypeEnum, Quiz, QuizResult, UserAnswersArgs } from 'src/lib/types/backend_modal';
-import { antIcon } from 'src/lib/utils/animations';
+import { UserAnswersArgs } from 'src/lib/types/backend_modal';
 
 import { css } from '@emotion/react';
-import Skeleton from 'react-loading-skeleton';
 import styled from '@emotion/styled';
-import ChoiceQuiz from './choice-quiz';
-import ColumnQuiz from './collum-quiz';
+import Skeleton from 'react-loading-skeleton';
+import CountdownTimer from 'src/components/count-down';
+import CourseService from 'src/lib/api/course';
+import { SelectedQuizType } from 'src/lib/types/commentType';
+import { getReturnValues } from 'src/lib/utils/utils';
 import QuizSlide from './quiz-slide';
 
-const { Panel } = Collapse;
-
-const { Text, Link } = Typography;
-
 interface QuizProps {
-  listQuiz: Quiz[];
-  onSubmit: () => void;
-  result: QuizResult | undefined;
-  isDone: boolean;
-  loading: boolean;
+  onSubmit: (answer: UserAnswersArgs[]) => void;
+  loading?: boolean;
+  lessonQuiz: SelectedQuizType;
   courseId: string;
-  mark: number;
 }
 
-const notDoEx = false;
 const QuizSection: React.FC<QuizProps> = (props) => {
-  const { listQuiz, onSubmit, result, loading, isDone, courseId, mark } = props;
-  console.log('lizQuiz :==>>', listQuiz);
-  const answerSheet = useSelector((state: RootState) => state.progress.answerSheet);
+  const { onSubmit, loading = false, lessonQuiz, courseId } = props;
   const [isSubmit, setIsSubmit] = useState<boolean>(false);
-  const [customResult, setCustomResult] = useState<any>([]);
+  const [answer, setAnswer] = useState<UserAnswersArgs[]>([]);
+  const [startTime, setStartTime] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const totalTime = lessonQuiz.quiz.reduce((total, current) => {
+    return total + (current?.time_limit || 0);
+  }, 0);
+  const [isExpiredTime, setIsExpiredTime] = useState<boolean>(false);
+  const targetDateTime = totalTime * 1000 + new Date(startTime || '').getTime();
+  // const targetDateTime = 5 * 1000 + new Date().getTime();
+  const showTime = (seconds) => {
+    const [day, hour, minute, second] = getReturnValues(seconds * 1000);
 
-  const [value, setValue] = useState(0);
-  const dispatch = useDispatch();
-
+    return !day
+      ? !hour
+        ? !minute
+          ? `${second} giây`
+          : `${minute} phút ${second} giây`
+        : `${hour} giờ ${minute} phút ${second} giây`
+      : `${day} ngày ${hour} giờ ${minute} phút ${second} giây`;
+  };
+  const setTimeDoingQuiz = async (isStart) => {
+    try {
+      setIsLoading(true);
+      const startTime = await CourseService.quizStartTime(courseId, lessonQuiz.lessonId, isStart);
+      setStartTime(startTime?.start_time || null);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
+    setTimeDoingQuiz(false);
+  }, []);
+  useEffect(() => {
+    console.log('answer :==>>', answer);
+  }, [answer]);
   return (
     <QuizStyled>
-      {loading ? (
+      {isLoading ? (
         <div style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <QuizSkeleton />
         </div>
       ) : (
         <></>
       )}
-      {!loading && isDone ? (
+      {!isLoading && lessonQuiz.isDone ? (
         <Progress
           type="circle"
           className="mark"
-          percent={(mark || 0) * 10}
+          percent={(lessonQuiz.result.mark || 0) * 10}
           format={(percent) => `${percent && parseFloat(percent.toFixed(2)) / 10}/10`}
           status="exception"
           strokeColor={{
@@ -64,41 +84,59 @@ const QuizSection: React.FC<QuizProps> = (props) => {
       ) : (
         <></>
       )}
-      {notDoEx ? (
-        <div>
-          <p>Bài tập được làm 1 lần và không được dừng sau khi bắt đầu.</p>
-          <p>
-            Thời gian làm bài là 60 phút. Được tính sau khi "<strong>Bắt đầu làm bài</strong>"
-          </p>
-          <Button>
-            <strong>Bắt đầu làm bài</strong>
-          </Button>
-        </div>
-      ) : listQuiz.length ? (
-        // listQuiz?.map((quiz, i) => {
-        //   if (quiz.question_type === QuestionTypeEnum.CHOICES) {
-        //     //trac ngiem
-        //     return (
-        //       <div className="quiz-item" key={i}>
-        //         <ChoiceQuiz quiz={quiz} />
-        //       </div>
-        //     );
-        //   } else if (quiz.question_type === QuestionTypeEnum.MATCH) {
-        //     //column
-        //     return (
-        //       <div className="quiz-item" key={i}>
-        //         <ColumnQuiz quiz={quiz} />
-        //       </div>
-        //     );
-        //   } else if (quiz.question_type === QuestionTypeEnum.FILL) {
-        //     //fill
-        //   }
-        // })
-        <QuizSlide listQuiz={listQuiz} />
+      {!startTime ? (
+        <>
+          <div
+            css={css`
+              padding: 50px;
+            `}
+          >
+            <p>Bài tập được làm 1 lần và không được dừng sau khi bắt đầu.</p>
+            <p>
+              Thời gian làm bài là <strong>{showTime(totalTime)}</strong>. Thời gian được tính sau khi "
+              <strong>Bắt đầu làm bài</strong>"
+            </p>
+            <Button onClick={() => setTimeDoingQuiz(true)}>
+              <strong>Bắt đầu làm bài</strong>
+            </Button>
+          </div>
+        </>
+      ) : lessonQuiz.quiz?.length ? (
+        <>
+          {!lessonQuiz.isDone && (
+            <CountdownTimer
+              expired={() => {
+                console.log('110');
+                setTimeout(() => {
+                  console.log('112');
+                  setIsSubmit(true);
+                  onSubmit(answer);
+                }, 1000);
+              }}
+              targetDate={targetDateTime}
+            />
+          )}
+          <QuizSlide
+            listQuiz={lessonQuiz.quiz}
+            onChangeQuiz={(v) => {
+              console.log('v :==>>', v);
+              setAnswer((prev) => {
+                const idx = prev.findIndex((ans) => ans.quiz_id === v.quiz_id);
+                if (idx >= 0) {
+                  prev.splice(idx, 1, v);
+                  return prev;
+                } else {
+                  return [...prev, v];
+                }
+              });
+            }}
+            quizResult={lessonQuiz.isDone ? lessonQuiz.result : null}
+          />
+        </>
       ) : (
         <Empty className="empty-data" image={Empty.PRESENTED_IMAGE_SIMPLE} />
       )}
-      {!loading && !isEmpty(listQuiz) && (
+      {!loading && !isEmpty(lessonQuiz.quiz) && answer?.length === lessonQuiz.quiz?.length && (
         <AppButton
           className="done-btn"
           btnTextColor={'black'}
@@ -108,10 +146,10 @@ const QuizSection: React.FC<QuizProps> = (props) => {
           // disabled={!isDone ? (listAnswer.length < listQuiz.length ? true : false) : false/}
           onClick={() => {
             setIsSubmit(true);
-            onSubmit();
+            onSubmit(answer);
           }}
         >
-          {!isDone ? 'NỘP BÀI' : 'CHỨNG CHỈ'}
+          {'NỘP BÀI'}
         </AppButton>
       )}
     </QuizStyled>
@@ -125,7 +163,7 @@ const QuizSkeleton = () => {
         width: 100%;
       `}
     >
-      {_.times(10).map((v) => (
+      {_.times(2).map((v) => (
         <div
           key={v}
           css={css`
@@ -206,16 +244,20 @@ const QuizStyled = styled.div`
     background-color: #faad14 !important;
     border-color: #faad14 !important;
     font-weight: 700;
-    border-radius: 10px;
     width: 150px;
     letter-spacing: 1px;
+    margin: auto;
+    border-radius: 5px;
+
     &:hover {
       letter-spacing: 3px;
-      color: #000;
+      color: #000 !important;
+      box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
     }
     &[disabled] {
       cursor: not-allowed;
     }
+    transition: all 400ms ease;
   }
 
   .ant-radio-disabled .ant-radio-inner:after {

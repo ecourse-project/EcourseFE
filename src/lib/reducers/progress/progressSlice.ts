@@ -3,12 +3,14 @@ import {
   CourseDocument,
   OFileUpload,
   Quiz,
+  QuizResult,
   UpdateLessonArgs,
   UpdateProgressArgs,
   UserAnswersArgs,
 } from 'src/lib/types/backend_modal';
 
 import { createSlice, current, PayloadAction } from '@reduxjs/toolkit';
+import { SelectedQuizType } from 'src/lib/types/commentType';
 
 export interface ProgressState {
   courseDetail: Course;
@@ -20,7 +22,7 @@ export interface ProgressState {
   answerSheet: UserAnswersArgs[];
   loading: boolean;
   error: string | null;
-  selectedQuiz: Quiz[];
+  selectedQuiz: SelectedQuizType | null;
 }
 
 const initialState: ProgressState = {
@@ -33,7 +35,7 @@ const initialState: ProgressState = {
   answerSheet: [],
   loading: false,
   error: null,
-  selectedQuiz: [] as Quiz[],
+  selectedQuiz: null,
 };
 
 export const progressSlice = createSlice({
@@ -43,16 +45,16 @@ export const progressSlice = createSlice({
     setSelectedDoc: (state, action: PayloadAction<any>) => {
       state.selectedDoc = action.payload;
       state.selectedVideo = {} as OFileUpload;
-      state.selectedQuiz = [] as Quiz[];
+      state.selectedQuiz = null;
       state.isDoneVideo = false;
     },
     setSelectedVideo: (state, action: PayloadAction<any>) => {
       state.selectedVideo = action.payload;
       state.selectedDoc = {} as CourseDocument;
-      state.selectedQuiz = [] as Quiz[];
+      state.selectedQuiz = null;
       state.isDoneVideo = false;
     },
-    setSelectedQuiz: (state, action: PayloadAction<Quiz[]>) => {
+    setSelectedQuiz: (state, action: PayloadAction<SelectedQuizType>) => {
       state.selectedQuiz = action.payload;
       state.selectedVideo = {} as OFileUpload;
       state.selectedDoc = {} as CourseDocument;

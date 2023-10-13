@@ -50,6 +50,7 @@ const parseParamsToUrL = (url: string, params: string[], paramsName: string) => 
 export const apiURL = {
   login: () => 'api/users-auth/token/',
   refresh: () => 'api/users-auth/token/refresh/',
+  userInfo: (user_id) => `api/users/user-info/?user_id=${user_id}`,
   me: () => 'api/users/me/',
   register: () => 'api/users-auth/registration/',
   existEmail: (email) => `api/users/exists/?email=${email}`,
@@ -115,9 +116,11 @@ export const apiURL = {
   documentRatingFilter: (document_id, score) => `document/rating/filter/?document_id=${document_id}&score=${score}`,
   courseRatingFilter: (course_id, score) => `course/rating/filter/?course_id=${course_id}&score=${score}`,
 
-  listQuiz: (id) => `api/quiz/?course_id=${id}`,
+  listQuiz: (course_id, lesson_id) => `api/quiz/?course_id=${course_id}&lesson_id=${lesson_id}`,
   getQuizResult: () => `api/quiz/result/`,
   downloadCerti: (course_id) => `api/quiz/certi/?course_id=${course_id}`,
+  quizStartTime: (course_id, lesson_id, is_start) =>
+    `api/quiz/start-time/?course_id=${course_id}&lesson_id=${lesson_id}&is_start=${is_start}`,
 
   listHeaders: () => `api/settings/headers/`,
   getHome: () => `api/settings/home/`,
@@ -159,6 +162,10 @@ export const apiURL = {
 class CourseService {
   static myInfo(): Promise<User> {
     return apiClient.get(apiURL.me());
+  }
+
+  static userInfo(user_id: string): Promise<User> {
+    return apiClient.get(apiURL.userInfo(user_id));
   }
 
   static updateInfo(phone?: string, full_name?: string, avatar?: string): Promise<User> {
@@ -323,8 +330,8 @@ class CourseService {
     return apiClient.get(apiURL.courseRatingFilter(course_id, score));
   }
 
-  static listQuiz(id: string): Promise<Quiz[]> {
-    return apiClient.get(apiURL.listQuiz(id));
+  static listQuiz(course_id: string, lesson_id: string): Promise<Quiz[]> {
+    return apiClient.get(apiURL.listQuiz(course_id, lesson_id));
   }
 
   static getQuizResult(params: QuizResultArgs): Promise<QuizResult> {
@@ -333,6 +340,10 @@ class CourseService {
 
   static downloadCerti(course_id: string): Promise<any> {
     return apiClient.get(apiURL.downloadCerti(course_id));
+  }
+
+  static quizStartTime(course_id: string, lesson_id: string, is_start: boolean): Promise<{ start_time?: string }> {
+    return apiClient.get(apiURL.quizStartTime(course_id, lesson_id, is_start));
   }
 
   static listHeaders(): Promise<Nav[]> {
