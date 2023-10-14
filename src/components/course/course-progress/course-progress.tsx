@@ -87,10 +87,7 @@ const CourseProgress = () => {
   const { downloadPDF, DownloadAnchor } = useExportCertificate({
     certificateExport: CourseService.downloadCerti,
     onFailed: (err) => {
-      
-      
-      
-      ('Download Error', err.message, () => {});
+      AlertTextError('Download Error', err.message, () => {});
     },
   });
 
