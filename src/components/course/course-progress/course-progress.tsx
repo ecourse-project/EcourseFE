@@ -33,6 +33,7 @@ import { useExportCertificate } from 'src/lib/hooks/useExportCerti';
 import QuizSection from './Quiz';
 import LessonItem from './lesson-item';
 import { CourseProgressWrapper } from './style';
+
 import { isIframeOrUrl, isURL, updateURLParams } from 'src/lib/utils/utils';
 
 const { Panel } = Collapse;

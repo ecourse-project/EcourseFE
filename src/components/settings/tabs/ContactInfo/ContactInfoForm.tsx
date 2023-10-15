@@ -43,6 +43,7 @@ const ContactSettingForm: React.FC<ContactSettingsFormProps> = () => {
   const formik = useFormik<SettingFieldData>({
     initialValues: {
       ...myProfile,
+      phone: myProfile.phone || '',
     },
     validationSchema: validationSchema.current,
     validateOnChange: true,

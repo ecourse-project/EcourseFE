@@ -123,7 +123,6 @@ export const updateURLParams = (router, myNewParams) => {
 };
 
 export function isIframeOrUrl(str) {
-  console.log('str', str);
   // Regex pattern to match an iframe tag
   const iframeRegex = /<iframe.*>.*<\/iframe>/i;
 
@@ -131,20 +130,16 @@ export function isIframeOrUrl(str) {
   const urlRegex = /^(https?:\/\/)?([\w.-]+)\.([a-z]{2,})(\/.*)?$/i;
 
   if (iframeRegex.test(str)) {
-    console.log('iframe');
     return true;
   }
-  console.log('not iframe');
   return false;
 }
 export function isURL(str) {
   const pattern = /^(?:\w+:)?\/\/([^\s.]+\.\S{2}|localhost[:?\d]*)\S*$/;
-  return pattern.test(str);
+  return pattern.test(str.replaceAll(' ', '%20'));
 }
 
 export const getReturnValues = (countDown) => {
-  console.log('countDown :==>>', countDown);
-  // calculate time left
   const days = Math.floor(countDown / (1000 * 60 * 60 * 24));
   const hours = Math.floor((countDown % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
   const minutes = Math.floor((countDown % (1000 * 60 * 60)) / (1000 * 60));
