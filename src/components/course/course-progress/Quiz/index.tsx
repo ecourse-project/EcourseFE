@@ -69,12 +69,12 @@ const QuizSection: React.FC<QuizProps> = (props) => {
       ) : (
         <></>
       )}
-      {!isLoading && lessonQuiz.isDone ? (
+      {!isLoading && lessonQuiz.isDone && lessonQuiz?.result?.mark ? (
         <Progress
           type="circle"
           className="mark"
-          percent={(lessonQuiz.result.mark || 0) * 10}
-          format={(percent) => `${percent && parseFloat(percent.toFixed(2)) / 10}/10`}
+          percent={lessonQuiz?.result?.mark}
+          format={(percent) => `${percent && parseFloat(percent.toFixed(2))}%`}
           status="exception"
           strokeColor={{
             from: '#7b4397',

@@ -325,10 +325,6 @@ const CourseProgress = () => {
     setNumPages(numPages);
   }
 
-  useEffect(() => {
-    console.log('state.selectedVideo :==>>', state.selectedVideo);
-  }, [state.selectedVideo]);
-
   return (
     <CourseProgressWrapper
       css={css`
