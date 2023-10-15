@@ -112,9 +112,9 @@ const CourseProgress = () => {
     } else if (params.video && courseDetail.lessons) {
       const currentLesson = courseDetail.lessons.find((v) => v.id === params.lesson);
       if (currentLesson) {
-        const currentVideo = currentLesson.videos.findIndex((video) => video.id === params.video);
+        const currentVideo = currentLesson.videos.find((video) => video.id === params.video);
         if (currentVideo) {
-          dispatch(progressAction.setSelectedDoc(currentVideo));
+          dispatch(progressAction.setSelectedVideo(currentVideo));
         }
       } //if there is not any current => assign first video by default
     } else if (params.quiz && courseDetail.lessons) {
@@ -324,6 +324,11 @@ const CourseProgress = () => {
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
   }
+
+  useEffect(() => {
+    console.log('state.selectedVideo :==>>', state.selectedVideo);
+  }, [state.selectedVideo]);
+
   return (
     <CourseProgressWrapper
       css={css`
