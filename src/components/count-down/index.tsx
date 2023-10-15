@@ -1,7 +1,5 @@
-import React, { useEffect, useMemo } from 'react';
-import useCountDown from './hooks/useCountDown';
-import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import useCountDown from './hooks/useCountDown';
 
 const DateTimeDisplay = ({ value, type, isDanger }) => {
   return (

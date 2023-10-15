@@ -1,17 +1,16 @@
-import { Card, Checkbox, Collapse, List } from 'antd';
-import { cloneDeep, debounce } from 'lodash';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'src/lib/reducers/model';
-import { progressAction } from 'src/lib/reducers/progress/progressSlice';
-import { Lesson, Quiz, QuizResult, UpdateLessonArgs } from 'src/lib/types/backend_modal';
-import { DurationTime, formatDurationTime, uniqueArr, updateURLParams } from 'src/lib/utils/utils';
-import ExamImg from 'src/assets/images/exam.png';
-import Image from 'next/image';
 import { FileTextOutlined, PlayCircleFilled } from '@ant-design/icons';
 import { css } from '@emotion/react';
-import { SelectedQuizType } from 'src/lib/types/commentType';
+import { Card, Checkbox, Collapse, List } from 'antd';
+import { cloneDeep, debounce } from 'lodash';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import ExamImg from 'src/assets/images/exam.png';
+import { RootState } from 'src/lib/reducers/model';
+import { progressAction } from 'src/lib/reducers/progress/progressSlice';
+import { Lesson, UpdateLessonArgs } from 'src/lib/types/backend_modal';
+import { DurationTime, formatDurationTime, uniqueArr, updateURLParams } from 'src/lib/utils/utils';
 
 const { Panel } = Collapse;
 
