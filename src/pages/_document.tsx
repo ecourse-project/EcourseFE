@@ -1,4 +1,5 @@
 import Document, { Head, Html, Main, NextScript } from 'next/document';
+import { WEB_DESCRIPTION, WEB_TITLE, WEB_URL } from 'src/lib/utils/constant';
 
 class MyDocument extends Document {
   static async getInitialProps(ctx) {
@@ -20,10 +21,10 @@ class MyDocument extends Document {
           <meta name="apple-mobile-web-app-capable" content="yes" />
           <meta name="keywords" content="creative,creativeteaching,teaching,chemistry, ecourse" />
           <meta property="og:locale" content="en_US" />
-          <meta property="og:site_name" content="Creativeteaching" />
-          <meta property="og:title" content="Creativeteaching" />
-          <meta property="og:description" content="Next.js + SWR codebase containing ecourse" />
-          <meta property="og:url" content="https://next-ecourse.now.sh/" />
+          <meta property="og:site_name" content={WEB_TITLE} />
+          <meta property="og:title" content={WEB_TITLE} />
+          <meta property="og:description" content={WEB_DESCRIPTION} />
+          <meta property="og:url" content={WEB_URL} />
           <meta property="og:image" content="/logo.png" />
           <meta name="msapplication-TileColor" content="#000" />
           <meta name="msapplication-TileImage" content="/images/ms-icon-144x144.png" />

@@ -16,3 +16,7 @@ export const DEFAULT_IMAGE_SOURCE = `data:image/png;base64,iVBORw0KGgoAAAANSUhEU
 export const DEFAULT_PAGE_SIZE = 6;
 
 export const METAMASK_DOWNNLOAD_LINK = 'https://metamask.io/download';
+
+export const WEB_URL = 'http://creativeteaching.net/';
+export const WEB_DESCRIPTION = '21st Century skills';
+export const WEB_TITLE = 'Creativeteaching';
