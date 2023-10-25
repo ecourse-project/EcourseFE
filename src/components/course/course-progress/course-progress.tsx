@@ -467,7 +467,6 @@ const CourseProgress = () => {
                   state.selectedDoc.file?.use_embedded_url &&
                   !state.selectedDoc.file?.file_embedded_url) ? (
                 <div className="pdf_wrapper">
-                  <div>Vao pdf</div>
                   <PdfViewer url={state.selectedDoc?.file?.file_path || ''} />
                   {/* <Document file={state.selectedDoc?.file?.file_path} onLoadSuccess={onDocumentLoadSuccess}>
                     <Page pageNumber={pageNumber} />
