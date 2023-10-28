@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "clean": "rm -rf node_modules .cache",
+    "clean": "rm -rf node_modules .cache .next",
     "build": "next build",
     "buildPro": "npm run clean && npm install && next build",
     "start": "next start",
