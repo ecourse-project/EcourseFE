@@ -102,7 +102,7 @@ const CourseProgress = () => {
   const setCurrentDocReloadPage = (courseDetail: Course) => {
     // set current doc when reload page
     if (params.doc && courseDetail.lessons) {
-      const currentLesson = courseDetail.lessons.find((v) => v.id === params.lesson);
+      const currentLesson = courseDetail.lessons.find((v) => v.documents?.some((doc) => doc.id === params.doc));
       if (currentLesson) {
         const currentDoc = currentLesson.documents.find((doc) => doc.id === params.doc);
         if (currentDoc) {
@@ -110,7 +110,7 @@ const CourseProgress = () => {
         }
       } //set current video on reloading page
     } else if (params.video && courseDetail.lessons) {
-      const currentLesson = courseDetail.lessons.find((v) => v.id === params.lesson);
+      const currentLesson = courseDetail.lessons.find((v) => v.videos?.some((vid) => vid.id === params.video));
       if (currentLesson) {
         const currentVideo = currentLesson.videos.find((video) => video.id === params.video);
         if (currentVideo) {
@@ -199,48 +199,18 @@ const CourseProgress = () => {
   };
 
   useEffect(() => {
-    console.log(isIframeOrUrl(state.selectedDoc.file?.file_embedded_url));
-  }, [state.selectedDoc]);
-  // useEffect(() => {
-  //   const { quiz, ...rest } = qury;
-  //   router.push(
-  //     {
-  //       pathname: '/course-progress',
-  //       query: {
-  //         ...router.query,
-  //         ...rest,
-  //         // exam: !videoId && !docId ? 'true' : '',
-  //       },
-  //     },
-  //     undefined,
-  //     { shallow: true },
-  //   );
-  // }, [state]);
-
-  // useEffect(() => {
-  //   console.log('state :==>>', state);
-  //   const videoId = state.selectedVideo?.id;
-  //   const docId = state.selectedDoc?.file?.id;
-  //   if (videoId || docId)
-  //     router.push(
-  //       {
-  //         pathname: '/course-progress',
-  //         query: {
-  //           ...router.query,
-  //           lesson: state.currentLesson,
-  //           video: videoId,
-  //           doc: docId,
-  //           // exam: !videoId && !docId ? 'true' : '',
-  //         },
-  //       },
-  //       undefined,
-  //       { shallow: true },
-  //     );
-  // }, [state.selectedDoc, state.selectedVideo]);
+    return () => {
+      dispatch(progressAction.setSelectedDoc(null));
+      dispatch(progressAction.setSelectedVideo(null));
+      dispatch(progressAction.setSelectedQuiz(null));
+      dispatch(progressAction.setSelectedDoc(null));
+    };
+  }, []);
 
   useEffect(() => {
-    if (!course) getCourseDetail(params.id);
-    else setCurrentDocReloadPage(course);
+    if (!course) {
+      getCourseDetail(params.id);
+    } else setCurrentDocReloadPage(course);
   }, [params.doc, params.video, params.quiz]);
 
   const debounceUpdateProgress = useDebouncedCallback(async (params: UpdateProgressArgs) => {
@@ -256,10 +226,6 @@ const CourseProgress = () => {
       console.log('error update', error);
     }
   }, 1000);
-
-  // useEffect(() => {
-  //   setVideoLoading(true);
-  // }, [state.selectedVideo]);
 
   const calculateProgress = () => {
     const doneDoc = state.updateParams?.lessons?.reduce((p, c) => p + c.completed_docs?.length, 0);
@@ -282,7 +248,6 @@ const CourseProgress = () => {
         lesson_id: state.selectedQuiz?.lessonId,
         user_answers: answer,
       } as QuizResultArgs);
-      console.log('result :==>>', result);
       setResultQuiz(result);
       await getCourseDetail(params.id);
       // }
@@ -461,11 +426,11 @@ const CourseProgress = () => {
                   />
                 )
               ) : (!_.isEmpty(state.selectedDoc) &&
-                  !state.selectedDoc.file?.use_embedded_url &&
+                  !state.selectedDoc?.file?.use_embedded_url &&
                   state.selectedDoc?.file?.file_path) ||
                 (!_.isEmpty(state.selectedDoc) &&
-                  state.selectedDoc.file?.use_embedded_url &&
-                  !state.selectedDoc.file?.file_embedded_url) ? (
+                  state.selectedDoc?.file?.use_embedded_url &&
+                  !state.selectedDoc?.file?.file_embedded_url) ? (
                 <div className="pdf_wrapper">
                   <PdfViewer url={state.selectedDoc?.file?.file_path || ''} />
                   {/* <Document file={state.selectedDoc?.file?.file_path} onLoadSuccess={onDocumentLoadSuccess}>
@@ -485,7 +450,7 @@ const CourseProgress = () => {
                 ) : (
                   <iframe
                     src={state.selectedDoc?.file?.file_embedded_url || ''}
-                    title={state.selectedDoc.name}
+                    title={state.selectedDoc?.name}
                     width="100%"
                     height="500px"
                     sandbox="allow-scripts allow-same-origin"
