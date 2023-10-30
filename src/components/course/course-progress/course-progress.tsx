@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { useDispatch, useSelector } from 'react-redux';
-import NotFile from 'src/assets/images/notfoundfile.png';
+// import NotFile from 'src/assets/images/notfoundfile.png';
 import CommentSection from 'src/components/comment';
 import CourseService from 'src/lib/api/course';
 import useDebouncedCallback from 'src/lib/hooks/useDebouncedCallback';
@@ -102,7 +102,7 @@ const CourseProgress = () => {
   const setCurrentDocReloadPage = (courseDetail: Course) => {
     // set current doc when reload page
     if (params.doc && courseDetail.lessons) {
-      const currentLesson = courseDetail.lessons.find((v) => v.documents?.some((doc) => doc.id === params.doc));
+      const currentLesson = courseDetail.lessons.find((v) => v.id === params.lesson);
       if (currentLesson) {
         const currentDoc = currentLesson.documents.find((doc) => doc.id === params.doc);
         if (currentDoc) {
@@ -110,7 +110,7 @@ const CourseProgress = () => {
         }
       } //set current video on reloading page
     } else if (params.video && courseDetail.lessons) {
-      const currentLesson = courseDetail.lessons.find((v) => v.videos?.some((vid) => vid.id === params.video));
+      const currentLesson = courseDetail.lessons.find((v) => v.id === params.lesson);
       if (currentLesson) {
         const currentVideo = currentLesson.videos.find((video) => video.id === params.video);
         if (currentVideo) {
@@ -199,18 +199,22 @@ const CourseProgress = () => {
   };
 
   useEffect(() => {
-    return () => {
-      dispatch(progressAction.setSelectedDoc(null));
-      dispatch(progressAction.setSelectedVideo(null));
-      dispatch(progressAction.setSelectedQuiz(null));
-      dispatch(progressAction.setSelectedDoc(null));
-    };
-  }, []);
+    console.log(isIframeOrUrl(state.selectedDoc.file?.file_embedded_url));
+  }, [state.selectedDoc]);
+  //   return () => {
+  //     dispatch(progressAction.setSelectedDoc(null));
+  //     dispatch(progressAction.setSelectedVideo(null));
+  //     dispatch(progressAction.setSelectedQuiz(null));
+  //     dispatch(progressAction.setSelectedDoc(null));
+  //   };
+  // }, []);
 
   useEffect(() => {
-    if (!course) {
-      getCourseDetail(params.id);
-    } else setCurrentDocReloadPage(course);
+    if (!course) getCourseDetail(params.id);
+    else setCurrentDocReloadPage(course);
+    // if (!course) {
+    //   getCourseDetail(params.id);
+    // } else setCurrentDocReloadPage(course);
   }, [params.doc, params.video, params.quiz]);
 
   const debounceUpdateProgress = useDebouncedCallback(async (params: UpdateProgressArgs) => {
@@ -426,11 +430,12 @@ const CourseProgress = () => {
                   />
                 )
               ) : (!_.isEmpty(state.selectedDoc) &&
-                  !state.selectedDoc?.file?.use_embedded_url &&
+                  // !state.selectedDoc?.file?.use_embedded_url &&
+                  !state.selectedDoc.file?.use_embedded_url &&
                   state.selectedDoc?.file?.file_path) ||
                 (!_.isEmpty(state.selectedDoc) &&
-                  state.selectedDoc?.file?.use_embedded_url &&
-                  !state.selectedDoc?.file?.file_embedded_url) ? (
+                  state.selectedDoc.file?.use_embedded_url &&
+                  !state.selectedDoc.file?.file_embedded_url) ? (
                 <div className="pdf_wrapper">
                   <PdfViewer url={state.selectedDoc?.file?.file_path || ''} />
                   {/* <Document file={state.selectedDoc?.file?.file_path} onLoadSuccess={onDocumentLoadSuccess}>
@@ -450,7 +455,8 @@ const CourseProgress = () => {
                 ) : (
                   <iframe
                     src={state.selectedDoc?.file?.file_embedded_url || ''}
-                    title={state.selectedDoc?.name}
+                    title={state.selectedDoc.name}
+                    // title={state.selectedDoc?.name}
                     width="100%"
                     height="500px"
                     sandbox="allow-scripts allow-same-origin"
@@ -468,7 +474,7 @@ const CourseProgress = () => {
                 </>
               ) : (
                 <>
-                  <Image src={NotFile} alt="no file found" width={200} height={200} style={{ margin: '100px auto' }} />
+                  <Image src="" alt="no file found" width={200} height={200} style={{ margin: '100px auto' }} />
                 </>
               )}
             </Row>
