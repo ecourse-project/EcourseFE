@@ -54,7 +54,7 @@ export const progressSlice = createSlice({
       state.selectedQuiz = null;
       state.isDoneVideo = false;
     },
-    setSelectedQuiz: (state, action: PayloadAction<SelectedQuizType>) => {
+    setSelectedQuiz: (state, action: PayloadAction<SelectedQuizType | null>) => {
       state.selectedQuiz = action.payload;
       state.selectedVideo = {} as OFileUpload;
       state.selectedDoc = {} as CourseDocument;
