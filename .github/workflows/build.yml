@@ -35,5 +35,6 @@ jobs:
           git checkout Next
           git merge --no-ff --allow-unrelated-histories Next-feat -m "Auto-merge: Merge Next-feat into Next"
           git push origin Next
-
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
