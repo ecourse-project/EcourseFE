@@ -1,0 +1,40 @@
+name: Auto Build on Push
+
+on:
+  push:
+    branches:
+      - Next
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm run clean && npm install
+
+      - name: Build
+        run: npm run build
+
+      # - name: Set up Git
+      #   run: |
+      #     git config user.name "CuongNHT"
+      #     git config user.email "nhtcit99@gmail.com"
+
+      # - name: Merge branch
+      #   run: |
+      #     git fetch origin Next
+      #     git checkout Next
+      #     git merge --no-ff --allow-unrelated-histories Next-feat -m "Auto-merge: Merge Next-feat into Next"
+      #     git push origin Next
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
