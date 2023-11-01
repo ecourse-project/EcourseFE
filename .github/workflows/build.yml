@@ -1,4 +1,4 @@
-name: Auto Merge on Success
+name: Auto Build on Push
 
 on:
   push:
@@ -19,9 +19,9 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        run: npm install
+        run: npm run clean && npm install
 
-      - name: Build and test
+      - name: Build
         run: npm run build
 
       - name: Set up Git
@@ -29,12 +29,12 @@ jobs:
           git config user.name "CuongNHT"
           git config user.email "nhtcit99@gmail.com"
 
-      - name: Merge branch
-        run: |
-          git fetch origin Next
-          git checkout Next
-          git merge --no-ff --allow-unrelated-histories Next-feat -m "Auto-merge: Merge Next-feat into Next"
-          git push origin Next
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Merge branch
+      #   run: |
+      #     git fetch origin Next
+      #     git checkout Next
+      #     git merge --no-ff --allow-unrelated-histories Next-feat -m "Auto-merge: Merge Next-feat into Next"
+      #     git push origin Next
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
