@@ -1,13 +1,11 @@
 import { Card } from 'antd';
 import Search from 'antd/es/transfer/search';
-import Link from 'next/link';
 
-import { FacebookOutlined, RightOutlined } from '@ant-design/icons';
+import { RightOutlined } from '@ant-design/icons';
 import styled from '@emotion/styled';
 
-import HomeTopicCard from './homeTopicCard';
-import CourseService from 'src/lib/api/course';
 import { useEffect, useState } from 'react';
+import CourseService from 'src/lib/api/course';
 import { Post } from 'src/lib/types/backend_modal';
 
 export interface IHomeSideProps {}

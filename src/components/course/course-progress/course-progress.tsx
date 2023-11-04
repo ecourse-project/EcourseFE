@@ -16,7 +16,6 @@ import { progressAction } from 'src/lib/reducers/progress/progressSlice';
 import {
   Course,
   Lesson,
-  Quiz,
   QuizResult,
   QuizResultArgs,
   UpdateLessonArgs,
@@ -36,7 +35,6 @@ import { CourseProgressWrapper } from './style';
 
 import { isIframeOrUrl, isURL, updateURLParams } from 'src/lib/utils/utils';
 
-const { Panel } = Collapse;
 export interface CourseParams {
   id: string;
   lesson?: string;
@@ -77,13 +75,11 @@ const CourseProgress = () => {
   const [sumDoc, setSumDoc] = useState<number>(0);
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [resultQuiz, setResultQuiz] = useState<QuizResult>();
   const dispatch = useDispatch();
   const state = useSelector((state: RootState) => state.progress);
-  const [checkedItems, setCheckedItems] = useState<UpdateLessonArgs[]>([]);
   const router = useRouter();
   const [progressNumber, setProgressNumber] = useState<number>(course?.progress || 0);
-  const [qury, setQury] = useState<any>({});
+
   const { downloadPDF, DownloadAnchor } = useExportCertificate({
     certificateExport: CourseService.downloadCerti,
     onFailed: (err) => {
@@ -146,36 +142,15 @@ const CourseProgress = () => {
   };
 
   const setInitialCheck = async (courseDetail: Course) => {
-    // set initial checked item and checked answer
     const res = convertDataToUpdateParams(courseDetail.lessons || []);
-    // const res = courseDetail?.lessons?.map((v) => {
-    //   // setSumDoc(sumDoc + v?.documents?.length);
-    //   // setSumVid(sumVid + v?.videos?.length);
-    //   return {
-    //     lesson_id: v.id,
-    //     completed_docs: [...(v?.docs_completed || [])],
-    //     completed_videos: [...(v?.videos_completed || [])],
-    //   } as UpdateLessonArgs;
-    // });
     setSumDoc(courseDetail.lessons?.reduce((p, c) => p + c.documents.length, 0) || 0);
     setSumVid(courseDetail.lessons?.reduce((p, c) => p + c.videos.length, 0) || 0);
 
-    setCheckedItems(res || []);
     dispatch(progressAction.setUpdateParams({ course_id: courseDetail.id, lessons: res }));
-
-    // const initialAnswer = quizList?.map(
-    //   (v) =>
-    //     ({
-    //       quiz_id: v.id,
-    //       answer_choice: AnswerChoiceEnum.NO_CHOICE,
-    //     }) as UserAnswersArgs,
-    // );
-    // dispatch(progressAction.updateCheckedAnswer(initialAnswer));
   };
 
   const getCourseDetail = async (id: string) => {
     try {
-      setLoading(true);
       let courseDetail: Course = {} as Course;
       if (String(params.isClass) === 'true') {
         courseDetail = await CourseService.getClassDetail(id);
@@ -193,8 +168,6 @@ const CourseProgress = () => {
       await setInitialCheck(courseDetail);
     } catch (error: any) {
       // AlertTextError('Error', error?.response?.data?.detail, () => router.back());
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -248,7 +221,6 @@ const CourseProgress = () => {
         lesson_id: state.selectedQuiz?.lessonId,
         user_answers: answer,
       } as QuizResultArgs);
-      setResultQuiz(result);
       await getCourseDetail(params.id);
       // }
     } catch (error) {
