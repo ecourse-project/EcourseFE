@@ -1,11 +1,12 @@
 import { Input, InputNumber } from 'antd';
 import { InputProps } from 'antd/lib/input';
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEventHandler, useState } from 'react';
 import theme from 'src/styles/theme';
 
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons/lib/icons';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import TextArea from 'antd/lib/input/TextArea';
 
 const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean) => {
   let isLabelAffected = isFocusing;
@@ -150,97 +151,7 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean) =>
         }
       }
     }
-    &.company-field {
-      input {
-        background-color: #fff !important;
-        min-height: 46px !important;
-      }
-    }
-    &.email-field {
-      input {
-        background-color: #fff !important;
-        min-height: 46px !important;
-      }
-    }
-    &.password-field {
-      input {
-        background-color: #fff !important;
-        min-height: 46px !important;
-      }
-    }
-    &.firstName-field {
-      input {
-        background-color: #fff !important;
-        min-height: 46px !important;
-      }
-    }
-    &.lastName-field {
-      input {
-        background-color: #fff !important;
-        min-height: 46px !important;
-      }
-    }
-    &.confirm-field {
-      input {
-        background-color: #fff !important;
-        min-height: 46px !important;
-      }
-    }
-    &.name-field {
-      input {
-        background-color: #fff !important;
-        min-height: 46px !important;
-      }
-    }
-    &.market-field {
-      input {
-        background-color: #fff !important;
-        min-height: 46px !important;
-      }
-    }
-    &.dre-field {
-      input {
-        background-color: #fff !important;
-        min-height: 46px !important;
-      }
-    }
-    &.website-field {
-      input {
-        background-color: #fff !important;
-        min-height: 40px !important;
-      }
-    }
-    &.website-lookup-field {
-      input {
-        background-color: #fff !important;
-        min-height: 46px !important;
-      }
-    }
-    &.password-protected {
-      .s-label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: 700;
-      }
-      input {
-        display: block;
-        width: 100%;
-        min-height: 38px;
-        padding: 8px 12px;
-        margin-bottom: 10px;
-        font-size: 14px;
-        line-height: 1.42857143;
-        color: #333333;
-        vertical-align: middle;
-        background-color: #ffffff;
-        border: 1px solid #cccccc;
-        border-radius: 5px;
-        &:focus {
-          border: 1px solid ${theme.text.blueColor};
-          box-shadow: none;
-        }
-      }
-    }
+
     .ant-input-affix-wrapper {
       input {
         &:focus {
@@ -263,7 +174,6 @@ export interface AppInputProps extends InputProps {
   handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   handleFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
-  handleChangeNumber?: (value) => void;
 }
 
 const AppInput: React.FC<AppInputProps> = (props) => {
@@ -284,7 +194,6 @@ const AppInput: React.FC<AppInputProps> = (props) => {
     showEye,
     type,
     placeholder,
-    handleChangeNumber,
     ...rest
   } = props;
 
@@ -303,7 +212,7 @@ const AppInput: React.FC<AppInputProps> = (props) => {
     setIsFocusing(false);
   };
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = (e) => {
     handleChange && handleChange(e);
     if (type !== 'number' && e.target.value && e.target.value.length > 0) {
       setIsEmpty(false);
@@ -320,59 +229,7 @@ const AppInput: React.FC<AppInputProps> = (props) => {
     <div className={className} css={[baseStyle(isForceFocus || isFocusing, isEmpty, hasError)]}>
       {/* onClick={onInputRefFocus} */}
       {label && <label className="s-label">{`${label}${requiredMark ? `*` : ''}`}</label>}
-      {type !== 'number' ? (
-        <Input
-          {...rest}
-          type={typeLocal}
-          placeholder={placeholder}
-          value={value}
-          onBlur={onBlur}
-          onFocus={onFocus}
-          onChange={onChange}
-          // ref={inputRef}
-          onInput={onInput}
-        />
-      ) : (
-        <div>
-          <InputNumber
-            addonAfter="(s)"
-            {...rest}
-            type={typeLocal}
-            placeholder={placeholder}
-            value={value as number}
-            onBlur={onBlur}
-            onFocus={onFocus}
-            onChange={handleChangeNumber}
-            min={0}
-            // ref={inputRef}
-            css={css`
-              &.ant-input-number-group-wrapper {
-                width: 100%;
-                .ant-input-number {
-                  border-color: #cccccc !important;
-                }
-              }
-            `}
-          />
-        </div>
-      )}
-      {showEye && (
-        <div className="eyes">
-          {typeLocal === 'password' ? (
-            <EyeOutlined
-              onClick={() => {
-                setTypeLocal('text');
-              }}
-            />
-          ) : (
-            <EyeInvisibleOutlined
-              onClick={() => {
-                setTypeLocal('password');
-              }}
-            />
-          )}
-        </div>
-      )}
+      <TextArea placeholder={placeholder} value={value || ''} onChange={onChange} />
     </div>
   );
 };
