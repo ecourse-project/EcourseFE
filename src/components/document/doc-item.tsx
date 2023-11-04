@@ -9,7 +9,6 @@ import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { docActions } from 'src/lib/reducers/document/documentSlice';
 import { RootState } from 'src/lib/reducers/model';
 import { Document, MoveEnum } from 'src/lib/types/backend_modal';
-import { formatCurrencySymbol } from 'src/lib/utils/currency';
 import { SaleStatusEnum } from 'src/lib/utils/enum';
 import { formatDate } from 'src/lib/utils/format';
 import RoutePaths from 'src/lib/utils/routes';
@@ -17,15 +16,13 @@ import { checkAccountPermission } from 'src/lib/utils/utils';
 import { DocumentParams } from 'src/sections/Pages/DocumentUI';
 
 /* eslint-disable react/prop-types */
-import { WalletOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 
+import IconChecked from 'src/assets/icons/IconChecked';
+import DefaultDocImage from 'src/assets/images/docDefault.jpg';
+import globalVariable from 'src/lib/config/env';
 import AppButton from '../button';
 import { ItemDocCourseWrapper } from './style';
-import Image from 'next/image';
-import DefaultDocImage from 'src/assets/images/docDefault.jpg';
-import IconChecked from 'src/assets/icons/IconChecked';
-import globalVariable from 'src/lib/config/env';
 
 interface ChildProps {
   document: Document; // try not to use any.
@@ -46,12 +43,11 @@ enum Color {
 
 const DocItem: React.FC<ChildProps> = memo((props) => {
   const { document, isMyLearn } = props;
-  const [added, setAdded] = useState(false);
   const [btnString, setBtnString] = useState<string>(BtnString.AVAILABLE);
   const cartData = useSelector((state: RootState) => state.document);
   const [loading, setLoading] = useState<boolean>(false);
   const [currentDoc, setCurrentDoc] = useState<Document>(document);
-  const [isFav, setIsFav] = useState<boolean>(document?.is_favorite || false);
+  // const [isFav, setIsFav] = useState<boolean>(document?.is_favorite || false);
   const params: DocumentParams = useQueryParam();
   const dispatch = useDispatch();
 

@@ -1,24 +1,8 @@
-import { Avatar, Breadcrumb, Button, Col, Divider, List, Row, Statistic, Tabs, Tag, Typography } from 'antd';
-import { isEmpty } from 'lodash';
+import { Breadcrumb, Col, Divider, List, Row, Tabs, Tag, Typography } from 'antd';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
 import CourseService from 'src/lib/api/course';
-import { useQueryParam } from 'src/lib/hooks/useQueryParam';
-import { RootState } from 'src/lib/reducers/model';
-import {
-  Course,
-  CourseComment,
-  MoveEnum,
-  Pagination,
-  RateCourseArgs,
-  Rating,
-  RatingEnum,
-  RequestStatus,
-  SaleStatusEnum,
-  UpdateLessonArgs,
-} from 'src/lib/types/backend_modal';
-import { formatCurrencySymbol } from 'src/lib/utils/currency';
+import { Course, MoveEnum, RequestStatus, SaleStatusEnum } from 'src/lib/types/backend_modal';
 import { formatDate } from 'src/lib/utils/format';
 import RoutePaths from 'src/lib/utils/routes';
 
@@ -32,22 +16,18 @@ import {
   FileSearchOutlined,
   MinusCircleOutlined,
   PlusCircleOutlined,
-  StarFilled,
   SwapOutlined,
   SyncOutlined,
-  UserOutlined,
   VerticalLeftOutlined,
 } from '@ant-design/icons';
 import { PageHeader } from '@ant-design/pro-layout';
 import { css } from '@emotion/react';
 
-import CommentSection from '../comment';
-import FeedbackSection from '../comment/feedbacks';
-import RatingModal from '../modal/rating-modal';
-import LessonItem from './course-progress/lesson-item';
 import { BtnString } from 'src/lib/utils/enum';
-import AppButton from '../button';
 import { AlertTextError } from '../alert/SweetAlert';
+import AppButton from '../button';
+import CommentSection from '../comment';
+import LessonItem from './course-progress/lesson-item';
 
 const { Paragraph, Title } = Typography;
 
@@ -136,22 +116,11 @@ interface DocDetailParams {
 }
 
 const CourseDetail: React.FC = () => {
-  const params: DocDetailParams = useQueryParam();
   const [course, setCourse] = useState<Course>({} as Course);
   const [loading, setLoading] = useState(false);
-  const [comment, setComment] = useState<CourseComment[]>([]);
-  const dispatch = useDispatch();
-  const [openRatingModal, setOpenRatingModal] = useState<boolean>(false);
-  const [myRate, setMyRate] = useState<Rating>({} as Rating);
-  const [star, setStar] = useState<number>(0);
-  const [feedback, setFeedback] = useState<string>('');
-  const listCourse = useSelector((state: RootState) => state.course.listCourse.results);
   const router = useRouter();
-  console.log('router :==>>', router);
   const courseId = router.query?.id?.toString?.() ?? '';
-  console.log('courseId :==>>', courseId);
   const isClass = router.pathname.includes(RoutePaths.CLASS);
-  const userProfile = useSelector((state: RootState) => state.app.user);
   const [btnString, setBtnString] = useState<string>(BtnString.AVAILABLE);
 
   const fetchCourseDetail = async (id: string) => {
@@ -167,15 +136,6 @@ const CourseDetail: React.FC = () => {
       AlertTextError('Error', error?.response?.data?.detail, () => router.back());
     }
   };
-
-  // const fetchComment = async (id: string) => {
-  //   try {
-  //     const cmt: Pagination<CourseComment> = await CourseService.listComments(id, 1000, 1);
-  //     cmt && setComment(cmt.results);
-  //   } catch (error) {
-  //     console.log('error get cmt', error);
-  //   }
-  // };
 
   useEffect(() => {
     fetchCourseDetail(courseId);

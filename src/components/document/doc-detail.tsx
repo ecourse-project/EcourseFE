@@ -1,11 +1,8 @@
-import { Breadcrumb, Button, Divider, Dropdown, Menu, Row, Statistic, Tabs, Typography } from 'antd';
+import { Breadcrumb, Button, Divider, Dropdown, Menu, Row, Tabs, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import CourseService from 'src/lib/api/course';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
-import { RootState } from 'src/lib/reducers/model';
-import { Document, MoveEnum, Rating, SaleStatusEnum } from 'src/lib/types/backend_modal';
-import { formatCurrency } from 'src/lib/utils/currency';
+import { Document, MoveEnum, SaleStatusEnum } from 'src/lib/types/backend_modal';
 import { formatDate } from 'src/lib/utils/format';
 import RoutePaths from 'src/lib/utils/routes';
 
@@ -108,13 +105,7 @@ const DocDetail: React.FC = () => {
   const params: DocDetailParams = useQueryParam();
   const [doc, setDoc] = useState<Document>({} as Document);
   const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
-  const [openRatingModal, setOpenRatingModal] = useState<boolean>(false);
-  const [myRate, setMyRate] = useState<Rating>({} as Rating);
-  const [star, setStar] = useState<number>(0);
-  const [feedback, setFeedback] = useState<string>('');
 
-  const listDoc = useSelector((state: RootState) => state.document.listDoc.results);
   const fetchDocDetail = async (id: string) => {
     try {
       const docDetail: Document = await CourseService.getDocDetail(id);
