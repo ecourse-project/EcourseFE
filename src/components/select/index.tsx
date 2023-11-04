@@ -37,6 +37,9 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean, su
         font-size: 24px;
       }
     }
+    .ant-select-selection-placeholder {
+      font-style: italic;
+    }
     div {
       border-radius: 0;
       font-size: 14px;
@@ -154,7 +157,10 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean, su
           font-size: 19px;
         }
       }
-
+      .ant-select-selection-placeholder {
+        color: #031f2d;
+        font-style: italic;
+      }
       .ant-select-selector {
         color: #031f2d;
         font-weight: 400;
@@ -162,6 +168,7 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean, su
         border-radius: 5px;
         .ant-select-selection-placeholder {
           color: #031f2d;
+          font-style: italic;
         }
         background-color: #fff !important;
         border-color: ${theme.text.blackColor} !important;
@@ -212,8 +219,8 @@ const AppSelect = (props) => {
     setIsFocusing(false);
   };
 
-  const onChange = (value: React.ChangeEvent<HTMLInputElement>) => {
-    handleChange && handleChange(value);
+  const onChange = (value: React.ChangeEvent<HTMLInputElement>, option) => {
+    handleChange && handleChange(value, option);
 
     if (value && +value > 0) {
       setIsEmpty(false);
@@ -258,10 +265,10 @@ const AppSelect = (props) => {
           </div>
         )}
       >
-        {itemSelect?.map((item, index) => {
+        {itemSelect?.map((item) => {
           return (
-            <Option className="option" key={index} value={item}>
-              {item}
+            <Option className="option" key={item.value} value={item.value} id={item?.id}>
+              {item.label}
             </Option>
           );
         })}

@@ -14,8 +14,8 @@ import { SelectedQuizType } from 'src/lib/types/commentType';
 
 export interface ProgressState {
   courseDetail: Course;
-  selectedDoc: CourseDocument;
-  selectedVideo: OFileUpload;
+  selectedDoc: CourseDocument | null;
+  selectedVideo: OFileUpload | null;
   currentLesson: string;
   isDoneVideo: boolean;
   updateParams: UpdateProgressArgs;

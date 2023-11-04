@@ -128,10 +128,10 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
   }, []);
 
   useEffect(() => {
-    if (isDoneVideo) {
-      const idx = checkedVideo.indexOf(selectedVideo.id);
+    if (isDoneVideo && selectedVideo) {
+      const idx = checkedVideo.indexOf(selectedVideo?.id);
       if (idx >= 0) {
-        setCheckedVideo([...checkedVideo, selectedVideo.id]);
+        setCheckedVideo([...checkedVideo, selectedVideo?.id]);
       }
     }
   }, [isDoneVideo]);

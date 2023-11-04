@@ -54,7 +54,6 @@ const Post: React.FC = () => {
   }, [pagination, params.header]);
 
   const onChangePage = (page: number) => {
-    console.log('page :==>>', page);
     setPagination({ ...pagination, page });
     router.push(`${RoutePaths.POST}?topic=${params.topic}&header=${params.header}&page=${page}`);
   };

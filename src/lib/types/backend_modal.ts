@@ -265,6 +265,7 @@ export interface Course {
   // rating_stats?: RatingStats;
   request_status?: RequestStatus;
   course_of_class?: boolean;
+  test: boolean;
 }
 
 // ===========================================Classes===========================================
@@ -406,23 +407,35 @@ export enum ContentTypeEnum {
 }
 
 export interface MatchQuestion {
+  id?: string;
+  order?: number;
+  time_limit?: number;
   content: string;
   first_column: Array<{ id: string; content_type: ContentTypeEnum; content: string }>;
   second_column: Array<{ id: string; content_type: ContentTypeEnum; content: string }>;
+  correct_answer?: Array<Array<string>>;
 }
 
 export interface FillBlankQuestion {
+  id?: string;
+  order?: number;
+  time_limit?: number;
   content: string;
+  hidden_words?: Array<{ id: number; word: string; hidden: boolean }>;
 }
 
 export interface ChoicesQuestion {
+  id?: string;
+  order?: number;
+  time_limit?: number;
   content: string;
-  content_type: ContentTypeEnum;
-  choices: Array<{ choice: string; choice_name: string; answer_type: ContentTypeEnum; answer: string }>;
+  content_type?: ContentTypeEnum;
+  choices: Array<{ choice?: string; choice_name: string; answer_type: ContentTypeEnum; answer: string }>;
 }
 
 export interface Quiz {
   id: string;
+  name: string;
   order: number;
   time_limit?: number;
   question_type: QuestionTypeEnum;
@@ -441,6 +454,15 @@ export interface QuizResultArgs {
   course_id: string;
   lesson_id: string;
   user_answers: UserAnswersArgs[];
+}
+
+export interface QuizArgs {
+  name: string;
+  course_id: string;
+  lesson_id: string;
+  choices_question: Array<ChoicesQuestion>;
+  match_question: Array<MatchQuestion>;
+  fill_blank_question: Array<FillBlankQuestion>;
 }
 
 export interface ChoicesQuizAnswer {
