@@ -1,15 +1,15 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
-import { Badge, Button, Card, Col, DatePicker, Drawer, Form, Input, Row, Select, Space } from 'antd';
+import { Button, Col, Drawer, Form, Row, Select, Space } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
+import { cloneDeep } from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
 import AppInput from 'src/components/input';
 import AppSelect from 'src/components/select';
 import MultipleSelect from 'src/components/select/multipleSelect';
 import CourseService from 'src/lib/api/course';
-import { QuestionTypeEnum, Quiz, QuizArgs } from 'src/lib/types/backend_modal';
+import { QuestionTypeEnum, Quiz } from 'src/lib/types/backend_modal';
 import { AlphabetLetter, replaceWordsInString, splitSentence } from 'src/lib/utils/utils';
-import { cloneDeep } from 'lodash';
 const { Option } = Select;
 interface SelectedLessonType {
   id: string;
@@ -32,7 +32,6 @@ const CreateQuiz = () => {
   const [quizTitle, setQuizTitle] = useState<string>('');
   //list quiz item state
   const [listQuiz, setListQuiz] = useState<Quiz[]>([]);
-  const [numOfAns, setNumOfAns] = useState<number | null>(4);
   const [visibleDrawer, setVisibleDrawer] = useState<boolean>(false);
   const [selectedAnsMatch, setSelectedAnsMatch] = useState<{ first: string; second: string } | null>(null);
   const numAns = Form.useWatch('numAns', { form, preserve: true });
@@ -547,7 +546,7 @@ const CreateQuiz = () => {
                 <Row gutter={16}>
                   <Col span={12}>
                     <p style={{ width: '100%' }}>Đáp án cột 1</p>
-                    {Array(Math.max(numFirstCol, numSecondCol) || 0)
+                    {Array(numFirstCol * numSecondCol || 0)
                       .fill(1)
                       .map((_, index) => {
                         return (
@@ -575,7 +574,7 @@ const CreateQuiz = () => {
                   </Col>
                   <Col span={12}>
                     <p style={{ width: '100%' }}>Đáp án cột 2</p>
-                    {Array(Math.max(numFirstCol, numSecondCol))
+                    {Array(numFirstCol * numSecondCol || 0)
                       .fill(1)
                       .map((_, index) => {
                         return (

@@ -3,7 +3,6 @@ import { Spin } from 'antd';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Course, Document, NavTypeEnum } from 'src/lib/types/backend_modal';
-import { formatCurrency } from 'src/lib/utils/currency';
 
 import { DeleteOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
@@ -16,7 +15,6 @@ interface ChildProps {
 }
 const CartItemRow: React.FC<ChildProps> = ({ document, course, isDeleteBtn = true, onDelete }) => {
   const [deleteLoading, setDeletetLoading] = useState<boolean>(false);
-  const dispatch = useDispatch();
 
   const deleteDoc = async () => {
     document && onDelete && onDelete(document?.id, NavTypeEnum.DOCUMENT);

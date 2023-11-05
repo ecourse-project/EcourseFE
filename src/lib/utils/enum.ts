@@ -76,3 +76,12 @@ export enum Color {
   PENDING = '#8c8c8c',
   BOUGHT = '#23c501',
 }
+
+export enum TagState {
+  SUCCESS = 'SUCCESS',
+  PROCESSING = 'PROCESSING',
+  ERROR = 'ERROR',
+  WARNING = 'WARNING',
+  WAITING = 'WAITING',
+  STOP = 'STOP',
+}
