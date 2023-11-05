@@ -1,14 +1,13 @@
-import { ForkEffect, call, put, select, takeLatest } from 'redux-saga/effects';
+import { ForkEffect, put, select, takeLatest } from 'redux-saga/effects';
 import CourseService from 'src/lib/api/course';
-import { Course, MoveEnum, Pagination, PaginationParams, SaleStatusEnum } from 'src/lib/types/backend_modal';
+import { Course } from 'src/lib/types/backend_modal';
 
-import { PayloadAction } from '@reduxjs/toolkit';
-import { progressAction } from './progressSlice';
-import { RootState } from '../model';
-import { debounce } from 'lodash';
 import { convertDataToUpdateParams } from 'src/components/course/course-progress/course-progress';
+import { RootState } from '../model';
+import { progressAction } from './progressSlice';
 
-function* watchUpdateProgress(action: PayloadAction<Course>) {
+// function* watchUpdateProgress(action: PayloadAction<Course>) {
+function* watchUpdateProgress() {
   const state = yield select((state: RootState) => state.progress);
 
   let results = {} as Course;

@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import moment from 'moment';
 import { forceLogout } from './auth';
-import { StorageKeys } from './enum';
+import { StorageKeys, TagState } from './enum';
 import { RcFile } from 'antd/es/upload';
 import { message } from 'antd';
 import { UploadFile } from 'antd/lib';

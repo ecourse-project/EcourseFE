@@ -3,7 +3,7 @@ import React from 'react';
 
 import { css } from '@emotion/react';
 
-const AlertCard: React.FC<{ description?: string; message?: string }> = ({ description, message = '' }) => {
+const AlertCard: React.FC<{ description?: string; message?: string }> = ({ message = '' }) => {
   return (
     <section
       css={css`

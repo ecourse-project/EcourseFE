@@ -1,4 +1,4 @@
-import { Breadcrumb, Col, Divider, List, Row, Tabs, Tag, Typography } from 'antd';
+import { Breadcrumb, Col, Divider, List, Row, Tabs, Typography } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import CourseService from 'src/lib/api/course';
@@ -9,15 +9,10 @@ import RoutePaths from 'src/lib/utils/routes';
 /* eslint-disable react/prop-types */
 import {
   CalendarOutlined,
-  CheckCircleOutlined,
-  ClockCircleOutlined,
-  CloseCircleOutlined,
-  ExclamationCircleOutlined,
   FileSearchOutlined,
   MinusCircleOutlined,
   PlusCircleOutlined,
   SwapOutlined,
-  SyncOutlined,
   VerticalLeftOutlined,
 } from '@ant-design/icons';
 import { PageHeader } from '@ant-design/pro-layout';
@@ -29,15 +24,15 @@ import AppButton from '../button';
 import CommentSection from '../comment';
 import LessonItem from './course-progress/lesson-item';
 
-const { Paragraph, Title } = Typography;
+const { Paragraph } = Typography;
 
-const separator = <SwapOutlined />;
-const IconLink = ({ src, text }) => (
-  <a className="example-link">
-    <img className="example-link-icon" src={src} alt={text} />
-    {text}
-  </a>
-);
+// const separator = <SwapOutlined />;
+// const IconLink = ({ src, text }) => (
+//   <a className="example-link">
+//     <img className="example-link-icon" src={src} alt={text} />
+//     {text}
+//   </a>
+// );
 
 const Content = ({ children, extraContent }) => (
   <Row>
@@ -52,68 +47,55 @@ const Content = ({ children, extraContent }) => (
   </Row>
 );
 
-enum TagState {
-  SUCCESS = 'SUCCESS',
-  PROCESSING = 'PROCESSING',
-  ERROR = 'ERROR',
-  WARNING = 'WARNING',
-  WAITING = 'WAITING',
-  STOP = 'STOP',
-}
+// const tags = (tagState: TagState, text: string) => {
+//   switch (tagState) {
+//     case TagState.SUCCESS:
+//       return (
+//         <Tag icon={<CheckCircleOutlined />} color="success">
+//           {text}
+//         </Tag>
+//       );
+//       break;
+//     case TagState.PROCESSING:
+//       return (
+//         <Tag icon={<SyncOutlined spin />} color="processing">
+//           {text}
+//         </Tag>
+//       );
+//       break;
+//     case TagState.ERROR:
+//       return (
+//         <Tag icon={<CloseCircleOutlined />} color="error">
+//           {text}
+//         </Tag>
+//       );
+//       break;
+//     case TagState.WARNING:
+//       return (
+//         <Tag icon={<ExclamationCircleOutlined />} color="warning">
+//           {text}
+//         </Tag>
+//       );
+//       break;
+//     case TagState.WAITING:
+//       return (
+//         <Tag icon={<ClockCircleOutlined />} color="default">
+//           {text}
+//         </Tag>
+//       );
+//       break;
+//     case TagState.STOP:
+//       return (
+//         <Tag icon={<MinusCircleOutlined />} color="default">
+//           {text}
+//         </Tag>
+//       );
+//       break;
 
-const tags = (tagState: TagState, text: string) => {
-  switch (tagState) {
-    case TagState.SUCCESS:
-      return (
-        <Tag icon={<CheckCircleOutlined />} color="success">
-          {text}
-        </Tag>
-      );
-      break;
-    case TagState.PROCESSING:
-      return (
-        <Tag icon={<SyncOutlined spin />} color="processing">
-          {text}
-        </Tag>
-      );
-      break;
-    case TagState.ERROR:
-      return (
-        <Tag icon={<CloseCircleOutlined />} color="error">
-          {text}
-        </Tag>
-      );
-      break;
-    case TagState.WARNING:
-      return (
-        <Tag icon={<ExclamationCircleOutlined />} color="warning">
-          {text}
-        </Tag>
-      );
-      break;
-    case TagState.WAITING:
-      return (
-        <Tag icon={<ClockCircleOutlined />} color="default">
-          {text}
-        </Tag>
-      );
-      break;
-    case TagState.STOP:
-      return (
-        <Tag icon={<MinusCircleOutlined />} color="default">
-          {text}
-        </Tag>
-      );
-      break;
-
-    default:
-      break;
-  }
-};
-
-interface DocDetailParams {
-  id: string;
-}
+//     default:
+//       break;
+//   }
+// };
 
 const CourseDetail: React.FC = () => {
   const [course, setCourse] = useState<Course>({} as Course);

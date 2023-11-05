@@ -1,20 +1,18 @@
 import { Button, Divider, Modal } from 'antd';
 import { useRouter } from 'next/router';
 import React, { ReactNode, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import AppButton from 'src/components/button';
 import CourseService from 'src/lib/api/course';
 import { CreateOrderArg, OCart } from 'src/lib/types/backend_modal';
-import { formatCurrencySymbol } from 'src/lib/utils/currency';
 import { GlobalStyle } from 'src/lib/utils/enum';
 import RoutePaths from 'src/lib/utils/routes';
 import Swal from 'sweetalert2';
 
 import { css } from '@emotion/react';
 
+import globalVariable from 'src/lib/config/env';
 import { TabSettingKey } from '../settings/tabs';
 import CartOrderBill from './cart-order-bill';
-import globalVariable from 'src/lib/config/env';
 
 interface ChildProps {
   docNum: number;
@@ -22,7 +20,7 @@ interface ChildProps {
   checkoutList: CreateOrderArg;
   cartData: OCart;
 }
-const PricingCard: React.FC<ChildProps> = ({ docNum, checkoutList, children, cartData }) => {
+const PricingCard: React.FC<ChildProps> = ({ docNum, checkoutList, cartData }) => {
   const [btnText, setBtnText] = useState<string>('Thanh toán');
   const [openModal, setOpenModal] = useState<boolean>(false);
   const handleCharge = async () => {
@@ -50,7 +48,7 @@ const PricingCard: React.FC<ChildProps> = ({ docNum, checkoutList, children, car
     // );
 
     try {
-      const order = await CourseService.createOrder(checkoutList);
+      await CourseService.createOrder(checkoutList);
       Swal.fire('Đã đặt đơn thành công!', '', 'success').then((v) => {
         if (v.isConfirmed) {
           window.open(globalVariable.GMAIL_URL, '_blank');
@@ -66,7 +64,6 @@ const PricingCard: React.FC<ChildProps> = ({ docNum, checkoutList, children, car
     }
   };
   const router = useRouter();
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (docNum === 0) {
@@ -79,7 +76,7 @@ const PricingCard: React.FC<ChildProps> = ({ docNum, checkoutList, children, car
 
   const handleOk = async () => {
     try {
-      const order = await CourseService.createOrder(checkoutList);
+      await CourseService.createOrder(checkoutList);
       Swal.fire('Đã đặt đơn thành công!', '', 'success').then((v) => {
         if (v.isConfirmed) router.push(`${RoutePaths.SETTINGS}?tab=${TabSettingKey.ORDER}`);
       });

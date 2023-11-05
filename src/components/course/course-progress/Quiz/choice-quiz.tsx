@@ -1,7 +1,6 @@
 import { css } from '@emotion/react';
 import { Radio, Typography } from 'antd';
 import React from 'react';
-import CountDown from 'src/components/count-down';
 import { QuestionTypeEnum, Quiz } from 'src/lib/types/backend_modal';
 
 interface ChoiceQuizProps {
@@ -13,7 +12,7 @@ interface ChoiceQuizProps {
   ) => void;
   result: { quiz_id: string; user_answer: string; correct_answer?: string } | undefined;
 }
-const { Text, Link } = Typography;
+const { Text } = Typography;
 const ChoiceQuiz: React.FC<ChoiceQuizProps> = ({ quiz, onChange, result }) => {
   const quizChoice = quiz.choices_question;
   if (!quizChoice) return;

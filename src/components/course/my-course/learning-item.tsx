@@ -72,10 +72,6 @@ const ItemWrapper = styled.div`
 
 export const LearningItem: React.FC<LearningItem> = (props) => {
   const { course, doc } = props;
-  const [openRatingModal, setOpenRatingModal] = useState<boolean>(false);
-  const [feedback, setFeedback] = useState<string>('');
-  const [star, setStar] = useState<number>(0);
-  const [myRate, setMyRate] = useState<Rating>({} as Rating);
   const router = useRouter();
   // const rateCourse = async (course_id: string, rating: number, comment: string) => {
   //   try {

@@ -1,14 +1,47 @@
-import { Input, InputNumber } from 'antd';
 import { InputProps } from 'antd/lib/input';
-import React, { ChangeEventHandler, useState } from 'react';
+import React, { useState } from 'react';
 import theme from 'src/styles/theme';
 
-import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons/lib/icons';
 import { css } from '@emotion/react';
-import styled from '@emotion/styled';
 import TextArea from 'antd/lib/input/TextArea';
 
-const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean) => {
+export interface AppInputProps extends InputProps {
+  label?: string;
+  requiredMark?: boolean;
+  isSubmitting?: boolean;
+  className?: string;
+  isForceFocus?: boolean;
+  value?: string | number | readonly string[];
+  handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  handleFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
+}
+
+const AppInput: React.FC<AppInputProps> = (props) => {
+  const { requiredMark, label, className, isForceFocus, handleChange, value, type, placeholder } = props;
+
+  const [isFocusing] = useState(!!value);
+  const [isEmpty, setIsEmpty] = useState(!value);
+
+  const onChange = (e) => {
+    handleChange && handleChange(e);
+    if (type !== 'number' && e.target.value && e.target.value.length > 0) {
+      setIsEmpty(false);
+    } else {
+      setIsEmpty(true);
+    }
+  };
+
+  return (
+    <div className={className} css={[baseStyle(isForceFocus || isFocusing, isEmpty)]}>
+      {label && <label className="s-label">{`${label}${requiredMark ? `*` : ''}`}</label>}
+      <TextArea placeholder={placeholder} value={value || ''} onChange={onChange} />
+    </div>
+  );
+};
+
+export default AppInput;
+const baseStyle = (isFocusing: boolean, isEmpty: boolean) => {
   let isLabelAffected = isFocusing;
   if (!isEmpty) {
     isLabelAffected = true;
@@ -161,77 +194,3 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean) =>
     }
   `;
 };
-
-export interface AppInputProps extends InputProps {
-  showEye?: boolean;
-  label?: string;
-  requiredMark?: boolean;
-  hasError?: boolean;
-  isSubmitting?: boolean;
-  className?: string;
-  isForceFocus?: boolean;
-  value?: string | number | readonly string[];
-  handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
-  handleFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
-}
-
-const AppInput: React.FC<AppInputProps> = (props) => {
-  const {
-    requiredMark,
-    label,
-    hasError,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    isSubmitting,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    className,
-    isForceFocus,
-    handleChange,
-    handleBlur,
-    handleFocus,
-    onInput,
-    value,
-    showEye,
-    type,
-    placeholder,
-    ...rest
-  } = props;
-
-  // const inputRef = React.useRef(null);
-  const [isFocusing, setIsFocusing] = useState(!!value);
-  const [isEmpty, setIsEmpty] = useState(!value);
-  const [typeLocal, setTypeLocal] = useState(type);
-
-  const onFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-    handleFocus && handleFocus(e);
-    setIsFocusing(true);
-  };
-
-  const onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    handleBlur && handleBlur(e);
-    setIsFocusing(false);
-  };
-
-  const onChange = (e) => {
-    handleChange && handleChange(e);
-    if (type !== 'number' && e.target.value && e.target.value.length > 0) {
-      setIsEmpty(false);
-    } else {
-      setIsEmpty(true);
-    }
-  };
-
-  // const onInputRefFocus = () => {
-  // 	inputRef.current?.focus();
-  // };
-
-  return (
-    <div className={className} css={[baseStyle(isForceFocus || isFocusing, isEmpty, hasError)]}>
-      {/* onClick={onInputRefFocus} */}
-      {label && <label className="s-label">{`${label}${requiredMark ? `*` : ''}`}</label>}
-      <TextArea placeholder={placeholder} value={value || ''} onChange={onChange} />
-    </div>
-  );
-};
-
-export default AppInput;

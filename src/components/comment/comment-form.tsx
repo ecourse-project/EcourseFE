@@ -2,9 +2,6 @@ import TextArea from 'antd/lib/input/TextArea';
 import { useFormik } from 'formik';
 import React, { useRef, useState } from 'react';
 import AppButton from 'src/components/button';
-import regex from 'src/lib/utils/regularExpression';
-import validation from 'src/lib/utils/validation';
-import * as Yup from 'yup';
 
 import { css } from '@emotion/react';
 
@@ -16,20 +13,10 @@ interface CommentProps {
   content: string;
 }
 const CommentForm: React.FC<CommentFormProps> = ({ onAddComment }) => {
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const inputRef = useRef<any>(null);
   const [focus, setFocus] = useState<boolean>(false);
-  const validationSchema = React.useRef(
-    Yup.object().shape({
-      password: Yup.string().required(validation.password.required).matches(regex.password, {
-        message: validation.password.invalidPwdRegex,
-      }),
-      confirmPassword: Yup.string()
-        .required(validation.password.required)
-        .oneOf([Yup.ref('password')], validation.confirmPassword.doesNotMatch),
-    }),
-  );
+
   const formik = useFormik<CommentProps>({
     initialValues: {
       content: '',
@@ -49,9 +36,6 @@ const CommentForm: React.FC<CommentFormProps> = ({ onAddComment }) => {
     },
   });
 
-  const hasError = (key: string) => {
-    return Object.keys(formik.errors).length > 0 && !!formik.errors[key] && formik.touched[key];
-  };
   return (
     <form
       css={css`

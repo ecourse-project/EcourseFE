@@ -1,9 +1,9 @@
-import { Col, Collapse, Divider, List, Popover, Progress, Row, Tabs } from 'antd';
+import { Col, Divider, List, Popover, Progress, Row, Tabs } from 'antd';
 import _, { cloneDeep } from 'lodash';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { useDispatch, useSelector } from 'react-redux';
 import NotFile from 'src/assets/images/notfoundfile.png';
@@ -26,9 +26,7 @@ import RoutePaths from 'src/lib/utils/routes';
 
 import { DownOutlined, HomeOutlined, PlayCircleOutlined, SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
-import { AlertTextError } from 'src/components/alert/SweetAlert';
 import PdfViewer from 'src/components/pdf';
-import { useExportCertificate } from 'src/lib/hooks/useExportCerti';
 import QuizSection from './Quiz';
 import LessonItem from './lesson-item';
 import { CourseProgressWrapper } from './style';
@@ -67,10 +65,7 @@ export const convertDataToUpdateParams = (lessons: Lesson[]) => {
 
 const CourseProgress = () => {
   const [course, setCourse] = useState<Course>();
-  const [numPages, setNumPages] = useState<number>();
-  const [pageNumber, setPageNumber] = useState<number>(1);
   const params: CourseParams = useQueryParam();
-  const [videoLoading, setVideoLoading] = useState<boolean>(true);
   const [sumVid, setSumVid] = useState<number>(0);
   const [sumDoc, setSumDoc] = useState<number>(0);
 
@@ -80,12 +75,12 @@ const CourseProgress = () => {
   const router = useRouter();
   const [progressNumber, setProgressNumber] = useState<number>(course?.progress || 0);
 
-  const { downloadPDF, DownloadAnchor } = useExportCertificate({
-    certificateExport: CourseService.downloadCerti,
-    onFailed: (err) => {
-      AlertTextError('Download Error', err.message, () => {});
-    },
-  });
+  // const { downloadPDF, DownloadAnchor } = useExportCertificate({
+  //   certificateExport: CourseService.downloadCerti,
+  //   onFailed: (err) => {
+  //     AlertTextError('Download Error', err.message, () => {});
+  //   },
+  // });
 
   const items = [
     {
@@ -228,59 +223,43 @@ const CourseProgress = () => {
     }
   };
 
-  const playerRef = React.useRef(null);
-  const videoJsOptions = {
-    autoplay: false,
-    controls: true,
-    responsive: true,
-    preload: 'auto',
-    fluid: true,
-    liveui: true,
-    playbackRates: [0.5, 1, 1.5, 2],
-    controlBar: {
-      skipButtons: {
-        forward: 5,
-      },
-    },
-    displayCurrentQuality: true,
-    defaultQuality: 'auto',
-    qualities: [
-      { name: 'Auto', value: 'auto' },
-      { name: '360p', value: '360' },
-      { name: '720p', value: '720' },
-      { name: '1080p', value: '1080' },
-    ],
-    sources: [
-      {
-        src: state.selectedVideo?.file_path,
-        type: 'video/mp4',
-      },
-    ],
-  };
+  // const playerRef = React.useRef(null);
+  // const videoJsOptions = {
+  //   autoplay: false,
+  //   controls: true,
+  //   responsive: true,
+  //   preload: 'auto',
+  //   fluid: true,
+  //   liveui: true,
+  //   playbackRates: [0.5, 1, 1.5, 2],
+  //   controlBar: {
+  //     skipButtons: {
+  //       forward: 5,
+  //     },
+  //   },
+  //   displayCurrentQuality: true,
+  //   defaultQuality: 'auto',
+  //   qualities: [
+  //     { name: 'Auto', value: 'auto' },
+  //     { name: '360p', value: '360' },
+  //     { name: '720p', value: '720' },
+  //     { name: '1080p', value: '1080' },
+  //   ],
+  //   sources: [
+  //     {
+  //       src: state.selectedVideo?.file_path,
+  //       type: 'video/mp4',
+  //     },
+  //   ],
+  // };
 
-  function onDocumentLoadSuccess({ numPages }) {
-    setNumPages(numPages);
-  }
+  // function onDocumentLoadSuccess({ numPages }) {
+  //   setNumPages(numPages);
+  // }
 
   return (
     <CourseProgressWrapper
       css={css`
-        .course_content {
-          .page_group {
-            .anticon-left-circle {
-              cursor: ${pageNumber === 1 ? 'not-allowed' : 'pointer'};
-            }
-            .anticon-right-circle {
-              cursor: ${pageNumber === numPages ? 'not-allowed' : 'pointer'};
-            }
-          }
-        }
-
-        @media (min-width: 1500px) {
-          .video_wrapper {
-            /* visibility: ${videoLoading ? 'hidden' : ''}; */
-          }
-        }
         .video_wrapper {
           iframe {
             max-width: 100%;
@@ -298,7 +277,6 @@ const CourseProgress = () => {
       `}
     >
       <Row className="course_header_wrapper">
-        {/* <Col span={20}> */}
         <div className="header-group">
           <Link href={`${RoutePaths.HOME}`} className="home_header">
             <HomeOutlined
@@ -317,8 +295,6 @@ const CourseProgress = () => {
             {course?.name}
           </div>
         </div>
-        {/* </Col> */}
-        {/* <Col span={4} className="right_box"> */}
         <div className="progress">
           <Progress
             className="progress_circle"
@@ -336,7 +312,6 @@ const CourseProgress = () => {
             </Popover>
           </span>
         </div>
-        {/* </Col> */}
       </Row>
       <Divider />
       <div className="">
@@ -356,9 +331,9 @@ const CourseProgress = () => {
                       width="100%"
                       height="100%"
                       controls={true}
-                      onReady={() => {
-                        setVideoLoading(false);
-                      }}
+                      // onReady={() => {
+                      //   setVideoLoading(false);
+                      // }}
                       config={{
                         file: {
                           attributes: {
@@ -405,12 +380,6 @@ const CourseProgress = () => {
                   !state.selectedDoc?.file?.file_embedded_url) ? (
                 <div className="pdf_wrapper">
                   <PdfViewer url={state.selectedDoc?.file?.file_path || ''} />
-                  {/* <Document file={state.selectedDoc?.file?.file_path} onLoadSuccess={onDocumentLoadSuccess}>
-                    <Page pageNumber={pageNumber} />
-                  </Document>
-                  <p>
-                    Page {pageNumber} of {numPages}
-                  </p> */}
                 </div>
               ) : state.selectedDoc?.file?.use_embedded_url ? (
                 isIframeOrUrl(state.selectedDoc?.file?.file_embedded_url) ||
