@@ -1,0 +1,32 @@
+{
+  "quiz_id": "a9b7dcbe-9acc-4194-9fd5-951826120a62",
+  "question": {
+    "order": 4,
+    "time_limit": 30,
+    "content": "11111111111111111111111111111111111111111",
+    "question_type": "CHOICES",
+    "choices": [
+      {
+        "choice_name": "A",
+        "answer_type": "TEXT",
+        "answer": "5"
+      },
+      {
+        "choice_name": "B",
+        "answer_type": "TEXT",
+        "answer": "6"
+      },
+      {
+        "choice_name": "C",
+        "answer_type": "TEXT",
+        "answer": "7"
+      },
+      {
+        "choice_name": "D",
+        "answer_type": "TEXT",
+        "answer": "8"
+      }
+    ],
+    "correct_answer": "A"
+  }
+}

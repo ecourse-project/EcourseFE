@@ -8,8 +8,16 @@ import AppInput from 'src/components/input';
 import AppSelect from 'src/components/select';
 import MultipleSelect from 'src/components/select/multipleSelect';
 import CourseService from 'src/lib/api/course';
-import { QuestionTypeEnum, Quiz } from 'src/lib/types/backend_modal';
+import {
+  ChoicesQuestion,
+  ContentTypeEnum,
+  FillBlankQuestion,
+  MatchQuestion,
+  QuestionTypeEnum,
+  Quiz,
+} from 'src/lib/types/backend_modal';
 import { AlphabetLetter, replaceWordsInString, splitSentence } from 'src/lib/utils/utils';
+import { v4 as uuidv4 } from 'uuid';
 const { Option } = Select;
 interface SelectedLessonType {
   id: string;
@@ -34,6 +42,8 @@ const CreateQuiz = () => {
   const [listQuiz, setListQuiz] = useState<Quiz[]>([]);
   const [visibleDrawer, setVisibleDrawer] = useState<boolean>(false);
   const [selectedAnsMatch, setSelectedAnsMatch] = useState<{ first: string; second: string } | null>(null);
+  const [newQuizId, setNewQuizId] = useState<string | null>(null);
+
   const numAns = Form.useWatch('numAns', { form, preserve: true });
   const quizType = Form.useWatch('type', { form, preserve: true });
   const numFirstCol = Form.useWatch('numFirstCol', { form, preserve: true });
@@ -51,13 +61,22 @@ const CreateQuiz = () => {
   const getCourseDetail = async () => {
     try {
       if (!selectedCourse?.id || !selectedLesson?.id) return;
-      const listQuizDetail = await CourseService.listQuiz(selectedCourse?.id, selectedLesson?.id);
+      const listQuizDetail = await CourseService.listQuiz();
       setListQuiz(listQuizDetail);
-      setQuizTitle(listQuizDetail?.[0]?.name);
+      // setQuizTitle();
     } catch (error) {
       console.log(error);
     }
   };
+
+  const createChoiceQuiz = async () => {
+    try {
+      console.log('abc');
+    } catch (error) {
+      console.log('abc');
+    }
+  };
+
   useEffect(() => {
     getListCourse();
   }, []);
@@ -71,6 +90,88 @@ const CreateQuiz = () => {
   const renderContent = useMemo(() => {
     return replaceWordsInString(cloneDeep(content) || '', cloneDeep(hiddenWord) || []);
   }, [content, hiddenWord]);
+
+  const handleCreateNewQuiz = async () => {
+    setVisibleDrawer(true);
+    return;
+    try {
+      await CourseService.createQuiz({ name: quizTitle });
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  };
+
+  const handleCreateQuiz = async (value) => {
+    // setVisibleDrawer(false);
+    console.log('submitValues: ', value);
+    let questionParam: ChoicesQuestion | MatchQuestion | FillBlankQuestion = {} as
+      | ChoicesQuestion
+      | MatchQuestion
+      | FillBlankQuestion;
+    if (value.type === QuestionTypeEnum.CHOICES) {
+      const optionObject = {};
+      AlphabetLetter.slice(0, numAns || 4).forEach((v) => {
+        optionObject[v] = value[`option.${v}`];
+      });
+      const choices = Object.keys(optionObject).map((v) => ({
+        choice: undefined,
+        answer_type: ContentTypeEnum.TEXT,
+        answer: optionObject[v],
+        choice_name: v,
+      }));
+      questionParam = {
+        id: undefined,
+        order: undefined,
+        time_limit: value.time,
+        choices: choices,
+        content: value.question,
+        correct_answer: value.correct_ans,
+        question_type: QuestionTypeEnum.CHOICES,
+        content_type: ContentTypeEnum.TEXT,
+      };
+    } else if (value.type === QuestionTypeEnum.MATCH) {
+      console.log('match', selectedAnsMatch);
+      const optionObject = {};
+      const first_column = Array.from({ length: numFirstCol }, (_, i) => i + 1).map((v) => ({
+        id: uuidv4(),
+        content_type: ContentTypeEnum.TEXT,
+        content: value[`firstCol.${v}`],
+      }));
+      const second_column = Array.from({ length: numSecondCol }, (_, i) => i + 1).map((v) => ({
+        id: uuidv4(),
+        content_type: ContentTypeEnum.TEXT,
+        content: value[`secondCol.${v}`],
+      }));
+      const ans = Array.from({ length: numFirstCol * numSecondCol || 0 }, (_, i) => i + 1).map((numOfAns, index) => {
+        console.log('first_column', first_column?.[`ansFiCol.${numOfAns}`]?.id);
+        console.log('first_column', first_column?.[value[`ansFiCol.${numOfAns}`]]?.id);
+        console.log('anfi', value['ansFiCol.1']?.toString());
+        console.log('ans', value);
+        return [first_column?.[value[`ansFiCol.${numOfAns}`]]?.id, second_column?.[value[`ansSeCol.${numOfAns}`]]?.id];
+      });
+      console.log('ans', ans);
+      questionParam = {
+        id: undefined,
+        order: undefined,
+        time_limit: value.time,
+        content: value.question,
+        first_column: first_column,
+        second_column: second_column,
+        correct_answer: value.correct_ans,
+        question_type: QuestionTypeEnum.MATCH,
+        content_type: ContentTypeEnum.TEXT,
+      };
+    } else if (value.type === QuestionTypeEnum.FILL) {
+      console.log('fill');
+    }
+    return;
+    await CourseService.createQuestion({
+      quiz_id: '32fd4786-019c-460a-829f-c0f9ec3867fa',
+      question: { ...questionParam },
+    });
+  };
+
+  console.log('selectedAnsMatch', selectedAnsMatch);
 
   return (
     <div>
@@ -176,7 +277,7 @@ const CreateQuiz = () => {
               handleChange={(e) => setQuizTitle(e.target.value)}
             />
           </div>
-          <Button type="primary" onClick={() => setVisibleDrawer(true)} icon={<PlusOutlined />}>
+          <Button type="primary" onClick={handleCreateNewQuiz} disabled={!quizTitle?.length} icon={<PlusOutlined />}>
             Tạo quiz
           </Button>
         </div>
@@ -201,10 +302,7 @@ const CreateQuiz = () => {
       >
         <Form
           layout="vertical"
-          onFinish={(value) => {
-            setVisibleDrawer(false);
-            console.log('submitValues: ', value);
-          }}
+          onFinish={handleCreateQuiz}
           form={form}
           // onFieldsChange={(e) => console.log('e :==>>', e)}
           // onChange={(e) => console.log('e :==>>', e)}
@@ -521,7 +619,7 @@ const CreateQuiz = () => {
                           <AppInput
                             label={`Phương án ${v}`}
                             placeholder={`Phương án ${v}`}
-                            value={form.getFieldValue(v)}
+                            value={form.getFieldValue(`secondCol.${[v]}`)}
                             handleChange={(e) => form.setFieldValue(`secondCol.${[v]}`, e.target.value)}
                             css={css`
                               height: 100%;
@@ -546,58 +644,74 @@ const CreateQuiz = () => {
                 <Row gutter={16}>
                   <Col span={12}>
                     <p style={{ width: '100%' }}>Đáp án cột 1</p>
-                    {Array(numFirstCol * numSecondCol || 0)
-                      .fill(1)
-                      .map((_, index) => {
-                        return (
+                    {Array.from({ length: numFirstCol * numSecondCol || 0 }, (_, i) => i + 1).map((value, index) => {
+                      return (
+                        <Form.Item
+                          key={index}
+                          name={`ansFiCol.${value}`}
+                          rules={[
+                            {
+                              required: false,
+                              message: `Chọn đáp cột 1`,
+                            },
+                          ]}
+                        >
                           <AppSelect
-                            key={index}
                             className="course-field"
                             placeholder="Chọn đáp cột 1"
                             type="string"
-                            itemSelect={Array.from({ length: numFirstCol }, (_, i) => i + 1).map((v) => ({
-                              value: v,
+                            itemSelect={Array.from({ length: numFirstCol }, (_, i) => i + 1).map((v, index) => ({
+                              value: index,
                               label: v,
                             }))}
-                            handleChange={(value) => {
-                              // form.setFieldValue('numFirstCol', value);
-                              setSelectedAnsMatch((prev) => (prev ? { ...prev, first: value } : null));
+                            handleChange={(v) => {
+                              form.setFieldValue(`ansFiCol.${value}`, v);
                             }}
-                            value={selectedAnsMatch?.first}
+                            value={form.getFieldValue(`ansFiCol.${value}`)}
                             css={css`
                               max-width: 500px;
                               margin-bottom: 10px;
                             `}
                           />
-                        );
-                      })}
+                        </Form.Item>
+                      );
+                    })}
                   </Col>
                   <Col span={12}>
                     <p style={{ width: '100%' }}>Đáp án cột 2</p>
-                    {Array(numFirstCol * numSecondCol || 0)
-                      .fill(1)
-                      .map((_, index) => {
-                        return (
+                    {Array.from({ length: numFirstCol * numSecondCol || 0 }, (_, i) => i + 1).map((value, index) => {
+                      return (
+                        <Form.Item
+                          key={index}
+                          name={`ansSeCol.${value}`}
+                          rules={[
+                            {
+                              required: false,
+                              message: `Chọn đáp cột 2`,
+                            },
+                          ]}
+                        >
                           <AppSelect
                             key={index}
                             className="course-field"
                             placeholder="Chọn đáp cột 2"
                             type="string"
-                            itemSelect={AlphabetLetter.slice(0, numSecondCol || 1).map((v) => ({
-                              value: v,
+                            itemSelect={AlphabetLetter.slice(0, numSecondCol || 1).map((v, index) => ({
+                              value: index,
                               label: v,
                             }))}
-                            handleChange={(value) => {
-                              setSelectedAnsMatch((prev) => (prev ? { ...prev, second: value } : null));
+                            handleChange={(v) => {
+                              form.setFieldValue(`ansSeCol.${value}`, v);
                             }}
-                            value={selectedAnsMatch?.second}
+                            value={form.getFieldValue(`ansSeCol.${value}`)}
                             css={css`
                               max-width: 500px;
                               margin-bottom: 10px;
                             `}
                           />
-                        );
-                      })}
+                        </Form.Item>
+                      );
+                    })}
                   </Col>
                 </Row>
               </Col>

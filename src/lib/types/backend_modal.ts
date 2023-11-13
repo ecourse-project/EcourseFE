@@ -71,6 +71,7 @@ export interface User {
   avatar: string;
   phone?: string;
   role: RoleEnum;
+  is_testing_user: boolean;
 }
 
 export interface OIsExist {
@@ -202,6 +203,11 @@ export enum ProgressStatusEnum {
   DONE = 'DONE',
 }
 
+export enum QuizLocationEnum {
+  VIDEO = 'VIDEO',
+  DOCUMENT = 'DOCUMENT',
+}
+
 export interface UpdateLessonArgs {
   lesson_id: string;
   completed_docs: string[];
@@ -236,9 +242,9 @@ export interface Lesson {
   documents: CourseDocument[];
   docs_completed?: string[];
   videos_completed?: string[];
-  quiz_detail?: QuizResult;
+  quiz_detail?: QuizResult[];
   list_quiz: Quiz[];
-  is_done_quiz: boolean;
+  quiz_location?: Array<{ id: string; order: number; location: QuizLocationEnum }>;
 }
 
 export interface Course {
@@ -414,6 +420,7 @@ export interface MatchQuestion {
   first_column: Array<{ id: string; content_type: ContentTypeEnum; content: string }>;
   second_column: Array<{ id: string; content_type: ContentTypeEnum; content: string }>;
   correct_answer?: Array<Array<string>>;
+  question_type: QuestionTypeEnum;
 }
 
 export interface FillBlankQuestion {
@@ -422,6 +429,7 @@ export interface FillBlankQuestion {
   time_limit?: number;
   content: string;
   hidden_words?: Array<{ id: number; word: string; hidden: boolean }>;
+  question_type: QuestionTypeEnum;
 }
 
 export interface ChoicesQuestion {
@@ -431,11 +439,12 @@ export interface ChoicesQuestion {
   content: string;
   content_type?: ContentTypeEnum;
   choices: Array<{ choice?: string; choice_name: string; answer_type: ContentTypeEnum; answer: string }>;
+  question_type: QuestionTypeEnum;
+  correct_answer: string;
 }
 
-export interface Quiz {
+export interface Question {
   id: string;
-  name: string;
   order: number;
   time_limit?: number;
   question_type: QuestionTypeEnum;
@@ -444,43 +453,62 @@ export interface Quiz {
   fill_blank_question?: FillBlankQuestion;
 }
 
+export interface Quiz {
+  id: string;
+  name?: string;
+  questions?: Question[];
+}
+
 export interface UserAnswersArgs {
-  quiz_id: string;
+  question_id: string;
   question_type: QuestionTypeEnum;
   answer: string | Array<string> | Array<Array<string>>;
 }
 
 export interface QuizResultArgs {
+  id: string;
   course_id: string;
   lesson_id: string;
   user_answers: UserAnswersArgs[];
 }
 
-export interface QuizArgs {
-  name: string;
+export interface AssignQuizArgs {
   course_id: string;
-  lesson_id: string;
-  choices_question: Array<ChoicesQuestion>;
-  match_question: Array<MatchQuestion>;
-  fill_blank_question: Array<FillBlankQuestion>;
+  quiz_location: Array<{
+    lesson_id: string;
+    quiz?: Array<{
+      id: string;
+      order: number;
+      location: QuizLocationEnum;
+    }>;
+  }>;
 }
 
-export interface ChoicesQuizAnswer {
+export interface CreateQuizArgs {
+  name: string;
+}
+
+export interface QuestionArgs {
+  quiz_id: string;
+  question: ChoicesQuestion | MatchQuestion | FillBlankQuestion;
+}
+
+export interface ChoicesQuestionAnswer {
   correct: number;
   total: number;
-  result: Array<{ quiz_id: string; user_answer: string; correct_answer?: string }>;
+  result: Array<{ question_id: string; user_answer: string; correct_answer?: string }>;
 }
 
-export interface MatchQuizAnswer {
-  quiz_id: string;
+export interface MatchQuestionAnswer {
+  question_id: string;
   correct: number;
   total: number;
   user_answer: Array<Array<string>>;
   correct_answer?: Array<Array<string>>;
 }
 
-export interface FillQuizAnswer {
-  quiz_id: string;
+export interface FillQuestionAnswer {
+  question_id: string;
   correct: number;
   total: number;
   user_answer: Array<string>;
@@ -488,10 +516,13 @@ export interface FillQuizAnswer {
 }
 
 export interface QuizResult {
+  id: string;
+  name?: string;
   mark?: number;
-  choices_quiz: ChoicesQuizAnswer;
-  match_quiz: MatchQuizAnswer[];
-  fill_quiz: FillQuizAnswer[];
+  is_done_quiz: boolean;
+  choices_question: ChoicesQuestionAnswer;
+  match_question: MatchQuestionAnswer[];
+  fill_question: FillQuestionAnswer[];
 }
 
 // ===========================================Setting===========================================
