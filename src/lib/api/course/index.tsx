@@ -2,10 +2,12 @@
 // import apiURL from 'src/apis';
 import { apiClient } from 'src/lib/config/apiClient';
 import {
+  AssignQuizArgs,
   CalculatePriceArgs,
   Course,
   CourseComment,
   CreateOrderArg,
+  CreateQuizArgs,
   Document,
   FavoriteList,
   Homepage,
@@ -23,6 +25,8 @@ import {
   PaginationParams,
   PaymentInfo,
   Post,
+  Question,
+  QuestionArgs,
   Quiz,
   QuizArgs,
   QuizResult,
@@ -118,10 +122,13 @@ export const apiURL = {
   documentRatingFilter: (document_id, score) => `document/rating/filter/?document_id=${document_id}&score=${score}`,
   courseRatingFilter: (course_id, score) => `course/rating/filter/?course_id=${course_id}&score=${score}`,
 
+  createQuestion: () => `api/quiz/question/`,
+  editQuestion: () => `api/quiz/question/`,
+  deleteQuestion: () => `api/quiz/question/`,
+  listQuestion: () => `api/quiz/question/`,
   createQuiz: () => `api/quiz/`,
-  editQuiz: () => `api/quiz/`,
-  deleteQuiz: () => `api/quiz/`,
-  listQuiz: (course_id, lesson_id) => `api/quiz/?course_id=${course_id}&lesson_id=${lesson_id}`,
+  listQuiz: () => `api/quiz/`,
+  assignQuiz: () => `api/quiz/assign`,
   getQuizResult: () => `api/quiz/result/`,
   downloadCerti: (course_id) => `api/quiz/certi/?course_id=${course_id}`,
   quizStartTime: (course_id, lesson_id, is_start) =>
@@ -275,12 +282,7 @@ class CourseService {
   }
 
   static getListCourses(): Promise<
-    {
-      id: string;
-      course_of_class: boolean;
-      name: string;
-      lessons?: Array<{ id: string; name: string }>;
-    }[]
+    { id: string; course_of_class: boolean; name: string; lessons?: Array<{ id: string; name: string }> }[]
   > {
     return apiClient.get(apiURL.getListCourses());
   }
@@ -346,20 +348,32 @@ class CourseService {
     return apiClient.get(apiURL.courseRatingFilter(course_id, score));
   }
 
-  static createQuiz(params: QuizArgs): Promise<Quiz[]> {
-    return apiClient.post(apiURL.createQuiz(), params);
+  static createQuestion(params: QuestionArgs): Promise<Quiz> {
+    return apiClient.post(apiURL.createQuestion(), params);
   }
 
-  static editQuiz(params: QuizArgs): Promise<Quiz[]> {
-    return apiClient.patch(apiURL.editQuiz(), params);
-  }
-  // list_quiz_id: Array<string>
-  static deleteQuiz(list_quiz_id: any): Promise<any> {
-    return apiClient.delete(apiURL.deleteQuiz(), list_quiz_id);
+  static editQuestion(params: QuestionArgs): Promise<Quiz> {
+    return apiClient.patch(apiURL.editQuestion(), params);
   }
 
-  static listQuiz(course_id: string, lesson_id: string): Promise<Quiz[]> {
-    return apiClient.get(apiURL.listQuiz(course_id, lesson_id));
+  static deleteQuestion(list_question_id: any): Promise<any> {
+    return apiClient.delete(apiURL.deleteQuestion(), list_question_id);
+  }
+
+  static listQuestion(): Promise<Question[]> {
+    return apiClient.get(apiURL.listQuestion());
+  }
+
+  static createQuiz(args: CreateQuizArgs): Promise<Quiz> {
+    return apiClient.post(apiURL.createQuiz(), args);
+  }
+
+  static listQuiz(): Promise<Quiz[]> {
+    return apiClient.get(apiURL.listQuiz());
+  }
+
+  static assignQuiz(args: AssignQuizArgs): Promise<any> {
+    return apiClient.post(apiURL.assignQuiz(), args);
   }
 
   static getQuizResult(params: QuizResultArgs): Promise<QuizResult> {
