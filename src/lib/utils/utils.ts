@@ -178,7 +178,7 @@ export const AlphabetLetter = [
 ];
 
 export function replaceWordsInString(sentence = '', wordsArray: string[] = []) {
-  const wordsInSentence = splitSentence(sentence);
+  const wordsInSentence = sentence.split(' ');
   const result = wordsInSentence.map((word) => {
     if (wordsArray.includes(word)) {
       return `[${word}]`;

@@ -157,12 +157,36 @@ const CreateQuiz = () => {
         content: value.question,
         first_column: first_column,
         second_column: second_column,
-        correct_answer: value.correct_ans,
+        correct_answer: ans,
         question_type: QuestionTypeEnum.MATCH,
         content_type: ContentTypeEnum.TEXT,
       };
+      console.log('questionParam', questionParam);
     } else if (value.type === QuestionTypeEnum.FILL) {
       console.log('fill');
+      const hiddenWord = value.content.split(' ').map((v, index) => ({
+        id: index + 1,
+        word: v,
+        hidden: value.hiddenWord.includes(v),
+      }));
+      console.log('hiddenWord', hiddenWord);
+      //       export interface FillBlankQuestion {
+      //   id?: string;
+      //   order?: number;
+      //   time_limit?: number;
+      //   content: string;
+      //   hidden_words?: Array<{ id: number; word: string; hidden: boolean }>;
+      //   question_type: QuestionTypeEnum;
+      // }
+
+      questionParam = {
+        id: undefined,
+        order: undefined,
+        time_limit: value.time,
+        content: value.question,
+        // hidden_words: Array<{ id: number; word: string; hidden: boolean }>;
+        question_type: QuestionTypeEnum.MATCH,
+      };
     }
     return;
     await CourseService.createQuestion({
@@ -306,7 +330,14 @@ const CreateQuiz = () => {
           form={form}
           // onFieldsChange={(e) => console.log('e :==>>', e)}
           // onChange={(e) => console.log('e :==>>', e)}
-          initialValues={{ numAns: 4, type: QuestionTypeEnum.FILL, numFirstCol: 1, numSecondCol: 1, hiddenWord: [] }}
+          initialValues={{
+            numAns: 4,
+            type: QuestionTypeEnum.FILL,
+            numFirstCol: 1,
+            numSecondCol: 1,
+            hiddenWord: [],
+            content: '',
+          }}
           css={css`
             .course-field {
               max-width: unset;
@@ -753,10 +784,13 @@ const CreateQuiz = () => {
                   className="course-field"
                   placeholder="Chọn từ để ẩn"
                   type="string"
-                  itemSelect={splitSentence(content)?.map((v) => ({
-                    value: v,
-                    label: v,
-                  }))}
+                  itemSelect={content
+                    ?.split(' ')
+                    ?.filter((v) => v !== ' ')
+                    ?.map((v) => ({
+                      value: v,
+                      label: v,
+                    }))}
                   handleChange={(value) => {
                     console.log('value', value);
                     form.setFieldValue('hiddenWord', value);
