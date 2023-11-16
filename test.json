@@ -1,32 +1,469 @@
-{
-  "quiz_id": "a9b7dcbe-9acc-4194-9fd5-951826120a62",
-  "question": {
-    "order": 4,
-    "time_limit": 30,
-    "content": "11111111111111111111111111111111111111111",
-    "question_type": "CHOICES",
-    "choices": [
+[
+  {
+    "id": "c758c90f-4006-4008-b455-676fdc10417a",
+    "name": "new quiz",
+    "questions": [
       {
-        "choice_name": "A",
-        "answer_type": "TEXT",
-        "answer": "5"
+        "id": "32c64519-c0e0-450b-8865-0273f561d216",
+        "order": 1,
+        "time_limit": 12,
+        "question_type": "CHOICES",
+        "choices_question": {
+          "content_type": "TEXT",
+          "correct_answer": {
+            "id": "f4c2669b-12f8-474b-9707-404f470a3e24",
+            "name": "A"
+          },
+          "content": "cau choice 1",
+          "choices": [
+            {
+              "choice": "f4c2669b-12f8-474b-9707-404f470a3e24",
+              "choice_name": "A",
+              "answer_type": "TEXT",
+              "answer": "a"
+            },
+            {
+              "choice": "be9110fb-5948-42f6-b7f2-a70fd29ea020",
+              "choice_name": "B",
+              "answer_type": "TEXT",
+              "answer": "v"
+            },
+            {
+              "choice": "1fe2156d-9553-43c3-92b5-b134101e7af8",
+              "choice_name": "C",
+              "answer_type": "TEXT",
+              "answer": "c"
+            },
+            {
+              "choice": "4e779feb-e13c-484a-8d4b-2bb2205162c5",
+              "choice_name": "D",
+              "answer_type": "TEXT",
+              "answer": "s"
+            }
+          ]
+        }
       },
       {
-        "choice_name": "B",
-        "answer_type": "TEXT",
-        "answer": "6"
+        "id": "88c41539-0377-4ff5-adb0-236b445f30d3",
+        "order": 1,
+        "time_limit": 120,
+        "question_type": "CHOICES",
+        "choices_question": {
+          "content_type": "TEXT",
+          "correct_answer": {
+            "id": "f015de4e-9451-4a62-9d8b-e35d2a8bf801",
+            "name": "E"
+          },
+          "content": "cau choice2",
+          "choices": [
+            {
+              "choice": "f4c2669b-12f8-474b-9707-404f470a3e24",
+              "choice_name": "A",
+              "answer_type": "TEXT",
+              "answer": "a"
+            },
+            {
+              "choice": "be9110fb-5948-42f6-b7f2-a70fd29ea020",
+              "choice_name": "B",
+              "answer_type": "TEXT",
+              "answer": "b"
+            },
+            {
+              "choice": "1fe2156d-9553-43c3-92b5-b134101e7af8",
+              "choice_name": "C",
+              "answer_type": "TEXT",
+              "answer": "c"
+            },
+            {
+              "choice": "4e779feb-e13c-484a-8d4b-2bb2205162c5",
+              "choice_name": "D",
+              "answer_type": "TEXT",
+              "answer": "d"
+            },
+            {
+              "choice": "f015de4e-9451-4a62-9d8b-e35d2a8bf801",
+              "choice_name": "E",
+              "answer_type": "TEXT",
+              "answer": "e"
+            }
+          ]
+        }
       },
       {
-        "choice_name": "C",
-        "answer_type": "TEXT",
-        "answer": "7"
+        "id": "85490a07-917f-492c-9abd-89d15829f6d6",
+        "order": 1,
+        "time_limit": 120,
+        "question_type": "FILL",
+        "fill_blank_question": {
+          "content": "{{}} tìm thấy câu {{}} {{}} này {{}} một cuốn sách năm 2011: tại thời điểm đó, nhúng trực tiếp SVG vào HTML chỉ hoạt động được trong các trình duyệt mới nhất. Đó là 7 năm trước, giờ đây, chúng ta có thể sử dụng các ảnh SVG một cách an toàn.",
+          "hidden_words": [
+            {
+              "id": 1,
+              "word": "Tôi",
+              "hidden": true
+            },
+            {
+              "id": 2,
+              "word": "tìm",
+              "hidden": false
+            },
+            {
+              "id": 3,
+              "word": "thấy",
+              "hidden": false
+            },
+            {
+              "id": 4,
+              "word": "câu",
+              "hidden": false
+            },
+            {
+              "id": 5,
+              "word": "trích",
+              "hidden": true
+            },
+            {
+              "id": 6,
+              "word": "dẫn",
+              "hidden": true
+            },
+            {
+              "id": 7,
+              "word": "này",
+              "hidden": false
+            },
+            {
+              "id": 8,
+              "word": "từ",
+              "hidden": true
+            },
+            {
+              "id": 9,
+              "word": "một",
+              "hidden": false
+            },
+            {
+              "id": 10,
+              "word": "cuốn",
+              "hidden": false
+            },
+            {
+              "id": 11,
+              "word": "sách",
+              "hidden": false
+            },
+            {
+              "id": 12,
+              "word": "năm",
+              "hidden": false
+            },
+            {
+              "id": 13,
+              "word": "2011:",
+              "hidden": false
+            },
+            {
+              "id": 14,
+              "word": "tại",
+              "hidden": false
+            },
+            {
+              "id": 15,
+              "word": "thời",
+              "hidden": false
+            },
+            {
+              "id": 16,
+              "word": "điểm",
+              "hidden": false
+            },
+            {
+              "id": 17,
+              "word": "đó,",
+              "hidden": false
+            },
+            {
+              "id": 18,
+              "word": "nhúng",
+              "hidden": false
+            },
+            {
+              "id": 19,
+              "word": "trực",
+              "hidden": false
+            },
+            {
+              "id": 20,
+              "word": "tiếp",
+              "hidden": false
+            },
+            {
+              "id": 21,
+              "word": "SVG",
+              "hidden": false
+            },
+            {
+              "id": 22,
+              "word": "vào",
+              "hidden": false
+            },
+            {
+              "id": 23,
+              "word": "HTML",
+              "hidden": false
+            },
+            {
+              "id": 24,
+              "word": "chỉ",
+              "hidden": false
+            },
+            {
+              "id": 25,
+              "word": "hoạt",
+              "hidden": false
+            },
+            {
+              "id": 26,
+              "word": "động",
+              "hidden": false
+            },
+            {
+              "id": 27,
+              "word": "được",
+              "hidden": false
+            },
+            {
+              "id": 28,
+              "word": "trong",
+              "hidden": false
+            },
+            {
+              "id": 29,
+              "word": "các",
+              "hidden": false
+            },
+            {
+              "id": 30,
+              "word": "trình",
+              "hidden": false
+            },
+            {
+              "id": 31,
+              "word": "duyệt",
+              "hidden": false
+            },
+            {
+              "id": 32,
+              "word": "mới",
+              "hidden": false
+            },
+            {
+              "id": 33,
+              "word": "nhất.",
+              "hidden": false
+            },
+            {
+              "id": 34,
+              "word": "Đó",
+              "hidden": false
+            },
+            {
+              "id": 35,
+              "word": "là",
+              "hidden": false
+            },
+            {
+              "id": 36,
+              "word": "7",
+              "hidden": false
+            },
+            {
+              "id": 37,
+              "word": "năm",
+              "hidden": false
+            },
+            {
+              "id": 38,
+              "word": "trước,",
+              "hidden": false
+            },
+            {
+              "id": 39,
+              "word": "giờ",
+              "hidden": false
+            },
+            {
+              "id": 40,
+              "word": "đây,",
+              "hidden": false
+            },
+            {
+              "id": 41,
+              "word": "chúng",
+              "hidden": false
+            },
+            {
+              "id": 42,
+              "word": "ta",
+              "hidden": false
+            },
+            {
+              "id": 43,
+              "word": "có",
+              "hidden": false
+            },
+            {
+              "id": 44,
+              "word": "thể",
+              "hidden": false
+            },
+            {
+              "id": 45,
+              "word": "sử",
+              "hidden": false
+            },
+            {
+              "id": 46,
+              "word": "dụng",
+              "hidden": false
+            },
+            {
+              "id": 47,
+              "word": "các",
+              "hidden": false
+            },
+            {
+              "id": 48,
+              "word": "ảnh",
+              "hidden": false
+            },
+            {
+              "id": 49,
+              "word": "SVG",
+              "hidden": false
+            },
+            {
+              "id": 50,
+              "word": "một",
+              "hidden": false
+            },
+            {
+              "id": 51,
+              "word": "cách",
+              "hidden": false
+            },
+            {
+              "id": 52,
+              "word": "an",
+              "hidden": false
+            },
+            {
+              "id": 53,
+              "word": "toàn.",
+              "hidden": false
+            }
+          ]
+        }
       },
       {
-        "choice_name": "D",
-        "answer_type": "TEXT",
-        "answer": "8"
+        "id": "0569e664-3f0f-4050-ac2f-e20d42df5d39",
+        "order": 1,
+        "time_limit": 123,
+        "question_type": "MATCH",
+        "match_question": {
+          "content": "match1",
+          "first_column": [
+            {
+              "id": "a63487f6-1e35-457e-a3a0-f83e988f0c03",
+              "content_type": "TEXT",
+              "content": "PA1"
+            },
+            {
+              "id": "19038300-9fa6-487a-9be2-55a3e2c145a1",
+              "content_type": "TEXT",
+              "content": "PA2"
+            }
+          ],
+          "second_column": [
+            {
+              "id": "958a82f1-de52-48a4-af0f-ad77c8346616",
+              "content_type": "TEXT",
+              "content": "PAA"
+            },
+            {
+              "id": "ec46ab69-a517-4a26-9fa2-ac3505d4ecd0",
+              "content_type": "TEXT",
+              "content": "PAB"
+            }
+          ],
+          "correct_answer": [
+            [
+              "a63487f6-1e35-457e-a3a0-f83e988f0c03",
+              "958a82f1-de52-48a4-af0f-ad77c8346616"
+            ],
+            [
+              "a63487f6-1e35-457e-a3a0-f83e988f0c03",
+              "ec46ab69-a517-4a26-9fa2-ac3505d4ecd0"
+            ],
+            [
+              "19038300-9fa6-487a-9be2-55a3e2c145a1",
+              "ec46ab69-a517-4a26-9fa2-ac3505d4ecd0"
+            ],
+            [
+              "19038300-9fa6-487a-9be2-55a3e2c145a1",
+              "958a82f1-de52-48a4-af0f-ad77c8346616"
+            ]
+          ]
+        }
+      },
+      {
+        "id": "9e142192-94f4-48f4-9ccd-c523dec08d15",
+        "order": 1,
+        "time_limit": 12,
+        "question_type": "MATCH",
+        "match_question": {
+          "content": "long match",
+          "first_column": [
+            {
+              "id": "88fb872f-5c3b-4b1e-92d7-8687d0c14e64",
+              "content_type": "TEXT",
+              "content": "Templates are similar to layouts in that they wrap each child layout or page."
+            },
+            {
+              "id": "67263884-fecd-4044-b1dc-307f8fc87ba1",
+              "content_type": "TEXT",
+              "content": "This means that when a user navigates between routes that share a template, a new instance of the component is mounted,"
+            }
+          ],
+          "second_column": [
+            {
+              "id": "75a5f956-2c3c-42d2-819b-dcd35b032144",
+              "content_type": "TEXT",
+              "content": "DOM elements are recreated, state is not preserved, and effects are re-synchronized"
+            },
+            {
+              "id": "da89c1de-6c6e-4808-afe1-7e52e06ad24b",
+              "content_type": "TEXT",
+              "content": "There may be cases where you need those specific behaviors, and templates would be a more suitable option than layouts. For example:"
+            },
+            {
+              "id": "ae88de3a-e3bc-4b1d-a973-97abe7ff8599",
+              "content_type": "TEXT",
+              "content": "Unlike layouts that persist across routes and maintain state, templates create a new instance for each of their children on navigation."
+            }
+          ],
+          "correct_answer": [
+            [
+              "88fb872f-5c3b-4b1e-92d7-8687d0c14e64",
+              "ae88de3a-e3bc-4b1d-a973-97abe7ff8599"
+            ],
+            [
+              "67263884-fecd-4044-b1dc-307f8fc87ba1",
+              "75a5f956-2c3c-42d2-819b-dcd35b032144"
+            ]
+          ]
+        }
       }
-    ],
-    "correct_answer": "A"
+    ]
   }
-}
+]

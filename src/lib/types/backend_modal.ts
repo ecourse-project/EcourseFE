@@ -61,6 +61,7 @@ export interface OVerifyToken {
 
 export enum RoleEnum {
   MANAGER = 'MANAGER',
+  TEACHER = 'TEACHER',
   STUDENT = 'STUDENT',
 }
 
@@ -272,6 +273,7 @@ export interface Course {
   request_status?: RequestStatus;
   course_of_class?: boolean;
   test: boolean;
+  author?: string;
 }
 
 // ===========================================Classes===========================================
@@ -440,7 +442,7 @@ export interface ChoicesQuestion {
   content_type?: ContentTypeEnum;
   choices: Array<{ choice?: string; choice_name: string; answer_type: ContentTypeEnum; answer: string }>;
   question_type: QuestionTypeEnum;
-  correct_answer: string;
+  correct_answer: { id: string; name: string };
 }
 
 export interface Question {
