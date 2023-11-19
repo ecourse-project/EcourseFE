@@ -1,6 +1,5 @@
 import { Image } from 'antd';
 import { useRouter } from 'next/router';
-// import { navigate } from 'gatsby';
 import React, { useState } from 'react';
 import ArrowLeft from 'src/assets/images/arrow-left.svg';
 import RoutePaths from 'src/lib/utils/routes';

@@ -24,5 +24,6 @@ const RoutePaths = {
   COURSE_PROGRESS: '/course-progress',
   MY_ACCOUNT: '/me',
   POST: '/post',
+  CREATE_QUIZ: '/create-quiz',
 };
 export default RoutePaths;
