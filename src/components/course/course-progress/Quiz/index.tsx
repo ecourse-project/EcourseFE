@@ -26,7 +26,7 @@ const QuizSection: React.FC<QuizProps> = (props) => {
   const [answer, setAnswer] = useState<UserAnswersArgs[]>([]);
   const [startTime, setStartTime] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const totalTime = lessonQuiz.quiz.reduce((total, current) => {
+  const totalTime = lessonQuiz?.quiz?.questions?.reduce((total, current) => {
     return total + (current?.time_limit || 0);
   }, 0);
   const [isExpiredTime, setIsExpiredTime] = useState<boolean>(false);
@@ -101,7 +101,7 @@ const QuizSection: React.FC<QuizProps> = (props) => {
             </Button>
           </div>
         </>
-      ) : lessonQuiz.quiz?.length ? (
+      ) : lessonQuiz.quiz ? (
         <>
           {!lessonQuiz.isDone && (
             <CountdownTimer
@@ -117,7 +117,7 @@ const QuizSection: React.FC<QuizProps> = (props) => {
             />
           )}
           <QuizSlide
-            listQuiz={lessonQuiz.quiz}
+            listQuiz={lessonQuiz.quiz.questions}
             onChangeQuiz={(v) => {
               console.log('v :==>>', v);
               setAnswer((prev) => {
