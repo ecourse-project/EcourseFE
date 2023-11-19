@@ -160,7 +160,7 @@ export type TypeTabPanel = {
 };
 
 export type SelectedQuizType = {
-  quiz: Quiz[];
+  quiz: Quiz;
   lessonId: string;
   result: QuizResult;
   isDone: boolean;

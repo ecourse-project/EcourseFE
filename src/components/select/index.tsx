@@ -7,6 +7,8 @@ import theme from 'src/styles/theme';
 
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import Link from 'next/link';
+import RoutePaths from 'src/lib/utils/routes';
 
 const { Option } = Select;
 const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean, suffixIcon?: ReactNode) => {
@@ -184,8 +186,6 @@ const CustomSelect = styled(Select)`
   height: 20px;
 `;
 
-// export interface AppSelectProps extends SelectProps<VT> {}
-
 const AppSelect = (props) => {
   const {
     requiredMark,
@@ -202,10 +202,10 @@ const AppSelect = (props) => {
     placeholder,
     isGetContainer,
     suffixIcon,
+    quizSelect,
     ...rest
   } = props;
 
-  // const inputRef = React.useRef<Input | null>(null);
   const [isFocusing, setIsFocusing] = useState(!!value);
   const [isEmpty, setIsEmpty] = useState(!value);
 
@@ -229,10 +229,6 @@ const AppSelect = (props) => {
     }
   };
 
-  // const onInputRefFocus = () => {
-  // 	inputRef.current?.focus();
-  // };
-
   return (
     <div className={className} css={[baseStyle(isForceFocus || isFocusing, isEmpty, hasError)]}>
       {label && <label className="s-label">{`${label}${requiredMark ? `*` : ''}`}</label>}
@@ -242,29 +238,15 @@ const AppSelect = (props) => {
         suffixIcon={suffixIcon}
         onBlur={onBlur}
         onFocus={onFocus}
-        // ref={inputRef}
         placeholder={placeholder}
         value={value !== '' ? value : null}
         getPopupContainer={isGetContainer ? () => document.getElementById('market') : () => document.body}
-        dropdownRender={(menu) => (
-          <div
-            className="field select-field"
-            css={css`
-              background-color: ${isSelect === typeSelect.SELECT_ANALYTICS ? '#051d29' : '#f3f3f3 !important'};
-
-              .option {
-                color: ${isSelect === typeSelect.SELECT_ANALYTICS ? '#fff' : '#000 !important'};
-                &:hover {
-                  background-color: #1c87c6 !important;
-                  color: ${isSelect === typeSelect.SELECT_ANALYTICS ? '#fff' : '#000 !important'};
-                }
-              }
-            `}
-          >
-            {menu}
-          </div>
-        )}
       >
+        {quizSelect && (
+          <Option className="option" value="CREATE_NEW_QUIZ">
+            <strong>Tạo quiz mới</strong>
+          </Option>
+        )}
         {itemSelect?.map((item) => {
           return (
             <Option className="option" key={item.value} value={item.value} id={item?.id}>

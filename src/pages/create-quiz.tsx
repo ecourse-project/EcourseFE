@@ -1,7 +1,7 @@
-import { PlusOutlined } from '@ant-design/icons';
+import { ApiOutlined, NodeIndexOutlined, PlusOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { Button, Col, Drawer, Form, Modal, Row, Select, Space, Table } from 'antd';
+import { Button, Col, Divider, Drawer, Form, Modal, Row, Select, Space, Table } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import { cloneDeep } from 'lodash';
 import { createContext, useEffect, useMemo, useState } from 'react';
@@ -14,6 +14,7 @@ import {
   ContentTypeEnum,
   FillBlankQuestion,
   MatchQuestion,
+  Question,
   QuestionTypeEnum,
   Quiz,
 } from 'src/lib/types/backend_modal';
@@ -35,14 +36,14 @@ interface ListCourseType {
 const CreateQuiz = () => {
   const [form] = Form.useForm();
 
-  const [listCourse, setListCourse] = useState<ListCourseType[]>([]);
-  const [selectedCourse, setSelectedCourse] = useState<ListCourseType | null>({} as ListCourseType);
   const [selectedLesson, setSelectedLesson] = useState<SelectedLessonType | null>({} as SelectedLessonType);
   const [quizTitle, setQuizTitle] = useState<string>('');
   //list quiz item state
   const [listQuiz, setListQuiz] = useState<Quiz[]>([]);
-  const [visibleDrawer, setVisibleDrawer] = useState<boolean>(false);
-  const [selectedAnsMatch, setSelectedAnsMatch] = useState<{ first: string; second: string } | null>(null);
+  const [drawerState, setDrawerState] = useState<{ open: boolean; questionData: Question | null }>({
+    open: false,
+    questionData: null,
+  });
   const [newQuizId, setNewQuizId] = useState<string | null>(null);
 
   const numAns = Form.useWatch('numAns', { form, preserve: true });
@@ -51,14 +52,7 @@ const CreateQuiz = () => {
   const numSecondCol = Form.useWatch('numSecondCol', { form, preserve: true });
   const content = Form.useWatch('content', { form, preserve: true });
   const hiddenWord = Form.useWatch('hiddenWord', { form, preserve: true });
-  const getListCourse = async () => {
-    try {
-      const courses = await CourseService.getListCourses();
-      setListCourse(courses);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
   const getListQuiz = async () => {
     try {
       const listQuizDetail = await CourseService.listQuiz();
@@ -69,39 +63,27 @@ const CreateQuiz = () => {
     }
   };
 
-  const createChoiceQuiz = async () => {
-    try {
-      console.log('abc');
-    } catch (error) {
-      console.log('abc');
-    }
-  };
-
   useEffect(() => {
     if (!selectedLesson) return;
     getListQuiz();
   }, [selectedLesson]);
-  const rsForm = () => {
-    form.resetFields();
-  };
+
   const renderContent = useMemo(() => {
     return replaceWordsInString(cloneDeep(content) || '', cloneDeep(hiddenWord) || []);
   }, [content, hiddenWord]);
 
   const handleCreateNewQuiz = async () => {
-    setVisibleDrawer(true);
-    return;
+    setDrawerState({ open: true, questionData: null });
     try {
       const newQuiz = await CourseService.createQuiz({ name: quizTitle });
       setNewQuizId(newQuiz.id);
     } catch (error: any) {
       console.log(error.message);
     }
+    setQuizTitle('');
   };
 
-  const handleCreateQuiz = async (value) => {
-    // setVisibleDrawer(false);
-    console.log('submitValues: ', value);
+  const handleCreateQuestion = async (value, continueCreateQuestion = false) => {
     let questionParam: ChoicesQuestion | MatchQuestion | FillBlankQuestion = {} as
       | ChoicesQuestion
       | MatchQuestion
@@ -128,8 +110,6 @@ const CreateQuiz = () => {
         content_type: ContentTypeEnum.TEXT,
       };
     } else if (value.type === QuestionTypeEnum.MATCH) {
-      console.log('match', selectedAnsMatch);
-      const optionObject = {};
       const first_column = Array.from({ length: numFirstCol }, (_, i) => i + 1).map((v) => ({
         id: uuidv4(),
         content_type: ContentTypeEnum.TEXT,
@@ -180,6 +160,32 @@ const CreateQuiz = () => {
       question: { ...questionParam },
     });
     getListQuiz();
+    form.resetFields();
+    !continueCreateQuestion && setDrawerState({ open: false, questionData: null });
+  };
+
+  const handleDeleteQuiz = async (id: string) => {
+    await CourseService.deleteQuiz(id);
+    getListQuiz();
+  };
+
+  const renderInitialFormValue = (questionData: Question) => {
+    console.log('questionData', questionData);
+    return {
+      type: questionData?.question_type || QuestionTypeEnum.CHOICES,
+      time: questionData?.time_limit || '',
+      question: questionData?.choices_question?.content || questionData.match_question?.content,
+      numAns: 4,
+      option: '', //option?.v
+      numFirstCol: 1,
+      numSecondCol: 1,
+      firstCol: '', //firstCol.v
+      secondCol: '',
+      ansFiCol: '',
+      ansSeCol: '',
+      content: '',
+      hiddenWord: [],
+    };
   };
 
   return (
@@ -290,55 +296,46 @@ const CreateQuiz = () => {
             Tạo bộ quiz mới
           </Button>
         </div>
-        <div className="quiz-header header">
-          <div className="stt">STT</div>
-          <div className="time">Thời gian (s)</div>
-          <div className="type">Loại</div>
-          <div className="content">Nội dung</div>
-          <div className="option">Lựa chọn</div>
-          <div className="ans">Đáp án</div>
-          <div className="action">Action</div>
-        </div>
 
         <QuizShow
           title={quizTitle}
           listQuiz={listQuiz}
           onAddNewQuestion={(id) => {
-            setVisibleDrawer(true);
+            setDrawerState({ open: true, questionData: null });
+
             setNewQuizId(id);
           }}
           onDeleteQuizItem={async (id: string) => {
             await CourseService.deleteQuestion([id]);
             getListQuiz();
           }}
-          onEditQuizItem={(id) => console.log(':id')}
-          onDeleteQuiz={async (id) => {
-            await CourseService.deleteQuiz(id);
-            getListQuiz();
-          }}
+          onEditQuizItem={(quizData) => setDrawerState({ open: true, questionData: quizData })}
+          onDeleteQuiz={handleDeleteQuiz}
         />
       </div>
 
       <Drawer
         title={`Tạo quiz cho ${quizTitle || '...'}`}
         width={'100%'}
-        onClose={() => setVisibleDrawer(false)}
-        open={visibleDrawer}
+        onClose={() => setDrawerState({ open: false, questionData: null })}
+        open={drawerState.open}
       >
         <Form
           layout="vertical"
-          onFinish={handleCreateQuiz}
+          onFinish={(formValue) => handleCreateQuestion(formValue)}
           form={form}
-          // onFieldsChange={(e) => console.log('e :==>>', e)}
-          // onChange={(e) => console.log('e :==>>', e)}
-          initialValues={{
-            numAns: 4,
-            type: QuestionTypeEnum.FILL,
-            numFirstCol: 1,
-            numSecondCol: 1,
-            hiddenWord: [],
-            content: '',
-          }}
+          initialValues={
+            drawerState.questionData
+              ? renderInitialFormValue(drawerState.questionData)
+              : {
+                  numAns: 4,
+                  type: QuestionTypeEnum.CHOICES,
+                  numFirstCol: 1,
+                  numSecondCol: 1,
+                  hiddenWord: [],
+                  content: '',
+                }
+          }
           css={css`
             .course-field {
               max-width: unset;
@@ -809,8 +806,28 @@ const CreateQuiz = () => {
           )}
           <Row>
             <Space>
-              <Button onClick={() => setVisibleDrawer(false)}>Huỷ</Button>
-              <Button type="dashed" onClick={rsForm}>
+              <Button
+                onClick={() => {
+                  if (newQuizId && !listQuiz.some((quiz) => quiz.id === newQuizId)) {
+                    handleDeleteQuiz(newQuizId);
+                  }
+                  form.resetFields();
+                  setDrawerState({ open: false, questionData: null });
+                }}
+              >
+                Huỷ
+              </Button>
+              <Button
+                type="dashed"
+                onClick={async () => {
+                  const formValue = form.getFieldsValue();
+                  form.validateFields();
+                  const x = form.getFieldsError();
+                  if (!x?.length) {
+                    handleCreateQuestion(formValue, true);
+                  }
+                }}
+              >
                 Tạo và Thêm
               </Button>
               <Button type="primary" htmlType="submit">
@@ -840,53 +857,50 @@ const QuizShow = ({
   onDeleteQuiz: (quizId: string) => void;
 
   onDeleteQuizItem: (quizId: string) => void;
-  onEditQuizItem: (quizId: string) => void;
+  onEditQuizItem: (quizId: Question) => void;
 }) => {
-  console.log('listQuiz', listQuiz);
-  const [open, setOpen] = useState(false);
-  const [modalData, setModalData] = useState<{ open: boolean; id: string }>({ open: false, id: '' });
-  const showModal = () => {
-    setOpen(true);
-  };
+  const [modalData, setModalData] = useState<{ open: string | null; id: string }>({ open: null, id: '' });
 
-  const hideModal = () => {
-    setOpen(false);
-  };
   const columns = [
     {
       title: 'STT',
       dataIndex: 'order',
       key: 'order',
+      width: 50,
+      className: 'stt',
     },
     {
       title: 'Thời gian',
       dataIndex: 'time_limit',
       key: 'time_limit',
+      width: 100,
     },
     {
       title: 'Loại',
       dataIndex: 'question_type',
       key: 'question_type',
+      width: 80,
     },
     {
-      title: 'Nội dung',
-      dataIndex: 'id',
-      key: 'id',
+      title: 'Câu hỏi',
+      key: 'content',
+      width: 150,
       render: (_, record) => {
         if (record.question_type === QuestionTypeEnum.CHOICES) {
           return <div>{record.choices_question.content}</div>;
         } else if (record.question_type === QuestionTypeEnum.MATCH) {
           return <div>{record.match_question?.content}</div>;
         } else if (record.question_type === QuestionTypeEnum.FILL) {
-          return <div></div>;
+          return <div>N/A</div>;
         }
       },
     },
     {
       title: 'Lựa chọn',
-      dataIndex: 'id',
-      key: 'id',
-      record: (_, record) => {
+      dataIndex: 'option',
+      key: 'option',
+      width: 400,
+      render: (_, record) => {
         if (record.question_type === QuestionTypeEnum.CHOICES) {
           return (
             <div>
@@ -900,29 +914,134 @@ const QuizShow = ({
             </div>
           );
         } else if (record.question_type === QuestionTypeEnum.MATCH) {
-          return <div>{record.match_question?.content}</div>;
+          const fiCol = record.match_question.first_column;
+          const seCol = record.match_question.second_column;
+          return (
+            <div>
+              {Array.from({ length: Math.max(fiCol.length, seCol.length) }, (_, i) => 1).map((v) => {
+                return (
+                  <div
+                    key={v}
+                    css={css`
+                      display: flex;
+                      gap: 20px;
+                      .fiSe {
+                        max-width: 200px;
+                        overflow: hidden;
+                        text-wrap: nowrap;
+                        text-overflow: ellipsis;
+                        cursor: pointer;
+                      }
+                    `}
+                  >
+                    <div className="fiSe" title={fiCol?.[v]?.content}>
+                      {fiCol?.[v]?.content}
+                    </div>
+                    {/* <NodeIndexOutlined /> */}
+                    <ApiOutlined />
+                    <div className="fiSe" title={seCol?.[v]?.content}>
+                      {seCol?.[v]?.content}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          );
         } else if (record.question_type === QuestionTypeEnum.FILL) {
-          return <div></div>;
+          return <div>{record.fill_blank_question.content}</div>;
         }
       },
     },
     {
       title: 'Đáp án',
-      dataIndex: 'question_type',
-      key: 'question_type',
+      key: 'ans',
+      width: 400,
+
+      render: (_, record) => {
+        if (record.question_type === QuestionTypeEnum.CHOICES) {
+          return <div>{record.choices_question.correct_answer.name}</div>;
+        } else if (record.question_type === QuestionTypeEnum.MATCH) {
+          const fiCol = record.match_question.first_column;
+          const seCol = record.match_question.second_column;
+          const getAnsContent = (id, column) => {
+            console.log(column.find((v) => v.id === id)?.content);
+            return column.find((v) => v.id === id)?.content;
+          };
+
+          return (
+            <div>
+              {record.match_question.correct_answer.map((v, idx) => {
+                const firstAnscontent = getAnsContent(v[0], fiCol);
+                const secondAnscontent = getAnsContent(v[1], seCol);
+                return (
+                  <div
+                    key={v + idx}
+                    css={css`
+                      display: flex;
+                      gap: 20px;
+                      .fiSe {
+                        max-width: 200px;
+                        overflow: hidden;
+                        text-wrap: nowrap;
+                        text-overflow: ellipsis;
+                        cursor: pointer;
+                      }
+                    `}
+                  >
+                    <div className="fiSe" title={firstAnscontent}>
+                      {firstAnscontent}
+                    </div>
+                    <NodeIndexOutlined />
+                    <div className="fiSe" title={secondAnscontent}>
+                      {secondAnscontent}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        } else if (record.question_type === QuestionTypeEnum.FILL) {
+          return (
+            <div>
+              {record.fill_blank_question.hidden_words
+                ?.filter((v) => v.hidden)
+                ?.map((item, idx) => {
+                  return (
+                    <div key={item.id}>
+                      {idx + 1} - {item.word}
+                    </div>
+                  );
+                })}
+            </div>
+          );
+        }
+      },
     },
     {
-      title: 'Xoá / Sửa',
-      dataIndex: 'id',
-      key: 'id',
-      render: (id) => {
+      title: 'Sửa / Xoá',
+      key: 'action',
+      width: 100,
+      render: (id, record) => {
         return (
           <div className="action">
-            <div className="action-grp">
-              <Button type="primary" ghost>
+            <div
+              className="action-grp"
+              css={css`
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+              `}
+            >
+              <Button
+                type="primary"
+                ghost
+                onClick={() => {
+                  onEditQuizItem(record);
+                }}
+              >
                 Edit
               </Button>
-              <Button onClick={() => onDeleteQuizItem(id)} type="dashed" danger ghost>
+              <Button onClick={() => onDeleteQuizItem(record.id)} type="dashed" danger ghost>
                 Delete
               </Button>
             </div>
@@ -933,8 +1052,45 @@ const QuizShow = ({
   ];
   return (
     <div>
-      {listQuiz.map((quiz, i) => {
-        return <Table key={quiz.id} dataSource={quiz.questions} columns={columns} />;
+      {listQuiz?.map((quiz, i) => {
+        return (
+          <div key={quiz.id}>
+            <Divider>{quiz.name}</Divider>
+            <Space style={{ marginBottom: 16 }}>
+              <Button
+                type="primary"
+                onClick={() => {
+                  onAddNewQuestion(quiz.id);
+                }}
+              >
+                Thêm câu hỏi
+              </Button>
+              <Button
+                type="primary"
+                danger
+                onClick={() => {
+                  setModalData({ open: quiz.id, id: quiz.id });
+                }}
+              >
+                {`Xoá quiz "${quiz.name}"`}
+              </Button>
+            </Space>
+            <Table dataSource={quiz?.questions} columns={columns} scroll={{ x: 1080, y: 1000 }} />
+            <Modal
+              title={`Xoá Quiz ${quiz.name}`}
+              open={quiz.id === modalData.open}
+              onOk={() => {
+                onDeleteQuiz(modalData.id);
+                setModalData((prev) => ({ ...prev, open: null }));
+              }}
+              onCancel={() => setModalData((prev) => ({ ...prev, open: null }))}
+              okText="Xác nhận"
+              cancelText="Huỷ"
+            >
+              <p>Xác nhận xoá</p>
+            </Modal>
+          </div>
+        );
       })}
     </div>
   );
@@ -1099,19 +1255,6 @@ const QuizShow = ({
           </div>
         );
       })}
-      <Modal
-        title="Xoá Quiz"
-        open={modalData.open}
-        onOk={() => {
-          onDeleteQuiz(modalData.id);
-          setModalData((prev) => ({ ...prev, open: false }));
-        }}
-        onCancel={() => setModalData((prev) => ({ ...prev, open: false }))}
-        okText="Xác nhận"
-        cancelText="Huỷ"
-      >
-        <p>Xác nhận xoá</p>
-      </Modal>
       ;
     </QuizShowWrapperStyled>
   );
