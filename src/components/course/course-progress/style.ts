@@ -148,6 +148,12 @@ export const CourseProgressWrapper = styled.div`
   .course_list {
     max-height: 90vh;
     overflow: auto;
+    .save-change-btn {
+      width: 100%;
+      height: 50px;
+      font-weight: 700;
+      font-size: 20px;
+    }
     .quiz_header {
       .ant-collapse-header {
         cursor: none;

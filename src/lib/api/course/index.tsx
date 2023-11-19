@@ -128,7 +128,7 @@ export const apiURL = {
   createQuiz: () => `api/quiz/`,
   listQuiz: () => `api/quiz/`,
   deleteQuiz: (quiz_id) => `api/quiz/delete/?quiz_id=${quiz_id}`,
-  assignQuiz: () => `api/quiz/assign`,
+  assignQuiz: () => `api/quiz/assign/`,
   getQuizResult: () => `api/quiz/result/`,
   downloadCerti: (course_id) => `api/quiz/certi/?course_id=${course_id}`,
   quizStartTime: (course_id, lesson_id, is_start) =>

@@ -1,4 +1,4 @@
-import { Col, Divider, List, Popover, Progress, Row, Tabs } from 'antd';
+import { Button, Col, Divider, List, Popover, Progress, Row, Tabs } from 'antd';
 import _, { cloneDeep } from 'lodash';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -14,10 +14,14 @@ import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { RootState } from 'src/lib/reducers/model';
 import { progressAction } from 'src/lib/reducers/progress/progressSlice';
 import {
+  AssignQuizArgs,
   Course,
   Lesson,
+  Quiz,
+  QuizLocationEnum,
   QuizResult,
   QuizResultArgs,
+  RoleEnum,
   UpdateLessonArgs,
   UpdateProgressArgs,
   UserAnswersArgs,
@@ -62,19 +66,29 @@ export const convertDataToUpdateParams = (lessons: Lesson[]) => {
   });
   return res;
 };
+export interface QuizSetting {
+  lesson_id: string;
+  quiz?: Array<{
+    id: string;
+    order: string;
+    location: QuizLocationEnum;
+  }>;
+}
 
 const CourseProgress = () => {
   const [course, setCourse] = useState<Course>();
   const params: CourseParams = useQueryParam();
   const [sumVid, setSumVid] = useState<number>(0);
   const [sumDoc, setSumDoc] = useState<number>(0);
+  const myProfile = useSelector((state: RootState) => state.app.user);
 
-  const [loading, setLoading] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
   const dispatch = useDispatch();
   const state = useSelector((state: RootState) => state.progress);
   const router = useRouter();
   const [progressNumber, setProgressNumber] = useState<number>(course?.progress || 0);
-
+  const [listQuiz, setListQuiz] = useState<Quiz[]>([]);
+  const [quizSetting, setQuizSetting] = useState<QuizSetting[]>([]);
   // const { downloadPDF, DownloadAnchor } = useExportCertificate({
   //   certificateExport: CourseService.downloadCerti,
   //   onFailed: (err) => {
@@ -109,14 +123,16 @@ const CourseProgress = () => {
         }
       } //if there is not any current => assign first video by default
     } else if (params.quiz && courseDetail.lessons) {
-      const currentLesson = courseDetail.lessons.find((v) => v.id === params.quiz);
+      const currentLesson = courseDetail.lessons.find((v) => v.id === params.lesson);
+      const currentQuiz = listQuiz?.find((v) => v.id === params.quiz) || ({} as Quiz);
+      console.log('currentQuiz,', currentQuiz);
       if (currentLesson && currentLesson.list_quiz) {
         dispatch(
           progressAction.setSelectedQuiz({
-            isDone: currentLesson.is_done_quiz,
+            isDone: currentLesson?.is_done_quiz,
             lessonId: currentLesson.id,
-            quiz: currentLesson.list_quiz,
-            result: cloneDeep(currentLesson.quiz_detail || ({} as QuizResult)),
+            quiz: currentQuiz,
+            result: cloneDeep(currentLesson.quiz_detail?.find((v) => v.id === currentQuiz.id) || ({} as QuizResult)),
           }),
         );
       }
@@ -166,7 +182,18 @@ const CourseProgress = () => {
     }
   };
 
+  const getListQuiz = async () => {
+    try {
+      const listQuizDetail = await CourseService.listQuiz();
+      setListQuiz(listQuizDetail);
+      // setQuizTitle();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
+    getListQuiz();
     return () => {
       dispatch(progressAction.setSelectedDoc(null));
       dispatch(progressAction.setSelectedVideo(null));
@@ -179,7 +206,7 @@ const CourseProgress = () => {
     if (!course) {
       getCourseDetail(params.id);
     } else setCurrentDocReloadPage(course);
-  }, [params.doc, params.video, params.quiz]);
+  }, [params.doc, params.video, params.quiz, listQuiz]);
 
   const debounceUpdateProgress = useDebouncedCallback(async (params: UpdateProgressArgs) => {
     try {
@@ -207,17 +234,12 @@ const CourseProgress = () => {
 
   const onSubmitQuiz = async (answer: UserAnswersArgs[]) => {
     try {
-      // if (course?.is_done_quiz) {
-      //   downloadPDF(params.id, course.name);
-      //   // window.open(`${globalVariable.API_URL}api/quiz/certi/?course_id=${params.id}`, '_blank');
-      // } else {
-      const result = await CourseService.getQuizResult({
+      await CourseService.getQuizResult({
         course_id: course?.id,
         lesson_id: state.selectedQuiz?.lessonId,
         user_answers: answer,
       } as QuizResultArgs);
       await getCourseDetail(params.id);
-      // }
     } catch (error) {
       console.log('error', error);
     }
@@ -397,7 +419,7 @@ const CourseProgress = () => {
                     sandbox="allow-scripts allow-same-origin"
                   />
                 )
-              ) : state.selectedQuiz?.quiz?.length ? (
+              ) : state.selectedQuiz?.quiz ? (
                 /* if user unchecked a video while doing quiz, show modal to warn that the quiz will hide if they continue unchecking that video */
 
                 <>
@@ -416,15 +438,45 @@ const CourseProgress = () => {
             <Tabs items={items} defaultActiveKey={params.tab} className="tab-section" />
           </Col>
           <Col span={8} className="course_list">
+            {myProfile.role === RoleEnum.MANAGER && (
+              <Button
+                className="save-change-btn"
+                disabled={!quizSetting.length}
+                onClick={async () => {
+                  if (isEditing) {
+                    const params: AssignQuizArgs = { course_id: course?.id || '', quiz_location: quizSetting as any };
+                    await CourseService.assignQuiz(params);
+                    setIsEditing(false);
+                  } else {
+                    setIsEditing(true);
+                  }
+                }}
+              >
+                {!isEditing ? 'Gán Bài Quiz' : 'Lưu Thay Đổi'}
+              </Button>
+            )}
             <List
               itemLayout="horizontal"
-              dataSource={course?.lessons}
+              dataSource={course?.lessons?.concat(course?.lessons)}
               renderItem={(item, i) => (
                 <LessonItem
                   lesson={item}
                   index={i}
                   isShowLessonDetail={true}
-
+                  listQuiz={listQuiz}
+                  isEditing={isEditing}
+                  onSaveQuizSetting={(quizSetting) => {
+                    setQuizSetting((prev) => {
+                      const idx = prev.findIndex((v) => v.lesson_id === item.id);
+                      if (idx >= 0) {
+                        prev[idx] = { lesson_id: item.id, quiz: quizSetting };
+                        return prev;
+                      } else {
+                        return [...prev, { lesson_id: item.id, quiz: quizSetting }];
+                      }
+                    });
+                    // const params: AssignQuizArgs = { course_id: course?.id, quiz_location: [{ lesson_id: '' }] };
+                  }}
                   // courseDetail={course || ({} as Course)}
                   // onUpdate={(data) => onUpdate(data, JSON.parse(JSON.stringify(checkedItems)))}
                 />
