@@ -24,6 +24,7 @@ interface LessonItemProps {
   listQuiz?: Quiz[];
   onSaveQuizSetting?: (quizSetting: QuizItemSetting[]) => void;
   isEditing?: boolean;
+
   // onUpdate: (data: UpdateLessonArgs) => void;
 }
 
@@ -113,6 +114,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
   const debounceSaveQuizSetting = useCallback(
     debounce((value) => {
       onSaveQuizSetting?.(value);
+
     }, 500),
     [],
   );
@@ -251,6 +253,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                       let quizName = '';
                       if (haveQuiz) {
                         quizName = listQuiz?.find((quiz) => quiz.id === haveQuiz)?.name || '';
+
                       }
                       return (
                         <>
@@ -285,6 +288,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                                 placeholder="Chọn quiz"
                                 quizSelect
                                 itemSelect={listQuiz?.map((quiz) => {
+
                                   return {
                                     value: quiz.id,
                                     label: quiz.name,
