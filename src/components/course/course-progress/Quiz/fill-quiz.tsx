@@ -1,9 +1,9 @@
 import { css } from '@emotion/react';
 import React, { useEffect, useState } from 'react';
 import { cloneDeep } from 'lodash';
-import { FillQuizAnswer, QuestionTypeEnum, Quiz } from 'src/lib/types/backend_modal';
+import { FillQuizAnswer, Question, QuestionTypeEnum, Quiz } from 'src/lib/types/backend_modal';
 interface FillQuizProps {
-  quiz: Quiz;
+  quiz: Question;
   onChange: (
     quiz_id: string,
     question_type: QuestionTypeEnum,
@@ -31,7 +31,6 @@ const FillQuiz: React.FC<FillQuizProps> = ({ quiz, onChange, result }) => {
   const handleInputChange = (index, event) => {
     const updatedInputs = [...userInputs];
     updatedInputs[index] = event.target.value;
-    console.log('updatedInputs :==>>', updatedInputs);
     const validAns = updatedInputs.filter((v) => v);
     onChange(quiz.id, quiz.question_type, validAns);
     setUserInputs(updatedInputs);

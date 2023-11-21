@@ -1,4 +1,11 @@
-import { QuestionTypeEnum, Quiz, QuizResult, QuizResultArgs, UserAnswersArgs } from 'src/lib/types/backend_modal';
+import {
+  Question,
+  QuestionTypeEnum,
+  Quiz,
+  QuizResult,
+  QuizResultArgs,
+  UserAnswersArgs,
+} from 'src/lib/types/backend_modal';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
 import 'swiper/css/navigation';
@@ -14,7 +21,7 @@ import { Button } from 'antd';
 import FillQuiz from './fill-quiz';
 
 interface QuizSwiperProps {
-  listQuiz: Quiz[];
+  listQuiz: Question[];
   onChangeQuiz: (value: UserAnswersArgs) => void;
   quizResult: QuizResult | null;
 }

@@ -171,18 +171,39 @@ const CreateQuiz = () => {
 
   const renderInitialFormValue = (questionData: Question) => {
     console.log('questionData', questionData);
+    const options = {};
+    questionData?.choices_question?.choices?.forEach((value, index) => {
+      const optionKey = `option.${index + 1}`;
+      options[optionKey] = value;
+    });
+    const firstColumn = {};
+    questionData?.match_question?.first_column?.forEach((value, index) => {
+      const optionKey = `firstCol.${index + 1}`;
+      options[optionKey] = value.content;
+    });
+    const secondColumn = {};
+    questionData?.match_question?.second_column?.forEach((value, index) => {
+      const optionKey = `secondCol.${index + 1}`;
+      options[optionKey] = value.content;
+    });
     return {
       type: questionData?.question_type || QuestionTypeEnum.CHOICES,
       time: questionData?.time_limit || '',
-      question: questionData?.choices_question?.content || questionData.match_question?.content,
-      numAns: 4,
-      option: '', //option?.v
-      numFirstCol: 1,
-      numSecondCol: 1,
-      firstCol: '', //firstCol.v
-      secondCol: '',
-      ansFiCol: '',
-      ansSeCol: '',
+      question:
+        questionData?.choices_question?.content ||
+        questionData.match_question?.content ||
+        questionData.fill_blank_question?.content,
+      numAns: questionData?.choices_question?.choices?.length || 4,
+      // option: '', //option?.v
+      ...options,
+      numFirstCol: questionData.match_question?.first_column?.length || 1,
+      numSecondCol: questionData.match_question?.second_column?.length || 1,
+      // firstCol: '', //firstCol.v
+      // secondCol: '',
+      ...firstColumn,
+      ...secondColumn,
+      ansFiCol: questionData?.match_question?.correct_answer?.map((v) => v[0]) || [],
+      ansSeCol: questionData?.match_question?.correct_answer?.map((v) => v[1]) || [],
       content: '',
       hiddenWord: [],
     };
@@ -806,33 +827,52 @@ const CreateQuiz = () => {
           )}
           <Row>
             <Space>
-              <Button
-                onClick={() => {
-                  if (newQuizId && !listQuiz.some((quiz) => quiz.id === newQuizId)) {
-                    handleDeleteQuiz(newQuizId);
-                  }
-                  form.resetFields();
-                  setDrawerState({ open: false, questionData: null });
-                }}
-              >
-                Huỷ
-              </Button>
-              <Button
-                type="dashed"
-                onClick={async () => {
-                  const formValue = form.getFieldsValue();
-                  form.validateFields();
-                  const x = form.getFieldsError();
-                  if (!x?.length) {
-                    handleCreateQuestion(formValue, true);
-                  }
-                }}
-              >
-                Tạo và Thêm
-              </Button>
-              <Button type="primary" htmlType="submit">
-                Tạo
-              </Button>
+              {drawerState.questionData ? (
+                <Button
+                  onClick={() => {
+                    const formValue = form.getFieldsValue();
+                    form.validateFields();
+                    const x = form.getFieldsError();
+                    if (!x?.length) {
+                      handleCreateQuestion(formValue, true); //change to handle update question
+                    }
+                    form.resetFields();
+                    setDrawerState({ open: false, questionData: null });
+                  }}
+                >
+                  Lưu Thay Đổi
+                </Button>
+              ) : (
+                <>
+                  <Button
+                    onClick={() => {
+                      if (newQuizId && !listQuiz.some((quiz) => quiz.id === newQuizId)) {
+                        handleDeleteQuiz(newQuizId);
+                      }
+                      form.resetFields();
+                      setDrawerState({ open: false, questionData: null });
+                    }}
+                  >
+                    Huỷ
+                  </Button>
+                  <Button
+                    type="dashed"
+                    onClick={async () => {
+                      const formValue = form.getFieldsValue();
+                      form.validateFields();
+                      const x = form.getFieldsError();
+                      if (!x?.length) {
+                        handleCreateQuestion(formValue, true);
+                      }
+                    }}
+                  >
+                    Tạo và Thêm
+                  </Button>
+                  <Button type="primary" htmlType="submit">
+                    Tạo
+                  </Button>
+                </>
+              )}
             </Space>
           </Row>
         </Form>

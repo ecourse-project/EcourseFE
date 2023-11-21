@@ -106,9 +106,7 @@ const QuizSection: React.FC<QuizProps> = (props) => {
           {!lessonQuiz.isDone && (
             <CountdownTimer
               expired={() => {
-                console.log('110');
                 setTimeout(() => {
-                  console.log('112');
                   setIsSubmit(true);
                   onSubmit(answer);
                 }, 1000);
@@ -117,9 +115,8 @@ const QuizSection: React.FC<QuizProps> = (props) => {
             />
           )}
           <QuizSlide
-            listQuiz={lessonQuiz.quiz.questions}
+            listQuiz={lessonQuiz.quiz.questions || []}
             onChangeQuiz={(v) => {
-              console.log('v :==>>', v);
               setAnswer((prev) => {
                 const idx = prev.findIndex((ans) => ans.quiz_id === v.quiz_id);
                 if (idx >= 0) {

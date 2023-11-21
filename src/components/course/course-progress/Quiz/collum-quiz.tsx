@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { Button, Tag, Typography } from 'antd';
 import React, { useMemo, useState } from 'react';
-import { MatchQuestion, MatchQuizAnswer, QuestionTypeEnum, Quiz } from 'src/lib/types/backend_modal';
+import { MatchQuestion, MatchQuizAnswer, Question, QuestionTypeEnum, Quiz } from 'src/lib/types/backend_modal';
 import { GrConnect } from 'react-icons/gr';
 import { isEmpty } from 'lodash';
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
@@ -57,7 +57,7 @@ const Column = ({ data, onRowClick, selectedRow, matchedPair, isResult = false }
 };
 
 interface ColumnQuiz {
-  quiz: Quiz;
+  quiz: Question;
   onChange: (
     quiz_id: string,
     question_type: QuestionTypeEnum,

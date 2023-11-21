@@ -1,10 +1,10 @@
 import { css } from '@emotion/react';
 import { Radio, Typography } from 'antd';
 import React from 'react';
-import { QuestionTypeEnum, Quiz } from 'src/lib/types/backend_modal';
+import { Question, QuestionTypeEnum, Quiz } from 'src/lib/types/backend_modal';
 
 interface ChoiceQuizProps {
-  quiz: Quiz;
+  quiz: Question;
   onChange: (
     quiz_id: string,
     question_type: QuestionTypeEnum,
