@@ -427,7 +427,8 @@ const CourseProgress = () => {
                 )
               ) : (!_.isEmpty(state.selectedDoc) &&
                   !state.selectedDoc?.file?.use_embedded_url &&
-                  state.selectedDoc?.file?.file_path) ||
+                  state.selectedDoc?.file?.file_path &&
+                  state.selectedDoc.file.file_type !== 'html') ||
                 (!_.isEmpty(state.selectedDoc) &&
                   state.selectedDoc?.file?.use_embedded_url &&
                   !state.selectedDoc?.file?.file_embedded_url) ? (
@@ -440,7 +441,7 @@ const CourseProgress = () => {
                     Page {pageNumber} of {numPages}
                   </p> */}
                 </div>
-              ) : state.selectedDoc?.file?.use_embedded_url ? (
+              ) : state.selectedDoc?.file?.file_embedded_url || state.selectedDoc?.file.file_path ? (
                 isIframeOrUrl(state.selectedDoc?.file?.file_embedded_url) ||
                 !isURL(state.selectedDoc?.file?.file_embedded_url) ? (
                   <div
@@ -449,7 +450,7 @@ const CourseProgress = () => {
                   />
                 ) : (
                   <iframe
-                    src={state.selectedDoc?.file?.file_embedded_url || ''}
+                    src={state.selectedDoc?.file?.file_embedded_url || state.selectedDoc?.file?.file_path || ''}
                     title={state.selectedDoc?.name}
                     width="100%"
                     height="500px"
