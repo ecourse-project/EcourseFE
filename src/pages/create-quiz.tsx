@@ -21,6 +21,11 @@ import {
 import { AlphabetLetter, replaceWordsInString, splitSentence } from 'src/lib/utils/utils';
 import { v4 as uuidv4 } from 'uuid';
 const { Option } = Select;
+import React from 'react';
+import Loadable from 'react-loadable';
+import Layout from 'src/components/common/Layout';
+import { LoadingPage } from 'src/components/loading/loadingBase';
+import PrivateProvider from 'src/components/providers/PrivateProvider';
 interface SelectedLessonType {
   id: string;
   name: string;
@@ -33,7 +38,7 @@ interface ListCourseType {
   lessons?: SelectedLessonType[] | undefined;
 }
 
-const CreateQuiz = () => {
+const CreateQuizPage = () => {
   const [form] = Form.useForm();
 
   const [selectedLesson, setSelectedLesson] = useState<SelectedLessonType | null>({} as SelectedLessonType);
@@ -90,8 +95,8 @@ const CreateQuiz = () => {
       | FillBlankQuestion;
     if (value.type === QuestionTypeEnum.CHOICES) {
       const optionObject = {};
-      AlphabetLetter.slice(0, numAns || 4).forEach((v) => {
-        optionObject[v] = value[`option.${v}`];
+      AlphabetLetter.slice(0, numAns || 4).forEach((v, idx) => {
+        optionObject[v] = value[`option.${idx + 1}`];
       });
       const choices = Object.keys(optionObject).map((v) => ({
         choice: undefined,
@@ -149,7 +154,9 @@ const CreateQuiz = () => {
         id: undefined,
         order: undefined,
         time_limit: value.time,
-        content: value.question,
+        title: value.question,
+        content: value.content,
+        full_content: value.content,
         hidden_words: hiddenWord,
         question_type: QuestionTypeEnum.FILL,
       };
@@ -171,10 +178,11 @@ const CreateQuiz = () => {
 
   const renderInitialFormValue = (questionData: Question) => {
     console.log('questionData', questionData);
+
     const options = {};
     questionData?.choices_question?.choices?.forEach((value, index) => {
       const optionKey = `option.${index + 1}`;
-      options[optionKey] = value;
+      options[optionKey] = value.answer;
     });
     const firstColumn = {};
     questionData?.match_question?.first_column?.forEach((value, index) => {
@@ -186,28 +194,58 @@ const CreateQuiz = () => {
       const optionKey = `secondCol.${index + 1}`;
       options[optionKey] = value.content;
     });
-    return {
+    questionData?.match_question?.correct_answer?.forEach((value, index) => {
+      const idxFi = questionData.match_question?.first_column.findIndex((v) => v.id === value[0]);
+
+      const idxSe = questionData.match_question?.second_column.findIndex((v) => v.id === value[1]);
+
+      const optionKey1 = `ansFiCol.${index + 1}`;
+      const optionKey2 = `ansSeCol.${index + 1}`;
+      if (typeof idxFi === 'number' && idxFi >= 0) options[optionKey1] = idxFi;
+      if (typeof idxSe === 'number' && idxSe >= 0) options[optionKey2] = idxSe;
+    });
+    const initalData = {
       type: questionData?.question_type || QuestionTypeEnum.CHOICES,
       time: questionData?.time_limit || '',
       question:
         questionData?.choices_question?.content ||
         questionData.match_question?.content ||
-        questionData.fill_blank_question?.content,
+        questionData.fill_blank_question?.title,
+
       numAns: questionData?.choices_question?.choices?.length || 4,
       // option: '', //option?.v
       ...options,
+      correct_ans: questionData?.choices_question?.correct_answer.name,
       numFirstCol: questionData.match_question?.first_column?.length || 1,
       numSecondCol: questionData.match_question?.second_column?.length || 1,
       // firstCol: '', //firstCol.v
       // secondCol: '',
       ...firstColumn,
       ...secondColumn,
-      ansFiCol: questionData?.match_question?.correct_answer?.map((v) => v[0]) || [],
-      ansSeCol: questionData?.match_question?.correct_answer?.map((v) => v[1]) || [],
-      content: '',
-      hiddenWord: [],
+      content: questionData.fill_blank_question?.full_content,
+      hiddenWord: questionData.fill_blank_question?.hidden_words?.filter((v) => v.hidden)?.map((u) => u.word),
     };
+    console.log('🚀 ~ file: create-quiz.tsx:215 ~ renderInitialFormValue ~ initalData:', initalData);
+
+    return initalData;
   };
+  useEffect(() => {
+    console.log('drawerState', drawerState);
+    if (drawerState.questionData && drawerState.open)
+      form.setFieldsValue(renderInitialFormValue(drawerState.questionData));
+    else
+      form.setFieldsValue({
+        numAns: 4,
+        type: QuestionTypeEnum.CHOICES,
+        numFirstCol: 1,
+        numSecondCol: 1,
+        hiddenWord: [],
+        content: '',
+        question: '',
+        time: '',
+      });
+    return form.resetFields();
+  }, [drawerState.open]);
 
   return (
     <div>
@@ -338,8 +376,12 @@ const CreateQuiz = () => {
       <Drawer
         title={`Tạo quiz cho ${quizTitle || '...'}`}
         width={'100%'}
-        onClose={() => setDrawerState({ open: false, questionData: null })}
+        onClose={() => {
+          setDrawerState({ open: false, questionData: null });
+          form.resetFields();
+        }}
         open={drawerState.open}
+        destroyOnClose
       >
         <Form
           layout="vertical"
@@ -368,10 +410,10 @@ const CreateQuiz = () => {
         >
           <Row gutter={16}>
             <Col span={24}>
-              <Form.Item name="type" label="Loại Quiz" rules={[{ required: true, message: 'Please select an owner' }]}>
+              <Form.Item name="type" label="Loại Quiz" rules={[{ required: true, message: 'Chọn loại câu hỏi' }]}>
                 <AppSelect
                   className="course-field"
-                  placeholder="Chọn quiz"
+                  placeholder="Chọn loại câu hỏi"
                   name="type"
                   type="string"
                   itemSelect={Object.keys(QuestionTypeEnum).map((v) => ({
@@ -379,10 +421,10 @@ const CreateQuiz = () => {
                     label: v,
                   }))}
                   handleChange={(value, option) => {
-                    setSelectedLesson({ id: option?.id, name: option.children });
                     form.setFieldValue('type', value);
                   }}
-                  value={selectedLesson?.name}
+                  value={form.getFieldValue('type')}
+                  disabled={!!drawerState.questionData}
                 />
               </Form.Item>
             </Col>
@@ -501,11 +543,11 @@ const CreateQuiz = () => {
                   }
                 `}
               >
-                {AlphabetLetter.slice(0, numAns || 4).map((v) => {
+                {AlphabetLetter.slice(0, numAns || 4).map((v, index) => {
                   return (
                     <Form.Item
                       key={v}
-                      name={`option.${v}`}
+                      name={`option.${index + 1}`}
                       rules={[
                         {
                           required: true,
@@ -518,7 +560,7 @@ const CreateQuiz = () => {
                         name={v}
                         placeholder={`Đáp án ${v}`}
                         value={form.getFieldValue(v)}
-                        handleChange={(e) => form.setFieldValue(`option.${[v]}`, e.target.value)}
+                        handleChange={(e) => form.setFieldValue(`option.${[v + 1]}`, e.target.value)}
                         css={css`
                           height: 100%;
                           .s-label {
@@ -708,11 +750,11 @@ const CreateQuiz = () => {
                         >
                           <AppSelect
                             className="course-field"
-                            placeholder="Chọn đáp cột 1"
+                            placeholder="Chọn đáp án cột 1"
                             type="string"
                             itemSelect={Array.from({ length: numFirstCol }, (_, i) => i + 1).map((v, index) => ({
                               value: index,
-                              label: v,
+                              label: 'Phương án ' + v,
                             }))}
                             handleChange={(v) => {
                               form.setFieldValue(`ansFiCol.${value}`, v);
@@ -748,7 +790,7 @@ const CreateQuiz = () => {
                             type="string"
                             itemSelect={AlphabetLetter.slice(0, numSecondCol || 1).map((v, index) => ({
                               value: index,
-                              label: v,
+                              label: 'Phương án ' + v,
                             }))}
                             handleChange={(v) => {
                               form.setFieldValue(`ansSeCol.${value}`, v);
@@ -881,8 +923,6 @@ const CreateQuiz = () => {
   );
 };
 
-export default CreateQuiz;
-
 const QuizShow = ({
   title,
   listQuiz,
@@ -931,7 +971,7 @@ const QuizShow = ({
         } else if (record.question_type === QuestionTypeEnum.MATCH) {
           return <div>{record.match_question?.content}</div>;
         } else if (record.question_type === QuestionTypeEnum.FILL) {
-          return <div>N/A</div>;
+          return <div>{record.fill_blank_question.title}</div>;
         }
       },
     },
@@ -958,7 +998,7 @@ const QuizShow = ({
           const seCol = record.match_question.second_column;
           return (
             <div>
-              {Array.from({ length: Math.max(fiCol.length, seCol.length) }, (_, i) => 1).map((v) => {
+              {Array.from({ length: Math.max(fiCol.length, seCol.length) }, (_, i) => i + 1).map((value, v) => {
                 return (
                   <div
                     key={v}
@@ -977,8 +1017,7 @@ const QuizShow = ({
                     <div className="fiSe" title={fiCol?.[v]?.content}>
                       {fiCol?.[v]?.content}
                     </div>
-                    {/* <NodeIndexOutlined /> */}
-                    <ApiOutlined />
+                    {fiCol?.[v]?.content && seCol?.[v]?.content && <ApiOutlined />}
                     <div className="fiSe" title={seCol?.[v]?.content}>
                       {seCol?.[v]?.content}
                     </div>
@@ -1004,7 +1043,6 @@ const QuizShow = ({
           const fiCol = record.match_question.first_column;
           const seCol = record.match_question.second_column;
           const getAnsContent = (id, column) => {
-            console.log(column.find((v) => v.id === id)?.content);
             return column.find((v) => v.id === id)?.content;
           };
 
@@ -1012,7 +1050,9 @@ const QuizShow = ({
             <div>
               {record.match_question.correct_answer.map((v, idx) => {
                 const firstAnscontent = getAnsContent(v[0], fiCol);
+
                 const secondAnscontent = getAnsContent(v[1], seCol);
+
                 return (
                   <div
                     key={v + idx}
@@ -1031,7 +1071,7 @@ const QuizShow = ({
                     <div className="fiSe" title={firstAnscontent}>
                       {firstAnscontent}
                     </div>
-                    <NodeIndexOutlined />
+                    {!!firstAnscontent && !!secondAnscontent && <NodeIndexOutlined />}
                     <div className="fiSe" title={secondAnscontent}>
                       {secondAnscontent}
                     </div>
@@ -1375,3 +1415,17 @@ const quizEdit = () => {
     </div>
   );
 };
+
+const CreateQuiz: React.FC = () => {
+  return (
+    <React.Fragment>
+      <PrivateProvider>
+        <Layout isNoneHeader>
+          <CreateQuizPage />
+        </Layout>
+      </PrivateProvider>
+    </React.Fragment>
+  );
+};
+
+export default CreateQuiz;
