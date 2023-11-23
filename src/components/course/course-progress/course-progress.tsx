@@ -441,7 +441,7 @@ const CourseProgress = () => {
                     Page {pageNumber} of {numPages}
                   </p> */}
                 </div>
-              ) : state.selectedDoc?.file?.file_embedded_url || state.selectedDoc?.file.file_path ? (
+              ) : state.selectedDoc?.file?.file_embedded_url || state.selectedDoc?.file?.file_path ? (
                 isIframeOrUrl(state.selectedDoc?.file?.file_embedded_url) ||
                 !isURL(state.selectedDoc?.file?.file_embedded_url) ? (
                   <div
