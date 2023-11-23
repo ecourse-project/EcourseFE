@@ -1,15 +1,17 @@
 import { FileTextOutlined, PlayCircleFilled } from '@ant-design/icons';
 import { css } from '@emotion/react';
 import { Card, Checkbox, Collapse, List } from 'antd';
-import { cloneDeep, debounce } from 'lodash';
+import { debounce } from 'lodash';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ExamImg from 'src/assets/images/exam.png';
+import AppSelect from 'src/components/select';
 import { RootState } from 'src/lib/reducers/model';
 import { progressAction } from 'src/lib/reducers/progress/progressSlice';
-import { Lesson, UpdateLessonArgs } from 'src/lib/types/backend_modal';
+import { Lesson, Quiz, QuizLocationEnum, UpdateLessonArgs } from 'src/lib/types/backend_modal';
+import RoutePaths from 'src/lib/utils/routes';
 import { DurationTime, formatDurationTime, uniqueArr, updateURLParams } from 'src/lib/utils/utils';
 
 const { Panel } = Collapse;
@@ -19,7 +21,16 @@ interface LessonItemProps {
   isCourseDetail?: boolean;
   index?: number;
   isShowLessonDetail: boolean;
+  listQuiz?: Quiz[];
+  onSaveQuizSetting?: (quizSetting: QuizItemSetting[]) => void;
+  isEditing?: boolean;
   // onUpdate: (data: UpdateLessonArgs) => void;
+}
+
+interface QuizItemSetting {
+  id: string;
+  order: string;
+  location: QuizLocationEnum;
 }
 
 const DisplayDurationTime = (duration) => {
@@ -53,23 +64,24 @@ const DisplayDurationTime = (duration) => {
 };
 
 const LessonItem: React.FC<LessonItemProps> = (props) => {
-  const { lesson, isCourseDetail = false, index, isShowLessonDetail } = props;
+  const { lesson, isCourseDetail = false, isShowLessonDetail, listQuiz, onSaveQuizSetting, isEditing } = props;
   const selectedDoc = useSelector((state: RootState) => state.progress.selectedDoc);
   const selectedVideo = useSelector((state: RootState) => state.progress.selectedVideo);
   const isDoneVideo = useSelector((state: RootState) => state.progress.isDoneVideo);
   const [checkedVideo, setCheckedVideo] = useState<string[]>(lesson.videos_completed || []);
   const [checkedDoc, setCheckedDoc] = useState<string[]>(lesson.docs_completed || []);
-  const updateParams = useSelector((state: RootState) => state.progress.updateParams);
+
+  const [quizSetting, setQuizSetting] = useState<QuizItemSetting[]>([]);
   const dispatch = useDispatch();
   const router = useRouter();
   const handleCheckedDoc = (e) => {
     if (checkedDoc.includes(e.target.value)) {
       const newChecked = checkedDoc.filter((v) => v !== e.target.value);
       setCheckedDoc(newChecked);
-      debounceCheckedItem2(checkedVideo, newChecked);
+      debounceCheckedItem(checkedVideo, newChecked);
     } else {
       setCheckedDoc([...checkedDoc, e.target.value]);
-      debounceCheckedItem2(checkedVideo, [...checkedDoc, e.target.value]);
+      debounceCheckedItem(checkedVideo, [...checkedDoc, e.target.value]);
     }
   };
 
@@ -77,47 +89,14 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
     if (checkedVideo.includes(e.target.value)) {
       const newChecked = checkedVideo.filter((v) => v !== e.target.value);
       setCheckedVideo(newChecked);
-      debounceCheckedItem2(newChecked, checkedDoc);
+      debounceCheckedItem(newChecked, checkedDoc);
     } else {
       setCheckedVideo([...checkedVideo, e.target.value]);
-      debounceCheckedItem2([...checkedVideo, e.target.value], checkedDoc);
+      debounceCheckedItem([...checkedVideo, e.target.value], checkedDoc);
     }
   };
 
-  const debounceCheckedItem = useCallback(
-    debounce((videos, docs) => {
-      const cloneUpdateParams = cloneDeep(updateParams);
-      const idx = cloneUpdateParams.lessons.findIndex((v) => v.lesson_id === lesson.id);
-      if (~idx) {
-        const updateParamsObject = {
-          lesson_id: lesson.id,
-          completed_videos: [...(uniqueArr(videos) || [])],
-          completed_docs: [...(uniqueArr(docs) || [])],
-        } as UpdateLessonArgs;
-        cloneUpdateParams.lessons.splice(idx, 1, updateParamsObject);
-      }
-      dispatch(progressAction.updateProgress(cloneUpdateParams));
-    }, 1000),
-    [],
-  );
-
-  const debounceCheckedItem2 = useCallback((videos, docs) => {
-    // const cloneUpdateParams = cloneDeep(updateParams);
-    // // //console.log('cloneUpdateParams :>> ', cloneUpdateParams);/
-    // const idx = cloneUpdateParams.findIndex((v) => v.lesson_id === lesson.id);
-    // //console.log('idx :>> ', idx);
-    // if (~idx) {
-    //   const updateParamsObject = {
-    //     lesson_id: lesson.id,
-    //     completed_videos: [...(uniqueArr(videos) || [])],
-    //     completed_docs: [...(uniqueArr(docs) || [])],
-    //   } as UpdateLessonArgs;
-    //   //console.log('updateParamsObject :>> ', cloneUpdateParams);
-    //   cloneUpdateParams.splice(idx, 1, updateParamsObject);
-    //   //console.log('updateParamsObject after splice :>> ', cloneUpdateParams);
-    // }
-    // //console.log('cloneUpdateParams after splice out side:>> ', cloneUpdateParams);
-    // dispatch(progressAction.updateProgress(cloneUpdateParams));
+  const debounceCheckedItem = useCallback((videos, docs) => {
     dispatch(
       progressAction.updateProgress({
         lesson_id: lesson.id,
@@ -128,14 +107,28 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
   }, []);
 
   useEffect(() => {
-    if (isDoneVideo) {
-      const idx = checkedVideo.indexOf(selectedVideo.id);
+    debounceSaveQuizSetting(quizSetting);
+  }, [quizSetting]);
+
+  const debounceSaveQuizSetting = useCallback(
+    debounce((value) => {
+      onSaveQuizSetting?.(value);
+    }, 500),
+    [],
+  );
+
+  useEffect(() => {
+    if (isDoneVideo && selectedVideo) {
+      const idx = checkedVideo.indexOf(selectedVideo?.id);
       if (idx >= 0) {
-        setCheckedVideo([...checkedVideo, selectedVideo.id]);
+        setCheckedVideo([...checkedVideo, selectedVideo?.id]);
       }
     }
   }, [isDoneVideo]);
 
+  useEffect(() => {
+    console.log('quizSetting :==>>', quizSetting);
+  }, [quizSetting]);
   return (
     <div
       css={css`
@@ -231,22 +224,6 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
             cursor: not-allowed;
           }
         }
-        /* .ant-checkbox-wrapper {
-          &:hover {
-            border-color: #000 !important;
-          }
-        }
-        .ant-checkbox-checked {
-          .ant-checkbox-inner {
-            width: 18px;
-            height: 18px;
-            background: #000 !important;
-            border-color: #000 !important;
-            &::after {
-              border-color: #000 !important;
-            }
-          }
-        } */
       `}
     >
       <List.Item>
@@ -269,53 +246,101 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                     key={'1'}
                     className="course_list_video"
                   >
-                    {lesson.videos?.map((v, i) => (
-                      <div
-                        key={i}
-                        className={`course_video_item video_${v.id}`}
-                        onClick={() => {
-                          updateURLParams(router, { lesson: lesson.id, doc: '', video: v.id, quiz: '' });
-                        }}
-                      >
-                        {!isCourseDetail && (
-                          // <input
-                          //   value={v.id}
-                          //   type="checkbox"
-                          //   checked={checkedVideo.includes(v.id)}
-                          //   onChange={(e) => {
-                          //     if (checkedVideo.includes(e.target.value)) {
-                          //       const newChecked = checkedVideo.filter((v) => v !== e.target.value);
-                          //       setCheckedVideo(newChecked);
-                          //       debounceCheckedItem(newChecked, checkedDoc);
-                          //     } else {
-                          //       setCheckedVideo((prev) => [...prev, e.target.value]);
-                          //       debounceCheckedItem([...checkedVideo, e.target.value], checkedDoc);
-                          //     }
-                          //   }}
-                          //   onClick={(e) => {
-                          //     e.stopPropagation();
-                          //   }}
-                          //   width={18}
-                          //   height={18}
-                          // />
-                          <Checkbox
-                            onChange={handleCheckedVid}
-                            checked={checkedVideo.includes(v.id)}
-                            value={v.id}
-                            onClick={(e) => e.stopPropagation()}
-                          />
-                        )}
-                        <div className="item_info">
-                          <p className="subject-name" title={v?.file_name}>{`${v?.file_name}`}</p>
-                          {!v?.use_embedded_url && (
-                            <div className="video_duration">
-                              <PlayCircleFilled />
-                              {`${DisplayDurationTime(v.duration)}s`}
+                    {lesson.videos?.map((v, i) => {
+                      const haveQuiz = lesson.quiz_location?.find((quizItem) => quizItem.order.toString() === v.id)?.id;
+                      let quizName = '';
+                      if (haveQuiz) {
+                        quizName = listQuiz?.find((quiz) => quiz.id === haveQuiz)?.name || '';
+                      }
+                      return (
+                        <>
+                          <div
+                            key={i}
+                            className={`course_video_item video_${v.id}`}
+                            onClick={() => {
+                              updateURLParams(router, { lesson: lesson.id, doc: '', video: v.id, quiz: '' });
+                            }}
+                          >
+                            {!isCourseDetail && (
+                              <Checkbox
+                                onChange={handleCheckedVid}
+                                checked={checkedVideo.includes(v.id)}
+                                value={v.id}
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                            )}
+                            <div className="item_info">
+                              <p className="subject-name" title={v?.file_name}>{`${v?.file_name}`}</p>
+                              {!v?.use_embedded_url && (
+                                <div className="video_duration">
+                                  <PlayCircleFilled />
+                                  {`${DisplayDurationTime(v.duration)}s`}
+                                </div>
+                              )}
                             </div>
-                          )}
-                        </div>
-                      </div>
-                    ))}
+                          </div>
+                          <div>
+                            {isEditing ? (
+                              <AppSelect
+                                placeholder="Chọn quiz"
+                                quizSelect
+                                value={haveQuiz}
+                                itemSelect={listQuiz?.map((quiz) => {
+                                  return {
+                                    value: quiz.id,
+                                    label: quiz.name,
+                                  };
+                                })}
+                                handleChange={(id) => {
+                                  if (id === 'CREATE_NEW_QUIZ') router.push(RoutePaths.CREATE_QUIZ);
+                                  else {
+                                    setQuizSetting((prev) => {
+                                      const idxFounded = prev?.findIndex((quizItem) => quizItem.order === v.id) || -1;
+                                      if (idxFounded >= 0) {
+                                        prev[idxFounded] = { id: id, location: QuizLocationEnum.VIDEO, order: v.id };
+                                        return prev;
+                                      } else {
+                                        return [...prev, { id: id, location: QuizLocationEnum.VIDEO, order: v.id }];
+                                      }
+                                    });
+                                  }
+                                }}
+                              />
+                            ) : (
+                              !!haveQuiz && (
+                                <Card
+                                  className="quiz_header"
+                                  css={css`
+                                    .ant-card-body {
+                                      padding: 11px;
+                                    }
+                                  `}
+                                >
+                                  <div
+                                    className={`quiz-name ${lesson.list_quiz?.length ? '' : 'disabled'}`}
+                                    onClick={() => {
+                                      if (!lesson.list_quiz.length) return;
+                                      updateURLParams(router, {
+                                        doc: '',
+                                        video: '',
+                                        lesson: lesson.id,
+                                        quiz: haveQuiz,
+                                      });
+                                    }}
+                                  >
+                                    <Image src={ExamImg} alt="quiz-img" width={30} height={30} />
+                                    <span>
+                                      {`Bài tập - `}
+                                      <strong>{quizName}</strong>
+                                    </span>
+                                  </div>
+                                </Card>
+                              )
+                            )}
+                          </div>
+                        </>
+                      );
+                    })}
                   </Panel>
                 </Collapse>
                 <Collapse defaultActiveKey="1">
@@ -342,17 +367,6 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                         }}
                       >
                         {!isCourseDetail && (
-                          // <input
-                          //   value={v.id}
-                          //   type="checkbox"
-                          //   checked={checkedDoc.includes(v.id)}
-                          //   onChange={handleCheckedDoc}
-                          //   onClick={(e) => {
-                          //     e.stopPropagation();
-                          //   }}
-                          //   width={18}
-                          //   height={18}
-                          // />
                           <Checkbox
                             onChange={handleCheckedDoc}
                             checked={checkedDoc.includes(v.id)}

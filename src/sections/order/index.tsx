@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 import { Loading3QuartersOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 
-const { Title, Paragraph, Text, Link } = Typography;
+const { Title } = Typography;
 const antIcon = <Loading3QuartersOutlined style={{ fontSize: 40 }} spin />;
 
 const OrderUI = () => {
@@ -21,7 +21,6 @@ const OrderUI = () => {
   const [listOrder, setListOrder] = useState<Pagination<OutputOrder>>();
   const [loading, setLoading] = useState<boolean>(false);
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>({} as PaymentInfo);
-  const dispatch = useDispatch();
   const getAllOrder = async () => {
     try {
       setLoading(true);

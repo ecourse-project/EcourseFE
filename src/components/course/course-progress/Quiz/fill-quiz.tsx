@@ -1,15 +1,15 @@
 import { css } from '@emotion/react';
 import React, { useEffect, useState } from 'react';
 import { cloneDeep } from 'lodash';
-import { FillQuizAnswer, QuestionTypeEnum, Quiz } from 'src/lib/types/backend_modal';
+import { FillQuestionAnswer, Question, QuestionTypeEnum, Quiz } from 'src/lib/types/backend_modal';
 interface FillQuizProps {
-  quiz: Quiz;
+  quiz: Question;
   onChange: (
-    quiz_id: string,
+    question_id: string,
     question_type: QuestionTypeEnum,
     answer: string | Array<string> | Array<Array<string>>,
   ) => void;
-  result: FillQuizAnswer | undefined;
+  result: FillQuestionAnswer | undefined;
 }
 const defaultIndex = 0;
 const FillQuiz: React.FC<FillQuizProps> = ({ quiz, onChange, result }) => {
@@ -31,7 +31,6 @@ const FillQuiz: React.FC<FillQuizProps> = ({ quiz, onChange, result }) => {
   const handleInputChange = (index, event) => {
     const updatedInputs = [...userInputs];
     updatedInputs[index] = event.target.value;
-    console.log('updatedInputs :==>>', updatedInputs);
     const validAns = updatedInputs.filter((v) => v);
     onChange(quiz.id, quiz.question_type, validAns);
     setUserInputs(updatedInputs);
@@ -61,8 +60,14 @@ const FillQuiz: React.FC<FillQuizProps> = ({ quiz, onChange, result }) => {
           color: red !important;
           font-weight: 700;
         }
+        .title {
+          font-weight: 700;
+        }
       `}
     >
+      <p className="title">
+        {quiz.order}. {quiz.fill_blank_question?.title}
+      </p>
       {!result?.user_answer
         ? fillQuiz?.split(' ')?.map((word, index) => {
             if (word === '{{}}') {

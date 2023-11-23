@@ -1,21 +1,12 @@
-import {
-  Course,
-  CourseDocument,
-  OFileUpload,
-  Quiz,
-  QuizResult,
-  UpdateLessonArgs,
-  UpdateProgressArgs,
-  UserAnswersArgs,
-} from 'src/lib/types/backend_modal';
+import { Course, CourseDocument, OFileUpload, UpdateProgressArgs, UserAnswersArgs } from 'src/lib/types/backend_modal';
 
 import { createSlice, current, PayloadAction } from '@reduxjs/toolkit';
 import { SelectedQuizType } from 'src/lib/types/commentType';
 
 export interface ProgressState {
   courseDetail: Course;
-  selectedDoc: CourseDocument;
-  selectedVideo: OFileUpload;
+  selectedDoc: CourseDocument | null;
+  selectedVideo: OFileUpload | null;
   currentLesson: string;
   isDoneVideo: boolean;
   updateParams: UpdateProgressArgs;
@@ -83,7 +74,7 @@ export const progressSlice = createSlice({
         state.answerSheet = action.payload;
       }
 
-      const idxAnswer = state.answerSheet.findIndex((v) => v.quiz_id === action.payload.quiz_id);
+      const idxAnswer = state.answerSheet.findIndex((v) => v.question_id === action.payload.quiz_id);
       if (~idxAnswer) {
         state.answerSheet.splice(idxAnswer, 1, action.payload);
       }

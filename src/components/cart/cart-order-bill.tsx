@@ -1,23 +1,18 @@
 /* eslint-disable react/no-children-prop */
-import { Checkbox, Col, Row } from 'antd';
+import { Col, Row } from 'antd';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { Course, CreateOrderArg, Document, OCart } from 'src/lib/types/backend_modal';
 
-import { Loading3QuartersOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 
 import CartItemRow from '../../components/cart/cart-item';
 
-const antIcon = <Loading3QuartersOutlined style={{ fontSize: 40 }} spin />;
-const CheckboxGroup = Checkbox.Group;
 interface OrderBillProps {
   checkList: CreateOrderArg;
   cartData: OCart;
   totalPrice: number;
 }
-const CartOrderBill: React.FC<OrderBillProps> = ({ checkList, cartData, totalPrice }) => {
-  const dispatch = useDispatch();
+const CartOrderBill: React.FC<OrderBillProps> = ({ checkList, cartData }) => {
   const [docs, setDocs] = useState<Document[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
 

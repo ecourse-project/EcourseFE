@@ -33,7 +33,7 @@ const reducer = (state: CourseProgressContextType, action: Action): CourseProgre
           answerSheet: action.payload,
         };
       }
-      const idxAnswer = currentAnswer.findIndex((v) => v.quiz_id === action.payload.quiz_id);
+      const idxAnswer = currentAnswer.findIndex((v) => v.question_id === action.payload.quiz_id);
       if (idxAnswer < 0) return state;
       currentAnswer.splice(idxAnswer, 1, action.payload);
       return {

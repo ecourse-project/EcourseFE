@@ -2,7 +2,7 @@ import { Button, Empty, Progress } from 'antd';
 import _, { isEmpty } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import AppButton from 'src/components/button';
-import { UserAnswersArgs } from 'src/lib/types/backend_modal';
+import { QuestionTypeEnum, UserAnswersArgs } from 'src/lib/types/backend_modal';
 
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -12,6 +12,9 @@ import CourseService from 'src/lib/api/course';
 import { SelectedQuizType } from 'src/lib/types/commentType';
 import { getReturnValues } from 'src/lib/utils/utils';
 import QuizSlide from './quiz-slide';
+import ColumnQuiz from './collum-quiz';
+import ChoiceQuiz from './choice-quiz';
+import FillQuiz from './fill-quiz';
 
 interface QuizProps {
   onSubmit: (answer: UserAnswersArgs[]) => void;
@@ -26,9 +29,10 @@ const QuizSection: React.FC<QuizProps> = (props) => {
   const [answer, setAnswer] = useState<UserAnswersArgs[]>([]);
   const [startTime, setStartTime] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const totalTime = lessonQuiz.quiz.reduce((total, current) => {
-    return total + (current?.time_limit || 0);
-  }, 0);
+  const totalTime =
+    lessonQuiz?.quiz?.questions?.reduce((total, current) => {
+      return total + (current?.time_limit || 0);
+    }, 0) || 0;
   const [isExpiredTime, setIsExpiredTime] = useState<boolean>(false);
   const targetDateTime = totalTime * 1000 + new Date(startTime || '').getTime();
   // const targetDateTime = 5 * 1000 + new Date().getTime();
@@ -60,6 +64,18 @@ const QuizSection: React.FC<QuizProps> = (props) => {
   useEffect(() => {
     console.log('answer :==>>', answer);
   }, [answer]);
+  const onChangeQuiz = (v) => {
+    setAnswer((prev) => {
+      const idx = prev.findIndex((ans) => ans.question_id === v.question_id);
+      if (idx >= 0) {
+        prev.splice(idx, 1, v);
+        return prev;
+      } else {
+        return [...prev, v];
+      }
+    });
+    console.log('value :==>>', v);
+  };
   return (
     <QuizStyled>
       {isLoading ? (
@@ -101,14 +117,12 @@ const QuizSection: React.FC<QuizProps> = (props) => {
             </Button>
           </div>
         </>
-      ) : lessonQuiz.quiz?.length ? (
+      ) : lessonQuiz.quiz ? (
         <>
           {!lessonQuiz.isDone && (
             <CountdownTimer
               expired={() => {
-                console.log('110');
                 setTimeout(() => {
-                  console.log('112');
                   setIsSubmit(true);
                   onSubmit(answer);
                 }, 1000);
@@ -116,10 +130,51 @@ const QuizSection: React.FC<QuizProps> = (props) => {
               targetDate={targetDateTime}
             />
           )}
-          <QuizSlide
-            listQuiz={lessonQuiz.quiz}
+          {lessonQuiz.quiz.questions?.map((quiz, i) => {
+            if (quiz.question_type === QuestionTypeEnum.CHOICES) {
+              //trac ngiem
+              return (
+                <div className="quiz-item" key={quiz.id}>
+                  <ChoiceQuiz
+                    quiz={quiz}
+                    onChange={(quiz_id, question_type, answer) =>
+                      onChangeQuiz({ question_id: quiz_id, question_type, answer })
+                    }
+                    result={lessonQuiz?.result?.choices_question?.result?.find((v) => v.question_id === quiz.id)}
+                  />
+                </div>
+              );
+            } else if (quiz.question_type === QuestionTypeEnum.MATCH) {
+              //column
+              return (
+                <div className="quiz-item" key={quiz.id}>
+                  <ColumnQuiz
+                    quiz={quiz}
+                    onChange={(quiz_id, question_type, answer) =>
+                      onChangeQuiz({ question_id: quiz_id, question_type, answer })
+                    }
+                    result={lessonQuiz.result?.match_question?.find((v) => v.question_id === quiz.id)}
+                  />
+                </div>
+              );
+            } else if (quiz.question_type === QuestionTypeEnum.FILL) {
+              //fill
+              return (
+                <div className="quiz-item" key={quiz.id}>
+                  <FillQuiz
+                    quiz={quiz}
+                    onChange={(quiz_id, question_type, answer) =>
+                      onChangeQuiz({ question_id: quiz_id, question_type, answer })
+                    }
+                    result={lessonQuiz.result?.fill_question?.find((v) => v.question_id === quiz.id)}
+                  />
+                </div>
+              );
+            }
+          })}
+          {/* <QuizSlide
+            listQuiz={lessonQuiz.quiz.questions || []}
             onChangeQuiz={(v) => {
-              console.log('v :==>>', v);
               setAnswer((prev) => {
                 const idx = prev.findIndex((ans) => ans.quiz_id === v.quiz_id);
                 if (idx >= 0) {
@@ -131,12 +186,12 @@ const QuizSection: React.FC<QuizProps> = (props) => {
               });
             }}
             quizResult={lessonQuiz.isDone ? lessonQuiz.result : null}
-          />
+          /> */}
         </>
       ) : (
         <Empty className="empty-data" image={Empty.PRESENTED_IMAGE_SIMPLE} />
       )}
-      {!loading && !isEmpty(lessonQuiz.quiz) && answer?.length === lessonQuiz.quiz?.length && (
+      {!loading && !isEmpty(lessonQuiz.quiz?.questions) && answer?.length === lessonQuiz?.quiz?.questions?.length && (
         <AppButton
           className="done-btn"
           btnTextColor={'black'}

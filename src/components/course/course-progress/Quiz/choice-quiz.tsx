@@ -1,19 +1,18 @@
 import { css } from '@emotion/react';
 import { Radio, Typography } from 'antd';
 import React from 'react';
-import CountDown from 'src/components/count-down';
-import { QuestionTypeEnum, Quiz } from 'src/lib/types/backend_modal';
+import { ChoicesQuestionAnswer, Question, QuestionTypeEnum, Quiz } from 'src/lib/types/backend_modal';
 
 interface ChoiceQuizProps {
-  quiz: Quiz;
+  quiz: Question;
   onChange: (
-    quiz_id: string,
+    question_id: string,
     question_type: QuestionTypeEnum,
     answer: string | Array<string> | Array<Array<string>>,
   ) => void;
-  result: { quiz_id: string; user_answer: string; correct_answer?: string } | undefined;
+  result: { question_id: string; user_answer: string; correct_answer?: string } | undefined;
 }
-const { Text, Link } = Typography;
+const { Text } = Typography;
 const ChoiceQuiz: React.FC<ChoiceQuizProps> = ({ quiz, onChange, result }) => {
   const quizChoice = quiz.choices_question;
   if (!quizChoice) return;
@@ -24,7 +23,8 @@ const ChoiceQuiz: React.FC<ChoiceQuizProps> = ({ quiz, onChange, result }) => {
         max-width: 80%;
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start;
+        padding: 0 60px;
         gap: 20px;
         .correct {
           color: #1890ff;
@@ -53,10 +53,16 @@ const ChoiceQuiz: React.FC<ChoiceQuizProps> = ({ quiz, onChange, result }) => {
         }
         .correct-ans {
           color: green !important;
+          font-weight: 700;
+        }
+        .question {
+          font-weight: 700;
         }
       `}
     >
-      <Text className="question">{quizChoice?.content}</Text>
+      <Text className="question">
+        {quiz?.order}. {quizChoice?.content}
+      </Text>
       {/* <Radio.Group onChange={(e) => onChange(e, quiz.id)} disabled={isDone || isSubmit}> */}
       <Radio.Group
         onChange={(e) => onChange(quiz.id, quiz.question_type, e.target.value)}

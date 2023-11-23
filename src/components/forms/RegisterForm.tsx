@@ -1,9 +1,8 @@
-import { CheckboxChangeEvent } from 'antd/lib/checkbox/Checkbox';
 import { useFormik } from 'formik';
 import { debounce } from 'lodash';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React from 'react';
 import AppButton from 'src/components/button';
 import ErrorMessage from 'src/components/error-message';
 import AppInput from 'src/components/input';
@@ -70,10 +69,7 @@ const RegisterForm: React.FC = () => {
   );
 
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [isTickAgree, setIsTickAgree] = React.useState<boolean>(false);
   const [generalError, setGeneralError] = React.useState<string>('');
-  const [inputphonePosition, setInputphonePosition] = React.useState<number>(0);
-  // const userAsset = useSelector((state: RootState) => state.user.userAssets);
   const formik = useFormik({
     initialValues: {
       full_name: '',
@@ -88,11 +84,15 @@ const RegisterForm: React.FC = () => {
     onSubmit: async (values) => {
       const { full_name, password1, password2, email } = values;
       try {
-        const user = await UserService.register(email, password1, password2, full_name);
+        setIsLoading(true);
+        await UserService.register(email, password1, password2, full_name);
         localStorage.setItem('email_register', values?.email);
         router.push(RoutePaths.LOGIN);
-      } catch (error) {
+      } catch (error: any) {
         console.log(error);
+        setGeneralError(error.message);
+      } finally {
+        setIsLoading(false);
       }
     },
   });
@@ -102,9 +102,6 @@ const RegisterForm: React.FC = () => {
   });
   const hasError = (key: string) => {
     return Object.keys(formik.errors).length > 0 && !!formik.errors[key] && formik.touched[key];
-  };
-  const onChange = (e: CheckboxChangeEvent) => {
-    setIsTickAgree(e.target.checked);
   };
 
   return (

@@ -1,6 +1,5 @@
 import { Avatar, Tooltip } from 'antd';
 import moment from 'moment';
-import React, { useState } from 'react';
 import { Rating } from 'src/lib/types/backend_modal';
 
 import { Comment } from '@ant-design/compatible';
@@ -10,7 +9,6 @@ interface RatingItemProps {
   rateList: Rating[];
 }
 const FeedbackSection = (props: RatingItemProps) => {
-  const [showReplyBox, setShowReplyBox] = useState<boolean>(false);
   const { rateList } = props;
   return (
     <>

@@ -1,9 +1,9 @@
-import { Col, Collapse, Divider, List, Popover, Progress, Row, Tabs } from 'antd';
+import { Button, Col, Divider, List, Popover, Progress, Row, Tabs } from 'antd';
 import _, { cloneDeep } from 'lodash';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { useDispatch, useSelector } from 'react-redux';
 import NotFile from 'src/assets/images/notfoundfile.png';
@@ -14,11 +14,14 @@ import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { RootState } from 'src/lib/reducers/model';
 import { progressAction } from 'src/lib/reducers/progress/progressSlice';
 import {
+  AssignQuizArgs,
   Course,
   Lesson,
   Quiz,
+  QuizLocationEnum,
   QuizResult,
   QuizResultArgs,
+  RoleEnum,
   UpdateLessonArgs,
   UpdateProgressArgs,
   UserAnswersArgs,
@@ -27,16 +30,13 @@ import RoutePaths from 'src/lib/utils/routes';
 
 import { DownOutlined, HomeOutlined, PlayCircleOutlined, SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
-import { AlertTextError } from 'src/components/alert/SweetAlert';
 import PdfViewer from 'src/components/pdf';
-import { useExportCertificate } from 'src/lib/hooks/useExportCerti';
 import QuizSection from './Quiz';
 import LessonItem from './lesson-item';
 import { CourseProgressWrapper } from './style';
 
 import { isIframeOrUrl, isURL, updateURLParams } from 'src/lib/utils/utils';
 
-const { Panel } = Collapse;
 export interface CourseParams {
   id: string;
   lesson?: string;
@@ -66,30 +66,35 @@ export const convertDataToUpdateParams = (lessons: Lesson[]) => {
   });
   return res;
 };
+export interface QuizSetting {
+  lesson_id: string;
+  quiz?: Array<{
+    id: string;
+    order: string;
+    location: QuizLocationEnum;
+  }>;
+}
 
 const CourseProgress = () => {
   const [course, setCourse] = useState<Course>();
-  const [numPages, setNumPages] = useState<number>();
-  const [pageNumber, setPageNumber] = useState<number>(1);
   const params: CourseParams = useQueryParam();
-  const [videoLoading, setVideoLoading] = useState<boolean>(true);
   const [sumVid, setSumVid] = useState<number>(0);
   const [sumDoc, setSumDoc] = useState<number>(0);
+  const myProfile = useSelector((state: RootState) => state.app.user);
 
-  const [loading, setLoading] = useState<boolean>(false);
-  const [resultQuiz, setResultQuiz] = useState<QuizResult>();
+  const [isEditing, setIsEditing] = useState<boolean>(false);
   const dispatch = useDispatch();
   const state = useSelector((state: RootState) => state.progress);
-  const [checkedItems, setCheckedItems] = useState<UpdateLessonArgs[]>([]);
   const router = useRouter();
   const [progressNumber, setProgressNumber] = useState<number>(course?.progress || 0);
-  const [qury, setQury] = useState<any>({});
-  const { downloadPDF, DownloadAnchor } = useExportCertificate({
-    certificateExport: CourseService.downloadCerti,
-    onFailed: (err) => {
-      AlertTextError('Download Error', err.message, () => {});
-    },
-  });
+  const [listQuiz, setListQuiz] = useState<Quiz[]>([]);
+  const [quizSetting, setQuizSetting] = useState<QuizSetting[]>([]);
+  // const { downloadPDF, DownloadAnchor } = useExportCertificate({
+  //   certificateExport: CourseService.downloadCerti,
+  //   onFailed: (err) => {
+  //     AlertTextError('Download Error', err.message, () => {});
+  //   },
+  // });
 
   const items = [
     {
@@ -118,14 +123,16 @@ const CourseProgress = () => {
         }
       } //if there is not any current => assign first video by default
     } else if (params.quiz && courseDetail.lessons) {
-      const currentLesson = courseDetail.lessons.find((v) => v.id === params.quiz);
+      const currentLesson = courseDetail.lessons.find((v) => v.id === params.lesson);
+      const currentQuiz = listQuiz?.find((v) => v.id === params.quiz) || ({} as Quiz);
+      console.log('currentQuiz,', currentQuiz);
       if (currentLesson && currentLesson.list_quiz) {
         dispatch(
           progressAction.setSelectedQuiz({
-            isDone: currentLesson.is_done_quiz,
+            isDone: false,
             lessonId: currentLesson.id,
-            quiz: currentLesson.list_quiz,
-            result: cloneDeep(currentLesson.quiz_detail || ({} as QuizResult)),
+            quiz: currentQuiz,
+            result: cloneDeep(currentLesson.quiz_detail?.find((v) => v.id === currentQuiz.id) || ({} as QuizResult)),
           }),
         );
       }
@@ -146,36 +153,15 @@ const CourseProgress = () => {
   };
 
   const setInitialCheck = async (courseDetail: Course) => {
-    // set initial checked item and checked answer
     const res = convertDataToUpdateParams(courseDetail.lessons || []);
-    // const res = courseDetail?.lessons?.map((v) => {
-    //   // setSumDoc(sumDoc + v?.documents?.length);
-    //   // setSumVid(sumVid + v?.videos?.length);
-    //   return {
-    //     lesson_id: v.id,
-    //     completed_docs: [...(v?.docs_completed || [])],
-    //     completed_videos: [...(v?.videos_completed || [])],
-    //   } as UpdateLessonArgs;
-    // });
     setSumDoc(courseDetail.lessons?.reduce((p, c) => p + c.documents.length, 0) || 0);
     setSumVid(courseDetail.lessons?.reduce((p, c) => p + c.videos.length, 0) || 0);
 
-    setCheckedItems(res || []);
     dispatch(progressAction.setUpdateParams({ course_id: courseDetail.id, lessons: res }));
-
-    // const initialAnswer = quizList?.map(
-    //   (v) =>
-    //     ({
-    //       quiz_id: v.id,
-    //       answer_choice: AnswerChoiceEnum.NO_CHOICE,
-    //     }) as UserAnswersArgs,
-    // );
-    // dispatch(progressAction.updateCheckedAnswer(initialAnswer));
   };
 
   const getCourseDetail = async (id: string) => {
     try {
-      setLoading(true);
       let courseDetail: Course = {} as Course;
       if (String(params.isClass) === 'true') {
         courseDetail = await CourseService.getClassDetail(id);
@@ -193,12 +179,21 @@ const CourseProgress = () => {
       await setInitialCheck(courseDetail);
     } catch (error: any) {
       // AlertTextError('Error', error?.response?.data?.detail, () => router.back());
-    } finally {
-      setLoading(false);
+    }
+  };
+
+  const getListQuiz = async () => {
+    try {
+      const listQuizDetail = await CourseService.listQuiz();
+      setListQuiz(listQuizDetail);
+      // setQuizTitle();
+    } catch (error) {
+      console.log(error);
     }
   };
 
   useEffect(() => {
+    getListQuiz();
     return () => {
       dispatch(progressAction.setSelectedDoc(null));
       dispatch(progressAction.setSelectedVideo(null));
@@ -211,7 +206,7 @@ const CourseProgress = () => {
     if (!course) {
       getCourseDetail(params.id);
     } else setCurrentDocReloadPage(course);
-  }, [params.doc, params.video, params.quiz]);
+  }, [params.doc, params.video, params.quiz, listQuiz]);
 
   const debounceUpdateProgress = useDebouncedCallback(async (params: UpdateProgressArgs) => {
     try {
@@ -239,76 +234,55 @@ const CourseProgress = () => {
 
   const onSubmitQuiz = async (answer: UserAnswersArgs[]) => {
     try {
-      // if (course?.is_done_quiz) {
-      //   downloadPDF(params.id, course.name);
-      //   // window.open(`${globalVariable.API_URL}api/quiz/certi/?course_id=${params.id}`, '_blank');
-      // } else {
-      const result = await CourseService.getQuizResult({
+      await CourseService.getQuizResult({
+        id: state.selectedQuiz?.quiz.id,
         course_id: course?.id,
         lesson_id: state.selectedQuiz?.lessonId,
         user_answers: answer,
       } as QuizResultArgs);
-      setResultQuiz(result);
       await getCourseDetail(params.id);
-      // }
     } catch (error) {
       console.log('error', error);
     }
   };
 
-  const playerRef = React.useRef(null);
-  const videoJsOptions = {
-    autoplay: false,
-    controls: true,
-    responsive: true,
-    preload: 'auto',
-    fluid: true,
-    liveui: true,
-    playbackRates: [0.5, 1, 1.5, 2],
-    controlBar: {
-      skipButtons: {
-        forward: 5,
-      },
-    },
-    displayCurrentQuality: true,
-    defaultQuality: 'auto',
-    qualities: [
-      { name: 'Auto', value: 'auto' },
-      { name: '360p', value: '360' },
-      { name: '720p', value: '720' },
-      { name: '1080p', value: '1080' },
-    ],
-    sources: [
-      {
-        src: state.selectedVideo?.file_path,
-        type: 'video/mp4',
-      },
-    ],
-  };
+  // const playerRef = React.useRef(null);
+  // const videoJsOptions = {
+  //   autoplay: false,
+  //   controls: true,
+  //   responsive: true,
+  //   preload: 'auto',
+  //   fluid: true,
+  //   liveui: true,
+  //   playbackRates: [0.5, 1, 1.5, 2],
+  //   controlBar: {
+  //     skipButtons: {
+  //       forward: 5,
+  //     },
+  //   },
+  //   displayCurrentQuality: true,
+  //   defaultQuality: 'auto',
+  //   qualities: [
+  //     { name: 'Auto', value: 'auto' },
+  //     { name: '360p', value: '360' },
+  //     { name: '720p', value: '720' },
+  //     { name: '1080p', value: '1080' },
+  //   ],
+  //   sources: [
+  //     {
+  //       src: state.selectedVideo?.file_path,
+  //       type: 'video/mp4',
+  //     },
+  //   ],
+  // };
 
-  function onDocumentLoadSuccess({ numPages }) {
-    setNumPages(numPages);
-  }
+  // function onDocumentLoadSuccess({ numPages }) {
+  //   setNumPages(numPages);
+  // }
 
   return (
     <CourseProgressWrapper
       css={css`
-        .course_content {
-          .page_group {
-            .anticon-left-circle {
-              cursor: ${pageNumber === 1 ? 'not-allowed' : 'pointer'};
-            }
-            .anticon-right-circle {
-              cursor: ${pageNumber === numPages ? 'not-allowed' : 'pointer'};
-            }
-          }
-        }
-
-        @media (min-width: 1500px) {
-          .video_wrapper {
-            /* visibility: ${videoLoading ? 'hidden' : ''}; */
-          }
-        }
         .video_wrapper {
           iframe {
             max-width: 100%;
@@ -326,7 +300,6 @@ const CourseProgress = () => {
       `}
     >
       <Row className="course_header_wrapper">
-        {/* <Col span={20}> */}
         <div className="header-group">
           <Link href={`${RoutePaths.HOME}`} className="home_header">
             <HomeOutlined
@@ -345,8 +318,6 @@ const CourseProgress = () => {
             {course?.name}
           </div>
         </div>
-        {/* </Col> */}
-        {/* <Col span={4} className="right_box"> */}
         <div className="progress">
           <Progress
             className="progress_circle"
@@ -364,7 +335,6 @@ const CourseProgress = () => {
             </Popover>
           </span>
         </div>
-        {/* </Col> */}
       </Row>
       <Divider />
       <div className="">
@@ -384,9 +354,9 @@ const CourseProgress = () => {
                       width="100%"
                       height="100%"
                       controls={true}
-                      onReady={() => {
-                        setVideoLoading(false);
-                      }}
+                      // onReady={() => {
+                      //   setVideoLoading(false);
+                      // }}
                       config={{
                         file: {
                           attributes: {
@@ -435,12 +405,6 @@ const CourseProgress = () => {
                   state.selectedDoc.file.file_type !== 'html') ? (
                 <div className="pdf_wrapper">
                   <PdfViewer url={state.selectedDoc?.file?.file_path || ''} />
-                  {/* <Document file={state.selectedDoc?.file?.file_path} onLoadSuccess={onDocumentLoadSuccess}>
-                    <Page pageNumber={pageNumber} />
-                  </Document>
-                  <p>
-                    Page {pageNumber} of {numPages}
-                  </p> */}
                 </div>
               ) : state.selectedDoc?.file?.file_embedded_url || state.selectedDoc?.file?.file_path ? (
                 isIframeOrUrl(state.selectedDoc?.file?.file_embedded_url) ||
@@ -458,7 +422,7 @@ const CourseProgress = () => {
                     sandbox="allow-scripts allow-same-origin"
                   />
                 )
-              ) : state.selectedQuiz?.quiz?.length ? (
+              ) : state.selectedQuiz?.quiz ? (
                 /* if user unchecked a video while doing quiz, show modal to warn that the quiz will hide if they continue unchecking that video */
 
                 <>
@@ -477,15 +441,45 @@ const CourseProgress = () => {
             <Tabs items={items} defaultActiveKey={params.tab} className="tab-section" />
           </Col>
           <Col span={8} className="course_list">
+            {myProfile.role === RoleEnum.MANAGER && (
+              <Button
+                className="save-change-btn"
+                disabled={!quizSetting.length}
+                onClick={async () => {
+                  if (isEditing) {
+                    const params: AssignQuizArgs = { course_id: course?.id || '', quiz_location: quizSetting as any };
+                    await CourseService.assignQuiz(params);
+                    setIsEditing(false);
+                  } else {
+                    setIsEditing(true);
+                  }
+                }}
+              >
+                {!isEditing ? 'Gán Bài Quiz' : 'Lưu Thay Đổi'}
+              </Button>
+            )}
             <List
               itemLayout="horizontal"
-              dataSource={course?.lessons}
+              dataSource={course?.lessons?.concat(course?.lessons)}
               renderItem={(item, i) => (
                 <LessonItem
                   lesson={item}
                   index={i}
                   isShowLessonDetail={true}
-
+                  listQuiz={listQuiz}
+                  isEditing={isEditing}
+                  onSaveQuizSetting={(quizSetting) => {
+                    setQuizSetting((prev) => {
+                      const idx = prev.findIndex((v) => v.lesson_id === item.id);
+                      if (idx >= 0) {
+                        prev[idx] = { lesson_id: item.id, quiz: quizSetting };
+                        return prev;
+                      } else {
+                        return [...prev, { lesson_id: item.id, quiz: quizSetting }];
+                      }
+                    });
+                    // const params: AssignQuizArgs = { course_id: course?.id, quiz_location: [{ lesson_id: '' }] };
+                  }}
                   // courseDetail={course || ({} as Course)}
                   // onUpdate={(data) => onUpdate(data, JSON.parse(JSON.stringify(checkedItems)))}
                 />

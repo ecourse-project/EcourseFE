@@ -1,10 +1,11 @@
 import _ from 'lodash';
 import moment from 'moment';
 import { forceLogout } from './auth';
-import { StorageKeys } from './enum';
+import { StorageKeys, TagState } from './enum';
 import { RcFile } from 'antd/es/upload';
 import { message } from 'antd';
 import { UploadFile } from 'antd/lib';
+import { PUNCTUATION_MARK } from './constant';
 
 export interface DurationTime {
   days: number;
@@ -145,4 +146,54 @@ export const getReturnValues = (countDown) => {
   const minutes = Math.floor((countDown % (1000 * 60 * 60)) / (1000 * 60));
   const seconds = Math.floor((countDown % (1000 * 60)) / 1000);
   return [days, hours, minutes, seconds];
+};
+
+export const AlphabetLetter = [
+  'A',
+  'B',
+  'C',
+  'D',
+  'E',
+  'F',
+  'G',
+  'H',
+  'I',
+  'J',
+  'K',
+  'L',
+  'M',
+  'N',
+  'O',
+  'P',
+  'Q',
+  'R',
+  'S',
+  'T',
+  'U',
+  'V',
+  'W',
+  'X',
+  'Y',
+  'Z',
+];
+
+export function replaceWordsInString(sentence = '', wordsArray: string[] = []) {
+  const wordsInSentence = sentence.split(' ');
+  const result = wordsInSentence.map((word) => {
+    if (wordsArray.includes(word)) {
+      return `[${word}]`;
+    }
+    return word;
+  });
+  const sentenceJoin = result.join(' ');
+  let finalRes = sentenceJoin;
+  PUNCTUATION_MARK.forEach((mark) => {
+    finalRes = finalRes.replaceAll(' ' + mark, mark);
+  });
+  return finalRes;
+}
+
+export const splitSentence = (text = '') => {
+  const x = text.match(/[\w'"’]+|[ ,;:.?!...:|]+/g);
+  return x?.filter((v) => v !== ' ') || [];
 };

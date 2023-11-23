@@ -1,6 +1,6 @@
-import { Input } from 'antd';
+import { Input, InputNumber } from 'antd';
 import { InputProps } from 'antd/lib/input';
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import theme from 'src/styles/theme';
 
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons/lib/icons';
@@ -47,9 +47,8 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean) =>
       font-size: 14px;
       border: 1px solid;
       background-color: transparent;
-      border-color: ${hasError ? theme.text.errorColor : theme.text.grayColor}!important;
       height: 100%;
-      min-height: 58px;
+      min-height: 46px;
       border-radius: 3px;
       &:hover {
         border-color: ${theme.text.blackColor};
@@ -113,7 +112,7 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean) =>
         rgba(0, 212, 255, 1) 100%
       );
       border-image-slice: 1;
-      min-height: 58px !important;
+      min-height: 46px !important;
       input {
         border: none;
         &:-webkit-autofill,
@@ -140,7 +139,7 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean) =>
         rgba(0, 212, 255, 1) 100%
       );
       border-image-slice: 1;
-      min-height: 58px !important;
+      min-height: 46px !important;
       input {
         border: none;
         &:-webkit-autofill,
@@ -154,55 +153,55 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean) =>
     &.company-field {
       input {
         background-color: #fff !important;
-        min-height: 58px !important;
+        min-height: 46px !important;
       }
     }
     &.email-field {
       input {
         background-color: #fff !important;
-        min-height: 58px !important;
+        min-height: 46px !important;
       }
     }
     &.password-field {
       input {
         background-color: #fff !important;
-        min-height: 58px !important;
+        min-height: 46px !important;
       }
     }
     &.firstName-field {
       input {
         background-color: #fff !important;
-        min-height: 58px !important;
+        min-height: 46px !important;
       }
     }
     &.lastName-field {
       input {
         background-color: #fff !important;
-        min-height: 58px !important;
+        min-height: 46px !important;
       }
     }
     &.confirm-field {
       input {
         background-color: #fff !important;
-        min-height: 58px !important;
+        min-height: 46px !important;
       }
     }
     &.name-field {
       input {
         background-color: #fff !important;
-        min-height: 58px !important;
+        min-height: 46px !important;
       }
     }
     &.market-field {
       input {
         background-color: #fff !important;
-        min-height: 58px !important;
+        min-height: 46px !important;
       }
     }
     &.dre-field {
       input {
         background-color: #fff !important;
-        min-height: 58px !important;
+        min-height: 46px !important;
       }
     }
     &.website-field {
@@ -214,7 +213,7 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean) =>
     &.website-lookup-field {
       input {
         background-color: #fff !important;
-        min-height: 58px !important;
+        min-height: 46px !important;
       }
     }
     &.password-protected {
@@ -252,12 +251,6 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean) =>
   `;
 };
 
-const CustomInput = styled(Input)`
-  height: 45px;
-  width: 100%;
-  border-radius: 5px;
-`;
-
 export interface AppInputProps extends InputProps {
   showEye?: boolean;
   label?: string;
@@ -270,6 +263,7 @@ export interface AppInputProps extends InputProps {
   handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   handleFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  handleChangeNumber?: (value) => void;
 }
 
 const AppInput: React.FC<AppInputProps> = (props) => {
@@ -290,6 +284,8 @@ const AppInput: React.FC<AppInputProps> = (props) => {
     showEye,
     type,
     placeholder,
+    handleChangeNumber,
+    suffix,
     ...rest
   } = props;
 
@@ -310,7 +306,7 @@ const AppInput: React.FC<AppInputProps> = (props) => {
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleChange && handleChange(e);
-    if (e.target.value && e.target.value.length > 0) {
+    if (type !== 'number' && e.target.value && e.target.value.length > 0) {
       setIsEmpty(false);
     } else {
       setIsEmpty(true);
@@ -324,18 +320,43 @@ const AppInput: React.FC<AppInputProps> = (props) => {
   return (
     <div className={className} css={[baseStyle(isForceFocus || isFocusing, isEmpty, hasError)]}>
       {/* onClick={onInputRefFocus} */}
-      <label className="s-label">{`${label}${requiredMark ? `*` : ''}`}</label>
-      <CustomInput
-        {...rest}
-        type={typeLocal}
-        placeholder={placeholder}
-        value={value}
-        onBlur={onBlur}
-        onFocus={onFocus}
-        onChange={onChange}
-        // ref={inputRef}
-        onInput={onInput}
-      />
+      {label && <label className="s-label">{`${label}${requiredMark ? `*` : ''}`}</label>}
+      {type !== 'number' ? (
+        <Input
+          {...rest}
+          type={typeLocal}
+          placeholder={placeholder}
+          value={value}
+          onBlur={onBlur}
+          onFocus={onFocus}
+          onChange={onChange}
+          // ref={inputRef}
+          onInput={onInput}
+        />
+      ) : (
+        <div>
+          <InputNumber
+            addonAfter={suffix}
+            {...rest}
+            type={typeLocal}
+            placeholder={placeholder}
+            value={value as number}
+            onBlur={onBlur}
+            onFocus={onFocus}
+            onChange={handleChangeNumber}
+            min={0}
+            // ref={inputRef}
+            css={css`
+              &.ant-input-number-group-wrapper {
+                width: 100%;
+                .ant-input-number {
+                  border-color: #cccccc !important;
+                }
+              }
+            `}
+          />
+        </div>
+      )}
       {showEye && (
         <div className="eyes">
           {typeLocal === 'password' ? (

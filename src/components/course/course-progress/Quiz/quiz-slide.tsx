@@ -1,4 +1,11 @@
-import { QuestionTypeEnum, Quiz, QuizResult, QuizResultArgs, UserAnswersArgs } from 'src/lib/types/backend_modal';
+import {
+  Question,
+  QuestionTypeEnum,
+  Quiz,
+  QuizResult,
+  QuizResultArgs,
+  UserAnswersArgs,
+} from 'src/lib/types/backend_modal';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
 import 'swiper/css/navigation';
@@ -14,7 +21,7 @@ import { Button } from 'antd';
 import FillQuiz from './fill-quiz';
 
 interface QuizSwiperProps {
-  listQuiz: Quiz[];
+  listQuiz: Question[];
   onChangeQuiz: (value: UserAnswersArgs) => void;
   quizResult: QuizResult | null;
 }
@@ -53,7 +60,7 @@ const QuizSlide: React.FC<QuizSwiperProps> = ({ listQuiz, onChangeQuiz, quizResu
           }
         `}
       >
-        {listQuiz?.map((quiz, i) => {
+        {/* {listQuiz?.map((quiz, i) => {
           if (quiz.question_type === QuestionTypeEnum.CHOICES) {
             //trac ngiem
             return (
@@ -94,7 +101,7 @@ const QuizSlide: React.FC<QuizSwiperProps> = ({ listQuiz, onChangeQuiz, quizResu
               </div>
             );
           }
-        })}
+        })} */}
       </Swiper>
     </div>
   );

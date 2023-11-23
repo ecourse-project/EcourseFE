@@ -1,27 +1,18 @@
 import { Button, Card, Col, Collapse, List, Row, Select, Skeleton } from 'antd';
-import { ExpandIconPosition } from 'antd/lib/collapse/Collapse';
 import moment from 'moment';
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React from 'react';
 import { OutputOrder } from 'src/lib/types/backend_modal';
-import { formatCurrency } from 'src/lib/utils/currency';
 import RoutePaths from 'src/lib/utils/routes';
 
 import { css } from '@emotion/react';
 // import InfoIcon from '@mui/icons-material/Info';
 
-import { AskForSave } from '../alert/SweetAlert';
-import PaymentInfo from './paymentInfo';
 import { InfoOutlined } from '@ant-design/icons';
 import { PaymentInfo as PaymentInfomation } from 'src/lib/types/backend_modal';
+import { AskForSave } from '../alert/SweetAlert';
+import PaymentInfo from './paymentInfo';
 
 const { Panel } = Collapse;
-const { Option } = Select;
-const text = `
-  A dog is a type of domesticated animal.
-  Known for its loyalty and faithfulness,
-  it can be found as a welcome guest in many households across the world.
-`;
 
 interface OrderItemPropType {
   orderItem: OutputOrder;

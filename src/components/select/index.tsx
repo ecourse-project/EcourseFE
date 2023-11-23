@@ -7,6 +7,8 @@ import theme from 'src/styles/theme';
 
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import Link from 'next/link';
+import RoutePaths from 'src/lib/utils/routes';
 
 const { Option } = Select;
 const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean, suffixIcon?: ReactNode) => {
@@ -36,6 +38,9 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean, su
       .anticon {
         font-size: 24px;
       }
+    }
+    .ant-select-selection-placeholder {
+      font-style: italic;
     }
     div {
       border-radius: 0;
@@ -154,7 +159,10 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean, su
           font-size: 19px;
         }
       }
-
+      .ant-select-selection-placeholder {
+        color: #031f2d;
+        font-style: italic;
+      }
       .ant-select-selector {
         color: #031f2d;
         font-weight: 400;
@@ -162,6 +170,7 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean, su
         border-radius: 5px;
         .ant-select-selection-placeholder {
           color: #031f2d;
+          font-style: italic;
         }
         background-color: #fff !important;
         border-color: ${theme.text.blackColor} !important;
@@ -176,8 +185,6 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean, su
 const CustomSelect = styled(Select)`
   height: 20px;
 `;
-
-// export interface AppSelectProps extends SelectProps<VT> {}
 
 const AppSelect = (props) => {
   const {
@@ -195,10 +202,10 @@ const AppSelect = (props) => {
     placeholder,
     isGetContainer,
     suffixIcon,
+    quizSelect,
     ...rest
   } = props;
 
-  // const inputRef = React.useRef<Input | null>(null);
   const [isFocusing, setIsFocusing] = useState(!!value);
   const [isEmpty, setIsEmpty] = useState(!value);
 
@@ -212,8 +219,8 @@ const AppSelect = (props) => {
     setIsFocusing(false);
   };
 
-  const onChange = (value: React.ChangeEvent<HTMLInputElement>) => {
-    handleChange && handleChange(value);
+  const onChange = (value: React.ChangeEvent<HTMLInputElement>, option) => {
+    handleChange && handleChange(value, option);
 
     if (value && +value > 0) {
       setIsEmpty(false);
@@ -221,10 +228,6 @@ const AppSelect = (props) => {
       setIsEmpty(true);
     }
   };
-
-  // const onInputRefFocus = () => {
-  // 	inputRef.current?.focus();
-  // };
 
   return (
     <div className={className} css={[baseStyle(isForceFocus || isFocusing, isEmpty, hasError)]}>
@@ -235,33 +238,19 @@ const AppSelect = (props) => {
         suffixIcon={suffixIcon}
         onBlur={onBlur}
         onFocus={onFocus}
-        // ref={inputRef}
         placeholder={placeholder}
         value={value !== '' ? value : null}
         getPopupContainer={isGetContainer ? () => document.getElementById('market') : () => document.body}
-        dropdownRender={(menu) => (
-          <div
-            className="field select-field"
-            css={css`
-              background-color: ${isSelect === typeSelect.SELECT_ANALYTICS ? '#051d29' : '#f3f3f3 !important'};
-
-              .option {
-                color: ${isSelect === typeSelect.SELECT_ANALYTICS ? '#fff' : '#000 !important'};
-                &:hover {
-                  background-color: #1c87c6 !important;
-                  color: ${isSelect === typeSelect.SELECT_ANALYTICS ? '#fff' : '#000 !important'};
-                }
-              }
-            `}
-          >
-            {menu}
-          </div>
-        )}
       >
-        {itemSelect?.map((item, index) => {
+        {quizSelect && (
+          <Option className="option" value="CREATE_NEW_QUIZ">
+            <strong>Tạo quiz mới</strong>
+          </Option>
+        )}
+        {itemSelect?.map((item) => {
           return (
-            <Option className="option" key={index} value={item}>
-              {item}
+            <Option className="option" key={item.value} value={item.value} id={item?.id}>
+              {item.label}
             </Option>
           );
         })}
