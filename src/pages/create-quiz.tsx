@@ -4,8 +4,9 @@ import styled from '@emotion/styled';
 import { Button, Col, Divider, Drawer, Form, Modal, Row, Select, Space, Table } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import { cloneDeep } from 'lodash';
-import { createContext, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import AppInput from 'src/components/input';
+import PrivateProvider from 'src/components/providers/PrivateProvider';
 import AppSelect from 'src/components/select';
 import MultipleSelect from 'src/components/select/multipleSelect';
 import CourseService from 'src/lib/api/course';
@@ -18,14 +19,9 @@ import {
   QuestionTypeEnum,
   Quiz,
 } from 'src/lib/types/backend_modal';
-import { AlphabetLetter, replaceWordsInString, splitSentence } from 'src/lib/utils/utils';
+import { AlphabetLetter, replaceWordsInString } from 'src/lib/utils/utils';
 import { v4 as uuidv4 } from 'uuid';
 const { Option } = Select;
-import React from 'react';
-import Loadable from 'react-loadable';
-import Layout from 'src/components/common/Layout';
-import { LoadingPage } from 'src/components/loading/loadingBase';
-import PrivateProvider from 'src/components/providers/PrivateProvider';
 interface SelectedLessonType {
   id: string;
   name: string;
@@ -88,7 +84,7 @@ const CreateQuizPage = () => {
     setQuizTitle('');
   };
 
-  const handleCreateQuestion = async (value, continueCreateQuestion = false) => {
+  const handleCreateQuestion = async ({ value, isUpdateQuestion = false, continueCreateQuestion = false }) => {
     let questionParam: ChoicesQuestion | MatchQuestion | FillBlankQuestion = {} as
       | ChoicesQuestion
       | MatchQuestion
@@ -106,7 +102,7 @@ const CreateQuizPage = () => {
       }));
       questionParam = {
         id: undefined,
-        order: undefined,
+        order: value.order,
         time_limit: value.time,
         choices: choices,
         content: value.question,
@@ -131,7 +127,7 @@ const CreateQuizPage = () => {
       });
       questionParam = {
         id: undefined,
-        order: undefined,
+        order: value.order,
         time_limit: value.time,
         content: value.question,
         first_column: first_column,
@@ -152,7 +148,7 @@ const CreateQuizPage = () => {
 
       questionParam = {
         id: undefined,
-        order: undefined,
+        order: value.order,
         time_limit: value.time,
         title: value.question,
         content: value.content,
@@ -162,10 +158,18 @@ const CreateQuizPage = () => {
       };
     }
     if (!newQuizId) return;
-    await CourseService.createQuestion({
-      quiz_id: newQuizId,
-      question: { ...questionParam },
-    });
+
+    if (isUpdateQuestion) {
+      await CourseService.editQuestion({
+        quiz_id: newQuizId,
+        question: { ...questionParam, id: drawerState.questionData?.id || '' },
+      });
+    } else {
+      await CourseService.createQuestion({
+        quiz_id: newQuizId,
+        question: { ...questionParam },
+      });
+    }
     getListQuiz();
     form.resetFields();
     !continueCreateQuestion && setDrawerState({ open: false, questionData: null });
@@ -224,16 +228,15 @@ const CreateQuizPage = () => {
       ...secondColumn,
       content: questionData.fill_blank_question?.full_content,
       hiddenWord: questionData.fill_blank_question?.hidden_words?.filter((v) => v.hidden)?.map((u) => u.word),
+      order: questionData.order || questionData.order || questionData.order,
     };
-    console.log('🚀 ~ file: create-quiz.tsx:215 ~ renderInitialFormValue ~ initalData:', initalData);
 
     return initalData;
   };
   useEffect(() => {
-    console.log('drawerState', drawerState);
-    if (drawerState.questionData && drawerState.open)
+    if (drawerState.questionData && drawerState.open) {
       form.setFieldsValue(renderInitialFormValue(drawerState.questionData));
-    else
+    } else
       form.setFieldsValue({
         numAns: 4,
         type: QuestionTypeEnum.CHOICES,
@@ -368,7 +371,10 @@ const CreateQuizPage = () => {
             await CourseService.deleteQuestion([id]);
             getListQuiz();
           }}
-          onEditQuizItem={(quizData) => setDrawerState({ open: true, questionData: quizData })}
+          onEditQuizItem={(quizId, quizData) => {
+            setNewQuizId(quizId);
+            setDrawerState({ open: true, questionData: quizData });
+          }}
           onDeleteQuiz={handleDeleteQuiz}
         />
       </div>
@@ -385,7 +391,9 @@ const CreateQuizPage = () => {
       >
         <Form
           layout="vertical"
-          onFinish={(formValue) => handleCreateQuestion(formValue)}
+          onFinish={(formValue) =>
+            handleCreateQuestion({ value: formValue, continueCreateQuestion: false, isUpdateQuestion: false })
+          }
           form={form}
           initialValues={
             drawerState.questionData
@@ -441,7 +449,7 @@ const CreateQuizPage = () => {
                   () => ({
                     validator(_, value) {
                       if (!value) {
-                        return Promise.reject();
+                        return Promise.resolve();
                       }
                       if (value < 0) {
                         return Promise.reject('Thời gian là một số dương.');
@@ -456,6 +464,7 @@ const CreateQuizPage = () => {
                   value={form.getFieldValue('time')}
                   handleChangeNumber={(e) => form.setFieldValue('time', e)}
                   type="number"
+                  suffix="(s)"
                 />
               </Form.Item>
             </Col>
@@ -559,8 +568,11 @@ const CreateQuizPage = () => {
                         label={`Đáp án ${v}`}
                         name={v}
                         placeholder={`Đáp án ${v}`}
-                        value={form.getFieldValue(v)}
-                        handleChange={(e) => form.setFieldValue(`option.${[v + 1]}`, e.target.value)}
+                        value={form.getFieldValue(`option.${[index + 1]}`)}
+                        handleChange={(e) => {
+                          console.log('e', e);
+                          form.setFieldValue(`option.${[index + 1]}`, e.target.value);
+                        }}
                         css={css`
                           height: 100%;
                           .s-label {
@@ -868,6 +880,16 @@ const CreateQuizPage = () => {
             <div></div>
           )}
           <Row>
+            <Form.Item name="order" label="Thứ tự" rules={[{ required: false, message: 'Điền nội dung câu.' }]}>
+              <AppInput
+                placeholder="Nhập thứ tự"
+                value={form.getFieldValue('order')}
+                handleChangeNumber={(e) => form.setFieldValue('order', e)}
+                type="number"
+              />
+            </Form.Item>
+          </Row>
+          <Row>
             <Space>
               {drawerState.questionData ? (
                 <Button
@@ -875,11 +897,11 @@ const CreateQuizPage = () => {
                     const formValue = form.getFieldsValue();
                     form.validateFields();
                     const x = form.getFieldsError();
-                    if (!x?.length) {
-                      handleCreateQuestion(formValue, true); //change to handle update question
+                    if (x.every((v) => v.errors.length === 0)) {
+                      handleCreateQuestion({ value: formValue, continueCreateQuestion: false, isUpdateQuestion: true });
                     }
                     form.resetFields();
-                    setDrawerState({ open: false, questionData: null });
+                    setDrawerState((prev) => ({ ...prev, open: false }));
                   }}
                 >
                   Lưu Thay Đổi
@@ -892,7 +914,7 @@ const CreateQuizPage = () => {
                         handleDeleteQuiz(newQuizId);
                       }
                       form.resetFields();
-                      setDrawerState({ open: false, questionData: null });
+                      setDrawerState((prev) => ({ ...prev, open: false }));
                     }}
                   >
                     Huỷ
@@ -904,7 +926,11 @@ const CreateQuizPage = () => {
                       form.validateFields();
                       const x = form.getFieldsError();
                       if (!x?.length) {
-                        handleCreateQuestion(formValue, true);
+                        handleCreateQuestion({
+                          value: formValue,
+                          continueCreateQuestion: true,
+                          isUpdateQuestion: false,
+                        });
                       }
                     }}
                   >
@@ -937,16 +963,19 @@ const QuizShow = ({
   onDeleteQuiz: (quizId: string) => void;
 
   onDeleteQuizItem: (quizId: string) => void;
-  onEditQuizItem: (quizId: Question) => void;
+  onEditQuizItem: (quizId: string, question: Question) => void;
 }) => {
   const [modalData, setModalData] = useState<{ open: string | null; id: string }>({ open: null, id: '' });
-
+  const editQuizItem = (quizItem) => {
+    const quizId = listQuiz.find((v) => v.questions?.some((u) => u.id === quizItem.id))?.id;
+    onEditQuizItem(quizId || '', quizItem);
+  };
   const columns = [
     {
       title: 'STT',
       dataIndex: 'order',
       key: 'order',
-      width: 50,
+      width: 80,
       className: 'stt',
     },
     {
@@ -959,7 +988,7 @@ const QuizShow = ({
       title: 'Loại',
       dataIndex: 'question_type',
       key: 'question_type',
-      width: 80,
+      width: 120,
     },
     {
       title: 'Câu hỏi',
@@ -1116,7 +1145,7 @@ const QuizShow = ({
                 type="primary"
                 ghost
                 onClick={() => {
-                  onEditQuizItem(record);
+                  editQuizItem(record);
                 }}
               >
                 Edit
@@ -1175,169 +1204,169 @@ const QuizShow = ({
     </div>
   );
 
-  return (
-    <QuizShowWrapperStyled>
-      {listQuiz.map((quiz, i) => {
-        return (
-          <div key={quiz.id}>
-            <fieldset>
-              <legend className="quiz-name">{quiz.name || 'Tiêu đề quiz'}</legend>
-              <div className="quiz-section-btn">
-                <Button
-                  type="primary"
-                  onClick={() => {
-                    onAddNewQuestion(quiz.id);
-                  }}
-                >
-                  Thêm câu hỏi
-                </Button>
+  // return (
+  //   <QuizShowWrapperStyled>
+  //     {listQuiz.map((quiz, i) => {
+  //       return (
+  //         <div key={quiz.id}>
+  //           <fieldset>
+  //             <legend className="quiz-name">{quiz.name || 'Tiêu đề quiz'}</legend>
+  //             <div className="quiz-section-btn">
+  //               <Button
+  //                 type="primary"
+  //                 onClick={() => {
+  //                   onAddNewQuestion(quiz.id);
+  //                 }}
+  //               >
+  //                 Thêm câu hỏi
+  //               </Button>
 
-                <Button
-                  type="primary"
-                  danger
-                  onClick={() => {
-                    setModalData({ open: true, id: quiz.id });
-                  }}
-                >
-                  Xoá quiz
-                </Button>
-              </div>
-              {quiz?.questions?.map((v, index) => {
-                if (v.question_type === QuestionTypeEnum.MATCH) {
-                  const renderPairAns = (ans, first, second) => {
-                    const ans1 = first.find((v) => v.id === ans[0]).content;
-                    const ans2 = second.find((v) => v.id === ans[1]).content;
-                    return (
-                      <div className="ans-pair">
-                        [
-                        <div className="ans-fi" title={ans1}>
-                          {ans1}
-                        </div>
-                        ] --- [
-                        <div className="ans-se" title={ans2}>
-                          {ans2}{' '}
-                        </div>
-                        ]
-                      </div>
-                    );
-                  };
+  //               <Button
+  //                 type="primary"
+  //                 danger
+  //                 onClick={() => {
+  //                   setModalData({ open: true, id: quiz.id });
+  //                 }}
+  //               >
+  //                 Xoá quiz
+  //               </Button>
+  //             </div>
+  //             {quiz?.questions?.map((v, index) => {
+  //               if (v.question_type === QuestionTypeEnum.MATCH) {
+  //                 const renderPairAns = (ans, first, second) => {
+  //                   const ans1 = first.find((v) => v.id === ans[0]).content;
+  //                   const ans2 = second.find((v) => v.id === ans[1]).content;
+  //                   return (
+  //                     <div className="ans-pair">
+  //                       [
+  //                       <div className="ans-fi" title={ans1}>
+  //                         {ans1}
+  //                       </div>
+  //                       ] --- [
+  //                       <div className="ans-se" title={ans2}>
+  //                         {ans2}{' '}
+  //                       </div>
+  //                       ]
+  //                     </div>
+  //                   );
+  //                 };
 
-                  const renderPairOptions = (first, second) => {};
+  //                 const renderPairOptions = (first, second) => {};
 
-                  return (
-                    <div className="quiz-header" key={v.id}>
-                      <div className="stt">{index + 1}</div>
-                      <div className="time">{v.time_limit}(s)</div>
-                      <div className="type">{v.question_type}</div>
-                      <div className="content">{v.match_question?.content}</div>
-                      <div className="option">
-                        <div>
-                          {v.match_question?.first_column.map((v, i) => {
-                            return <div key={v.id}>{v.content}</div>;
-                          })}
-                        </div>
-                        <div>
-                          {v.match_question?.second_column.map((v, i) => {
-                            return <div key={v.id}>{v.content}</div>;
-                          })}
-                        </div>
-                      </div>
-                      <div className="ans">
-                        <div>
-                          {v.match_question?.correct_answer?.map((ans, idx) => {
-                            return (
-                              <div key={idx}>
-                                {renderPairAns(ans, v.match_question?.first_column, v.match_question?.second_column)}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                      <div className="action">
-                        <div className="action-grp">
-                          <Button type="primary" ghost>
-                            Edit
-                          </Button>
-                          <Button onClick={() => onDeleteQuizItem(v.id)} type="dashed" danger ghost>
-                            Delete
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                } else if (v.question_type === QuestionTypeEnum.CHOICES)
-                  return (
-                    <div className="quiz-header" key={v.id}>
-                      <div className="stt">{index + 1}</div>
-                      <div className="time">{v.time_limit}(s)</div>
-                      <div className="type">{v.question_type}</div>
-                      <div className="content">{v.choices_question?.content}</div>
-                      <div className="option">
-                        <div>
-                          {v.choices_question?.choices.map((c, index) => {
-                            return (
-                              <div key={c.choice_name + index}>
-                                {c.choice_name}: {c.answer}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                      <div className="ans">{v.choices_question?.correct_answer.name}</div>
-                      <div className="action">
-                        <div className="action-grp">
-                          <Button type="primary" ghost>
-                            Edit
-                          </Button>
-                          <Button onClick={() => onDeleteQuizItem(v.id)} type="dashed" danger ghost>
-                            Delete
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                else if (v.question_type === QuestionTypeEnum.FILL)
-                  return (
-                    <div className="quiz-header" key={v.id}>
-                      <div className="stt">{index + 1}</div>
-                      <div className="time">{v.time_limit}(s)</div>
-                      <div className="type">{v.question_type}</div>
-                      <div className="content"></div>
-                      <div className="option">{v.fill_blank_question?.content}</div>
-                      <div className="ans">
-                        <div>
-                          {v?.fill_blank_question?.hidden_words
-                            ?.filter((v) => v.hidden)
-                            ?.map((v, idx) => {
-                              return (
-                                <div key={v.id + idx}>
-                                  {idx + 1} - {v.word}
-                                </div>
-                              );
-                            })}
-                        </div>
-                      </div>
-                      <div className="action">
-                        <div className="action-grp">
-                          <Button type="primary" ghost>
-                            Edit
-                          </Button>
-                          <Button onClick={() => onDeleteQuizItem(v.id)} type="dashed" danger ghost>
-                            Delete
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                else return null;
-              })}
-            </fieldset>
-          </div>
-        );
-      })}
-      ;
-    </QuizShowWrapperStyled>
-  );
+  //                 return (
+  //                   <div className="quiz-header" key={v.id}>
+  //                     <div className="stt">{index + 1}</div>
+  //                     <div className="time">{v.time_limit}(s)</div>
+  //                     <div className="type">{v.question_type}</div>
+  //                     <div className="content">{v.match_question?.content}</div>
+  //                     <div className="option">
+  //                       <div>
+  //                         {v.match_question?.first_column.map((v, i) => {
+  //                           return <div key={v.id}>{v.content}</div>;
+  //                         })}
+  //                       </div>
+  //                       <div>
+  //                         {v.match_question?.second_column.map((v, i) => {
+  //                           return <div key={v.id}>{v.content}</div>;
+  //                         })}
+  //                       </div>
+  //                     </div>
+  //                     <div className="ans">
+  //                       <div>
+  //                         {v.match_question?.correct_answer?.map((ans, idx) => {
+  //                           return (
+  //                             <div key={idx}>
+  //                               {renderPairAns(ans, v.match_question?.first_column, v.match_question?.second_column)}
+  //                             </div>
+  //                           );
+  //                         })}
+  //                       </div>
+  //                     </div>
+  //                     <div className="action">
+  //                       <div className="action-grp">
+  //                         <Button type="primary" ghost>
+  //                           Edit
+  //                         </Button>
+  //                         <Button onClick={() => onDeleteQuizItem(v.id)} type="dashed" danger ghost>
+  //                           Delete
+  //                         </Button>
+  //                       </div>
+  //                     </div>
+  //                   </div>
+  //                 );
+  //               } else if (v.question_type === QuestionTypeEnum.CHOICES)
+  //                 return (
+  //                   <div className="quiz-header" key={v.id}>
+  //                     <div className="stt">{index + 1}</div>
+  //                     <div className="time">{v.time_limit}(s)</div>
+  //                     <div className="type">{v.question_type}</div>
+  //                     <div className="content">{v.choices_question?.content}</div>
+  //                     <div className="option">
+  //                       <div>
+  //                         {v.choices_question?.choices.map((c, index) => {
+  //                           return (
+  //                             <div key={c.choice_name + index}>
+  //                               {c.choice_name}: {c.answer}
+  //                             </div>
+  //                           );
+  //                         })}
+  //                       </div>
+  //                     </div>
+  //                     <div className="ans">{v.choices_question?.correct_answer.name}</div>
+  //                     <div className="action">
+  //                       <div className="action-grp">
+  //                         <Button type="primary" ghost>
+  //                           Edit
+  //                         </Button>
+  //                         <Button onClick={() => onDeleteQuizItem(v.id)} type="dashed" danger ghost>
+  //                           Delete
+  //                         </Button>
+  //                       </div>
+  //                     </div>
+  //                   </div>
+  //                 );
+  //               else if (v.question_type === QuestionTypeEnum.FILL)
+  //                 return (
+  //                   <div className="quiz-header" key={v.id}>
+  //                     <div className="stt">{index + 1}</div>
+  //                     <div className="time">{v.time_limit}(s)</div>
+  //                     <div className="type">{v.question_type}</div>
+  //                     <div className="content"></div>
+  //                     <div className="option">{v.fill_blank_question?.content}</div>
+  //                     <div className="ans">
+  //                       <div>
+  //                         {v?.fill_blank_question?.hidden_words
+  //                           ?.filter((v) => v.hidden)
+  //                           ?.map((v, idx) => {
+  //                             return (
+  //                               <div key={v.id + idx}>
+  //                                 {idx + 1} - {v.word}
+  //                               </div>
+  //                             );
+  //                           })}
+  //                       </div>
+  //                     </div>
+  //                     <div className="action">
+  //                       <div className="action-grp">
+  //                         <Button type="primary" ghost>
+  //                           Edit
+  //                         </Button>
+  //                         <Button onClick={() => onDeleteQuizItem(v.id)} type="dashed" danger ghost>
+  //                           Delete
+  //                         </Button>
+  //                       </div>
+  //                     </div>
+  //                   </div>
+  //                 );
+  //               else return null;
+  //             })}
+  //           </fieldset>
+  //         </div>
+  //       );
+  //     })}
+  //     ;
+  //   </QuizShowWrapperStyled>
+  // );
 };
 
 const QuizShowWrapperStyled = styled.div`
@@ -1420,9 +1449,7 @@ const CreateQuiz: React.FC = () => {
   return (
     <React.Fragment>
       <PrivateProvider>
-        <Layout isNoneHeader>
-          <CreateQuizPage />
-        </Layout>
+        <CreateQuizPage />
       </PrivateProvider>
     </React.Fragment>
   );

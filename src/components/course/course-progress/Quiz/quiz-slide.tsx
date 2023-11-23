@@ -60,7 +60,7 @@ const QuizSlide: React.FC<QuizSwiperProps> = ({ listQuiz, onChangeQuiz, quizResu
           }
         `}
       >
-        {listQuiz?.map((quiz, i) => {
+        {/* {listQuiz?.map((quiz, i) => {
           if (quiz.question_type === QuestionTypeEnum.CHOICES) {
             //trac ngiem
             return (
@@ -101,7 +101,7 @@ const QuizSlide: React.FC<QuizSwiperProps> = ({ listQuiz, onChangeQuiz, quizResu
               </div>
             );
           }
-        })}
+        })} */}
       </Swiper>
     </div>
   );

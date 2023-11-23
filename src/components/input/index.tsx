@@ -285,6 +285,7 @@ const AppInput: React.FC<AppInputProps> = (props) => {
     type,
     placeholder,
     handleChangeNumber,
+    suffix,
     ...rest
   } = props;
 
@@ -335,7 +336,7 @@ const AppInput: React.FC<AppInputProps> = (props) => {
       ) : (
         <div>
           <InputNumber
-            addonAfter="(s)"
+            addonAfter={suffix}
             {...rest}
             type={typeLocal}
             placeholder={placeholder}

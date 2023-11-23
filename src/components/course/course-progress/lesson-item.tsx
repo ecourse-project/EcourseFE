@@ -284,6 +284,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                               <AppSelect
                                 placeholder="Chọn quiz"
                                 quizSelect
+                                value={haveQuiz}
                                 itemSelect={listQuiz?.map((quiz) => {
                                   return {
                                     value: quiz.id,

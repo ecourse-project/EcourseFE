@@ -235,6 +235,7 @@ const CourseProgress = () => {
   const onSubmitQuiz = async (answer: UserAnswersArgs[]) => {
     try {
       await CourseService.getQuizResult({
+        id: state.selectedQuiz?.quiz.id,
         course_id: course?.id,
         lesson_id: state.selectedQuiz?.lessonId,
         user_answers: answer,
@@ -404,7 +405,7 @@ const CourseProgress = () => {
                 <div className="pdf_wrapper">
                   <PdfViewer url={state.selectedDoc?.file?.file_path || ''} />
                 </div>
-              ) : state.selectedDoc?.file?.file_embedded_url || state.selectedDoc?.file.file_path ? (
+              ) : state.selectedDoc?.file?.file_embedded_url || state.selectedDoc?.file?.file_path ? (
                 isIframeOrUrl(state.selectedDoc?.file?.file_embedded_url) ||
                 !isURL(state.selectedDoc?.file?.file_embedded_url) ? (
                   <div

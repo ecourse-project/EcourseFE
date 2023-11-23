@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { Button, Tag, Typography } from 'antd';
-import React, { useMemo, useState } from 'react';
-import { MatchQuestion, MatchQuizAnswer, Question, QuestionTypeEnum, Quiz } from 'src/lib/types/backend_modal';
+import React, { useEffect, useMemo, useState } from 'react';
+import { MatchQuestion, MatchQuestionAnswer, Question, QuestionTypeEnum, Quiz } from 'src/lib/types/backend_modal';
 import { GrConnect } from 'react-icons/gr';
 import { isEmpty } from 'lodash';
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
@@ -40,12 +40,12 @@ const Column = ({ data, onRowClick, selectedRow, matchedPair, isResult = false }
     >
       {data.map((row, index) => (
         <div
-          className={`row ${disableList.includes(row.id) || isResult ? 'disabled' : ''} ${
+          className={`row ${disableList.includes(row.id) || isResult ? '' : ''} ${
             [selectedRow.first, selectedRow.second].includes(row.id) ? 'selecting' : ''
           }`}
           key={row.id}
           onClick={() => {
-            if (disableList.includes(row.id)) return;
+            // if (disableList.includes(row.id)) return;
             onRowClick(row.id);
           }}
         >
@@ -59,11 +59,11 @@ const Column = ({ data, onRowClick, selectedRow, matchedPair, isResult = false }
 interface ColumnQuiz {
   quiz: Question;
   onChange: (
-    quiz_id: string,
+    question_id: string,
     question_type: QuestionTypeEnum,
     answer: string | Array<string> | Array<Array<string>>,
   ) => void;
-  result: MatchQuizAnswer | undefined;
+  result: MatchQuestionAnswer | undefined;
 }
 
 const ColumnQuiz: React.FC<ColumnQuiz> = ({ quiz, onChange, result }) => {
@@ -77,6 +77,13 @@ const ColumnQuiz: React.FC<ColumnQuiz> = ({ quiz, onChange, result }) => {
   const [selectPair, setSelectPair] = useState<{ first: string; second: string }>({ first: '', second: '' });
   const [matchPair, setMatchPair] = useState<Array<{ first: string; second: string }>>([]);
 
+  useEffect(() => {
+    console.log('matchPair :==>>', matchPair);
+    onChange(quiz.id, quiz.question_type, [
+      ...matchPair.filter((v) => !isEmpty(v)).map((pair) => [pair.first, pair.second]),
+    ]);
+  }, [matchPair]);
+
   if (!quizData) return;
   const handleRowClick = (id) => {
     if (firstColId?.includes(id)) {
@@ -88,22 +95,26 @@ const ColumnQuiz: React.FC<ColumnQuiz> = ({ quiz, onChange, result }) => {
 
   const handleConnect = (leftId, rightId) => {
     setMatchPair((prev) => {
-      return [...prev.filter((v) => !isEmpty(v)), { first: leftId, second: rightId }];
+      if (prev.some((v) => v.first === leftId && v.second === rightId)) return prev;
+      else return [...prev.filter((v) => !isEmpty(v)), { first: leftId, second: rightId }];
     });
-    onChange(quiz.id, quiz.question_type, [
-      ...matchPair.filter((v) => !isEmpty(v)).map((pair) => [pair.first, pair.second]),
-      [leftId, rightId],
-    ]);
+
     setSelectPair({ first: '', second: '' });
   };
 
-  const removeMatchedTag = (firstId: string) => {
+  const removeMatchedTag = (firstId: string, secondId: string) => {
+    console.log('firstId,secondId :==>>', firstId, secondId);
+    // Helper function to check if two arrays are equal
+    function arraysAreEqual(arr1, arr2) {
+      console.log('arr1 :==>>', arr1);
+      console.log('arr2 :==>>', arr2);
+      return arr1.first === arr2[0] && arr1.second === arr2[1];
+    }
     setMatchPair((prev) => {
-      return prev.filter((pair) => pair.first !== firstId);
+      const newArray = prev.filter((subArray) => !arraysAreEqual(subArray, [firstId, secondId]));
+      console.log(':new', newArray);
+      return newArray;
     });
-    onChange(quiz.id, quiz.question_type, [
-      ...matchPair.filter((v) => v.first !== firstId).map((pair) => [pair.first, pair.second]),
-    ]);
   };
   const renderUserAns = (userAns, quizData: MatchQuestion, correctAnsList, isUserAns) => {
     return userAns?.map((v) => {
@@ -140,11 +151,12 @@ const ColumnQuiz: React.FC<ColumnQuiz> = ({ quiz, onChange, result }) => {
     <div
       css={css`
         max-width: 80%;
+        padding: 0 60px;
         .column-quiz {
           display: flex;
           flex-direction: column;
           justify-content: space-evenly;
-          align-items: center;
+          align-items: flex-start;
           .connect {
             display: flex;
             align-items: center;
@@ -195,10 +207,16 @@ const ColumnQuiz: React.FC<ColumnQuiz> = ({ quiz, onChange, result }) => {
             width: 160px;
           }
         }
+        .question {
+          font-weight: 700;
+          text-align: left;
+        }
       `}
     >
       <div className="column-quiz">
-        <Text className="question">{quizData?.content}</Text>
+        <Text className="question">
+          {quiz.order}. {quizData?.content}
+        </Text>
         <div className="column">
           <div className="first-col">
             <Column
@@ -212,8 +230,12 @@ const ColumnQuiz: React.FC<ColumnQuiz> = ({ quiz, onChange, result }) => {
           <div className="connect">
             <Button
               shape="circle"
-              disabled={!(selectPair.first && selectPair.second)}
-              onClick={() => handleConnect(selectPair.first, selectPair.second)}
+              // disabled={!(selectPair.first && selectPair.second)}
+              onClick={() => {
+                console.log('selectPair :==>>', selectPair);
+                if (!selectPair.first || !selectPair.second) return;
+                handleConnect(selectPair.first, selectPair.second);
+              }}
             >
               <GrConnect />
             </Button>
@@ -255,10 +277,10 @@ const ColumnQuiz: React.FC<ColumnQuiz> = ({ quiz, onChange, result }) => {
             const secondContent = quizData.second_column.find((v) => v.id === pair.second)?.content;
             return (
               <Tag
-                key={pair.first}
+                key={pair.first + pair.second}
                 closable={true}
                 style={{ userSelect: 'none' }}
-                onClose={() => removeMatchedTag(pair.first)}
+                onClose={() => removeMatchedTag(pair.first, pair.second)}
                 color="blue"
               >
                 <div className="tag-matched">
