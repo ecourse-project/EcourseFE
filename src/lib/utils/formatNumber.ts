@@ -4,5 +4,5 @@ export const formatCommas = (number: number | string): number | string => {
 };
 
 export const unformatCommas = (value: string): number | string => {
-  return value.replaceAll(',', '');
+  return value?.replaceAll(',', '');
 };

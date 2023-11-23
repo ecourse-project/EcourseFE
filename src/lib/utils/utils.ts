@@ -136,7 +136,7 @@ export function isIframeOrUrl(str) {
 }
 export function isURL(str) {
   const pattern = /^(?:\w+:)?\/\/([^\s.]+\.\S{2}|localhost[:?\d]*)\S*$/;
-  return pattern.test(str.replaceAll(' ', '%20'));
+  return pattern.test(str?.replaceAll(' ', '%20'));
 }
 
 export const getReturnValues = (countDown) => {

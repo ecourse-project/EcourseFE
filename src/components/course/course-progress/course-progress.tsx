@@ -132,13 +132,13 @@ const CourseProgress = () => {
     } else if (courseDetail.lessons && !params.quiz) {
       const currentLesson = courseDetail.lessons[0];
       if (
-        (currentLesson.videos?.length && currentLesson.videos[0].file_embedded_url) ||
-        currentLesson.videos[0].file_path
+        (currentLesson.videos?.length && currentLesson.videos[0]?.file_embedded_url) ||
+        currentLesson.videos[0]?.file_path
       ) {
         updateURLParams(router, { video: currentLesson.videos[0].id });
       } else if (
-        (currentLesson.documents?.length && currentLesson.documents[0].file.file_embedded_url) ||
-        currentLesson.documents[0].file.file_path
+        (currentLesson.documents?.length && currentLesson.documents[0].file?.file_embedded_url) ||
+        currentLesson.documents[0].file?.file_path
       ) {
         updateURLParams(router, { video: currentLesson.documents[0].id });
       }

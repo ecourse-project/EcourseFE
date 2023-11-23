@@ -14,7 +14,7 @@ interface FillQuizProps {
 const defaultIndex = 0;
 const FillQuiz: React.FC<FillQuizProps> = ({ quiz, onChange, result }) => {
   const [userInputs, setUserInputs] = useState<string[]>([]);
-  const fillQuiz = (quiz.fill_blank_question?.content || '').replaceAll('{{}}', '{{}} ');
+  const fillQuiz = (quiz.fill_blank_question?.content || '')?.replaceAll('{{}}', '{{}} ');
   const [numberInput, setNumberInput] = useState<number>(0);
   const correctAnswer = cloneDeep(result?.correct_answer);
   const userAnswer = cloneDeep(result?.user_answer);
