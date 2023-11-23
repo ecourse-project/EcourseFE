@@ -431,7 +431,8 @@ const CourseProgress = () => {
                   state.selectedDoc.file.file_type !== 'html') ||
                 (!_.isEmpty(state.selectedDoc) &&
                   state.selectedDoc?.file?.use_embedded_url &&
-                  !state.selectedDoc?.file?.file_embedded_url) ? (
+                  !state.selectedDoc?.file?.file_embedded_url &&
+                  state.selectedDoc.file.file_type !== 'html') ? (
                 <div className="pdf_wrapper">
                   <PdfViewer url={state.selectedDoc?.file?.file_path || ''} />
                   {/* <Document file={state.selectedDoc?.file?.file_path} onLoadSuccess={onDocumentLoadSuccess}>
