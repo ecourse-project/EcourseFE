@@ -925,7 +925,7 @@ const CreateQuizPage = () => {
                       const formValue = form.getFieldsValue();
                       form.validateFields();
                       const x = form.getFieldsError();
-                      if (!x?.length) {
+                      if (x.every((v) => v.errors.length === 0)) {
                         handleCreateQuestion({
                           value: formValue,
                           continueCreateQuestion: true,
