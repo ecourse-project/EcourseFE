@@ -107,23 +107,23 @@ const CourseProgress = () => {
   const setCurrentDocReloadPage = (courseDetail: Course) => {
     // set current doc when reload page
     if (params.doc && courseDetail.lessons) {
-      const currentLesson = courseDetail.lessons.find((v) => v.documents?.some((doc) => doc.id === params.doc));
+      const currentLesson = courseDetail.lessons?.find((v) => v.documents?.some((doc) => doc.id === params.doc));
       if (currentLesson) {
-        const currentDoc = currentLesson.documents.find((doc) => doc.id === params.doc);
+        const currentDoc = currentLesson.documents?.find((doc) => doc.id === params.doc);
         if (currentDoc) {
           dispatch(progressAction.setSelectedDoc(currentDoc));
         }
       } //set current video on reloading page
     } else if (params.video && courseDetail.lessons) {
-      const currentLesson = courseDetail.lessons.find((v) => v.videos?.some((vid) => vid.id === params.video));
+      const currentLesson = courseDetail.lessons?.find((v) => v.videos?.some((vid) => vid.id === params.video));
       if (currentLesson) {
-        const currentVideo = currentLesson.videos.find((video) => video.id === params.video);
+        const currentVideo = currentLesson.videos?.find((video) => video.id === params.video);
         if (currentVideo) {
           dispatch(progressAction.setSelectedVideo(currentVideo));
         }
       } //if there is not any current => assign first video by default
     } else if (params.quiz && courseDetail.lessons) {
-      const currentLesson = courseDetail.lessons.find((v) => v.id === params.lesson);
+      const currentLesson = courseDetail.lessons?.find((v) => v.id === params.lesson);
       const currentQuiz = listQuiz?.find((v) => v.id === params.quiz) || ({} as Quiz);
       console.log('currentQuiz,', currentQuiz);
       if (currentLesson && currentLesson.list_quiz) {
@@ -470,7 +470,7 @@ const CourseProgress = () => {
                   isEditing={isEditing}
                   onSaveQuizSetting={(quizSetting) => {
                     setQuizSetting((prev) => {
-                      const idx = prev.findIndex((v) => v.lesson_id === item.id);
+                      const idx = prev?.findIndex((v) => v.lesson_id === item.id);
                       if (idx >= 0) {
                         prev[idx] = { lesson_id: item.id, quiz: quizSetting };
                         return prev;
