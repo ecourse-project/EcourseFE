@@ -11,7 +11,7 @@ import { LoginParams } from 'src/lib/api/auth/model';
 import CourseService from 'src/lib/api/course';
 import UserService from 'src/lib/api/user';
 import { appActions } from 'src/lib/reducers/app/appSlice';
-import { LoginFormData } from 'src/lib/types/commentType';
+import { LoginFormData } from 'src/lib/types/appType';
 import { StorageKeys } from 'src/lib/utils/enum';
 import validation from 'src/lib/utils/validation';
 import * as Yup from 'yup';

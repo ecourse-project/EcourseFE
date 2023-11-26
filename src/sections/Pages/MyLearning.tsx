@@ -7,7 +7,7 @@ import TabPaneSection from 'src/components/tab-pane-learning';
 import CourseService from 'src/lib/api/course';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { Course, Document, FavoriteList } from 'src/lib/types/backend_modal';
-import { TypeTabPanel } from 'src/lib/types/commentType';
+import { TypeTabPanel } from 'src/lib/types/appType';
 import { v4 as uuidv4 } from 'uuid';
 
 import { css } from '@emotion/react';

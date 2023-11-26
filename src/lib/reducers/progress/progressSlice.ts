@@ -1,7 +1,15 @@
-import { Course, CourseDocument, OFileUpload, UpdateProgressArgs, UserAnswersArgs } from 'src/lib/types/backend_modal';
-
+import {
+  Course,
+  CourseDocument,
+  OFileUpload,
+  QuizLocationEnum,
+  UpdateProgressArgs,
+  UserAnswersArgs,
+} from 'src/lib/types/backend_modal';
+import { cloneDeep } from 'lodash';
 import { createSlice, current, PayloadAction } from '@reduxjs/toolkit';
-import { SelectedQuizType } from 'src/lib/types/commentType';
+import { QuizLocation, SelectedQuizType } from 'src/lib/types/appType';
+import { QuizAssignEnum } from 'src/lib/utils/enum';
 
 export interface ProgressState {
   courseDetail: Course;
@@ -14,6 +22,7 @@ export interface ProgressState {
   loading: boolean;
   error: string | null;
   selectedQuiz: SelectedQuizType | null;
+  quizLocation: Array<QuizLocation>;
 }
 
 const initialState: ProgressState = {
@@ -27,6 +36,7 @@ const initialState: ProgressState = {
   loading: false,
   error: null,
   selectedQuiz: null,
+  quizLocation: [],
 };
 
 export const progressSlice = createSlice({
@@ -81,6 +91,68 @@ export const progressSlice = createSlice({
     },
     setCourse: (state, action: PayloadAction<Course>) => {
       state.courseDetail = action.payload;
+    },
+    setQuizLocation: (state, action: PayloadAction<Array<QuizLocation>>) => {
+      state.quizLocation = action.payload;
+    },
+    updateQuizLocation: (
+      state,
+      action: PayloadAction<{ lessonId: string; questionId: string; documentId: string }>,
+    ) => {
+      const prevState: Array<QuizLocation> = cloneDeep(state.quizLocation);
+      const existedLessonIdx = prevState.findIndex((v) => v.lesson_id === action.payload.lessonId);
+
+      if (existedLessonIdx >= 0) {
+        const existedQuiz = prevState[existedLessonIdx]?.quiz?.findIndex((v) => v.order === action.payload.documentId);
+        if (typeof existedQuiz === 'number' && existedQuiz >= 0) {
+          if (action.payload.questionId === QuizAssignEnum.UNASSIGN_QUIZ) {
+            prevState[existedLessonIdx]?.quiz?.splice(existedQuiz, 1);
+          } else {
+            prevState[existedLessonIdx]?.quiz?.splice(existedQuiz, 1, {
+              id: action.payload.questionId,
+              location: QuizLocationEnum.VIDEO,
+              order: action.payload.documentId,
+            });
+          }
+          state.quizLocation = prevState;
+        } else {
+          if (action.payload.questionId === QuizAssignEnum.UNASSIGN_QUIZ) {
+            state.quizLocation = prevState;
+          } else {
+            const newLessonQuiz = {
+              ...prevState[existedLessonIdx],
+              quiz: [
+                ...(prevState[existedLessonIdx]?.quiz || []),
+                {
+                  id: action.payload.questionId,
+                  location: QuizLocationEnum.VIDEO,
+                  order: action.payload.documentId,
+                },
+              ],
+            };
+            prevState[existedLessonIdx] = newLessonQuiz;
+            state.quizLocation = prevState;
+          }
+        }
+      } else {
+        if (action.payload.questionId === QuizAssignEnum.UNASSIGN_QUIZ) {
+          state.quizLocation = prevState;
+        } else {
+          state.quizLocation = [
+            ...prevState,
+            {
+              lesson_id: action.payload.lessonId,
+              quiz: [
+                {
+                  id: action.payload.questionId,
+                  location: QuizLocationEnum.VIDEO,
+                  order: action.payload.documentId,
+                },
+              ],
+            },
+          ];
+        }
+      }
     },
   },
 });

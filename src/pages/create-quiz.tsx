@@ -1,9 +1,10 @@
-import { ApiOutlined, NodeIndexOutlined, PlusOutlined } from '@ant-design/icons';
+import { ApiOutlined, HomeOutlined, NodeIndexOutlined, PlusOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Button, Col, Divider, Drawer, Form, Modal, Row, Select, Space, Table } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import { cloneDeep } from 'lodash';
+import { useRouter } from 'next/router';
 import React, { useEffect, useMemo, useState } from 'react';
 import AppInput from 'src/components/input';
 import PrivateProvider from 'src/components/providers/PrivateProvider';
@@ -19,9 +20,9 @@ import {
   QuestionTypeEnum,
   Quiz,
 } from 'src/lib/types/backend_modal';
+import RoutePaths from 'src/lib/utils/routes';
 import { AlphabetLetter, replaceWordsInString } from 'src/lib/utils/utils';
 import { v4 as uuidv4 } from 'uuid';
-const { Option } = Select;
 interface SelectedLessonType {
   id: string;
   name: string;
@@ -37,7 +38,6 @@ interface ListCourseType {
 const CreateQuizPage = () => {
   const [form] = Form.useForm();
 
-  const [selectedLesson, setSelectedLesson] = useState<SelectedLessonType | null>({} as SelectedLessonType);
   const [quizTitle, setQuizTitle] = useState<string>('');
   //list quiz item state
   const [listQuiz, setListQuiz] = useState<Quiz[]>([]);
@@ -46,7 +46,7 @@ const CreateQuizPage = () => {
     questionData: null,
   });
   const [newQuizId, setNewQuizId] = useState<string | null>(null);
-
+  const router = useRouter();
   const numAns = Form.useWatch('numAns', { form, preserve: true });
   const quizType = Form.useWatch('type', { form, preserve: true });
   const numFirstCol = Form.useWatch('numFirstCol', { form, preserve: true });
@@ -65,9 +65,8 @@ const CreateQuizPage = () => {
   };
 
   useEffect(() => {
-    if (!selectedLesson) return;
     getListQuiz();
-  }, [selectedLesson]);
+  }, []);
 
   const renderContent = useMemo(() => {
     return replaceWordsInString(cloneDeep(content) || '', cloneDeep(hiddenWord) || []);
@@ -264,11 +263,17 @@ const CreateQuizPage = () => {
             gap: 15px;
             margin-left: 20px;
             align-items: end;
+            justify-content: space-between;
             .course-field {
               max-width: 300px;
             }
             .ant-input {
               min-height: 46px !important;
+            }
+            .quiz-name-group {
+              display: flex;
+              gap: 15px;
+              align-items: center;
             }
           }
           .quiz-header {
@@ -346,17 +351,24 @@ const CreateQuizPage = () => {
               value={selectedLesson?.name}
             />
           </div> */}
-          <div className="quiz-name">
-            <AppInput
-              label="Tiêu đề quiz"
-              placeholder="Tiêu đề quiz"
-              value={quizTitle}
-              handleChange={(e) => setQuizTitle(e.target.value)}
-            />
+          <div className="quiz-name-group">
+            <div className="quiz-name">
+              <AppInput
+                label="Tiêu đề quiz"
+                placeholder="Tiêu đề quiz"
+                value={quizTitle}
+                handleChange={(e) => setQuizTitle(e.target.value)}
+              />
+            </div>
+            <Button type="primary" onClick={handleCreateNewQuiz} disabled={!quizTitle?.length} icon={<PlusOutlined />}>
+              Tạo bộ quiz mới
+            </Button>
           </div>
-          <Button type="primary" onClick={handleCreateNewQuiz} disabled={!quizTitle?.length} icon={<PlusOutlined />}>
-            Tạo bộ quiz mới
-          </Button>
+          <div>
+            <Button type="primary" onClick={() => router.push(RoutePaths.HOME)} icon={<HomeOutlined />}>
+              Về trang chủ
+            </Button>
+          </div>
         </div>
 
         <QuizShow
@@ -1192,6 +1204,7 @@ const QuizShow = ({
                 onDeleteQuiz(modalData.id);
                 setModalData((prev) => ({ ...prev, open: null }));
               }}
+              centered
               onCancel={() => setModalData((prev) => ({ ...prev, open: null }))}
               okText="Xác nhận"
               cancelText="Huỷ"

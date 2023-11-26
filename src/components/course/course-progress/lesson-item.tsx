@@ -1,6 +1,6 @@
-import { FileTextOutlined, PlayCircleFilled } from '@ant-design/icons';
+import { ExclamationCircleFilled, FileTextOutlined, PlayCircleFilled } from '@ant-design/icons';
 import { css } from '@emotion/react';
-import { Card, Checkbox, Collapse, List } from 'antd';
+import { Card, Checkbox, Collapse, List, Modal } from 'antd';
 import { debounce } from 'lodash';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -13,8 +13,11 @@ import { progressAction } from 'src/lib/reducers/progress/progressSlice';
 import { Lesson, Quiz, QuizLocationEnum, UpdateLessonArgs } from 'src/lib/types/backend_modal';
 import RoutePaths from 'src/lib/utils/routes';
 import { DurationTime, formatDurationTime, uniqueArr, updateURLParams } from 'src/lib/utils/utils';
-
+import { cloneDeep } from 'lodash';
+import { QuizItemSetting } from 'src/lib/types/appType';
+import { QuizAssignEnum } from 'src/lib/utils/enum';
 const { Panel } = Collapse;
+const { confirm } = Modal;
 
 interface LessonItemProps {
   lesson: Lesson;
@@ -25,12 +28,6 @@ interface LessonItemProps {
   onSaveQuizSetting?: (quizSetting: QuizItemSetting[]) => void;
   isEditing?: boolean;
   // onUpdate: (data: UpdateLessonArgs) => void;
-}
-
-interface QuizItemSetting {
-  id: string;
-  order: string;
-  location: QuizLocationEnum;
 }
 
 const DisplayDurationTime = (duration) => {
@@ -64,14 +61,14 @@ const DisplayDurationTime = (duration) => {
 };
 
 const LessonItem: React.FC<LessonItemProps> = (props) => {
-  const { lesson, isCourseDetail = false, isShowLessonDetail, listQuiz, onSaveQuizSetting, isEditing } = props;
+  const { lesson, isCourseDetail = false, isShowLessonDetail, listQuiz, isEditing } = props;
+  const quizLocation = useSelector((state: RootState) => state.progress.quizLocation);
   const selectedDoc = useSelector((state: RootState) => state.progress.selectedDoc);
   const selectedVideo = useSelector((state: RootState) => state.progress.selectedVideo);
   const isDoneVideo = useSelector((state: RootState) => state.progress.isDoneVideo);
   const [checkedVideo, setCheckedVideo] = useState<string[]>(lesson.videos_completed || []);
   const [checkedDoc, setCheckedDoc] = useState<string[]>(lesson.docs_completed || []);
 
-  const [quizSetting, setQuizSetting] = useState<QuizItemSetting[]>([]);
   const dispatch = useDispatch();
   const router = useRouter();
   const handleCheckedDoc = (e) => {
@@ -107,17 +104,6 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
   }, []);
 
   useEffect(() => {
-    debounceSaveQuizSetting(quizSetting);
-  }, [quizSetting]);
-
-  const debounceSaveQuizSetting = useCallback(
-    debounce((value) => {
-      onSaveQuizSetting?.(value);
-    }, 500),
-    [],
-  );
-
-  useEffect(() => {
     if (isDoneVideo && selectedVideo) {
       const idx = checkedVideo.indexOf(selectedVideo?.id);
       if (idx >= 0) {
@@ -126,14 +112,21 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
     }
   }, [isDoneVideo]);
 
-  useEffect(() => {
-    console.log('quizSetting :==>>', quizSetting);
-  }, [quizSetting]);
+  const showConfirm = () => {
+    confirm({
+      title: 'Chuyển đến trang tạo quiz mới?',
+      icon: <ExclamationCircleFilled />,
+      content: ' Các thay đổi sẽ không được lưu lại',
+      onOk() {
+        router.push(RoutePaths.CREATE_QUIZ);
+      },
+      centered: true,
+    });
+  };
+
   return (
     <div
       css={css`
-        max-height: 90vh;
-        overflow: auto;
         .course_lesson {
           .ant-collapse-header {
             font-weight: 700;
@@ -247,7 +240,10 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                     className="course_list_video"
                   >
                     {lesson.videos?.map((v, i) => {
-                      const haveQuiz = lesson.quiz_location?.find((quizItem) => quizItem.order.toString() === v.id)?.id;
+                      const haveQuiz = quizLocation
+                        ?.find((item) => item.lesson_id === lesson.id)
+                        ?.quiz?.find((u) => u.order === v.id)?.id;
+                      console.log('🚀 ~ file: lesson-item.tsx:247 ~ {lesson.videos?.map ~ haveQuiz:', haveQuiz);
                       let quizName = '';
                       if (haveQuiz) {
                         quizName = listQuiz?.find((quiz) => quiz.id === haveQuiz)?.name || '';
@@ -292,17 +288,15 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                                   };
                                 })}
                                 handleChange={(id) => {
-                                  if (id === 'CREATE_NEW_QUIZ') router.push(RoutePaths.CREATE_QUIZ);
+                                  if (id === QuizAssignEnum.CREATE_NEW_QUIZ) showConfirm();
                                   else {
-                                    setQuizSetting((prev) => {
-                                      const idxFounded = prev?.findIndex((quizItem) => quizItem.order === v.id) || -1;
-                                      if (idxFounded >= 0) {
-                                        prev[idxFounded] = { id: id, location: QuizLocationEnum.VIDEO, order: v.id };
-                                        return prev;
-                                      } else {
-                                        return [...prev, { id: id, location: QuizLocationEnum.VIDEO, order: v.id }];
-                                      }
-                                    });
+                                    dispatch(
+                                      progressAction.updateQuizLocation({
+                                        lessonId: lesson.id,
+                                        questionId: id,
+                                        documentId: v.id,
+                                      }),
+                                    );
                                   }
                                 }}
                               />
@@ -358,31 +352,100 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                     key={'1'}
                     className="course_list_video"
                   >
-                    {lesson.documents?.map((v, i) => (
-                      <div
-                        key={i}
-                        className={`course_video_item video_${v.id}`}
-                        onClick={() => {
-                          updateURLParams(router, { doc: v.id, video: '', quiz: '', lesson: lesson.id });
-                        }}
-                      >
-                        {!isCourseDetail && (
-                          <Checkbox
-                            onChange={handleCheckedDoc}
-                            checked={checkedDoc.includes(v.id)}
-                            value={v.id}
-                            onClick={(e) => e.stopPropagation()}
-                          />
-                        )}
-                        <div className="item_info">
-                          <div className="subject-name" title={v.name}>{`${v.name}`}</div>
-                          <div className="video_duration doc">
-                            <FileTextOutlined />
-                            {`${(v?.file?.file_size / 1000000).toFixed(2)} MB`}
+                    {lesson.documents?.map((v, i) => {
+                      const haveQuiz = quizLocation
+                        ?.find((item) => item.lesson_id === lesson.id)
+                        ?.quiz?.find((u) => u.order === v.id)?.id;
+                      console.log('🚀 ~ file: lesson-item.tsx:365 ~ {lesson.documents?.map ~ haveQuiz:', haveQuiz);
+                      let quizName = '';
+                      if (haveQuiz) {
+                        quizName = listQuiz?.find((quiz) => quiz.id === haveQuiz)?.name || '';
+                      }
+                      return (
+                        <>
+                          <div
+                            key={i}
+                            className={`course_video_item video_${v.id}`}
+                            onClick={() => {
+                              updateURLParams(router, { doc: v.id, video: '', quiz: '', lesson: lesson.id });
+                            }}
+                          >
+                            {!isCourseDetail && (
+                              <Checkbox
+                                onChange={handleCheckedDoc}
+                                checked={checkedDoc.includes(v.id)}
+                                value={v.id}
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                            )}
+                            <div className="item_info">
+                              <div className="subject-name" title={v.name}>{`${v.name}`}</div>
+                              <div className="video_duration doc">
+                                <FileTextOutlined />
+                                {`${(v?.file?.file_size / 1000000).toFixed(2)} MB`}
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                    ))}
+                          <div>
+                            {isEditing ? (
+                              <AppSelect
+                                placeholder="Chọn quiz"
+                                quizSelect
+                                value={haveQuiz}
+                                itemSelect={listQuiz?.map((quiz) => {
+                                  return {
+                                    value: quiz.id,
+                                    label: quiz.name,
+                                  };
+                                })}
+                                handleChange={(id) => {
+                                  if (id === QuizAssignEnum.CREATE_NEW_QUIZ) showConfirm();
+                                  else {
+                                    dispatch(
+                                      progressAction.updateQuizLocation({
+                                        lessonId: lesson.id,
+                                        questionId: id,
+                                        documentId: v.id,
+                                      }),
+                                    );
+                                  }
+                                }}
+                              />
+                            ) : (
+                              !!haveQuiz && (
+                                <Card
+                                  className="quiz_header"
+                                  css={css`
+                                    .ant-card-body {
+                                      padding: 11px;
+                                    }
+                                  `}
+                                >
+                                  <div
+                                    className={`quiz-name ${lesson.list_quiz?.length ? '' : 'disabled'}`}
+                                    onClick={() => {
+                                      if (!lesson.list_quiz.length) return;
+                                      updateURLParams(router, {
+                                        doc: '',
+                                        video: '',
+                                        lesson: lesson.id,
+                                        quiz: haveQuiz,
+                                      });
+                                    }}
+                                  >
+                                    <Image src={ExamImg} alt="quiz-img" width={30} height={30} />
+                                    <span>
+                                      {`Bài tập - `}
+                                      <strong>{quizName}</strong>
+                                    </span>
+                                  </div>
+                                </Card>
+                              )
+                            )}
+                          </div>
+                        </>
+                      );
+                    })}
                   </Panel>
                 </Collapse>
 

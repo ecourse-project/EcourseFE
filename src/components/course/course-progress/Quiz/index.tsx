@@ -9,7 +9,7 @@ import styled from '@emotion/styled';
 import Skeleton from 'react-loading-skeleton';
 import CountdownTimer from 'src/components/count-down';
 import CourseService from 'src/lib/api/course';
-import { SelectedQuizType } from 'src/lib/types/commentType';
+import { SelectedQuizType } from 'src/lib/types/appType';
 import { getReturnValues } from 'src/lib/utils/utils';
 import QuizSlide from './quiz-slide';
 import ColumnQuiz from './collum-quiz';
@@ -121,11 +121,13 @@ const QuizSection: React.FC<QuizProps> = (props) => {
         <>
           {!lessonQuiz.isDone && (
             <CountdownTimer
-              expired={() => {
-                setTimeout(() => {
-                  setIsSubmit(true);
-                  onSubmit(answer);
-                }, 1000);
+              expired={(value) => {
+                if (value) {
+                  setTimeout(() => {
+                    setIsSubmit(true);
+                    onSubmit(answer);
+                  }, 1000);
+                }
               }}
               targetDate={targetDateTime}
             />

@@ -13,8 +13,7 @@ const DateTimeDisplay = ({ value, type, isDanger }) => {
 const ExpiredNotice = () => {
   return (
     <div className="expired-notice">
-      <span>Expired!!!</span>
-      <p>Please select a future date and time.</p>
+      <span>Hết giờ!!!</span>
     </div>
   );
 };
@@ -48,7 +47,7 @@ const CountdownTimer = ({ targetDate, expired }) => {
     return (
       <CountDownStyled>
         {/* <ShowCounter days={days} hours={hours} minutes={minutes} seconds={seconds} />; */}
-        <ShowCounter hours={hours} minutes={minutes} seconds={seconds} />;
+        <ShowCounter hours={hours} minutes={minutes} seconds={seconds} />
       </CountDownStyled>
     );
   }
