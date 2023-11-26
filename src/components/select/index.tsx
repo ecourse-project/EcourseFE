@@ -2,7 +2,7 @@
 
 import { Select } from 'antd';
 import React, { ReactNode, useState } from 'react';
-import { typeSelect } from 'src/lib/utils/enum';
+import { QuizAssignEnum, typeSelect } from 'src/lib/utils/enum';
 import theme from 'src/styles/theme';
 
 import { css } from '@emotion/react';
@@ -243,9 +243,14 @@ const AppSelect = (props) => {
         getPopupContainer={isGetContainer ? () => document.getElementById('market') : () => document.body}
       >
         {quizSelect && (
-          <Option className="option" value="CREATE_NEW_QUIZ">
-            <strong>Tạo quiz mới</strong>
-          </Option>
+          <>
+            <Option className="option" value={QuizAssignEnum.CREATE_NEW_QUIZ}>
+              <strong style={{ fontStyle: 'italic' }}>Tạo quiz mới</strong>
+            </Option>
+            <Option className="option" value={QuizAssignEnum.UNASSIGN_QUIZ}>
+              Bỏ gán quiz
+            </Option>
+          </>
         )}
         {itemSelect?.map((item) => {
           return (

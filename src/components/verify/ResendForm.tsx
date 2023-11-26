@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import AppButton from 'src/components/button';
 import AppInput from 'src/components/input';
-import { ResetPassword1FieldData } from 'src/lib/types/commentType';
+import { ResetPassword1FieldData } from 'src/lib/types/appType';
 import RoutePaths from 'src/lib/utils/routes';
 import validation from 'src/lib/utils/validation';
 import * as Yup from 'yup';

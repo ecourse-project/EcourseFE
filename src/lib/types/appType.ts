@@ -78,7 +78,7 @@ export interface NeighbourhoodModels {
   name: string;
 }
 import { ReactElement, ReactNode } from 'react';
-import { Quiz, QuizResult } from './backend_modal';
+import { Quiz, QuizLocationEnum, QuizResult } from './backend_modal';
 
 // export interface PaginationParams {
 // 	_limit: number;
@@ -165,3 +165,13 @@ export type SelectedQuizType = {
   result: QuizResult;
   isDone: boolean;
 };
+export interface QuizItemSetting {
+  id: string;
+  order: string;
+  location: QuizLocationEnum;
+}
+
+export interface QuizLocation {
+  lesson_id: string;
+  quiz?: Array<QuizItemSetting>;
+}

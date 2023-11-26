@@ -2,7 +2,7 @@ import Router from 'next/router';
 import React, { useEffect } from 'react';
 import isEqual from 'react-fast-compare';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
-import { TypeTabPanel } from 'src/lib/types/commentType';
+import { TypeTabPanel } from 'src/lib/types/appType';
 import RoutePaths from 'src/lib/utils/routes';
 import OrderUI from 'src/sections/order';
 import MyLearning, { LearningTabsKey } from 'src/sections/Pages/MyLearning';

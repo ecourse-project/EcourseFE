@@ -3,7 +3,7 @@
 import { Tabs } from 'antd';
 import React, { PropsWithChildren } from 'react';
 import isEqual from 'react-fast-compare';
-import { TypeTabPanel } from 'src/lib/types/commentType';
+import { TypeTabPanel } from 'src/lib/types/appType';
 
 import { css } from '@emotion/react';
 

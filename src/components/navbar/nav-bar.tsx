@@ -1,4 +1,11 @@
-import { HomeFilled, LogoutOutlined, SettingOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  BookOutlined,
+  HomeFilled,
+  LogoutOutlined,
+  SettingOutlined,
+  ShoppingCartOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import { css } from '@emotion/react';
 import { Avatar, Divider, Dropdown, Space } from 'antd';
 import { isEmpty } from 'lodash';
@@ -7,7 +14,7 @@ import { NextRouter, useRouter } from 'next/router';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/lib/reducers/model';
-import { Nav, NavTypeEnum } from 'src/lib/types/backend_modal';
+import { Nav, NavTypeEnum, RoleEnum } from 'src/lib/types/backend_modal';
 import RoutePaths from 'src/lib/utils/routes';
 
 import styled from '@emotion/styled';
@@ -59,6 +66,14 @@ const Nav: React.FC = React.memo(() => {
       icon: <LogoutOutlined />,
     },
   ];
+
+  const managerAccountItems: MenuProps['items'] = accountItems.concat([
+    {
+      key: '3',
+      label: <Link href={RoutePaths.CREATE_QUIZ}>Tạo quiz mới</Link>,
+      icon: <BookOutlined />,
+    },
+  ]);
 
   return (
     <NavStyle id="menu-nav" router={router}>
@@ -137,7 +152,11 @@ const Nav: React.FC = React.memo(() => {
           <div className="account-group" id="account-dropdown">
             {!isEmpty(myProfile) ? (
               <Dropdown
-                menu={{ items: accountItems }}
+                menu={
+                  myProfile && myProfile.role === RoleEnum.MANAGER
+                    ? { items: managerAccountItems }
+                    : { items: accountItems }
+                }
                 placement="bottomRight"
                 arrow
                 className="cuongDropdown"

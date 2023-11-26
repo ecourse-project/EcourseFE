@@ -8,7 +8,7 @@ import AppInput from 'src/components/input';
 import CourseService from 'src/lib/api/course';
 import { appActions } from 'src/lib/reducers/app/appSlice';
 import { RootState } from 'src/lib/reducers/model';
-import { SettingFieldData } from 'src/lib/types/commentType';
+import { SettingFieldData } from 'src/lib/types/appType';
 import regex from 'src/lib/utils/regularExpression';
 import validation from 'src/lib/utils/validation';
 import theme from 'src/styles/theme';

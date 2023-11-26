@@ -5,7 +5,7 @@ import AppButton from 'src/components/button';
 import ErrorMessage from 'src/components/error-message';
 import AppInput from 'src/components/input';
 import CourseService from 'src/lib/api/course';
-import { ChangePasswordFieldData } from 'src/lib/types/commentType';
+import { ChangePasswordFieldData } from 'src/lib/types/appType';
 import regex from 'src/lib/utils/regularExpression';
 import validation from 'src/lib/utils/validation';
 import theme from 'src/styles/theme';

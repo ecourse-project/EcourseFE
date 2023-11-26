@@ -245,7 +245,7 @@ export interface Lesson {
   videos_completed?: string[];
   quiz_detail?: QuizResult[];
   list_quiz: Quiz[];
-  quiz_location?: Array<{ id: string; order: number; location: QuizLocationEnum }>;
+  quiz_location?: Array<{ id: string; order: string; location: QuizLocationEnum }>;
 }
 
 export interface Course {
@@ -482,7 +482,7 @@ export interface AssignQuizArgs {
     lesson_id: string;
     quiz?: Array<{
       id: string;
-      order: number;
+      order: string;
       location: QuizLocationEnum;
     }>;
   }>;

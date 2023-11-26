@@ -36,6 +36,7 @@ import LessonItem from './lesson-item';
 import { CourseProgressWrapper } from './style';
 
 import { isIframeOrUrl, isURL, updateURLParams } from 'src/lib/utils/utils';
+import { QuizItemSetting } from 'src/lib/types/appType';
 
 export interface CourseParams {
   id: string;
@@ -81,6 +82,7 @@ const CourseProgress = () => {
   const [sumVid, setSumVid] = useState<number>(0);
   const [sumDoc, setSumDoc] = useState<number>(0);
   const myProfile = useSelector((state: RootState) => state.app.user);
+  const quizLocation = useSelector((state: RootState) => state.progress.quizLocation);
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const dispatch = useDispatch();
@@ -88,7 +90,6 @@ const CourseProgress = () => {
   const router = useRouter();
   const [progressNumber, setProgressNumber] = useState<number>(course?.progress || 0);
   const [listQuiz, setListQuiz] = useState<Quiz[]>([]);
-  const [quizSetting, setQuizSetting] = useState<QuizSetting[]>([]);
   // const { downloadPDF, DownloadAnchor } = useExportCertificate({
   //   certificateExport: CourseService.downloadCerti,
   //   onFailed: (err) => {
@@ -174,6 +175,11 @@ const CourseProgress = () => {
       }
       // set current doc when reload page
       setCurrentDocReloadPage(courseDetail);
+      dispatch(
+        progressAction.setQuizLocation(
+          courseDetail?.lessons?.map((v) => ({ lesson_id: v.id, quiz: v?.quiz_location })) || [],
+        ),
+      );
       dispatch(progressAction.setCourse(courseDetail));
       // set initial checked item and checked answer
       await setInitialCheck(courseDetail);
@@ -444,11 +450,14 @@ const CourseProgress = () => {
             {myProfile.role === RoleEnum.MANAGER && (
               <Button
                 className="save-change-btn"
-                disabled={!quizSetting.length}
                 onClick={async () => {
                   if (isEditing) {
-                    const params: AssignQuizArgs = { course_id: course?.id || '', quiz_location: quizSetting as any };
-                    await CourseService.assignQuiz(params);
+                    const assignQuizParams: AssignQuizArgs = {
+                      course_id: course?.id || '',
+                      quiz_location: quizLocation,
+                    };
+                    await CourseService.assignQuiz(assignQuizParams);
+                    getCourseDetail(params.id);
                     setIsEditing(false);
                   } else {
                     setIsEditing(true);
@@ -468,18 +477,7 @@ const CourseProgress = () => {
                   isShowLessonDetail={true}
                   listQuiz={listQuiz}
                   isEditing={isEditing}
-                  onSaveQuizSetting={(quizSetting) => {
-                    setQuizSetting((prev) => {
-                      const idx = prev?.findIndex((v) => v.lesson_id === item.id);
-                      if (idx >= 0) {
-                        prev[idx] = { lesson_id: item.id, quiz: quizSetting };
-                        return prev;
-                      } else {
-                        return [...prev, { lesson_id: item.id, quiz: quizSetting }];
-                      }
-                    });
-                    // const params: AssignQuizArgs = { course_id: course?.id, quiz_location: [{ lesson_id: '' }] };
-                  }}
+
                   // courseDetail={course || ({} as Course)}
                   // onUpdate={(data) => onUpdate(data, JSON.parse(JSON.stringify(checkedItems)))}
                 />

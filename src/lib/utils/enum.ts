@@ -85,3 +85,8 @@ export enum TagState {
   WAITING = 'WAITING',
   STOP = 'STOP',
 }
+
+export enum QuizAssignEnum {
+  CREATE_NEW_QUIZ = 'CREATE_NEW_QUIZ',
+  UNASSIGN_QUIZ = 'UNASSIGN_QUIZ',
+}
