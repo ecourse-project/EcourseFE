@@ -449,7 +449,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                   </Panel>
                 </Collapse>
 
-                <Card
+                {/* <Card
                   className="quiz_header"
                   css={css`
                     .ant-card-body {
@@ -470,7 +470,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                       <strong>{lesson?.name}</strong>
                     </span>
                   </div>
-                </Card>
+                </Card> */}
               </>
             ) : (
               <div></div>

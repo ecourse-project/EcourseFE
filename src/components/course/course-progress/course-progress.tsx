@@ -464,7 +464,7 @@ const CourseProgress = () => {
                   }
                 }}
               >
-                {!isEditing ? 'Gán Bài Quiz' : 'Lưu Thay Đổi'}
+                {!isEditing ? 'Thêm Quiz' : 'Lưu Thay Đổi'}
               </Button>
             )}
             <List
