@@ -64,9 +64,10 @@ interface ColumnQuiz {
     answer: string | Array<string> | Array<Array<string>>,
   ) => void;
   result: MatchQuestionAnswer | undefined;
+  isDone: boolean;
 }
 
-const ColumnQuiz: React.FC<ColumnQuiz> = ({ quiz, onChange, result }) => {
+const ColumnQuiz: React.FC<ColumnQuiz> = ({ quiz, onChange, result, isDone }) => {
   const quizData = quiz.match_question;
   const firstColId = useMemo(() => {
     return quizData?.first_column.map((v) => v.id);
@@ -145,7 +146,6 @@ const ColumnQuiz: React.FC<ColumnQuiz> = ({ quiz, onChange, result }) => {
   const isCorrectAns = (userAns, correctAnsList) => {
     return correctAnsList?.some((v) => v.includes(userAns[0]) && v.includes(userAns[1]));
   };
-  console.log('result :==>>', result);
 
   return (
     <div
@@ -224,7 +224,7 @@ const ColumnQuiz: React.FC<ColumnQuiz> = ({ quiz, onChange, result }) => {
               onRowClick={handleRowClick}
               selectedRow={selectPair}
               matchedPair={matchPair}
-              isResult={!!result}
+              isResult={!!result || isDone}
             />
           </div>
           <div className="connect">
@@ -245,7 +245,7 @@ const ColumnQuiz: React.FC<ColumnQuiz> = ({ quiz, onChange, result }) => {
               data={quizData.second_column}
               onRowClick={handleRowClick}
               selectedRow={selectPair}
-              isResult={!!result}
+              isResult={!!result || isDone}
               matchedPair={matchPair}
             />
           </div>

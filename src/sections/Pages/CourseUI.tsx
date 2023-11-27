@@ -18,6 +18,8 @@ import RoutePaths from 'src/lib/utils/routes';
 import { HomeOutlined, SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 import { DEFAULT_PAGE_SIZE } from 'src/lib/utils/constant';
+import { useSelector } from 'react-redux';
+import { RootState } from 'src/lib/reducers/model';
 
 export interface CourseClassParams {
   page?: number;
@@ -35,6 +37,8 @@ const CourseUI: React.FC = () => {
     page: 1,
     limit: DEFAULT_PAGE_SIZE,
   });
+  const myProfile = useSelector((state: RootState) => state.app.user);
+
   const fetCourseClass = async (pagination: PaginationParams) => {
     const token = localStorage.getItem(StorageKeys.SESSION_KEY);
     setLoading(true);
@@ -123,6 +127,7 @@ const CourseUI: React.FC = () => {
               <DocCourseWrapper>
                 {listCourse?.results?.length ? (
                   listCourse?.results?.map((e, i) => {
+                    if (e?.test && !myProfile?.is_testing_user) return;
                     return (
                       <Col key={i} className="item">
                         <CourseItem course={e} />

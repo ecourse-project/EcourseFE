@@ -14,14 +14,14 @@ import { NextRouter, useRouter } from 'next/router';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/lib/reducers/model';
-import { Nav, NavTypeEnum, RoleEnum } from 'src/lib/types/backend_modal';
+import { Nav as NavType, NavTypeEnum, RoleEnum } from 'src/lib/types/backend_modal';
 import RoutePaths from 'src/lib/utils/routes';
 
 import styled from '@emotion/styled';
 import type { MenuProps } from 'antd';
 
 const Nav: React.FC = React.memo(() => {
-  const header: Nav[] = useSelector((state: RootState) => state.app.header);
+  const header: NavType[] = useSelector((state: RootState) => state.app.header);
   const router = useRouter();
   const myProfile = useSelector((state: RootState) => state.app.user);
 
@@ -36,7 +36,7 @@ const Nav: React.FC = React.memo(() => {
       ? `${RoutePaths.POST}?topic=${topicValue}&header=${navHeader}&page=1`
       : '';
   };
-  const generateItem = (navItem: Nav): MenuProps['items'] => {
+  const generateItem = (navItem: NavType): MenuProps['items'] => {
     return navItem.topic.map((v, i) => ({
       key: i,
       label: (
@@ -67,13 +67,13 @@ const Nav: React.FC = React.memo(() => {
     },
   ];
 
-  const managerAccountItems: MenuProps['items'] = accountItems.concat([
+  const managerAccountItems: MenuProps['items'] = [
     {
       key: '3',
       label: <Link href={RoutePaths.CREATE_QUIZ}>Tạo quiz mới</Link>,
       icon: <BookOutlined />,
     },
-  ]);
+  ];
 
   return (
     <NavStyle id="menu-nav" router={router}>
@@ -153,8 +153,8 @@ const Nav: React.FC = React.memo(() => {
             {!isEmpty(myProfile) ? (
               <Dropdown
                 menu={
-                  myProfile && myProfile.role === RoleEnum.MANAGER
-                    ? { items: managerAccountItems }
+                  myProfile && (myProfile as any)?.quiz_permission
+                    ? { items: managerAccountItems.concat(accountItems) }
                     : { items: accountItems }
                 }
                 placement="bottomRight"

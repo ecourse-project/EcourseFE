@@ -219,10 +219,10 @@ const AppSelect = (props) => {
     setIsFocusing(false);
   };
 
-  const onChange = (value: React.ChangeEvent<HTMLInputElement>, option) => {
-    handleChange && handleChange(value, option);
+  const onChange = (onchangeValue: React.ChangeEvent<HTMLInputElement>, option) => {
+    handleChange && handleChange(onchangeValue, option);
 
-    if (value && +value > 0) {
+    if (onchangeValue && +onchangeValue > 0) {
       setIsEmpty(false);
     } else {
       setIsEmpty(true);
@@ -241,14 +241,17 @@ const AppSelect = (props) => {
         placeholder={placeholder}
         value={value !== '' ? value : null}
         getPopupContainer={isGetContainer ? () => document.getElementById('market') : () => document.body}
+        onSelect={(selectedValue) => {
+          if (!quizSelect) return;
+          if (selectedValue === value) {
+            handleChange && handleChange(QuizAssignEnum.UNASSIGN_QUIZ);
+          }
+        }}
       >
         {quizSelect && (
           <>
             <Option className="option" value={QuizAssignEnum.CREATE_NEW_QUIZ}>
               <strong style={{ fontStyle: 'italic' }}>Tạo quiz mới</strong>
-            </Option>
-            <Option className="option" value={QuizAssignEnum.UNASSIGN_QUIZ}>
-              Bỏ gán quiz
             </Option>
           </>
         )}

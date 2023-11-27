@@ -197,3 +197,9 @@ export const splitSentence = (text = '') => {
   const x = text.match(/[\w'"’]+|[ ,;:.?!...:|]+/g);
   return x?.filter((v) => v !== ' ') || [];
 };
+
+export function removePunctuation(sentence) {
+  const pattern = /^[^\w\s]+|[^\w\s]+$/g;
+  const cleanedSentence = sentence?.replace(pattern, '');
+  return cleanedSentence;
+}

@@ -1,5 +1,5 @@
 import { Button, Col, Divider, List, Popover, Progress, Row, Tabs } from 'antd';
-import _, { cloneDeep } from 'lodash';
+import _, { cloneDeep, isEmpty } from 'lodash';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -105,7 +105,7 @@ const CourseProgress = () => {
     },
   ];
 
-  const setCurrentDocReloadPage = (courseDetail: Course) => {
+  const setCurrentDocReloadPage = (courseDetail: Course, listQuiz: Quiz[]) => {
     // set current doc when reload page
     if (params.doc && courseDetail.lessons) {
       const currentLesson = courseDetail.lessons?.find((v) => v.documents?.some((doc) => doc.id === params.doc));
@@ -126,11 +126,11 @@ const CourseProgress = () => {
     } else if (params.quiz && courseDetail.lessons) {
       const currentLesson = courseDetail.lessons?.find((v) => v.id === params.lesson);
       const currentQuiz = listQuiz?.find((v) => v.id === params.quiz) || ({} as Quiz);
-      console.log('currentQuiz,', currentQuiz);
+      const isDoneQuiz = currentLesson?.quiz_detail?.find((v) => v.id === currentQuiz.id)?.is_done_quiz;
       if (currentLesson && currentLesson.list_quiz) {
         dispatch(
           progressAction.setSelectedQuiz({
-            isDone: false,
+            isDone: !!isDoneQuiz,
             lessonId: currentLesson.id,
             quiz: currentQuiz,
             result: cloneDeep(currentLesson.quiz_detail?.find((v) => v.id === currentQuiz.id) || ({} as QuizResult)),
@@ -174,7 +174,7 @@ const CourseProgress = () => {
         setProgressNumber(courseDetail.progress || 0);
       }
       // set current doc when reload page
-      setCurrentDocReloadPage(courseDetail);
+      if (!isEmpty(courseDetail) && listQuiz.length) setCurrentDocReloadPage(courseDetail, listQuiz);
       dispatch(
         progressAction.setQuizLocation(
           courseDetail?.lessons?.map((v) => ({ lesson_id: v.id, quiz: v?.quiz_location })) || [],
@@ -211,8 +211,8 @@ const CourseProgress = () => {
   useEffect(() => {
     if (!course) {
       getCourseDetail(params.id);
-    } else setCurrentDocReloadPage(course);
-  }, [params.doc, params.video, params.quiz, listQuiz]);
+    } else setCurrentDocReloadPage(course, listQuiz);
+  }, [params.doc, params.video, params.quiz, listQuiz?.length]);
 
   const debounceUpdateProgress = useDebouncedCallback(async (params: UpdateProgressArgs) => {
     try {
@@ -447,7 +447,7 @@ const CourseProgress = () => {
             <Tabs items={items} defaultActiveKey={params.tab} className="tab-section" />
           </Col>
           <Col span={8} className="course_list">
-            {myProfile.role === RoleEnum.MANAGER && (
+            {(myProfile as any).quiz_permission && (
               <Button
                 className="save-change-btn"
                 onClick={async () => {
@@ -469,7 +469,7 @@ const CourseProgress = () => {
             )}
             <List
               itemLayout="horizontal"
-              dataSource={course?.lessons?.concat(course?.lessons)}
+              dataSource={course?.lessons}
               renderItem={(item, i) => (
                 <LessonItem
                   lesson={item}

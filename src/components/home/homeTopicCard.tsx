@@ -25,6 +25,7 @@ const HomeTopicCardWrapper = styled.div`
     float: left;
     margin-right: 15px;
     margin-bottom: 5px;
+    min-height: 150px;
   }
   .post-name {
     font-weight: 700;
@@ -33,7 +34,7 @@ const HomeTopicCardWrapper = styled.div`
   .post-sumary {
     font-style: italic;
     font-weight: 500;
-
+    min-height: 80px;
     /* text-align: left;
     display: -webkit-box;
     -webkit-line-clamp: 6;
@@ -42,6 +43,13 @@ const HomeTopicCardWrapper = styled.div`
     text-overflow: ellipsis;
     color: gray;
     white-space: normal; */
+  }
+  .author {
+    font-family: 'Montserrat';
+    text-align: left;
+    font-size: 14px;
+    font-weight: 500;
+    font-style: italic;
   }
   .post-create {
     margin: 10px;
@@ -63,7 +71,10 @@ export default function HomeTopicCard(props: IHomeTopicCardProps) {
           <Image src={post?.thumbnail?.image_path} preview={false} />
           <div className="post-content">
             <p className="post-name">{post?.name}</p>
-            <p className="post-sumary">{`${post?.content_summary?.slice(0, 160) || ''}...`}</p>
+            {(post as any)?.author && <div className="author">Tác giả: {(post as any)?.author}</div>}
+            <p className="post-sumary">
+              {post?.content_summary.length ? `${post?.content_summary?.slice(0, 160) + '...'}` : ''}
+            </p>
             <p className="post-create">{getFormatDate(post?.created)}</p>
           </div>
         </Link>

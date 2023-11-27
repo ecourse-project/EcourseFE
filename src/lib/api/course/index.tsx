@@ -131,8 +131,8 @@ export const apiURL = {
   assignQuiz: () => `api/quiz/assign/`,
   getQuizResult: () => `api/quiz/result/`,
   downloadCerti: (course_id) => `api/quiz/certi/?course_id=${course_id}`,
-  quizStartTime: (course_id, lesson_id, is_start) =>
-    `api/quiz/start-time/?course_id=${course_id}&lesson_id=${lesson_id}&is_start=${is_start}`,
+  quizStartTime: (course_id, lesson_id, quiz_id, is_start) =>
+    `api/quiz/start-time/?course_id=${course_id}&lesson_id=${lesson_id}&quiz_id=${quiz_id}&is_start=${is_start}`,
 
   listHeaders: () => `api/settings/headers/`,
   getHome: () => `api/settings/home/`,
@@ -394,8 +394,13 @@ class CourseService {
     return apiClient.get(apiURL.downloadCerti(course_id));
   }
 
-  static quizStartTime(course_id: string, lesson_id: string, is_start: boolean): Promise<{ start_time?: string }> {
-    return apiClient.get(apiURL.quizStartTime(course_id, lesson_id, is_start));
+  static quizStartTime(
+    course_id: string,
+    lesson_id: string,
+    quiz_id: string,
+    is_start: boolean,
+  ): Promise<{ start_time?: string }> {
+    return apiClient.get(apiURL.quizStartTime(course_id, lesson_id, quiz_id, is_start));
   }
 
   static listHeaders(): Promise<Nav[]> {

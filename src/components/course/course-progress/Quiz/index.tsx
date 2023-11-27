@@ -33,7 +33,6 @@ const QuizSection: React.FC<QuizProps> = (props) => {
     lessonQuiz?.quiz?.questions?.reduce((total, current) => {
       return total + (current?.time_limit || 0);
     }, 0) || 0;
-  const [isExpiredTime, setIsExpiredTime] = useState<boolean>(false);
   const targetDateTime = totalTime * 1000 + new Date(startTime || '').getTime();
   // const targetDateTime = 5 * 1000 + new Date().getTime();
   const showTime = (seconds) => {
@@ -50,7 +49,7 @@ const QuizSection: React.FC<QuizProps> = (props) => {
   const setTimeDoingQuiz = async (isStart) => {
     try {
       setIsLoading(true);
-      const startTime = await CourseService.quizStartTime(courseId, lessonQuiz.lessonId, isStart);
+      const startTime = await CourseService.quizStartTime(courseId, lessonQuiz.lessonId, lessonQuiz.quiz.id, isStart);
       setStartTime(startTime?.start_time || null);
     } catch (error) {
       console.log(error);
@@ -60,10 +59,8 @@ const QuizSection: React.FC<QuizProps> = (props) => {
   };
   useEffect(() => {
     setTimeDoingQuiz(false);
-  }, []);
-  useEffect(() => {
-    console.log('answer :==>>', answer);
-  }, [answer]);
+  }, [lessonQuiz.quiz.id]);
+
   const onChangeQuiz = (v) => {
     setAnswer((prev) => {
       const idx = prev.findIndex((ans) => ans.question_id === v.question_id);
@@ -74,7 +71,6 @@ const QuizSection: React.FC<QuizProps> = (props) => {
         return [...prev, v];
       }
     });
-    console.log('value :==>>', v);
   };
   return (
     <QuizStyled>
@@ -143,6 +139,7 @@ const QuizSection: React.FC<QuizProps> = (props) => {
                       onChangeQuiz({ question_id: quiz_id, question_type, answer })
                     }
                     result={lessonQuiz?.result?.choices_question?.result?.find((v) => v.question_id === quiz.id)}
+                    isDone={lessonQuiz.isDone}
                   />
                 </div>
               );
@@ -156,6 +153,7 @@ const QuizSection: React.FC<QuizProps> = (props) => {
                       onChangeQuiz({ question_id: quiz_id, question_type, answer })
                     }
                     result={lessonQuiz.result?.match_question?.find((v) => v.question_id === quiz.id)}
+                    isDone={lessonQuiz.isDone}
                   />
                 </div>
               );
@@ -169,6 +167,7 @@ const QuizSection: React.FC<QuizProps> = (props) => {
                       onChangeQuiz({ question_id: quiz_id, question_type, answer })
                     }
                     result={lessonQuiz.result?.fill_question?.find((v) => v.question_id === quiz.id)}
+                    isDone={lessonQuiz.isDone}
                   />
                 </div>
               );
@@ -193,22 +192,25 @@ const QuizSection: React.FC<QuizProps> = (props) => {
       ) : (
         <Empty className="empty-data" image={Empty.PRESENTED_IMAGE_SIMPLE} />
       )}
-      {!loading && !isEmpty(lessonQuiz.quiz?.questions) && answer?.length === lessonQuiz?.quiz?.questions?.length && (
-        <AppButton
-          className="done-btn"
-          btnTextColor={'black'}
-          btnStyle={'solid'}
-          btnSize={'small'}
-          btnWidth={'full-w'}
-          // disabled={!isDone ? (listAnswer.length < listQuiz.length ? true : false) : false/}
-          onClick={() => {
-            setIsSubmit(true);
-            onSubmit(answer);
-          }}
-        >
-          {'NỘP BÀI'}
-        </AppButton>
-      )}
+      {!loading &&
+        !isEmpty(lessonQuiz.quiz?.questions) &&
+        answer?.length === lessonQuiz?.quiz?.questions?.length &&
+        !lessonQuiz.isDone && (
+          <AppButton
+            className="done-btn"
+            btnTextColor={'black'}
+            btnStyle={'solid'}
+            btnSize={'small'}
+            btnWidth={'full-w'}
+            // disabled={!isDone ? (listAnswer.length < listQuiz.length ? true : false) : false/}
+            onClick={() => {
+              setIsSubmit(true);
+              onSubmit(answer);
+            }}
+          >
+            {'NỘP BÀI'}
+          </AppButton>
+        )}
     </QuizStyled>
   );
 };

@@ -11,9 +11,10 @@ interface ChoiceQuizProps {
     answer: string | Array<string> | Array<Array<string>>,
   ) => void;
   result: { question_id: string; user_answer: string; correct_answer?: string } | undefined;
+  isDone: boolean;
 }
 const { Text } = Typography;
-const ChoiceQuiz: React.FC<ChoiceQuizProps> = ({ quiz, onChange, result }) => {
+const ChoiceQuiz: React.FC<ChoiceQuizProps> = ({ quiz, onChange, result, isDone }) => {
   const quizChoice = quiz.choices_question;
   if (!quizChoice) return;
   return (
@@ -67,7 +68,7 @@ const ChoiceQuiz: React.FC<ChoiceQuizProps> = ({ quiz, onChange, result }) => {
       <Radio.Group
         onChange={(e) => onChange(quiz.id, quiz.question_type, e.target.value)}
         defaultValue={result?.user_answer}
-        disabled={!!result}
+        disabled={!!result || isDone}
       >
         {quizChoice?.choices?.map((ans, index) => {
           return (

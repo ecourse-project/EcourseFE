@@ -21,7 +21,7 @@ import {
   Quiz,
 } from 'src/lib/types/backend_modal';
 import RoutePaths from 'src/lib/utils/routes';
-import { AlphabetLetter, replaceWordsInString } from 'src/lib/utils/utils';
+import { AlphabetLetter, removePunctuation, replaceWordsInString } from 'src/lib/utils/utils';
 import { v4 as uuidv4 } from 'uuid';
 interface SelectedLessonType {
   id: string;
@@ -423,13 +423,14 @@ const CreateQuizPage = () => {
             .course-field {
               max-width: unset;
             }
-            .ant-input {
+            .ant-input,
+            .ant-input-number {
               width: 100%;
             }
           `}
         >
           <Row gutter={16}>
-            <Col span={24}>
+            <Col span={8}>
               <Form.Item name="type" label="Loại Quiz" rules={[{ required: true, message: 'Chọn loại câu hỏi' }]}>
                 <AppSelect
                   className="course-field"
@@ -448,8 +449,6 @@ const CreateQuizPage = () => {
                 />
               </Form.Item>
             </Col>
-          </Row>
-          <Row gutter={16}>
             <Col span={8}>
               <Form.Item
                 name="time"
@@ -480,7 +479,19 @@ const CreateQuizPage = () => {
                 />
               </Form.Item>
             </Col>
-            <Col span={16}>
+            <Col span={8}>
+              <Form.Item name="order" label="Thứ tự" rules={[{ required: false, message: 'Điền thứ tự.' }]}>
+                <AppInput
+                  placeholder="Nhập thứ tự"
+                  value={form.getFieldValue('order')}
+                  handleChangeNumber={(e) => form.setFieldValue('order', e)}
+                  type="number"
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={24}>
               <Form.Item name="question" label="Câu hỏi" rules={[{ required: true, message: 'Điền câu hỏi quiz' }]}>
                 <AppInput
                   name="question"
@@ -874,7 +885,7 @@ const CreateQuizPage = () => {
                     ?.filter((v) => v !== ' ')
                     ?.map((v) => ({
                       value: v,
-                      label: v,
+                      label: removePunctuation(v),
                     }))}
                   handleChange={(value) => {
                     console.log('value', value);
@@ -891,16 +902,7 @@ const CreateQuizPage = () => {
           ) : (
             <div></div>
           )}
-          <Row>
-            <Form.Item name="order" label="Thứ tự" rules={[{ required: false, message: 'Điền nội dung câu.' }]}>
-              <AppInput
-                placeholder="Nhập thứ tự"
-                value={form.getFieldValue('order')}
-                handleChangeNumber={(e) => form.setFieldValue('order', e)}
-                type="number"
-              />
-            </Form.Item>
-          </Row>
+
           <Row>
             <Space>
               {drawerState.questionData ? (
@@ -1196,7 +1198,7 @@ const QuizShow = ({
                 {`Xoá quiz "${quiz.name}"`}
               </Button>
             </Space>
-            <Table dataSource={quiz?.questions} columns={columns} scroll={{ x: 1080, y: 1000 }} />
+            <Table dataSource={quiz?.questions} columns={columns} scroll={{ x: 1080 }} pagination={false} />
             <Modal
               title={`Xoá Quiz ${quiz.name}`}
               open={quiz.id === modalData.open}

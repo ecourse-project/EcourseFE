@@ -10,9 +10,10 @@ interface FillQuizProps {
     answer: string | Array<string> | Array<Array<string>>,
   ) => void;
   result: FillQuestionAnswer | undefined;
+  isDone: boolean;
 }
 const defaultIndex = 0;
-const FillQuiz: React.FC<FillQuizProps> = ({ quiz, onChange, result }) => {
+const FillQuiz: React.FC<FillQuizProps> = ({ quiz, onChange, result, isDone }) => {
   const [userInputs, setUserInputs] = useState<string[]>([]);
   const fillQuiz = (quiz.fill_blank_question?.content || '')?.replaceAll('{{}}', '{{}} ');
   const [numberInput, setNumberInput] = useState<number>(0);
@@ -30,7 +31,7 @@ const FillQuiz: React.FC<FillQuizProps> = ({ quiz, onChange, result }) => {
 
   const handleInputChange = (index, event) => {
     const updatedInputs = [...userInputs];
-    updatedInputs[index] = event.target.value;
+    updatedInputs[index] = event.target.value?.trim();
     const validAns = updatedInputs.filter((v) => v);
     onChange(quiz.id, quiz.question_type, validAns);
     setUserInputs(updatedInputs);
@@ -76,7 +77,9 @@ const FillQuiz: React.FC<FillQuizProps> = ({ quiz, onChange, result }) => {
                   key={index}
                   type="text"
                   value={userInputs[index]}
-                  onChange={(event) => handleInputChange(index, event)}
+                  onChange={(event) => {
+                    handleInputChange(index, event);
+                  }}
                   required
                   style={{ width: 100 }}
                 />

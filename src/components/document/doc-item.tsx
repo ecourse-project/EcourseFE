@@ -187,6 +187,7 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
 
             <div className="doc_info">
               <div className="title">{document.name}</div>
+              {(document as any)?.author && <div className="author">Tác giả: {(document as any)?.author}</div>}
               {/* <p className="download">
                 <VerticalAlignBottomOutlined />
                 Số lượt tải: {document.sold}
