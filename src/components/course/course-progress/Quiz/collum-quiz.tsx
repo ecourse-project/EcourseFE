@@ -204,7 +204,7 @@ const ColumnQuiz: React.FC<ColumnQuiz> = ({ quiz, onChange, result, isDone }) =>
         .correct-ans,
         .user-ans {
           .ant-tag {
-            width: 160px;
+            width: 200px;
           }
         }
         .question {

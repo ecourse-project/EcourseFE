@@ -85,7 +85,11 @@ const CommentItem: React.FC<CommentItemProps> = (props) => {
           </div>
         }
         content={
-          <pre>
+          <pre
+            css={css`
+              text-wrap: balance;
+            `}
+          >
             {item.content}
             {showReplyBox && (
               <CommentForm
