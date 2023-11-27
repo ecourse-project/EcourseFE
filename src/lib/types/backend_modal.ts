@@ -427,10 +427,10 @@ export interface MatchQuestion {
 
 export interface FillBlankQuestion {
   id?: string;
+  title: string;
   order?: number;
   time_limit?: number;
   content: string;
-  title: string;
   full_content: string;
   hidden_words?: Array<{ id: number; word: string; hidden: boolean }>;
   question_type: QuestionTypeEnum;

@@ -36,7 +36,6 @@ const CourseItem: React.FC<ChildProps> = (props) => {
   const params: CourseClassParams = useQueryParam();
   const dispatch = useDispatch();
   const route = useRouter();
-
   useEffect(() => {
     if (currentCourse.course_of_class && !currentCourse.request_status) {
       setBtnString(BtnString.AVAILABLE_REQUEST);
@@ -206,6 +205,7 @@ const CourseItem: React.FC<ChildProps> = (props) => {
             <div>
               <h4 className="title">{currentCourse.name}</h4>
             </div>
+            {(currentCourse as any)?.author && <div className="author">Tác giả: {(currentCourse as any)?.author}</div>}
             {/* <p className="download">
               <VerticalAlignBottomOutlined />
               Số lượt tải: {currentCourse.sold}

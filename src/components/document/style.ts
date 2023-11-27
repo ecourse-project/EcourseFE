@@ -37,6 +37,13 @@ export const ItemDocCourseWrapper = styled.div`
     height: fit-content;
     text-decoration: none;
   }
+  .author {
+    font-family: 'Montserrat';
+    text-align: left;
+    font-size: 14px;
+    font-weight: 500;
+    font-style: italic;
+  }
 
   .description {
     text-align: left;
