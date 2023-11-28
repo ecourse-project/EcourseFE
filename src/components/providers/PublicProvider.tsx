@@ -20,7 +20,6 @@ const PublicProvider: React.FC<{ children?: ReactNode }> = ({ children }) => {
 
   const getUserProfile = async () => {
     const token = localStorage.getItem(StorageKeys.SESSION_KEY);
-    console.log('token :==>>', token);
     try {
       if (isEmpty(header)) {
         const header = await CourseService.listHeaders();

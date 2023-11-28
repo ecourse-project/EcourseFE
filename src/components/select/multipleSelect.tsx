@@ -93,7 +93,6 @@ const MultipleSelect = (props: MultipleSelectProps) => {
     loadingMoreMailing,
     ...rest
   } = props;
-
   const inputRef = React.useRef<any>(null);
   const [isFocusing, setIsFocusing] = useState(!!value);
   const [isEmpty, setIsEmpty] = useState(!value);

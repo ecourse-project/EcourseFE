@@ -81,7 +81,7 @@ const QuizSection: React.FC<QuizProps> = (props) => {
       ) : (
         <></>
       )}
-      {!isLoading && lessonQuiz.isDone && lessonQuiz?.result?.mark ? (
+      {!isLoading && lessonQuiz.isDone && typeof lessonQuiz?.result?.mark === 'number' ? (
         <Progress
           type="circle"
           className="mark"
