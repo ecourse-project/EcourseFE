@@ -178,10 +178,11 @@ export const AlphabetLetter = [
 ];
 
 export function replaceWordsInString(sentence = '', wordsArray: string[] = []) {
-  const wordsInSentence = sentence.split(' ');
+  const wordsInSentence = sentence.split(' ')?.filter((v) => v?.trim() !== '');
+
   const result = wordsInSentence.map((word) => {
-    if (wordsArray.includes(word)) {
-      return `[${word}]`;
+    if (wordsArray.includes(removePunctuation(word))) {
+      return word.replace(removePunctuation(word), `[${removePunctuation(word)}]`);
     }
     return word;
   });

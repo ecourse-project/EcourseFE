@@ -141,8 +141,8 @@ const CreateQuizPage = () => {
         .filter((v) => v !== ' ')
         .map((v, index) => ({
           id: index + 1,
-          word: v,
-          hidden: value.hiddenWord.includes(v),
+          word: removePunctuation(v),
+          hidden: value.hiddenWord.includes(removePunctuation(v)),
         }));
 
       questionParam = {
@@ -882,13 +882,12 @@ const CreateQuizPage = () => {
                   type="string"
                   itemSelect={content
                     ?.split(' ')
-                    ?.filter((v) => v !== ' ')
+                    ?.filter((v) => removePunctuation(v)?.trim() !== '')
                     ?.map((v) => ({
-                      value: v,
+                      value: removePunctuation(v),
                       label: removePunctuation(v),
                     }))}
                   handleChange={(value) => {
-                    console.log('value', value);
                     form.setFieldValue('hiddenWord', value);
                   }}
                   value={form.getFieldValue('hiddenWord') || []}

@@ -243,7 +243,6 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                       const haveQuiz = quizLocation
                         ?.find((item) => item.lesson_id === lesson.id)
                         ?.quiz?.find((u) => u.order === v.id)?.id;
-                      console.log('🚀 ~ file: lesson-item.tsx:247 ~ {lesson.videos?.map ~ haveQuiz:', haveQuiz);
                       let quizName = '';
                       if (haveQuiz) {
                         quizName = listQuiz?.find((quiz) => quiz.id === haveQuiz)?.name || '';
@@ -356,7 +355,6 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                       const haveQuiz = quizLocation
                         ?.find((item) => item.lesson_id === lesson.id)
                         ?.quiz?.find((u) => u.order === v.id)?.id;
-                      console.log('🚀 ~ file: lesson-item.tsx:365 ~ {lesson.documents?.map ~ haveQuiz:', haveQuiz);
                       let quizName = '';
                       if (haveQuiz) {
                         quizName = listQuiz?.find((quiz) => quiz.id === haveQuiz)?.name || '';

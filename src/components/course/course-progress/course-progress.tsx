@@ -211,8 +211,9 @@ const CourseProgress = () => {
   useEffect(() => {
     if (!course) {
       getCourseDetail(params.id);
-    } else setCurrentDocReloadPage(course, listQuiz);
-  }, [params.doc, params.video, params.quiz, listQuiz?.length]);
+    } else if (!listQuiz.length) getListQuiz();
+    else setCurrentDocReloadPage(course, listQuiz);
+  }, [params.doc, params.video, params.quiz]);
 
   const debounceUpdateProgress = useDebouncedCallback(async (params: UpdateProgressArgs) => {
     try {
@@ -456,6 +457,7 @@ const CourseProgress = () => {
                       course_id: course?.id || '',
                       quiz_location: quizLocation,
                     };
+
                     await CourseService.assignQuiz(assignQuizParams);
                     getCourseDetail(params.id);
                     setIsEditing(false);

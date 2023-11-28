@@ -92,7 +92,7 @@ const FillQuiz: React.FC<FillQuizProps> = ({ quiz, onChange, result, isDone }) =
             if (word === '{{}}') {
               const correctAns = correctAnswer?.shift();
               const userAns = userAnswer?.shift();
-              return correctAns === userAns || !result?.correct_answer ? (
+              return correctAns?.toLocaleLowerCase() === userAns?.toLocaleLowerCase() || !result?.correct_answer ? (
                 <>
                   {userAns && <span className={`${result?.correct_answer && 'correct'} user-ans`}>{userAns}</span>}
                   {correctAns && <span className="correct"> / {correctAns}</span>}
