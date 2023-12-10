@@ -18,6 +18,7 @@ import {
 } from '@ant-design/icons';
 import { PageHeader } from '@ant-design/pro-layout/es/components/PageHeader';
 import { css } from '@emotion/react';
+import { useRouter } from 'next/router';
 
 const { Paragraph, Title } = Typography;
 const menu = (
@@ -105,7 +106,8 @@ const DocDetail: React.FC = () => {
   const params: DocDetailParams = useQueryParam();
   const [doc, setDoc] = useState<Document>({} as Document);
   const [loading, setLoading] = useState(false);
-
+  const router = useRouter();
+  const { id } = router.query;
   const fetchDocDetail = async (id: string) => {
     try {
       const docDetail: Document = await CourseService.getDocDetail(id);
@@ -116,8 +118,8 @@ const DocDetail: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchDocDetail(params.id);
-  }, []);
+    if (id) fetchDocDetail(id as string);
+  }, [id]);
 
   // useEffect(() => {
   // 	const document = listDoc?.filter((v) => v.id === doc.id)[0];
