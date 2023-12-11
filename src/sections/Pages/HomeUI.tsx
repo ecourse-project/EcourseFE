@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import HomeData from 'src/components/home';
 import HomeSide from 'src/components/home/homeSide';
 import CourseService from 'src/lib/api/course';
-import { Course, Document, Homepage } from 'src/lib/types/backend_modal';
+import { Course, Document, Home, Homepage } from 'src/lib/types/backend_modal';
 
 interface InitialState {
   listDoc: Document[];
@@ -31,10 +31,10 @@ export interface ICategory {
 }
 
 const HomeUI = () => {
-  const [homeData, setHomeData] = useState<Homepage[]>([]);
+  const [homeData, setHomeData] = useState<Home>({} as Home);
   const fetchHomeData = async () => {
     try {
-      const homes: Homepage[] = await CourseService.getHome();
+      const homes: Home = await CourseService.getHome();
       setHomeData(homes);
     } catch (error) {
       console.log('error', error);
@@ -48,7 +48,7 @@ const HomeUI = () => {
     <div className="page-container">
       <Row gutter={16} style={{ maxWidth: '100%' }}>
         <Col span={18}>
-          {homeData?.map((v, i) => {
+          {homeData?.homepage?.map((v, i) => {
             return <HomeData homeData={v} key={i} />;
           })}
         </Col>

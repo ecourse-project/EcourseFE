@@ -89,7 +89,7 @@ const CourseProgress = () => {
   const state = useSelector((state: RootState) => state.progress);
   const router = useRouter();
   const [progressNumber, setProgressNumber] = useState<number>(course?.progress || 0);
-  const [listQuiz, setListQuiz] = useState<Quiz[]>([]);
+  const [listQuiz, setListQuiz] = useState<Quiz[] | null>(null);
   // const { downloadPDF, DownloadAnchor } = useExportCertificate({
   //   certificateExport: CourseService.downloadCerti,
   //   onFailed: (err) => {
@@ -174,7 +174,7 @@ const CourseProgress = () => {
         setProgressNumber(courseDetail.progress || 0);
       }
       // set current doc when reload page
-      if (!isEmpty(courseDetail) && listQuiz.length) setCurrentDocReloadPage(courseDetail, listQuiz);
+      if (!isEmpty(courseDetail) && listQuiz) setCurrentDocReloadPage(courseDetail, listQuiz);
       dispatch(
         progressAction.setQuizLocation(
           courseDetail?.lessons?.map((v) => ({ lesson_id: v.id, quiz: v?.quiz_location })) || [],
@@ -192,7 +192,7 @@ const CourseProgress = () => {
     try {
       const listQuizDetail = await CourseService.listQuiz();
       setListQuiz(listQuizDetail);
-      // setQuizTitle();
+      setCurrentDocReloadPage(course || ({} as Course), listQuizDetail);
     } catch (error) {
       console.log(error);
     }
@@ -211,8 +211,8 @@ const CourseProgress = () => {
   useEffect(() => {
     if (!course) {
       getCourseDetail(params.id);
-    } else if (!listQuiz.length) getListQuiz();
-    else setCurrentDocReloadPage(course, listQuiz);
+    } else if (!listQuiz) getListQuiz();
+    else setCurrentDocReloadPage(course, listQuiz || []);
   }, [params.doc, params.video, params.quiz]);
 
   const debounceUpdateProgress = useDebouncedCallback(async (params: UpdateProgressArgs) => {
@@ -477,7 +477,7 @@ const CourseProgress = () => {
                   lesson={item}
                   index={i}
                   isShowLessonDetail={true}
-                  listQuiz={listQuiz}
+                  listQuiz={listQuiz || []}
                   isEditing={isEditing}
 
                   // courseDetail={course || ({} as Course)}
