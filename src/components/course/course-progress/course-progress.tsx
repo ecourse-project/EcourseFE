@@ -174,7 +174,7 @@ const CourseProgress = () => {
         setProgressNumber(courseDetail.progress || 0);
       }
       // set current doc when reload page
-      if (!isEmpty(courseDetail) && listQuiz.length) setCurrentDocReloadPage(courseDetail, listQuiz);
+      if (!isEmpty(courseDetail) && listQuiz) setCurrentDocReloadPage(courseDetail, listQuiz);
       dispatch(
         progressAction.setQuizLocation(
           courseDetail?.lessons?.map((v) => ({ lesson_id: v.id, quiz: v?.quiz_location })) || [],
@@ -211,7 +211,7 @@ const CourseProgress = () => {
   useEffect(() => {
     if (!course) {
       getCourseDetail(params.id);
-    } else if (listQuiz && !listQuiz?.length) getListQuiz();
+    } else if (!listQuiz) getListQuiz();
     else setCurrentDocReloadPage(course, listQuiz || []);
   }, [params.doc, params.video, params.quiz]);
 
@@ -477,7 +477,7 @@ const CourseProgress = () => {
                   lesson={item}
                   index={i}
                   isShowLessonDetail={true}
-                  listQuiz={listQuiz}
+                  listQuiz={listQuiz || []}
                   isEditing={isEditing}
 
                   // courseDetail={course || ({} as Course)}

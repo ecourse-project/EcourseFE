@@ -73,6 +73,7 @@ export interface User {
   phone?: string;
   role: RoleEnum;
   is_testing_user: boolean;
+  quiz_permission: boolean;
 }
 
 export interface OIsExist {
@@ -558,6 +559,20 @@ export interface HomepageDetail {
 export interface Homepage {
   topic: string;
   detail: HomepageDetail;
+}
+
+export interface Home {
+  homepage: Homepage[];
+  category: string[];
+}
+
+export interface SearchItem {
+  id: string;
+  author?: string;
+  name: string;
+  thumbnail?: OImageUpload;
+  content_summary?: string;
+  type: NavTypeEnum;
 }
 
 // ===========================================Post===========================================
