@@ -128,7 +128,8 @@ export const apiURL = {
   listQuestion: () => `api/quiz/question/`,
   deleteQuestion: () => `api/quiz/question/delete/`,
   createQuiz: () => `api/quiz/`,
-  listQuiz: () => `api/quiz/`,
+  listQuiz: (course_id) => `api/quiz/?course_id=${course_id}`,
+
   deleteQuiz: (quiz_id) => `api/quiz/delete/?quiz_id=${quiz_id}`,
   assignQuiz: () => `api/quiz/assign/`,
   getQuizResult: () => `api/quiz/result/`,
@@ -381,8 +382,8 @@ class CourseService {
     return apiClient.post(apiURL.createQuiz(), args);
   }
 
-  static listQuiz(): Promise<Quiz[]> {
-    return apiClient.get(apiURL.listQuiz());
+  static listQuiz(course_id?: string): Promise<Quiz[]> {
+    return apiClient.get(apiURL.listQuiz(course_id));
   }
 
   static assignQuiz(args: AssignQuizArgs): Promise<any> {

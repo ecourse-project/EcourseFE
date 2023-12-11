@@ -188,9 +188,9 @@ const CourseProgress = () => {
     }
   };
 
-  const getListQuiz = async () => {
+  const getListQuiz = async (id: string) => {
     try {
-      const listQuizDetail = await CourseService.listQuiz();
+      const listQuizDetail = await CourseService.listQuiz(id);
       setListQuiz(listQuizDetail);
       setCurrentDocReloadPage(course || ({} as Course), listQuizDetail);
     } catch (error) {
@@ -199,7 +199,6 @@ const CourseProgress = () => {
   };
 
   useEffect(() => {
-    getListQuiz();
     return () => {
       dispatch(progressAction.setSelectedDoc(null));
       dispatch(progressAction.setSelectedVideo(null));
@@ -211,7 +210,8 @@ const CourseProgress = () => {
   useEffect(() => {
     if (!course) {
       getCourseDetail(params.id);
-    } else if (!listQuiz) getListQuiz();
+      getListQuiz(params.id);
+    } else if (!listQuiz) getListQuiz(params.id);
     else setCurrentDocReloadPage(course, listQuiz || []);
   }, [params.doc, params.video, params.quiz]);
 
