@@ -200,6 +200,14 @@ export const DocCourseWrapper = styled.div`
     }
     transition: all 1s ease;
   }
+  .search-course,
+  .search-doc {
+    flex: none;
+    width: 100%;
+    .detail {
+      display: flex;
+    }
+  }
   .ant-card-head {
     background-color: #e8e8e8;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;

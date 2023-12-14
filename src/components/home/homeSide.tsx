@@ -1,5 +1,4 @@
-import { Card } from 'antd';
-import Search from 'antd/es/transfer/search';
+import { Card, Input } from 'antd';
 
 import { RightOutlined } from '@ant-design/icons';
 import styled from '@emotion/styled';
@@ -7,7 +6,9 @@ import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
 import CourseService from 'src/lib/api/course';
 import { Post } from 'src/lib/types/backend_modal';
-
+import { SearchProps } from 'antd/lib/input';
+import { useRouter } from 'next/router';
+const { Search } = Input;
 export interface IHomeSideProps {}
 
 const HomeSideWrapper = styled.div`
@@ -38,6 +39,9 @@ const topic = ['AR', 'Bài giảng', 'CHEM', 'CODE', 'Dạy học dự án', 'd�
 export default function HomeSide(props: IHomeSideProps) {
   const [listPost, setListPost] = useState<Post[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
+  console.log('🚀 ~ file: homeSide.tsx:43 ~ HomeSide ~ router:', router);
+
   const getAllPost = async () => {
     try {
       setLoading(true);
@@ -52,16 +56,25 @@ export default function HomeSide(props: IHomeSideProps) {
   useEffect(() => {
     getAllPost();
   }, []);
+
+  const onSearch: SearchProps['onSearch'] = (value, _e, info) => {
+    const url = `/search/${value}`;
+
+    // Use router.push with shallow option to update URL without reloading the page
+    router.push(url, undefined, { shallow: true });
+    console.log(info?.source, value);
+  };
+
   return (
     <HomeSideWrapper>
-      <div className="side-item translate">
+      {/* <div className="side-item translate">
         <Card title="Translate" style={{ width: 300 }}>
           Translate Section
         </Card>
-      </div>
+      </div> */}
       <div className="side-item search-bar">
         <Card title="Search" style={{ width: 300 }}>
-          <Search placeholder="Tìm kiếm khoá học" />
+          <Search placeholder="Nhập để tìm" onSearch={onSearch} enterButton allowClear />
         </Card>
       </div>
       {/* <div className="side-item fb-page">

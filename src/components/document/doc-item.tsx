@@ -27,6 +27,8 @@ import { ItemDocCourseWrapper } from './style';
 interface ChildProps {
   document: Document; // try not to use any.
   isMyLearn?: boolean;
+  className?: string;
+  isSearch?: boolean;
 }
 enum BtnString {
   AVAILABLE = 'THÊM',
@@ -42,13 +44,11 @@ enum Color {
 }
 
 const DocItem: React.FC<ChildProps> = memo((props) => {
-  const { document, isMyLearn } = props;
+  const { document, isMyLearn, className, isSearch } = props;
   const [btnString, setBtnString] = useState<string>(BtnString.AVAILABLE);
-  const cartData = useSelector((state: RootState) => state.document);
   const [loading, setLoading] = useState<boolean>(false);
   const [currentDoc, setCurrentDoc] = useState<Document>(document);
   // const [isFav, setIsFav] = useState<boolean>(document?.is_favorite || false);
-  const params: DocumentParams = useQueryParam();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -127,6 +127,7 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
           color: ${btnString === BtnString.AVAILABLE ? Color.AVAILABLE : Color.IN_CART};
         }
       `}
+      className={className}
     >
       <div className="pop-up">
         <Popover
@@ -188,6 +189,7 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
             <div className="doc_info">
               <div className="title">{document.name}</div>
               {(document as any)?.author && <div className="author">Tác giả: {(document as any)?.author}</div>}
+              {isSearch && document.description}{' '}
               {/* <p className="download">
                 <VerticalAlignBottomOutlined />
                 Số lượt tải: {document.sold}
