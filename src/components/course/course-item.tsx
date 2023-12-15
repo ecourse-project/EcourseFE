@@ -25,11 +25,13 @@ import { ItemDocCourseWrapper } from '../document/style';
 interface ChildProps {
   course: Course;
   isMyLearn?: boolean;
+  className?: string;
+  isSearch?: boolean;
 }
 
 const CourseItem: React.FC<ChildProps> = (props) => {
   // eslint-disable-next-line prefer-const
-  const { course, isMyLearn } = props;
+  const { course, isMyLearn, className, isSearch } = props;
   const [btnString, setBtnString] = useState<string>(BtnString.AVAILABLE);
   const [loading, setLoading] = useState<boolean>(false);
   const [currentCourse, setCurrentCourse] = useState<Course>(course);
@@ -143,6 +145,7 @@ const CourseItem: React.FC<ChildProps> = (props) => {
           color: ${btnString === BtnString.AVAILABLE ? Color.AVAILABLE : Color.IN_CART};
         }
       `}
+      className={className}
     >
       <Popover
         placement="right"
@@ -185,7 +188,7 @@ const CourseItem: React.FC<ChildProps> = (props) => {
         }
         trigger="hover"
       >
-        <Link href={`${params.isClass ? RoutePaths.CLASS : RoutePaths.COURSE}/${currentCourse.id}`}>
+        <Link href={`${params.isClass ? RoutePaths.CLASS : RoutePaths.COURSE}/${currentCourse.id}`} className="detail">
           <div className="doc--image">
             <img
               className="doc-img"
@@ -206,6 +209,7 @@ const CourseItem: React.FC<ChildProps> = (props) => {
               <h4 className="title">{currentCourse.name}</h4>
             </div>
             {(currentCourse as any)?.author && <div className="author">Tác giả: {(currentCourse as any)?.author}</div>}
+            {isSearch && currentCourse.description}{' '}
             {/* <p className="download">
               <VerticalAlignBottomOutlined />
               Số lượt tải: {currentCourse.sold}

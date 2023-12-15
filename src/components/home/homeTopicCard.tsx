@@ -9,13 +9,14 @@ import { getFormatDate } from 'src/lib/utils/utils';
 export interface IHomeTopicCardProps {
   post: Post;
   isSideBar?: boolean;
+  isSearch?: boolean;
 }
 const HomeTopicCardWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   min-height: 100%;
-  max-width: 210px;
+  max-width: ${(props: { isSearch: boolean }) => (props.isSearch ? '' : '210px')};
   min-width: 200px;
   min-height: 300px;
   p {
@@ -29,7 +30,8 @@ const HomeTopicCardWrapper = styled.div`
   }
   .post-name {
     font-weight: 700;
-    min-height: 170px;
+    min-height: ${(props: { isSearch: boolean }) => (props.isSearch ? '' : '')};
+    word-break: break-all;
   }
   .post-sumary {
     font-style: italic;
@@ -56,18 +58,24 @@ const HomeTopicCardWrapper = styled.div`
     margin-bottom: 0;
     text-align: right;
   }
-  img {
-    width: 200px;
-    height: 130px;
-    aspect-ratio: auto 240/135;
+  .postItem {
+    .post-detail {
+      display: ${(props: { isSearch: boolean }) => (props.isSearch ? 'flex' : 'grid')};
+    }
+    width: 100%;
+    img {
+      width: 200px;
+      height: 130px;
+      aspect-ratio: auto 240/135;
+    }
   }
 `;
 export default function HomeTopicCard(props: IHomeTopicCardProps) {
-  const { post, isSideBar } = props;
+  const { post, isSideBar, isSearch } = props;
   return (
-    <HomeTopicCardWrapper>
+    <HomeTopicCardWrapper isSearch={!!isSearch}>
       <div className="postItem">
-        <Link href={`${RoutePaths.POST}/${post.id}`}>
+        <Link href={`${RoutePaths.POST}/${post.id}`} className="post-detail">
           <Image src={post?.thumbnail?.image_path} preview={false} />
           <div className="post-content">
             <p className="post-name">{post?.name}</p>
