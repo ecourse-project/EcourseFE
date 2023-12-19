@@ -207,9 +207,10 @@ const CourseItem: React.FC<ChildProps> = (props) => {
           <div className="doc_info">
             <div>
               <h4 className="title">{currentCourse.name}</h4>
+              {isSearch && <p>Cập nhật: {formatDate(currentCourse?.modified)}</p>}
             </div>
             {(currentCourse as any)?.author && <div className="author">Tác giả: {(currentCourse as any)?.author}</div>}
-            {isSearch && currentCourse.description}{' '}
+            {isSearch && currentCourse.description}
             {/* <p className="download">
               <VerticalAlignBottomOutlined />
               Số lượt tải: {currentCourse.sold}
