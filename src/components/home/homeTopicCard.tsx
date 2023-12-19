@@ -69,6 +69,9 @@ const HomeTopicCardWrapper = styled.div`
       aspect-ratio: auto 240/135;
     }
   }
+  .post-content {
+    width: ${(props: { isSearch: boolean }) => (props.isSearch ? '100%' : '')};
+  }
 `;
 export default function HomeTopicCard(props: IHomeTopicCardProps) {
   const { post, isSideBar, isSearch } = props;

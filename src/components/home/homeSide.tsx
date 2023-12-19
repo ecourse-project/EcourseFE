@@ -39,7 +39,9 @@ const topic = ['AR', 'Bài giảng', 'CHEM', 'CODE', 'Dạy học dự án', 'd�
 export default function HomeSide(props: IHomeSideProps) {
   const [listPost, setListPost] = useState<Post[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+
   const router = useRouter();
+  const { search: searchTerm } = router.query;
   console.log('🚀 ~ file: homeSide.tsx:43 ~ HomeSide ~ router:', router);
 
   const getAllPost = async () => {
@@ -57,12 +59,11 @@ export default function HomeSide(props: IHomeSideProps) {
     getAllPost();
   }, []);
 
-  const onSearch: SearchProps['onSearch'] = (value, _e, info) => {
+  const onSearch: SearchProps['onSearch'] = (value) => {
     const url = `/search/${value}`;
 
     // Use router.push with shallow option to update URL without reloading the page
     router.push(url, undefined, { shallow: true });
-    console.log(info?.source, value);
   };
 
   return (
@@ -74,7 +75,7 @@ export default function HomeSide(props: IHomeSideProps) {
       </div> */}
       <div className="side-item search-bar">
         <Card title="Search" style={{ width: 300 }}>
-          <Search placeholder="Nhập để tìm" onSearch={onSearch} enterButton allowClear />
+          <Search placeholder="Nhập để tìm" onSearch={onSearch} enterButton allowClear value={searchTerm} />
         </Card>
       </div>
       {/* <div className="side-item fb-page">
@@ -105,7 +106,7 @@ export default function HomeSide(props: IHomeSideProps) {
         <Card title="Chuyên mục" style={{ width: 300 }}>
           {topic.map((v) => {
             return (
-              <div className="topic-item" key={v}>
+              <div className="topic-item" key={v} onClick={() => onSearch(v)}>
                 <RightOutlined />
                 {v.toLocaleUpperCase()}
               </div>
