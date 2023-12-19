@@ -3,11 +3,11 @@ import { Card, Input } from 'antd';
 import { RightOutlined } from '@ant-design/icons';
 import styled from '@emotion/styled';
 
-import { useEffect, useState } from 'react';
-import CourseService from 'src/lib/api/course';
-import { Post } from 'src/lib/types/backend_modal';
 import { SearchProps } from 'antd/lib/input';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import CourseService from 'src/lib/api/course';
+import { Home } from 'src/lib/types/backend_modal';
 const { Search } = Input;
 export interface IHomeSideProps {}
 
@@ -35,77 +35,44 @@ const HomeSideWrapper = styled.div`
     }
   }
 `;
-const topic = ['AR', 'Bài giảng', 'CHEM', 'CODE', 'Dạy học dự án', 'dạy học system', 'dạy học stem'];
 export default function HomeSide(props: IHomeSideProps) {
-  const [listPost, setListPost] = useState<Post[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
-  console.log('🚀 ~ file: homeSide.tsx:43 ~ HomeSide ~ router:', router);
-
-  const getAllPost = async () => {
+  const { search: searchTerm } = router.query;
+  const [homeData, setHomeData] = useState<Home>({} as Home);
+  const fetchHomeData = async () => {
     try {
-      setLoading(true);
-      const res = await CourseService.listPosts(100, 1, '', '');
-      setListPost(res.results);
+      const homes: Home = await CourseService.getHome();
+      setHomeData(homes);
     } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
+      console.log('error', error);
     }
   };
+
   useEffect(() => {
-    getAllPost();
+    fetchHomeData();
   }, []);
 
-  const onSearch: SearchProps['onSearch'] = (value, _e, info) => {
+  const onSearch: SearchProps['onSearch'] = (value) => {
     const url = `/search/${value}`;
 
     // Use router.push with shallow option to update URL without reloading the page
     router.push(url, undefined, { shallow: true });
-    console.log(info?.source, value);
   };
 
   return (
     <HomeSideWrapper>
-      {/* <div className="side-item translate">
-        <Card title="Translate" style={{ width: 300 }}>
-          Translate Section
-        </Card>
-      </div> */}
       <div className="side-item search-bar">
         <Card title="Search" style={{ width: 300 }}>
-          <Search placeholder="Nhập để tìm" onSearch={onSearch} enterButton allowClear />
+          <Search placeholder="Nhập để tìm" onSearch={onSearch} enterButton allowClear value={searchTerm} />
         </Card>
       </div>
-      {/* <div className="side-item fb-page">
-        <Card title="Facebook Page" style={{ width: 300 }}>
-          <Link href={'https://www.facebook.com/chemistryresources.vn'} target="_blank">
-            <FacebookOutlined />
-            TeachingResources
-          </Link>
-        </Card>
-      </div> */}
-      <div className="side-item popular-content">
-        {/* <Card title="Bài viết phổ biến" style={{ width: 300 }}>
-          {listPost
-            .concat(listPost)
-            .concat(listPost)
-            .concat(listPost)
-            .concat(listPost)
-            .concat(listPost)
-            .concat(listPost)
-            .concat(listPost)
-            .concat(listPost)
-            .map((v) => (
-              <HomeTopicCard key={v.id} post={v} isSideBar />
-            ))}
-        </Card> */}
-      </div>
+
+      <div className="side-item popular-content"></div>
       <div className="side-item topic">
         <Card title="Chuyên mục" style={{ width: 300 }}>
-          {topic.map((v) => {
+          {homeData?.category?.map((v) => {
             return (
-              <div className="topic-item" key={v}>
+              <div className="topic-item" key={v} onClick={() => onSearch(v)}>
                 <RightOutlined />
                 {v.toLocaleUpperCase()}
               </div>
