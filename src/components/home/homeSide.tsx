@@ -63,7 +63,7 @@ export default function HomeSide(props: IHomeSideProps) {
   return (
     <HomeSideWrapper>
       <div className="side-item search-bar">
-        <Card title="Search" style={{ width: 300 }}>
+        <Card title="Tìm kiếm" style={{ width: 300 }}>
           <Search placeholder="Nhập để tìm" onSearch={onSearch} enterButton allowClear value={searchTerm} />
         </Card>
       </div>
