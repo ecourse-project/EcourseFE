@@ -102,7 +102,7 @@ const SearchPageUI = () => {
                     return (
                       <DocCourseWrapper>
                         <Col className="search-doc">
-                          <DocItem document={item as any} />
+                          <DocItem document={item as any} isSearch />
                         </Col>
                       </DocCourseWrapper>
                     );
