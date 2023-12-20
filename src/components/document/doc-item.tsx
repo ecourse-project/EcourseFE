@@ -229,7 +229,7 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
 
           {document.sale_status === SaleStatusEnum.BOUGHT && <IconChecked />}
         </div>
-        {!isMyLearn && (
+        {!isMyLearn && !isSearch && (
           <AppButton
             className="card-btn"
             btnTextColor={'black'}
