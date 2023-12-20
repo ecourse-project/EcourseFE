@@ -36,7 +36,6 @@ const HomeSideWrapper = styled.div`
   }
 `;
 export default function HomeSide(props: IHomeSideProps) {
-
   const router = useRouter();
   const { search: searchTerm } = router.query;
   const [homeData, setHomeData] = useState<Home>({} as Home);

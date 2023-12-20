@@ -245,7 +245,7 @@ const CourseItem: React.FC<ChildProps> = (props) => {
           {currentCourse.sale_status === SaleStatusEnum.BOUGHT && <IconChecked />}
         </div>
 
-        {!isMyLearn && (
+        {!isMyLearn && !isSearch && (
           <AppButton
             className="card-btn class-btn"
             btnTextColor={'black'}
