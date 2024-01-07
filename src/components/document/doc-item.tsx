@@ -170,7 +170,7 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
           }
           trigger="hover"
         >
-          <Link href={`${RoutePaths.DOCUMENT}/${document.id}`}>
+          <Link href={`${RoutePaths.DOCUMENT}/${document.id}`} className="detail">
             <div className="doc--image">
               <img
                 className="doc-img"
@@ -188,8 +188,9 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
 
             <div className="doc_info">
               <div className="title">{document.name}</div>
+              {isSearch && <p>Cập nhật: {formatDate(document?.modified)}</p>}
               {(document as any)?.author && <div className="author">Tác giả: {(document as any)?.author}</div>}
-              {isSearch && document.description}{' '}
+              {isSearch && document.description}
               {/* <p className="download">
                 <VerticalAlignBottomOutlined />
                 Số lượt tải: {document.sold}
@@ -228,7 +229,7 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
 
           {document.sale_status === SaleStatusEnum.BOUGHT && <IconChecked />}
         </div>
-        {!isMyLearn && (
+        {!isMyLearn && !isSearch && (
           <AppButton
             className="card-btn"
             btnTextColor={'black'}
