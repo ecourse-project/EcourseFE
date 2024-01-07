@@ -6,6 +6,9 @@ import { SkeletonTheme } from 'react-loading-skeleton';
 import { Provider } from 'react-redux';
 import { store } from 'src/lib/config/reduxStore';
 import ContextProvider from 'src/lib/context';
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+const queryClient = new QueryClient();
 
 const CreativeTeaching = ({ Component, pageProps }) => (
   <>
@@ -16,7 +19,9 @@ const CreativeTeaching = ({ Component, pageProps }) => (
     <Provider store={store}>
       <ContextProvider>
         <SkeletonTheme baseColor="#777777">
-          <Component {...pageProps} />
+          <QueryClientProvider client={queryClient}>
+            <Component {...pageProps} />
+          </QueryClientProvider>
         </SkeletonTheme>
       </ContextProvider>
     </Provider>

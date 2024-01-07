@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import CourseService from 'src/lib/api/course';
 import { Home } from 'src/lib/types/backend_modal';
+import useCourseHook from 'src/lib/api/course/query-hooks/useCourseHook';
 const { Search } = Input;
 export interface IHomeSideProps {}
 
@@ -38,20 +39,7 @@ const HomeSideWrapper = styled.div`
 export default function HomeSide(props: IHomeSideProps) {
   const router = useRouter();
   const { search: searchTerm } = router.query;
-  const [homeData, setHomeData] = useState<Home>({} as Home);
-
-  const fetchHomeData = async () => {
-    try {
-      const homes: Home = await CourseService.getHome();
-      setHomeData(homes);
-    } catch (error) {
-      console.log('error', error);
-    }
-  };
-
-  useEffect(() => {
-    fetchHomeData();
-  }, []);
+  const { homeData } = useCourseHook();
 
   const onSearch: SearchProps['onSearch'] = (value) => {
     const url = `/search/${value}`;

@@ -2,11 +2,10 @@
 
 import { Col, Row } from 'antd';
 import { StaticImageData } from 'next/image';
-import { useEffect, useState } from 'react';
 import HomeData from 'src/components/home';
 import HomeSide from 'src/components/home/homeSide';
-import CourseService from 'src/lib/api/course';
-import { Course, Document, Home, Homepage } from 'src/lib/types/backend_modal';
+import useCourseHook from 'src/lib/api/course/query-hooks/useCourseHook';
+import { Course, Document } from 'src/lib/types/backend_modal';
 
 interface InitialState {
   listDoc: Document[];
@@ -31,19 +30,7 @@ export interface ICategory {
 }
 
 const HomeUI = () => {
-  const [homeData, setHomeData] = useState<Home>({} as Home);
-  const fetchHomeData = async () => {
-    try {
-      const homes: Home = await CourseService.getHome();
-      setHomeData(homes);
-    } catch (error) {
-      console.log('error', error);
-    }
-  };
-
-  useEffect(() => {
-    fetchHomeData();
-  }, []);
+  const { homeData } = useCourseHook();
   return (
     <div className="page-container">
       <Row gutter={16} style={{ maxWidth: '100%' }}>
