@@ -24,3 +24,4 @@ export const WEB_TITLE = 'Creativeteaching';
 export const PUNCTUATION_MARK = [',', ';', ':', '.', '?', '!', '...', ':', '|', "'"];
 
 export const DEFAULT_STALE_TIME = 5 * 60 * 1000;
+export const ONE_DAY_CACHE_TIME = 24 * 60 * 60 * 1000;

@@ -1,6 +1,5 @@
 import React from 'react';
 import Loadable from 'react-loadable';
-import { QueryClient, QueryClientProvider } from 'react-query';
 import Layout from 'src/components/common/Layout';
 import { LoadingPage } from 'src/components/loading/loadingBase';
 import PublicProvider from 'src/components/providers/PublicProvider';
@@ -10,17 +9,13 @@ const HomeLoadable = Loadable({
   loading: () => <LoadingPage isLoading={true} />,
 });
 
-const queryClient = new QueryClient();
-
 const Home: React.FC = () => {
   return (
     <React.Fragment>
       <PublicProvider>
         <Layout>
           {/* <ErrorBoundary> */}
-          <QueryClientProvider client={queryClient}>
-            <HomeLoadable />
-          </QueryClientProvider>
+          <HomeLoadable />
           {/* </ErrorBoundary> */}
         </Layout>
       </PublicProvider>
