@@ -22,3 +22,5 @@ export const WEB_DESCRIPTION = '21st Century skills';
 export const WEB_TITLE = 'Creativeteaching';
 
 export const PUNCTUATION_MARK = [',', ';', ':', '.', '?', '!', '...', ':', '|', "'"];
+
+export const DEFAULT_STALE_TIME = 5 * 60 * 1000;
