@@ -9,7 +9,7 @@ import CustomPagination from 'src/components/order/pagination';
 import CourseService from 'src/lib/api/course';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { Pagination, PaginationParams, Post } from 'src/lib/types/backend_modal';
-import { DEFAULT_PAGE_SIZE } from 'src/lib/utils/constant';
+import { DEFAULT_POST_PAGE_SIZE } from 'src/lib/utils/constant';
 import { UpperCaseFirstLetter } from 'src/lib/utils/format';
 import RoutePaths from 'src/lib/utils/routes';
 
@@ -27,7 +27,7 @@ const Post: React.FC = () => {
 
   const [pagination, setPagination] = useState<PaginationParams>({
     page: params?.page || 1,
-    limit: DEFAULT_PAGE_SIZE * 2,
+    limit: DEFAULT_POST_PAGE_SIZE,
   });
   const getListPost = async (pagination: PaginationParams) => {
     try {
