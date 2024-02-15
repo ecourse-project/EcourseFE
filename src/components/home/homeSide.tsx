@@ -3,12 +3,11 @@ import { Card, Input } from 'antd';
 import { RightOutlined } from '@ant-design/icons';
 import styled from '@emotion/styled';
 
+import Meta from 'antd/es/card/Meta';
 import { SearchProps } from 'antd/lib/input';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import CourseService from 'src/lib/api/course';
-import { Home } from 'src/lib/types/backend_modal';
 import useCourseHook from 'src/lib/api/course/query-hooks/useCourseHook';
+import RoutePaths from 'src/lib/utils/routes';
 const { Search } = Input;
 export interface IHomeSideProps {}
 
@@ -64,6 +63,27 @@ export default function HomeSide(props: IHomeSideProps) {
               <div className="topic-item" key={v} onClick={() => onSearch(v)}>
                 <RightOutlined />
                 {v.toLocaleUpperCase()}
+              </div>
+            );
+          })}
+        </Card>
+        <Card title="Bài viết mới" style={{ width: 300 }}>
+          {homeData?.new_post?.map((v) => {
+            return (
+              <div
+                className="topic-item"
+                key={v.id}
+                onClick={() => {
+                  router.push(`${RoutePaths.POST}/${v.id}`);
+                }}
+              >
+                <Card
+                  hoverable
+                  style={{ width: '100%' }}
+                  cover={<img src={v?.thumbnail?.image_path || ''} alt={'img'} width={200} height={130} />}
+                >
+                  <Meta title={v?.name} />
+                </Card>
               </div>
             );
           })}

@@ -564,6 +564,7 @@ export interface Homepage {
 export interface Home {
   homepage: Homepage[];
   category: string[];
+  new_post: SearchItem[];
 }
 
 export interface SearchItem {
@@ -585,6 +586,7 @@ export interface Post {
   thumbnail: OImageUpload;
   content?: string;
   content_summary: string;
+  type?: NavTypeEnum;
 }
 
 // ===========================================Configuration===========================================
