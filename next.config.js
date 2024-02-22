@@ -10,7 +10,7 @@ module.exports = {
       },
       {
         protocol: 'http',
-        hostname: 'creativeteaching.net',
+        hostname: 'teachingchem.edu.vn',
         pathname: '/media/**',
       },
     ],
