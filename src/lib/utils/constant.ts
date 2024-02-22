@@ -11,9 +11,9 @@ export const DEFAULT_POST_PAGE_SIZE = 12;
 
 export const METAMASK_DOWNNLOAD_LINK = 'https://metamask.io/download';
 
-export const WEB_URL = 'http://creativeteaching.net/';
+export const WEB_URL = 'http://teachingchem.edu.vn/';
 export const WEB_DESCRIPTION = '21st Century skills';
-export const WEB_TITLE = 'Creativeteaching';
+export const WEB_TITLE = 'Teaching Chemistry';
 
 export const PUNCTUATION_MARK = [',', ';', ':', '.', '?', '!', '...', ':', '|', "'"];
 

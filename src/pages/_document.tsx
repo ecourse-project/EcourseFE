@@ -19,7 +19,7 @@ class MyDocument extends Document {
           <meta name="google" content="notranslate" />
           <meta name="mobile-web-app-capable" content="yes" />
           <meta name="apple-mobile-web-app-capable" content="yes" />
-          <meta name="keywords" content="creative,creativeteaching,teaching,chemistry, ecourse" />
+          <meta name="keywords" content="creative, teachingchem,creativeteaching,teaching,chemistry, ecourse" />
           <meta property="og:locale" content="en_US" />
           <meta property="og:site_name" content={WEB_TITLE} />
           <meta property="og:title" content={WEB_TITLE} />
