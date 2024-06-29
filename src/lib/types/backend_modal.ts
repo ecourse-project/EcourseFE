@@ -571,9 +571,12 @@ export interface SearchItem {
   id: string;
   author?: string;
   name: string;
+  description?: string;
+  created?: string;
+  modified?: string;
   thumbnail?: OImageUpload;
   content_summary?: string;
-  type: NavTypeEnum;
+  type?: NavTypeEnum;
 }
 
 // ===========================================Post===========================================
@@ -586,7 +589,6 @@ export interface Post {
   thumbnail: OImageUpload;
   content?: string;
   content_summary: string;
-  type?: NavTypeEnum;
 }
 
 // ===========================================Configuration===========================================
@@ -594,4 +596,15 @@ export interface PaymentInfo {
   method: string;
   payment_info: string;
   content: string;
+}
+
+// ===========================================Configuration===========================================
+export interface ChatGPTMessage {
+  id: string;
+  message: string;
+  content: string;
+  created_at: string;
+  success: boolean;
+  error: string;
+  owner: string;
 }

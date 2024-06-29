@@ -16,7 +16,7 @@ module.exports = {
     ],
   },
   // next.config.js
-
+  transpilePackages: ['@ant-design/pro-chat'],
   async headers() {
     return [
       {

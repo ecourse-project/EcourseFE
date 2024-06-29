@@ -54,5 +54,5 @@
     "@typescript-eslint/no-unused-vars": ["warn"],
     "@typescript-eslint/no-explicit-any": ["off"]
   },
-  "plugins": ["@typescript-eslint", "react", "react-hooks", "prettier"]
+  "plugins": ["@typescript-eslint", "react", "react-hooks", "prettier","unused-imports" ]
 }

@@ -4,6 +4,7 @@ import { apiClient } from 'src/lib/config/apiClient';
 import {
   AssignQuizArgs,
   CalculatePriceArgs,
+  ChatGPTMessage,
   Course,
   CourseComment,
   CreateOrderArg,
@@ -129,7 +130,6 @@ export const apiURL = {
   deleteQuestion: () => `api/quiz/question/delete/`,
   createQuiz: () => `api/quiz/`,
   listQuiz: (course_id) => `api/quiz/?course_id=${course_id}`,
-
   deleteQuiz: (quiz_id) => `api/quiz/delete/?quiz_id=${quiz_id}`,
   assignQuiz: () => `api/quiz/assign/`,
   getQuizResult: () => `api/quiz/result/`,
@@ -173,6 +173,10 @@ export const apiURL = {
   getPaymentInfo: () => `api/configuration/payment-info/`,
 
   uploadImage: () => 'api/upload/upload-images/',
+
+  chat: () => 'api/chatgpt/chat/?test=True',
+
+  getChatHistory: () => 'api/chatgpt/history/',
 };
 
 class CourseService {
@@ -230,7 +234,7 @@ class CourseService {
   }
 
   static searchItems(search: string): Promise<SearchItem[]> {
-    return apiClient.get(apiURL.searchItems(search));
+    return apiClient.get(apiURL.searchItems(search || ''));
   }
 
   static getMostDownloadDocs(): Promise<Document[]> {
@@ -383,7 +387,7 @@ class CourseService {
   }
 
   static listQuiz(course_id?: string): Promise<Quiz[]> {
-    return apiClient.get(apiURL.listQuiz(course_id));
+    return apiClient.get(apiURL.listQuiz(course_id || ''));
   }
 
   static assignQuiz(args: AssignQuizArgs): Promise<any> {
@@ -468,5 +472,14 @@ class CourseService {
   static uploadImage(data: any): Promise<any> {
     return apiClient.post(apiURL.uploadImage(), data);
   }
+
+  static chat(message: string): Promise<ChatGPTMessage> {
+    return apiClient.post(apiURL.chat(), { message: message });
+  }
+
+  static getChatHistory(): Promise<Array<ChatGPTMessage>> {
+    return apiClient.get(apiURL.getChatHistory());
+  }
 }
+
 export default CourseService;
