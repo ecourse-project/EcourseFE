@@ -4,6 +4,7 @@ import { apiClient } from 'src/lib/config/apiClient';
 import {
   AssignQuizArgs,
   CalculatePriceArgs,
+  ChatGPTMessage,
   Course,
   CourseComment,
   CreateOrderArg,
@@ -52,6 +53,7 @@ const parseParamsToUrL = (url: string, params: string[], paramsName: string) => 
   }
   return newURL;
 };
+
 
 export const apiURL = {
   login: () => 'api/users-auth/token/',
@@ -128,14 +130,12 @@ export const apiURL = {
   listQuestion: () => `api/quiz/question/`,
   deleteQuestion: () => `api/quiz/question/delete/`,
   createQuiz: () => `api/quiz/`,
-  listQuiz: (course_id) => `api/quiz/?course_id=${course_id}`,
-
+  listQuiz: (course_id) =>  `api/quiz/?course_id=${course_id}`,
   deleteQuiz: (quiz_id) => `api/quiz/delete/?quiz_id=${quiz_id}`,
-  assignQuiz: () => `api/quiz/assign/`,
+  assignQuiz: () =>   `api/quiz/assign/`,
   getQuizResult: () => `api/quiz/result/`,
   downloadCerti: (course_id) => `api/quiz/certi/?course_id=${course_id}`,
-  quizStartTime: (course_id, lesson_id, quiz_id, is_start) =>
-    `api/quiz/start-time/?course_id=${course_id}&lesson_id=${lesson_id}&quiz_id=${quiz_id}&is_start=${is_start}`,
+  quizStartTime: (course_id, lesson_id, quiz_id, is_start) => `api/quiz/start-time/?course_id=${course_id}&lesson_id=${lesson_id}&quiz_id=${quiz_id}&is_start=${is_start}`,
 
   listHeaders: () => `api/settings/headers/`,
   getHome: () => `api/settings/home/`,
@@ -168,11 +168,13 @@ export const apiURL = {
     }
     return url;
   },
-  listPostTopics: () => `api/posts/topics/`,
+  listPostTopics: () =>  `api/posts/topics/`,
 
   getPaymentInfo: () => `api/configuration/payment-info/`,
 
   uploadImage: () => 'api/upload/upload-images/',
+
+  chat: () => 'api/chatgpt/chat/?test=True'
 };
 
 class CourseService {
@@ -186,9 +188,9 @@ class CourseService {
 
   static updateInfo(phone?: string, full_name?: string, avatar?: string): Promise<User> {
     return apiClient.patch(apiURL.me(), {
-      phone: phone,
-      full_name: full_name,
-      avatar: avatar,
+        phone: phone,
+        full_name: full_name,
+        avatar: avatar,
     });
   }
 
@@ -230,7 +232,7 @@ class CourseService {
   }
 
   static searchItems(search: string): Promise<SearchItem[]> {
-    return apiClient.get(apiURL.searchItems(search));
+    return apiClient.get(apiURL.searchItems(search || ''));
   }
 
   static getMostDownloadDocs(): Promise<Document[]> {
@@ -289,15 +291,9 @@ class CourseService {
     return apiClient.post(apiURL.calculatePrice(), params);
   }
 
-  static getListCourses(): Promise<
-    {
-      id: string;
-      author?: string;
-      course_of_class: boolean;
-      name: string;
-      lessons?: Array<{ id: string; name: string }>;
-    }[]
-  > {
+  static getListCourses(): Promise<{
+    id: string, author?: string, course_of_class: boolean, name: string, lessons?: Array<{id: string, name: string}>
+  }[]> {
     return apiClient.get(apiURL.getListCourses());
   }
 
@@ -383,7 +379,7 @@ class CourseService {
   }
 
   static listQuiz(course_id?: string): Promise<Quiz[]> {
-    return apiClient.get(apiURL.listQuiz(course_id));
+    return apiClient.get(apiURL.listQuiz(course_id || ''));
   }
 
   static assignQuiz(args: AssignQuizArgs): Promise<any> {
@@ -402,12 +398,7 @@ class CourseService {
     return apiClient.get(apiURL.downloadCerti(course_id));
   }
 
-  static quizStartTime(
-    course_id: string,
-    lesson_id: string,
-    quiz_id: string,
-    is_start: boolean,
-  ): Promise<{ start_time?: string }> {
+  static quizStartTime(course_id: string, lesson_id: string, quiz_id: string, is_start: boolean): Promise<{start_time?: string}> {
     return apiClient.get(apiURL.quizStartTime(course_id, lesson_id, quiz_id, is_start));
   }
 
@@ -419,7 +410,7 @@ class CourseService {
     return apiClient.get(apiURL.getHome());
   }
 
-  static initData(): Promise<{ success: true }> {
+  static initData(): Promise<{"success": true}> {
     return apiClient.get(apiURL.initData());
   }
 
@@ -439,13 +430,7 @@ class CourseService {
     return apiClient.post(apiURL.requestJoinClass(), { class_id: class_id });
   }
 
-  static listPosts(
-    limit: number,
-    page: number,
-    topic?: string,
-    header?: string,
-    post_id?: string[],
-  ): Promise<Pagination<Post>> {
+  static listPosts(limit: number, page: number, topic?: string, header?: string, post_id?: string[]): Promise<Pagination<Post>> {
     return apiClient.get(apiURL.listPosts(limit, page, topic, header, post_id));
   }
 
@@ -468,5 +453,10 @@ class CourseService {
   static uploadImage(data: any): Promise<any> {
     return apiClient.post(apiURL.uploadImage(), data);
   }
+
+  static chat(message: string): Promise<ChatGPTMessage> {
+    return apiClient.post(apiURL.chat(), { message: message });
+  }
 }
+
 export default CourseService;
