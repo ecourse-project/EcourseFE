@@ -34,6 +34,8 @@ const Nav: React.FC = React.memo(() => {
       ? `${RoutePaths.CLASS}?topic=${topicValue}&header=${navHeader}&page=1&isClass=true`
       : type === NavTypeEnum.POST
       ? `${RoutePaths.POST}?topic=${topicValue}&header=${navHeader}&page=1`
+      : type === NavTypeEnum.CHATGPT
+      ? 'gpt-search'
       : '';
   };
   const generateItem = (navItem: NavType): MenuProps['items'] => {
