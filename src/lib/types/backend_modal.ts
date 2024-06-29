@@ -536,6 +536,7 @@ export enum NavTypeEnum {
   COURSE = 'COURSE',
   CLASS = 'CLASS',
   POST = 'POST',
+  CHATGPT = 'CHATGPT',
 }
 
 export interface Topic {
