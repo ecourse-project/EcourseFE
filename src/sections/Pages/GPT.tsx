@@ -8,6 +8,8 @@ import { ChatGPTMessage } from 'src/lib/types/backend_modal';
 // import { ProChat } from '@ant-design/pro-chat';
 import { useTheme } from 'antd-style';
 import { ProChat } from 'src/components/prochat/pro-chat';
+import useCourseHook from 'src/lib/api/course/query-hooks/useCourseHook';
+import Loading from 'src/components/prochat/pro-chat/es/ChatItem/components/Loading';
 
 const { Search } = Input;
 
@@ -20,8 +22,7 @@ const GPTPageUI = () => {
     try {
       setLoading(true);
       const searchResult: ChatGPTMessage = await CourseService.chat(searchTerm);
-      console.log('🚀 ~ getSearchData ~ searchResult:', searchResult);
-      return searchResult.message;
+      return searchResult.content;
     } catch (error) {
       console.log('error', error);
     } finally {
@@ -32,37 +33,37 @@ const GPTPageUI = () => {
     const res = await getSearchData(text);
     return new Promise<string>((resolve) => {
       setTimeout(() => {
-        resolve(
-          "What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." as string,
-        );
+        resolve(res || '');
       }, 2000);
     });
   };
-  const handleSearch = debounce((value) => {
-    getSearchData(value);
-  }, 500);
+
+  const { chatHistory, chatLoading } = useCourseHook();
 
   return (
     <div className="side-item search-bar">
-      {/* <Card title="Tìm kiếm" style={{ width: 300 }}>
-        <Search
-          placeholder="Nhập câu hỏi của bạn!!!"
-          onSearch={handleSearch}
-          onChange={(e) => setSearchValue(e.target.value)}
-          allowClear
-          value={searchValue}
-        />
-      </Card> */}
-
-      <div style={{ background: theme.colorBgLayout }}>
-        <ProChat
-          request={async (messages) => {
-            const text = await delay(messages?.[0]?.content as string);
-            return new Response(text);
-          }}
-          style={{ height: '300px' }}
-        />
-      </div>
+      {chatLoading ? (
+        <Loading />
+      ) : (
+        <div style={{ background: theme.colorBgLayout }}>
+          <ProChat
+            request={async (messages) => {
+              const text = await delay(messages?.[messages?.length - 1]?.content as string);
+              return new Response(text);
+            }}
+            style={{ height: '100vh' }}
+            initialChats={
+              chatHistory?.map((v) => ({
+                ...v,
+                createAt: v.created_at,
+                updateAt: v.created_at,
+                role: v.owner === 'user' ? 'user' : 'system',
+                error: undefined,
+              })) || []
+            }
+          />
+        </div>
+      )}
     </div>
   );
 };
