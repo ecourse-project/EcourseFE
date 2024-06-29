@@ -106,7 +106,7 @@ const SearchPageUI = () => {
                         </Col>
                       </DocCourseWrapper>
                     );
-                  else if ([NavTypeEnum.COURSE, NavTypeEnum.CLASS].includes(item.type))
+                  else if ([NavTypeEnum.COURSE, NavTypeEnum.CLASS].includes(item.type as NavTypeEnum))
                     return (
                       <DocCourseWrapper>
                         <Col className="search-course">

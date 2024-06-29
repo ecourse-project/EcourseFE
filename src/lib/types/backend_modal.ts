@@ -246,7 +246,7 @@ export interface Lesson {
   videos_completed?: string[];
   quiz_detail?: QuizResult[];
   list_quiz: Quiz[];
-  quiz_location?: Array<{id: string, order: string, location: QuizLocationEnum}>
+  quiz_location?: Array<{ id: string; order: string; location: QuizLocationEnum }>;
 }
 
 export interface Course {
@@ -284,9 +284,7 @@ export enum RequestStatus {
   AVAILABLE = 'available',
 }
 
-export interface Class {
-
-}
+export interface Class {}
 
 // ===========================================Comments===========================================
 export interface ReplyComment {
@@ -422,8 +420,8 @@ export interface MatchQuestion {
   order?: number;
   time_limit?: number;
   content: string;
-  first_column: Array<{id: string, content_type: ContentTypeEnum, content: string}>;
-  second_column: Array<{id: string, content_type: ContentTypeEnum, content: string}>;
+  first_column: Array<{ id: string; content_type: ContentTypeEnum; content: string }>;
+  second_column: Array<{ id: string; content_type: ContentTypeEnum; content: string }>;
   correct_answer?: Array<Array<string>>;
   question_type: QuestionTypeEnum;
 }
@@ -431,11 +429,11 @@ export interface MatchQuestion {
 export interface FillBlankQuestion {
   id?: string;
   title: string;
-  order?: number,
-  time_limit?: number,
+  order?: number;
+  time_limit?: number;
   content: string;
   full_content: string;
-  hidden_words?: Array<{id: number, word: string, hidden: boolean}>;
+  hidden_words?: Array<{ id: number; word: string; hidden: boolean }>;
   question_type: QuestionTypeEnum;
 }
 
@@ -445,9 +443,9 @@ export interface ChoicesQuestion {
   time_limit?: number;
   content: string;
   content_type?: ContentTypeEnum;
-  choices: Array<{choice?: string, choice_name: string, answer_type: ContentTypeEnum, answer: string}>
+  choices: Array<{ choice?: string; choice_name: string; answer_type: ContentTypeEnum; answer: string }>;
   question_type: QuestionTypeEnum;
-  correct_answer: {id: string, name: string};
+  correct_answer: { id: string; name: string };
 }
 
 export interface Question {
@@ -458,7 +456,6 @@ export interface Question {
   choices_question?: ChoicesQuestion;
   match_question?: MatchQuestion;
   fill_blank_question?: FillBlankQuestion;
-
 }
 
 export interface Quiz {
@@ -483,13 +480,13 @@ export interface QuizResultArgs {
 export interface AssignQuizArgs {
   course_id: string;
   quiz_location: Array<{
-    lesson_id: string,
+    lesson_id: string;
     quiz?: Array<{
-      id: string,
-      order: string,
-      location: QuizLocationEnum,
-    }>
-  }>
+      id: string;
+      order: string;
+      location: QuizLocationEnum;
+    }>;
+  }>;
 }
 
 export interface CreateQuizArgs {
@@ -504,7 +501,7 @@ export interface QuestionArgs {
 export interface ChoicesQuestionAnswer {
   correct: number;
   total: number;
-  result: Array<{question_id: string, user_answer: string, correct_answer?: string}>;
+  result: Array<{ question_id: string; user_answer: string; correct_answer?: string }>;
 }
 
 export interface MatchQuestionAnswer {
@@ -557,7 +554,6 @@ export interface HomepageDetail {
   course_id: string[];
   class_id: string[];
   post_id: string[];
-
 }
 
 export interface Homepage {
@@ -595,7 +591,6 @@ export interface Post {
   content_summary: string;
 }
 
-
 // ===========================================Configuration===========================================
 export interface PaymentInfo {
   method: string;
@@ -603,12 +598,13 @@ export interface PaymentInfo {
   content: string;
 }
 
-
 // ===========================================Configuration===========================================
 export interface ChatGPTMessage {
   id: string;
   message: string;
   content: string;
-  created: string;
+  created_at: string;
   success: boolean;
+  error: string;
+  owner: string;
 }

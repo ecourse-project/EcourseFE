@@ -7,7 +7,7 @@ import CourseService from 'src/lib/api/course';
 import { ChatGPTMessage } from 'src/lib/types/backend_modal';
 // import { ProChat } from '@ant-design/pro-chat';
 import { useTheme } from 'antd-style';
-import { ProChat } from 'src/components/prochat/pro-chat';
+import { ChatMessage, ProChat } from 'src/components/prochat/pro-chat';
 import useCourseHook from 'src/lib/api/course/query-hooks/useCourseHook';
 import Loading from 'src/components/prochat/pro-chat/es/ChatItem/components/Loading';
 
@@ -53,13 +53,13 @@ const GPTPageUI = () => {
             }}
             style={{ height: '100vh' }}
             initialChats={
-              chatHistory?.map((v) => ({
+              (chatHistory?.map((v) => ({
                 ...v,
                 createAt: v.created_at,
                 updateAt: v.created_at,
                 role: v.owner === 'user' ? 'user' : 'system',
                 error: undefined,
-              })) || []
+              })) || []) as unknown as ChatMessage[]
             }
           />
         </div>
