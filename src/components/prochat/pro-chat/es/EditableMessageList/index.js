@@ -71,7 +71,8 @@ export var EditableMessageList = /*#__PURE__*/memo(function (_ref) {
         }), /*#__PURE__*/_jsx(ActionIcon, {
           icon: Trash,
           onClick: function onClick() {
-            dispatch({
+            return;
+          dispatch({
               index: index,
               type: 'deleteMessage'
             });

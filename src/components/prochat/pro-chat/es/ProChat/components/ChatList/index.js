@@ -86,8 +86,8 @@ var List = /*#__PURE__*/memo(function (_ref) {
     historyCount: historyCount,
     loadingId: chatLoadingId,
     onActionsClick: onActionsClick,
-    onMessageChange: onMessageChange,
-    renderActions: renderActions
+    onMessageChange: onMessageChange
+    // renderActions: renderActions
     // need support custom Render
     ,
     renderMessages: renderMessages,
