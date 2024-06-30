@@ -45,11 +45,13 @@ export var chatAction = function chatAction(set, get) {
         }, _callee);
       }));
       function clearMessage() {
+        return;
         return _clearMessage.apply(this, arguments);
       }
       return clearMessage;
     }(),
     deleteMessage: function deleteMessage(id) {
+      return;
       get().dispatchMessage({
         id: id,
         type: 'deleteMessage'

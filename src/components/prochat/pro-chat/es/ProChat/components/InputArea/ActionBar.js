@@ -61,7 +61,7 @@ export var ActionBar = function ActionBar(_ref2) {
       className: cx(styles.extra, className),
       gap: 8
     }, flexConfig), {}, {
-      children: (_actionsRender = actionsRender === null || actionsRender === void 0 ? void 0 : actionsRender(defaultDoms)) !== null && _actionsRender !== void 0 ? _actionsRender : defaultDoms
+      children: (_actionsRender = actionsRender === null || actionsRender === void 0 ? void 0 : actionsRender(null)) !== null && _actionsRender !== void 0 ? _actionsRender : null
     }))
   });
 };
