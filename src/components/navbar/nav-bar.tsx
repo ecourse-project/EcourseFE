@@ -25,16 +25,20 @@ const Nav: React.FC = React.memo(() => {
   const router = useRouter();
   const myProfile = useSelector((state: RootState) => state.app.user);
 
+  const compareTextNotCase = (w1 = '', w2 = '') => {
+    return w1.toLowerCase() === w2.toLowerCase();
+  };
+
   const goToPage = (type, topicValue, navHeader) => {
     return type === NavTypeEnum.DOCUMENT
       ? `${RoutePaths.DOCUMENT}?topic=${topicValue}&header=${navHeader}&page=1`
-      : type === NavTypeEnum.COURSE
+      : compareTextNotCase(type, NavTypeEnum.COURSE)
       ? `${RoutePaths.COURSE}?topic=${topicValue}&header=${navHeader}&page=1`
-      : type === NavTypeEnum.CLASS
+      : compareTextNotCase(type, NavTypeEnum.CLASS)
       ? `${RoutePaths.CLASS}?topic=${topicValue}&header=${navHeader}&page=1&isClass=true`
-      : type === NavTypeEnum.POST
+      : compareTextNotCase(type, NavTypeEnum.POST)
       ? `${RoutePaths.POST}?topic=${topicValue}&header=${navHeader}&page=1`
-      : type === NavTypeEnum.CHATGPT
+      : compareTextNotCase(type, NavTypeEnum.CHATGPT)
       ? 'gpt-search'
       : '';
   };
