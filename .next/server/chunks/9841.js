@@ -174,19 +174,9 @@ const useCourseHook = ()=>{
         cacheTime: src_lib_utils_constant__WEBPACK_IMPORTED_MODULE_2__/* .ONE_DAY_CACHE_TIME */ .bQ,
         refetchOnWindowFocus: false
     });
-    const { data: chatHistory, error: chatHistoryError, refetch: refetchChatList, isLoading: chatLoading } = (0,react_query__WEBPACK_IMPORTED_MODULE_0__.useQuery)("chat-history", ___WEBPACK_IMPORTED_MODULE_1__/* ["default"] */ .Z.getChatHistory, {
-        staleTime: src_lib_utils_constant__WEBPACK_IMPORTED_MODULE_2__/* .DEFAULT_STALE_TIME */ .ok,
-        keepPreviousData: true,
-        cacheTime: src_lib_utils_constant__WEBPACK_IMPORTED_MODULE_2__/* .ONE_DAY_CACHE_TIME */ .bQ,
-        refetchOnWindowFocus: false
-    });
     return {
         homeData,
-        homeError,
-        chatHistory,
-        chatHistoryError,
-        refetchChatList,
-        chatLoading
+        homeError
     };
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useCourseHook);
