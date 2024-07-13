@@ -758,9 +758,9 @@
     "id": 43387,
     "files": [
       "static/chunks/1024-40b65b6d052d9ccc.js",
-      "static/chunks/3942.478ac980b6fbd25e.js",
+      "static/chunks/3942.96cd63cf4207be2d.js",
       "static/chunks/3541.a7421317cf8d9528.js",
-      "static/chunks/3387.70ad95df94aa5738.js"
+      "static/chunks/3387.e5585dc364a9e5ae.js"
     ]
   },
   "course-progress.tsx -> src/sections/Pages/CourseProgressUI": {
@@ -783,9 +783,9 @@
     "id": 43387,
     "files": [
       "static/chunks/1024-40b65b6d052d9ccc.js",
-      "static/chunks/3942.478ac980b6fbd25e.js",
+      "static/chunks/3942.96cd63cf4207be2d.js",
       "static/chunks/3541.a7421317cf8d9528.js",
-      "static/chunks/3387.70ad95df94aa5738.js"
+      "static/chunks/3387.e5585dc364a9e5ae.js"
     ]
   },
   "document\\[id]\\index.tsx -> src/sections/Pages/DocumentDetailUI": {
@@ -802,8 +802,8 @@
     "id": 56619,
     "files": [
       "static/chunks/1024-40b65b6d052d9ccc.js",
-      "static/chunks/3942.478ac980b6fbd25e.js",
-      "static/chunks/6619.9118887f58abe01b.js"
+      "static/chunks/3942.96cd63cf4207be2d.js",
+      "static/chunks/6619.4d1cf9dd5d7b65b4.js"
     ]
   },
   "forgot-password.tsx -> src/sections/ForgotPassword": {
@@ -819,16 +819,17 @@
     ]
   },
   "gpt-search.tsx -> src/sections/Pages/GPT": {
-    "id": 74943,
+    "id": 89471,
     "files": [
       "static/chunks/175675d1.4ab4bc9e7b3029ff.js",
       "static/chunks/35d052b6.3229850034f6e73b.js",
+      "static/chunks/d0c16330.b163ac9755e935cc.js",
       "static/chunks/1024-40b65b6d052d9ccc.js",
       "static/chunks/3043.66f235bd77364a7f.js",
       "static/chunks/6860.f195150fb27a050b.js",
       "static/chunks/8573.0e1592c56930adfe.js",
-      "static/chunks/3290.c5e89349d827be66.js",
-      "static/chunks/4943.e9364470447c4b20.js"
+      "static/chunks/4642.4e8f74d5859b2eb5.js",
+      "static/chunks/9471.0e97fe43453c903a.js"
     ]
   },
   "index.tsx -> src/sections/Pages/HomeUI": {
@@ -837,7 +838,7 @@
       "static/chunks/1024-40b65b6d052d9ccc.js",
       "static/chunks/2361.6fb426a5ed2803c2.js",
       "static/chunks/3541.a7421317cf8d9528.js",
-      "static/chunks/637.db3766f7ae2f068a.js"
+      "static/chunks/637.d4a1eacd124f1bb8.js"
     ]
   },
   "login.tsx -> src/sections/Login": {
@@ -882,8 +883,7 @@
     "id": 82170,
     "files": [
       "static/chunks/1024-40b65b6d052d9ccc.js",
-      "static/chunks/8870.1853e5b9d4daf93e.js",
-      "static/chunks/2170.560b02ff4b57bb91.js"
+      "static/chunks/2170.8bee088581a306ed.js"
     ]
   },
   "register.tsx -> src/sections/Register": {
@@ -903,7 +903,7 @@
       "static/chunks/1024-40b65b6d052d9ccc.js",
       "static/chunks/7882.38b7cbf8917d8b54.js",
       "static/chunks/3541.a7421317cf8d9528.js",
-      "static/chunks/3431.48414f1877a724a6.js"
+      "static/chunks/3431.fd3f356993d616f5.js"
     ]
   },
   "search\\index.tsx -> src/sections/Pages/Search": {
@@ -912,7 +912,7 @@
       "static/chunks/1024-40b65b6d052d9ccc.js",
       "static/chunks/7882.38b7cbf8917d8b54.js",
       "static/chunks/3541.a7421317cf8d9528.js",
-      "static/chunks/3431.48414f1877a724a6.js"
+      "static/chunks/3431.fd3f356993d616f5.js"
     ]
   },
   "settings.tsx -> src/sections/Pages/Setting": {

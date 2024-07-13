@@ -5357,7 +5357,7 @@ var gLocaleObject = function gLocaleObject(gLocale) {
 
 /***/ }),
 
-/***/ 9844:
+/***/ 65532:
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
@@ -5373,13 +5373,7 @@ ___WEBPACK_IMPORTED_MODULE_1__ = (__webpack_async_dependencies__.then ? (await _
 
 
 
-const useCourseHook = ()=>{
-    const { data: homeData, error: homeError } = (0,react_query__WEBPACK_IMPORTED_MODULE_0__.useQuery)("home", ___WEBPACK_IMPORTED_MODULE_1__/* ["default"] */ .Z.getHome, {
-        staleTime: src_lib_utils_constant__WEBPACK_IMPORTED_MODULE_2__/* .DEFAULT_STALE_TIME */ .ok,
-        keepPreviousData: true,
-        cacheTime: src_lib_utils_constant__WEBPACK_IMPORTED_MODULE_2__/* .ONE_DAY_CACHE_TIME */ .bQ,
-        refetchOnWindowFocus: false
-    });
+const useChatHistory = ()=>{
     const { data: chatHistory, error: chatHistoryError, refetch: refetchChatList, isLoading: chatLoading } = (0,react_query__WEBPACK_IMPORTED_MODULE_0__.useQuery)("chat-history", ___WEBPACK_IMPORTED_MODULE_1__/* ["default"] */ .Z.getChatHistory, {
         staleTime: src_lib_utils_constant__WEBPACK_IMPORTED_MODULE_2__/* .DEFAULT_STALE_TIME */ .ok,
         keepPreviousData: true,
@@ -5387,15 +5381,13 @@ const useCourseHook = ()=>{
         refetchOnWindowFocus: false
     });
     return {
-        homeData,
-        homeError,
         chatHistory,
         chatHistoryError,
         refetchChatList,
         chatLoading
     };
 };
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useCourseHook);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useChatHistory);
 
 __webpack_async_result__();
 } catch(e) { __webpack_async_result__(e); } });
@@ -5411,19 +5403,27 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _emotion_react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(57101);
-/* harmony import */ var antd_lib_input__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(30675);
-/* harmony import */ var antd_lib_input__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(antd_lib_input__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(16689);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var src_lib_api_course__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(84626);
-/* harmony import */ var antd_style__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(23061);
-/* harmony import */ var antd_style__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(antd_style__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var src_components_prochat_pro_chat__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(55063);
-/* harmony import */ var src_lib_api_course_query_hooks_useCourseHook__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(9844);
-/* harmony import */ var src_components_prochat_pro_chat_es_ChatItem_components_Loading__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(68895);
-var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_emotion_react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__, src_lib_api_course__WEBPACK_IMPORTED_MODULE_3__, src_lib_api_course_query_hooks_useCourseHook__WEBPACK_IMPORTED_MODULE_5__, src_components_prochat_pro_chat__WEBPACK_IMPORTED_MODULE_7__]);
-([_emotion_react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__, src_lib_api_course__WEBPACK_IMPORTED_MODULE_3__, src_lib_api_course_query_hooks_useCourseHook__WEBPACK_IMPORTED_MODULE_5__, src_components_prochat_pro_chat__WEBPACK_IMPORTED_MODULE_7__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
+/* harmony import */ var antd_lib_float_button__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(98766);
+/* harmony import */ var antd_lib_float_button__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(antd_lib_float_button__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var antd_lib_input__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(30675);
+/* harmony import */ var antd_lib_input__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(antd_lib_input__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(16689);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var src_lib_api_course__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(84626);
+/* harmony import */ var antd_style__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(23061);
+/* harmony import */ var antd_style__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(antd_style__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var src_components_prochat_pro_chat__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(55063);
+/* harmony import */ var src_components_prochat_pro_chat_es_ChatItem_components_Loading__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(68895);
+/* harmony import */ var src_lib_api_course_query_hooks_useChatHistory__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(65532);
+/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(71853);
+/* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(next_router__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var react_icons_tb__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(44152);
+/* harmony import */ var react_icons_tb__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(react_icons_tb__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _emotion_styled__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(4115);
+var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_emotion_react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__, src_lib_api_course__WEBPACK_IMPORTED_MODULE_4__, src_lib_api_course_query_hooks_useChatHistory__WEBPACK_IMPORTED_MODULE_6__, _emotion_styled__WEBPACK_IMPORTED_MODULE_9__, src_components_prochat_pro_chat__WEBPACK_IMPORTED_MODULE_11__]);
+([_emotion_react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__, src_lib_api_course__WEBPACK_IMPORTED_MODULE_4__, src_lib_api_course_query_hooks_useChatHistory__WEBPACK_IMPORTED_MODULE_6__, _emotion_styled__WEBPACK_IMPORTED_MODULE_9__, src_components_prochat_pro_chat__WEBPACK_IMPORTED_MODULE_11__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
 /* eslint-disable prettier/prettier */ 
+
 
 
 
@@ -5432,15 +5432,18 @@ var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_emo
 
 
 
-const { Search } = (antd_lib_input__WEBPACK_IMPORTED_MODULE_1___default());
+
+const { Search } = (antd_lib_input__WEBPACK_IMPORTED_MODULE_2___default());
+
+
 const GPTPageUI = ()=>{
-    const [loading, setLoading] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
-    const [searchValue, setSearchValue] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)("");
-    const theme = (0,antd_style__WEBPACK_IMPORTED_MODULE_4__.useTheme)();
+    const [loading, setLoading] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(false);
+    const theme = (0,antd_style__WEBPACK_IMPORTED_MODULE_5__.useTheme)();
+    const route = (0,next_router__WEBPACK_IMPORTED_MODULE_7__.useRouter)();
     const getSearchData = async (searchTerm)=>{
         try {
             setLoading(true);
-            const searchResult = await src_lib_api_course__WEBPACK_IMPORTED_MODULE_3__/* ["default"] */ .Z.chat(searchTerm);
+            const searchResult = await src_lib_api_course__WEBPACK_IMPORTED_MODULE_4__/* ["default"] */ .Z.chat(searchTerm);
             return searchResult.content;
         } catch (error) {
             console.log("error", error);
@@ -5456,35 +5459,67 @@ const GPTPageUI = ()=>{
             }, 2000);
         });
     };
-    const { chatHistory, chatLoading } = (0,src_lib_api_course_query_hooks_useCourseHook__WEBPACK_IMPORTED_MODULE_5__/* ["default"] */ .Z)();
+    const { chatHistory, chatLoading } = (0,src_lib_api_course_query_hooks_useChatHistory__WEBPACK_IMPORTED_MODULE_6__/* ["default"] */ .Z)();
     return /*#__PURE__*/ _emotion_react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("div", {
         className: "side-item search-bar",
-        children: chatLoading ? /*#__PURE__*/ _emotion_react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(src_components_prochat_pro_chat_es_ChatItem_components_Loading__WEBPACK_IMPORTED_MODULE_6__/* ["default"] */ .Z, {}) : /*#__PURE__*/ _emotion_react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("div", {
+        children: chatLoading ? /*#__PURE__*/ _emotion_react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(src_components_prochat_pro_chat_es_ChatItem_components_Loading__WEBPACK_IMPORTED_MODULE_10__/* ["default"] */ .Z, {}) : /*#__PURE__*/ (0,_emotion_react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
             style: {
                 background: theme.colorBgLayout
             },
-            children: /*#__PURE__*/ _emotion_react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(src_components_prochat_pro_chat__WEBPACK_IMPORTED_MODULE_7__/* .ProChat */ .j, {
-                request: async (messages)=>{
-                    const text = await delay(messages?.[messages?.length - 1]?.content);
-                    return new Response(text);
-                },
-                style: {
-                    height: "100vh"
-                },
-                initialChats: chatHistory?.map((v)=>({
-                        ...v,
-                        createAt: v.created_at,
-                        updateAt: v.created_at,
-                        role: v.owner === "user" ? "user" : "system",
-                        error: undefined
-                    })) || []
-            })
+            children: [
+                /*#__PURE__*/ _emotion_react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(src_components_prochat_pro_chat__WEBPACK_IMPORTED_MODULE_11__/* .ProChat */ .j, {
+                    request: async (messages)=>{
+                        const text = await delay(messages?.[messages?.length - 1]?.content);
+                        return new Response(text);
+                    },
+                    style: {
+                        height: "100vh"
+                    },
+                    initialChats: chatHistory?.map((v)=>({
+                            ...v,
+                            createAt: v.created_at,
+                            updateAt: v.created_at,
+                            role: v.owner === "user" ? "user" : "system",
+                            error: undefined
+                        })) || []
+                }),
+                /*#__PURE__*/ _emotion_react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(FloatButtonStyled, {
+                    children: /*#__PURE__*/ _emotion_react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx((antd_lib_float_button__WEBPACK_IMPORTED_MODULE_1___default()), {
+                        shape: "circle",
+                        type: "primary",
+                        style: {
+                            top: 15,
+                            bottom: "100vh",
+                            left: 10,
+                            backgroundColor: "transparent"
+                        },
+                        icon: /*#__PURE__*/ _emotion_react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(react_icons_tb__WEBPACK_IMPORTED_MODULE_8__.TbDoorEnter, {}),
+                        tooltip: /*#__PURE__*/ _emotion_react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("div", {
+                            children: "Trang chủ"
+                        }),
+                        onClick: ()=>{
+                            route.push("/");
+                        }
+                    })
+                })
+            ]
         })
     });
 };
 const GPTSection = ()=>{
     return /*#__PURE__*/ _emotion_react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(GPTPageUI, {});
 };
+const FloatButtonStyled = _emotion_styled__WEBPACK_IMPORTED_MODULE_9__["default"].div`
+  .ant-float-btn > div {
+    background: #252525;
+    svg {
+      fill: #fff;
+    }
+    &:hover {
+      background-color: #252525;
+    }
+  }
+`;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (GPTSection);
 
 __webpack_async_result__();
