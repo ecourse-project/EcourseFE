@@ -287,6 +287,24 @@ const CourseProgress = () => {
   //   setNumPages(numPages);
   // }
 
+  function extractBodyStyles(htmlContent) {
+    const bodyStyleRegex = /<style>\s*body\s*{([^}]*)}/;
+    const match = htmlContent.match(bodyStyleRegex);
+
+    return match ? match[1].trim() : null;
+  }
+
+  function extractAndRemoveBodyStyles(htmlContent) {
+    // More flexible regex to handle various style block formats
+
+    const bodyStyle = extractBodyStyles(htmlContent);
+
+    return {
+      html: htmlContent.replace(bodyStyle, ''),
+    };
+  }
+  const { html } = extractAndRemoveBodyStyles(state.selectedDoc?.file?.file_embedded_url || '');
+
   return (
     <CourseProgressWrapper
       css={css`
@@ -416,10 +434,20 @@ const CourseProgress = () => {
               ) : state.selectedDoc?.file?.file_embedded_url || state.selectedDoc?.file?.file_path ? (
                 isIframeOrUrl(state.selectedDoc?.file?.file_embedded_url) ||
                 !isURL(state.selectedDoc?.file?.file_embedded_url) ? (
-                  <div
-                    className="pdf_wrapper"
-                    dangerouslySetInnerHTML={{ __html: state.selectedDoc?.file?.file_embedded_url || '' }}
-                  />
+                  <div className="pdf_wrapper">
+                    <iframe
+                      title={state.selectedDoc?.name}
+                      width="100%"
+                      sandbox="allow-scripts allow-same-origin"
+                      srcDoc={html}
+                    >
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: html,
+                        }}
+                      />
+                    </iframe>
+                  </div>
                 ) : (
                   <iframe
                     src={state.selectedDoc?.file?.file_embedded_url || state.selectedDoc?.file?.file_path || ''}
