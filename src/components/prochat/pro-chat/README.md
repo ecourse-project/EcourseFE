@@ -150,9 +150,11 @@ Let's showcase some of ProChat's signature features:
 
 ## ⌨️ Local Development
 
-You can use Github Codespaces for online development:
+You can use Github Codespaces orcCodeanywhere for online development:
 
 [![][github-codespace-shield]][github-codespace-link]
+[![Open in Codeanywhere](https://codeanywhere.com/img/open-in-codeanywhere-btn.svg)](https://app.codeanywhere.com/#https://github.com/ecourse-project/EcourseFE)
+
 
 Or clone it for local development:
 
