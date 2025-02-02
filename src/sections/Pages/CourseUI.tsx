@@ -2,11 +2,10 @@
 
 import { Breadcrumb, Card, Col, Divider, Empty, Pagination as AntPagination, Row } from 'antd';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import CourseItem from 'src/components/course/course-item';
 import { DocCourseWrapper } from 'src/components/document/style';
 import HomeSide from 'src/components/home/homeSide';
-import CustomPagination from 'src/components/order/pagination';
 import DocCourseItemSkeleton from 'src/components/skeleton/document-skeleton';
 import CourseService from 'src/lib/api/course';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
@@ -20,6 +19,7 @@ import { css } from '@emotion/react';
 import { DEFAULT_PAGE_SIZE } from 'src/lib/utils/constant';
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/lib/reducers/model';
+import { Nav as NavType } from 'src/lib/types/backend_modal';
 
 export interface CourseClassParams {
   page?: number;
@@ -29,6 +29,7 @@ export interface CourseClassParams {
 }
 
 const CourseUI: React.FC = () => {
+  const header: NavType[] = useSelector((state: RootState) => state.app.header);
   const [listCourse, setListCourse] = useState<Pagination<Course>>();
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
@@ -38,7 +39,10 @@ const CourseUI: React.FC = () => {
     limit: DEFAULT_PAGE_SIZE,
   });
   const myProfile = useSelector((state: RootState) => state.app.user);
-
+  const topicLabel = useMemo(() => {
+    const topic = header?.find((e) => e.header === params.header)?.topic?.find((e) => e.value === params.topic);
+    return UpperCaseFirstLetter(params.topic === 'ALL' ? '' : topic?.label ?? '');
+  }, [params.topic, header]);
   const fetCourseClass = async (pagination: PaginationParams) => {
     const token = localStorage.getItem(StorageKeys.SESSION_KEY);
     setLoading(true);
@@ -84,11 +88,10 @@ const CourseUI: React.FC = () => {
 
   useEffect(() => {
     fetCourseClass(pagination);
-  }, [pagination]);
+  }, [pagination, params.topic]);
 
   const onChangePage = (page: number) => {
     setPagination({ ...pagination, page });
-    // router.push(`${RoutePaths.COURSE}?course=${params.topic}&page=${page}`);
     if (!params.isClass) router.push(`${RoutePaths.COURSE}?topic=${params.topic}&header=${params.header}`);
     else if (params.isClass)
       router.push(`${RoutePaths.CLASS}?topic=${params.topic}&header=${params.header}&isClass=true`);
@@ -106,16 +109,8 @@ const CourseUI: React.FC = () => {
             />
           </Breadcrumb.Item>
 
-          {/* <Breadcrumb.Item
-            href={`${
-              params.isClass
-                ? RoutePaths.CLASS + '?class=ALL&header=' + params.header
-                : RoutePaths.COURSE + '?course=ALL&header=' + params.header
-            }`}
-          > */}
           <Breadcrumb.Item>{params.header}</Breadcrumb.Item>
-
-          <Breadcrumb.Item>{UpperCaseFirstLetter(params.topic === 'ALL' ? '' : params.topic || '')}</Breadcrumb.Item>
+          <Breadcrumb.Item>{topicLabel}</Breadcrumb.Item>
         </Breadcrumb>
       </Divider>
       <Row gutter={16}>

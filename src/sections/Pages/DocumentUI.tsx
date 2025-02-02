@@ -2,11 +2,10 @@
 
 import { Breadcrumb, Card, Col, Divider, Empty, Pagination as AntPagination, Row } from 'antd';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import DocItem from 'src/components/document/doc-item';
 import { DocCourseWrapper } from 'src/components/document/style';
 import HomeSide from 'src/components/home/homeSide';
-import CustomPagination from 'src/components/order/pagination';
 import DocCourseItemSkeleton from 'src/components/skeleton/document-skeleton';
 import CourseService from 'src/lib/api/course';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
@@ -18,23 +17,32 @@ import RoutePaths from 'src/lib/utils/routes';
 import { HomeOutlined, SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 import { DEFAULT_PAGE_SIZE } from 'src/lib/utils/constant';
+import { useSelector } from 'react-redux';
+import { RootState } from 'src/lib/reducers/model';
+import { Nav as NavType } from 'src/lib/types/backend_modal';
 
 export interface DocumentParams {
   page?: number;
   topic?: string;
+  topicLabel?: string;
   header?: string;
 }
 
 const DocumentUI: React.FC = () => {
+  const header: NavType[] = useSelector((state: RootState) => state.app.header);
   const [listDoc, setListDoc] = useState<PaginationType<Document>>();
   const [loading, setLoading] = useState<boolean>(false);
-  // const listDoc = useSelector((state: RootState) => state.document.listDoc);
   const router = useRouter();
   const params: DocumentParams = useQueryParam();
   const [pagination, setPagination] = useState<PaginationParams>({
     page: params?.page || 1,
     limit: DEFAULT_PAGE_SIZE,
   });
+
+  const topicLabel = useMemo(() => {
+    const topic = header?.find((e) => e.header === params.header)?.topic?.find((e) => e.value === params.topic);
+    return UpperCaseFirstLetter(params.topic === 'ALL' ? '' : topic?.label ?? '');
+  }, [params.topic, header]);
 
   const fetchDocument = async (pagination) => {
     const token = localStorage.getItem(StorageKeys.SESSION_KEY);
@@ -62,7 +70,7 @@ const DocumentUI: React.FC = () => {
 
   useEffect(() => {
     fetchDocument(pagination);
-  }, [pagination]);
+  }, [pagination, params.topic]);
 
   const onChangePage = (page: number) => {
     setPagination({ ...pagination, page });
@@ -81,9 +89,7 @@ const DocumentUI: React.FC = () => {
           </Breadcrumb.Item>
           {/* <Breadcrumb.Item href={`${RoutePaths.DOCUMENT}?document=ALL&page=${1}&header=${params.header}`}> */}
           <Breadcrumb.Item>{params?.header}</Breadcrumb.Item>
-          <Breadcrumb.Item href={''}>
-            {UpperCaseFirstLetter(params.topic === 'ALL' ? '' : params.topic || '')}
-          </Breadcrumb.Item>
+          <Breadcrumb.Item>{topicLabel}</Breadcrumb.Item>
         </Breadcrumb>
       </Divider>
       <Row gutter={16}>

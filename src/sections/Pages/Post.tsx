@@ -2,24 +2,27 @@ import { HomeOutlined, SwapOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 import { Breadcrumb, Card, Divider, Empty, Pagination as AntPagination, Col, Row } from 'antd';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import HomeSide from 'src/components/home/homeSide';
 import HomeTopicCard from 'src/components/home/homeTopicCard';
-import CustomPagination from 'src/components/order/pagination';
 import CourseService from 'src/lib/api/course';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { Pagination, PaginationParams, Post } from 'src/lib/types/backend_modal';
 import { DEFAULT_POST_PAGE_SIZE } from 'src/lib/utils/constant';
 import { UpperCaseFirstLetter } from 'src/lib/utils/format';
 import RoutePaths from 'src/lib/utils/routes';
-
+import { useSelector } from 'react-redux';
+import { RootState } from 'src/lib/reducers/model';
+import { Nav as NavType } from 'src/lib/types/backend_modal';
 export interface DocumentParams {
   page?: number;
   topic?: string;
+  topicLabel?: string;
   header?: string;
 }
 
-const Post: React.FC = () => {
+const PostPage: React.FC = () => {
+  const header: NavType[] = useSelector((state: RootState) => state.app.header);
   const [listPost, setlistPost] = useState<Pagination<Post>>();
   const params: DocumentParams = useQueryParam();
   const [loading, setLoading] = useState<boolean>(false);
@@ -29,6 +32,12 @@ const Post: React.FC = () => {
     page: params?.page || 1,
     limit: DEFAULT_POST_PAGE_SIZE,
   });
+
+  const topicLabel = useMemo(() => {
+    const topic = header?.find((e) => e.header === params.header)?.topic?.find((e) => e.value === params.topic);
+    return UpperCaseFirstLetter(params.topic === 'ALL' ? '' : topic?.label ?? '');
+  }, [params.topic, header]);
+
   const getListPost = async (pagination: PaginationParams) => {
     try {
       setLoading(true);
@@ -52,7 +61,7 @@ const Post: React.FC = () => {
 
   useEffect(() => {
     getListPost(pagination);
-  }, [pagination, params.header]);
+  }, [pagination, params.header, params.topic]);
 
   const onChangePage = (page: number) => {
     setPagination({ ...pagination, page });
@@ -71,9 +80,7 @@ const Post: React.FC = () => {
             />
           </Breadcrumb.Item>
           <Breadcrumb.Item>{params.header}</Breadcrumb.Item>
-          <Breadcrumb.Item href={''}>
-            {UpperCaseFirstLetter(params.topic === 'ALL' ? '' : params.topic || '')}
-          </Breadcrumb.Item>
+          <Breadcrumb.Item>{topicLabel}</Breadcrumb.Item>
         </Breadcrumb>
       </Divider>
       <Row gutter={16}>
@@ -145,4 +152,4 @@ const Post: React.FC = () => {
   );
 };
 
-export default Post;
+export default PostPage;
