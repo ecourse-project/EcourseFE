@@ -758,9 +758,9 @@
     "id": 43387,
     "files": [
       "static/chunks/1024-40b65b6d052d9ccc.js",
-      "static/chunks/3942.96cd63cf4207be2d.js",
+      "static/chunks/3942.478ac980b6fbd25e.js",
       "static/chunks/3541.a7421317cf8d9528.js",
-      "static/chunks/3387.e5585dc364a9e5ae.js"
+      "static/chunks/3387.23a074efd7ff7239.js"
     ]
   },
   "course-progress.tsx -> src/sections/Pages/CourseProgressUI": {
@@ -783,9 +783,9 @@
     "id": 43387,
     "files": [
       "static/chunks/1024-40b65b6d052d9ccc.js",
-      "static/chunks/3942.96cd63cf4207be2d.js",
+      "static/chunks/3942.478ac980b6fbd25e.js",
       "static/chunks/3541.a7421317cf8d9528.js",
-      "static/chunks/3387.e5585dc364a9e5ae.js"
+      "static/chunks/3387.23a074efd7ff7239.js"
     ]
   },
   "document\\[id]\\index.tsx -> src/sections/Pages/DocumentDetailUI": {
@@ -802,8 +802,8 @@
     "id": 56619,
     "files": [
       "static/chunks/1024-40b65b6d052d9ccc.js",
-      "static/chunks/3942.96cd63cf4207be2d.js",
-      "static/chunks/6619.4d1cf9dd5d7b65b4.js"
+      "static/chunks/3942.478ac980b6fbd25e.js",
+      "static/chunks/6619.4c067886afc38fbc.js"
     ]
   },
   "forgot-password.tsx -> src/sections/ForgotPassword": {
@@ -883,7 +883,8 @@
     "id": 82170,
     "files": [
       "static/chunks/1024-40b65b6d052d9ccc.js",
-      "static/chunks/2170.8bee088581a306ed.js"
+      "static/chunks/8870.1853e5b9d4daf93e.js",
+      "static/chunks/2170.9114703086016893.js"
     ]
   },
   "register.tsx -> src/sections/Register": {

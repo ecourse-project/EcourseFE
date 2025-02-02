@@ -44,7 +44,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ant_design_icons_lib_icons_SwapOutlined__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(5212);
 /* harmony import */ var _ant_design_icons_lib_icons_SwapOutlined__WEBPACK_IMPORTED_MODULE_20___default = /*#__PURE__*/__webpack_require__.n(_ant_design_icons_lib_icons_SwapOutlined__WEBPACK_IMPORTED_MODULE_20__);
 /* harmony import */ var _emotion_react__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(53139);
-/* harmony import */ var src_lib_utils_constant__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(45354);
+/* harmony import */ var src_lib_utils_constant__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(45354);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(6022);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_22___default = /*#__PURE__*/__webpack_require__.n(react_redux__WEBPACK_IMPORTED_MODULE_22__);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_emotion_react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__, src_components_document_doc_item__WEBPACK_IMPORTED_MODULE_10__, src_components_document_style__WEBPACK_IMPORTED_MODULE_11__, src_components_home_homeSide__WEBPACK_IMPORTED_MODULE_12__, src_components_skeleton_document_skeleton__WEBPACK_IMPORTED_MODULE_13__, src_lib_api_course__WEBPACK_IMPORTED_MODULE_14__, src_lib_hooks_useQueryParam__WEBPACK_IMPORTED_MODULE_15__, _emotion_react__WEBPACK_IMPORTED_MODULE_21__]);
 ([_emotion_react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__, src_components_document_doc_item__WEBPACK_IMPORTED_MODULE_10__, src_components_document_style__WEBPACK_IMPORTED_MODULE_11__, src_components_home_homeSide__WEBPACK_IMPORTED_MODULE_12__, src_components_skeleton_document_skeleton__WEBPACK_IMPORTED_MODULE_13__, src_lib_api_course__WEBPACK_IMPORTED_MODULE_14__, src_lib_hooks_useQueryParam__WEBPACK_IMPORTED_MODULE_15__, _emotion_react__WEBPACK_IMPORTED_MODULE_21__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
 /* eslint-disable prettier/prettier */ 
@@ -70,16 +72,24 @@ var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_emo
 
 
 
+
 const DocumentUI = ()=>{
+    const header = (0,react_redux__WEBPACK_IMPORTED_MODULE_22__.useSelector)((state)=>state.app.header);
     const [listDoc, setListDoc] = (0,react__WEBPACK_IMPORTED_MODULE_9__.useState)();
     const [loading, setLoading] = (0,react__WEBPACK_IMPORTED_MODULE_9__.useState)(false);
-    // const listDoc = useSelector((state: RootState) => state.document.listDoc);
     const router = (0,next_router__WEBPACK_IMPORTED_MODULE_8__.useRouter)();
     const params = (0,src_lib_hooks_useQueryParam__WEBPACK_IMPORTED_MODULE_15__/* .useQueryParam */ .W)();
     const [pagination, setPagination] = (0,react__WEBPACK_IMPORTED_MODULE_9__.useState)({
         page: params?.page || 1,
-        limit: src_lib_utils_constant__WEBPACK_IMPORTED_MODULE_22__/* .DEFAULT_PAGE_SIZE */ .L8
+        limit: src_lib_utils_constant__WEBPACK_IMPORTED_MODULE_23__/* .DEFAULT_PAGE_SIZE */ .L8
     });
+    const topicLabel = (0,react__WEBPACK_IMPORTED_MODULE_9__.useMemo)(()=>{
+        const topic = header?.find((e)=>e.header === params.header)?.topic?.find((e)=>e.value === params.topic);
+        return (0,src_lib_utils_format__WEBPACK_IMPORTED_MODULE_17__/* .UpperCaseFirstLetter */ .Rl)(params.topic === "ALL" ? "" : topic?.label ?? "");
+    }, [
+        params.topic,
+        header
+    ]);
     const fetchDocument = async (pagination)=>{
         const token = localStorage.getItem(src_lib_utils_enum__WEBPACK_IMPORTED_MODULE_16__/* .StorageKeys */ .BU.SESSION_KEY);
         try {
@@ -105,7 +115,8 @@ const DocumentUI = ()=>{
     (0,react__WEBPACK_IMPORTED_MODULE_9__.useEffect)(()=>{
         fetchDocument(pagination);
     }, [
-        pagination
+        pagination,
+        params.topic
     ]);
     const onChangePage = (page)=>{
         setPagination({
@@ -133,8 +144,7 @@ const DocumentUI = ()=>{
                             children: params?.header
                         }),
                         /*#__PURE__*/ _emotion_react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx((antd_lib_breadcrumb__WEBPACK_IMPORTED_MODULE_1___default().Item), {
-                            href: "",
-                            children: (0,src_lib_utils_format__WEBPACK_IMPORTED_MODULE_17__/* .UpperCaseFirstLetter */ .Rl)(params.topic === "ALL" ? "" : params.topic || "")
+                            children: topicLabel
                         })
                     ]
                 })

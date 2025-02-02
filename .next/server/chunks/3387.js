@@ -74,6 +74,7 @@ var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_emo
 
 
 const CourseUI = ()=>{
+    const header = (0,react_redux__WEBPACK_IMPORTED_MODULE_22__.useSelector)((state)=>state.app.header);
     const [listCourse, setListCourse] = (0,react__WEBPACK_IMPORTED_MODULE_9__.useState)();
     const [loading, setLoading] = (0,react__WEBPACK_IMPORTED_MODULE_9__.useState)(false);
     const router = (0,next_router__WEBPACK_IMPORTED_MODULE_8__.useRouter)();
@@ -83,6 +84,13 @@ const CourseUI = ()=>{
         limit: src_lib_utils_constant__WEBPACK_IMPORTED_MODULE_23__/* .DEFAULT_PAGE_SIZE */ .L8
     });
     const myProfile = (0,react_redux__WEBPACK_IMPORTED_MODULE_22__.useSelector)((state)=>state.app.user);
+    const topicLabel = (0,react__WEBPACK_IMPORTED_MODULE_9__.useMemo)(()=>{
+        const topic = header?.find((e)=>e.header === params.header)?.topic?.find((e)=>e.value === params.topic);
+        return (0,src_lib_utils_format__WEBPACK_IMPORTED_MODULE_17__/* .UpperCaseFirstLetter */ .Rl)(params.topic === "ALL" ? "" : topic?.label ?? "");
+    }, [
+        params.topic,
+        header
+    ]);
     const fetCourseClass = async (pagination)=>{
         const token = localStorage.getItem(src_lib_utils_enum__WEBPACK_IMPORTED_MODULE_16__/* .StorageKeys */ .BU.SESSION_KEY);
         setLoading(true);
@@ -114,14 +122,14 @@ const CourseUI = ()=>{
     (0,react__WEBPACK_IMPORTED_MODULE_9__.useEffect)(()=>{
         fetCourseClass(pagination);
     }, [
-        pagination
+        pagination,
+        params.topic
     ]);
     const onChangePage = (page)=>{
         setPagination({
             ...pagination,
             page
         });
-        // router.push(`${RoutePaths.COURSE}?course=${params.topic}&page=${page}`);
         if (!params.isClass) router.push(`${src_lib_utils_routes__WEBPACK_IMPORTED_MODULE_18__/* ["default"] */ .Z.COURSE}?topic=${params.topic}&header=${params.header}`);
         else if (params.isClass) router.push(`${src_lib_utils_routes__WEBPACK_IMPORTED_MODULE_18__/* ["default"] */ .Z.CLASS}?topic=${params.topic}&header=${params.header}&isClass=true`);
     };
@@ -144,7 +152,7 @@ const CourseUI = ()=>{
                             children: params.header
                         }),
                         /*#__PURE__*/ _emotion_react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx((antd_lib_breadcrumb__WEBPACK_IMPORTED_MODULE_1___default().Item), {
-                            children: (0,src_lib_utils_format__WEBPACK_IMPORTED_MODULE_17__/* .UpperCaseFirstLetter */ .Rl)(params.topic === "ALL" ? "" : params.topic || "")
+                            children: topicLabel
                         })
                     ]
                 })
