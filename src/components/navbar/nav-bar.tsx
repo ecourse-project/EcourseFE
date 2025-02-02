@@ -50,6 +50,7 @@ const Nav: React.FC = React.memo(() => {
           href={`${goToPage(navItem.type?.toLocaleUpperCase(), v.value || 'ALL', navItem.header)}`}
           css={css`
             background-color: ${router.query?.[navItem.type?.toLocaleLowerCase()] === v.label ? '#cdcdcd' : ''};
+            text-align: 'center';
           `}
         >
           {v.label}
@@ -144,7 +145,13 @@ const Nav: React.FC = React.memo(() => {
                       : 0.6};
                   `}
                 >
-                  <Space>{v.header}</Space>
+                  <Space
+                    css={css`
+                      text-align: center;
+                    `}
+                  >
+                    {v.header}
+                  </Space>
                 </Link>
               </Dropdown>
             );
