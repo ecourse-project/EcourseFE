@@ -2700,6 +2700,19 @@ const CourseProgress = ()=>{
     // function onDocumentLoadSuccess({ numPages }) {
     //   setNumPages(numPages);
     // }
+    function extractBodyStyles(htmlContent) {
+        const bodyStyleRegex = /<style>\s*body\s*{([^}]*)}/;
+        const match = htmlContent.match(bodyStyleRegex);
+        return match ? match[1].trim() : null;
+    }
+    function extractAndRemoveBodyStyles(htmlContent) {
+        // More flexible regex to handle various style block formats
+        const bodyStyle = extractBodyStyles(htmlContent);
+        return {
+            html: htmlContent.replace(bodyStyle, "")
+        };
+    }
+    const { html } = extractAndRemoveBodyStyles(state.selectedDoc?.file?.file_embedded_url || "");
     return /*#__PURE__*/ (0,_emotion_react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_style__WEBPACK_IMPORTED_MODULE_31__/* .CourseProgressWrapper */ .Y, {
         css: _emotion_react__WEBPACK_IMPORTED_MODULE_27__.css`
         .video_wrapper {
@@ -2827,9 +2840,17 @@ const CourseProgress = ()=>{
                                         })
                                     }) : state.selectedDoc?.file?.file_embedded_url || state.selectedDoc?.file?.file_path ? (0,src_lib_utils_utils__WEBPACK_IMPORTED_MODULE_32__/* .isIframeOrUrl */ .w0)(state.selectedDoc?.file?.file_embedded_url) || !(0,src_lib_utils_utils__WEBPACK_IMPORTED_MODULE_32__/* .isURL */ .PX)(state.selectedDoc?.file?.file_embedded_url) ? /*#__PURE__*/ _emotion_react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("div", {
                                         className: "pdf_wrapper",
-                                        dangerouslySetInnerHTML: {
-                                            __html: state.selectedDoc?.file?.file_embedded_url || ""
-                                        }
+                                        children: /*#__PURE__*/ _emotion_react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("iframe", {
+                                            title: state.selectedDoc?.name,
+                                            width: "100%",
+                                            sandbox: "allow-scripts allow-same-origin",
+                                            srcDoc: html,
+                                            children: /*#__PURE__*/ _emotion_react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("div", {
+                                                dangerouslySetInnerHTML: {
+                                                    __html: html
+                                                }
+                                            })
+                                        })
                                     }) : /*#__PURE__*/ _emotion_react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx("iframe", {
                                         src: state.selectedDoc?.file?.file_embedded_url || state.selectedDoc?.file?.file_path || "",
                                         title: state.selectedDoc?.name,

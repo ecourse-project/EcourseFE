@@ -39,9 +39,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var src_components_home_homeTopicCard__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(17595);
 /* harmony import */ var src_lib_api_course__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(84626);
 /* harmony import */ var src_lib_hooks_useQueryParam__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(8443);
-/* harmony import */ var src_lib_utils_constant__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(45354);
+/* harmony import */ var src_lib_utils_constant__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(45354);
 /* harmony import */ var src_lib_utils_format__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(90455);
 /* harmony import */ var src_lib_utils_routes__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(70351);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(6022);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_19___default = /*#__PURE__*/__webpack_require__.n(react_redux__WEBPACK_IMPORTED_MODULE_19__);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_emotion_react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__, _emotion_react__WEBPACK_IMPORTED_MODULE_3__, src_components_home_homeSide__WEBPACK_IMPORTED_MODULE_13__, src_components_home_homeTopicCard__WEBPACK_IMPORTED_MODULE_14__, src_lib_api_course__WEBPACK_IMPORTED_MODULE_15__, src_lib_hooks_useQueryParam__WEBPACK_IMPORTED_MODULE_16__]);
 ([_emotion_react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__, _emotion_react__WEBPACK_IMPORTED_MODULE_3__, src_components_home_homeSide__WEBPACK_IMPORTED_MODULE_13__, src_components_home_homeTopicCard__WEBPACK_IMPORTED_MODULE_14__, src_lib_api_course__WEBPACK_IMPORTED_MODULE_15__, src_lib_hooks_useQueryParam__WEBPACK_IMPORTED_MODULE_16__] = __webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__);
 
@@ -64,15 +66,24 @@ var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_emo
 
 
 
-const Post = ()=>{
+
+const PostPage = ()=>{
+    const header = (0,react_redux__WEBPACK_IMPORTED_MODULE_19__.useSelector)((state)=>state.app.header);
     const [listPost, setlistPost] = (0,react__WEBPACK_IMPORTED_MODULE_12__.useState)();
     const params = (0,src_lib_hooks_useQueryParam__WEBPACK_IMPORTED_MODULE_16__/* .useQueryParam */ .W)();
     const [loading, setLoading] = (0,react__WEBPACK_IMPORTED_MODULE_12__.useState)(false);
     const router = (0,next_router__WEBPACK_IMPORTED_MODULE_11__.useRouter)();
     const [pagination, setPagination] = (0,react__WEBPACK_IMPORTED_MODULE_12__.useState)({
         page: params?.page || 1,
-        limit: src_lib_utils_constant__WEBPACK_IMPORTED_MODULE_19__/* .DEFAULT_POST_PAGE_SIZE */ .Ag
+        limit: src_lib_utils_constant__WEBPACK_IMPORTED_MODULE_20__/* .DEFAULT_POST_PAGE_SIZE */ .Ag
     });
+    const topicLabel = (0,react__WEBPACK_IMPORTED_MODULE_12__.useMemo)(()=>{
+        const topic = header?.find((e)=>e.header === params.header)?.topic?.find((e)=>e.value === params.topic);
+        return (0,src_lib_utils_format__WEBPACK_IMPORTED_MODULE_17__/* .UpperCaseFirstLetter */ .Rl)(params.topic === "ALL" ? "" : topic?.label ?? "");
+    }, [
+        params.topic,
+        header
+    ]);
     const getListPost = async (pagination)=>{
         try {
             setLoading(true);
@@ -96,7 +107,8 @@ const Post = ()=>{
         getListPost(pagination);
     }, [
         pagination,
-        params.header
+        params.header,
+        params.topic
     ]);
     const onChangePage = (page)=>{
         setPagination({
@@ -124,8 +136,7 @@ const Post = ()=>{
                             children: params.header
                         }),
                         /*#__PURE__*/ _emotion_react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx((antd_lib_breadcrumb__WEBPACK_IMPORTED_MODULE_4___default().Item), {
-                            href: "",
-                            children: (0,src_lib_utils_format__WEBPACK_IMPORTED_MODULE_17__/* .UpperCaseFirstLetter */ .Rl)(params.topic === "ALL" ? "" : params.topic || "")
+                            children: topicLabel
                         })
                     ]
                 })
@@ -195,7 +206,7 @@ const Post = ()=>{
         ]
     });
 };
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Post);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (PostPage);
 
 __webpack_async_result__();
 } catch(e) { __webpack_async_result__(e); } });
