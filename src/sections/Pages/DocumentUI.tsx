@@ -11,7 +11,6 @@ import CourseService from 'src/lib/api/course';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { Document, PaginationParams, Pagination as PaginationType } from 'src/lib/types/backend_modal';
 import { StorageKeys } from 'src/lib/utils/enum';
-import { UpperCaseFirstLetter } from 'src/lib/utils/format';
 import RoutePaths from 'src/lib/utils/routes';
 
 import { HomeOutlined, SwapOutlined } from '@ant-design/icons';
@@ -41,7 +40,7 @@ const DocumentUI: React.FC = () => {
 
   const topicLabel = useMemo(() => {
     const topic = header?.find((e) => e.header === params.header)?.topic?.find((e) => e.value === params.topic);
-    return UpperCaseFirstLetter(params.topic === 'ALL' ? '' : topic?.label ?? '');
+    return params.topic === 'ALL' ? '' : topic?.label ?? '';
   }, [params.topic, header]);
 
   const fetchDocument = async (pagination) => {

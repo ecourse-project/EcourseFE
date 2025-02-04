@@ -9,7 +9,6 @@ import CourseService from 'src/lib/api/course';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { Pagination, PaginationParams, Post } from 'src/lib/types/backend_modal';
 import { DEFAULT_POST_PAGE_SIZE } from 'src/lib/utils/constant';
-import { UpperCaseFirstLetter } from 'src/lib/utils/format';
 import RoutePaths from 'src/lib/utils/routes';
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/lib/reducers/model';
@@ -35,7 +34,7 @@ const PostPage: React.FC = () => {
 
   const topicLabel = useMemo(() => {
     const topic = header?.find((e) => e.header === params.header)?.topic?.find((e) => e.value === params.topic);
-    return UpperCaseFirstLetter(params.topic === 'ALL' ? '' : topic?.label ?? '');
+    return params.topic === 'ALL' ? '' : topic?.label ?? '';
   }, [params.topic, header]);
 
   const getListPost = async (pagination: PaginationParams) => {
