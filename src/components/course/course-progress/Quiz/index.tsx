@@ -173,21 +173,6 @@ const QuizSection: React.FC<QuizProps> = (props) => {
               );
             }
           })}
-          {/* <QuizSlide
-            listQuiz={lessonQuiz.quiz.questions || []}
-            onChangeQuiz={(v) => {
-              setAnswer((prev) => {
-                const idx = prev.findIndex((ans) => ans.quiz_id === v.quiz_id);
-                if (idx >= 0) {
-                  prev.splice(idx, 1, v);
-                  return prev;
-                } else {
-                  return [...prev, v];
-                }
-              });
-            }}
-            quizResult={lessonQuiz.isDone ? lessonQuiz.result : null}
-          /> */}
         </>
       ) : (
         <Empty className="empty-data" image={Empty.PRESENTED_IMAGE_SIMPLE} />
@@ -202,7 +187,6 @@ const QuizSection: React.FC<QuizProps> = (props) => {
             btnStyle={'solid'}
             btnSize={'small'}
             btnWidth={'full-w'}
-            // disabled={!isDone ? (listAnswer.length < listQuiz.length ? true : false) : false/}
             onClick={() => {
               setIsSubmit(true);
               onSubmit(answer);
@@ -277,8 +261,6 @@ export default QuizSection;
 
 const QuizStyled = styled.div`
   width: 100%;
-  /* margin-left: 7%;
-  max-width: 77%; */
   .quiz-item {
     padding: 10px 0;
   }

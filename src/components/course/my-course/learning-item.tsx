@@ -1,7 +1,7 @@
 import { Card, Divider, Progress } from 'antd';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
-import { Course, Document, Rating } from 'src/lib/types/backend_modal';
+import React from 'react';
+import { Course, Document } from 'src/lib/types/backend_modal';
 import RoutePaths from 'src/lib/utils/routes';
 
 import styled from '@emotion/styled';
@@ -73,30 +73,6 @@ const ItemWrapper = styled.div`
 export const LearningItem: React.FC<LearningItem> = (props) => {
   const { course, doc } = props;
   const router = useRouter();
-  // const rateCourse = async (course_id: string, rating: number, comment: string) => {
-  //   try {
-  //     if (rating === 1) rating = RatingEnum.ONE;
-  //     if (rating === 2) rating = RatingEnum.TWO;
-  //     if (rating === 3) rating = RatingEnum.THREE;
-  //     if (rating === 4) rating = RatingEnum.FOUR;
-  //     if (rating === 5) rating = RatingEnum.FIVE;
-
-  //     const rate = await CourseService.rateCourse({
-  //       course_id,
-  //       rating,
-  //       comment,
-  //     } as RateCourseArgs);
-  //     setMyRate(rate);
-  //     course?.rating_detail?.push(rate);
-  //   } catch (error) {
-  //     //console.log('error', error);
-  //   }
-  // };
-
-  // const handleSaveRating = () => {
-  //   rateCourse(course?.id || '', star, feedback);
-  //   setOpenRatingModal(false);
-  // };
   const handleLearn = (type) => {
     if (type === ItemType.COURESE) router.push(`${RoutePaths.COURSE}/${course?.id}`);
     if (type === ItemType.DOC) router.push(`${RoutePaths.DOCUMENT}/${doc?.id}`);
@@ -104,15 +80,6 @@ export const LearningItem: React.FC<LearningItem> = (props) => {
 
   return (
     <>
-      {/* <RatingModal
-        visible={openRatingModal}
-        countStar={(value) => setStar(value)}
-        onChangeFeedback={(value) => setFeedback(value)}
-        onClose={() => setOpenRatingModal(false)}
-        onSave={handleSaveRating}
-        rated={isEmpty(myRate) ? course?.my_rating : myRate}
-        defaultStar={star}
-      /> */}
       {course ? (
         <ItemWrapper>
           <Card
@@ -151,44 +118,9 @@ export const LearningItem: React.FC<LearningItem> = (props) => {
             <Meta title={doc.name} />
             <div>Tên tác giả</div>
             <Divider />
-            {/* <Progress percent={course.progress} showInfo={false} /> */}
             <div className="extra">
-              <span className="status_text">
-                {/* {course.progress === 100
-										? 'Đã hoàn thành'
-										: course.progress !== 0
-										? `${course.progress}% đã hoàn thành`
-										: 'Bắt đầu học'} */}
-                Đọc tài liệu
-              </span>
-              <span>
-                {/* <div>
-                  {Number(doc?.my_rating?.rating) ? (
-                    <div
-                      className="rate"
-                      onClick={() => {
-                        setOpenRatingModal(true);
-                      }}
-                    >
-                      <div style={{ fontSize: '11px' }}>Đánh giá của bạn</div>
-                      <Rate
-                        defaultValue={doc.my_rating?.rating || star}
-                        disabled={!!Number(doc.rating)}
-                        onChange={(value) => {
-                          setStar(value);
-                          setOpenRatingModal(true);
-                        }}
-                        value={doc.my_rating?.rating || star}
-                      />
-                    </div>
-                  ) : (
-                    <>
-                      <div style={{ fontSize: '11px' }}>Đánh giá trung bình </div>
-                      <Rate defaultValue={doc.rating} disabled={true} value={doc.rating} />{' '}
-                    </>
-                  )}
-                </div> */}
-              </span>
+              <span className="status_text">Đọc tài liệu</span>
+              <span></span>
             </div>
           </Card>
         </ItemWrapper>

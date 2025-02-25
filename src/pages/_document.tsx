@@ -4,7 +4,7 @@ import { WEB_DESCRIPTION, WEB_TITLE, WEB_URL } from 'src/lib/utils/constant';
 class MyDocument extends Document {
   static async getInitialProps(ctx) {
     const initialProps = await Document.getInitialProps(ctx);
-    const { html, head } = ctx.renderPage();
+    const { head } = ctx.renderPage();
     return { head, ...initialProps };
   }
 

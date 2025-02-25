@@ -8,7 +8,7 @@ import { getFormatDate } from 'src/lib/utils/utils';
 const PostDetail: React.FC = () => {
   const router = useRouter();
   const { id } = router.query;
-  const [content, setContent] = useState<string>('');
+  const [_, setContent] = useState<string>('');
   const [postDetail, setPostDetail] = useState<Post>();
   const getPostDetail = async () => {
     try {
@@ -42,10 +42,8 @@ const PostDetail: React.FC = () => {
         }
       `}
     >
-      {/* <h1 className="topic">{postDetail?.name}</h1> */}
       <p className="create-date">Ngày đăng: {getFormatDate(postDetail?.created)}</p>
       <div dangerouslySetInnerHTML={{ __html: postDetail?.content || '' }}></div>
-      {/* <p className="author">LTD</p> */}
     </div>
   );
 };

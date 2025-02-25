@@ -32,9 +32,7 @@ export const documentSlice = createSlice({
     fetchMostDoc: (state, action: PayloadAction<Document[]>) => {
       state.mostDownDoc = action.payload;
     },
-    updateCart: (state, action: PayloadAction<Document>) => {
-      // //console.log('curernte', current(state));
-    },
+    updateCart: (state, action: PayloadAction<Document>) => {},
     updateLoading: (state, action) => {
       state.updateLoading =
         action.payload === LoadingEnum.INCREMENT

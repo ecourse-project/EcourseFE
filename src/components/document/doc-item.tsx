@@ -3,17 +3,14 @@ import { Popover } from 'antd';
 import { isEqual } from 'lodash';
 import Link from 'next/link';
 import React, { memo, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import CourseService from 'src/lib/api/course';
-import { useQueryParam } from 'src/lib/hooks/useQueryParam';
 import { docActions } from 'src/lib/reducers/document/documentSlice';
-import { RootState } from 'src/lib/reducers/model';
 import { Document, MoveEnum } from 'src/lib/types/backend_modal';
 import { SaleStatusEnum } from 'src/lib/utils/enum';
 import { formatDate } from 'src/lib/utils/format';
 import RoutePaths from 'src/lib/utils/routes';
 import { checkAccountPermission } from 'src/lib/utils/utils';
-import { DocumentParams } from 'src/sections/Pages/DocumentUI';
 
 /* eslint-disable react/prop-types */
 import { css } from '@emotion/react';
@@ -157,15 +154,10 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
             >
               <p className="title">{document.name}</p>
 
-              {/* <Tag color="geekblue">Best Seller</Tag> */}
               <p>Cập nhật: {formatDate(document?.modified)}</p>
-              {/* <p>Dung lượng: {(Number(document?.file?.file_size) / 1024000).toFixed(1)} MB</p> */}
               <p>Dung lượng: {document?.file?.file_size} KB</p>
 
               <p>{document.description}</p>
-              {/* <p className="heart" onClick={() => handleAddFav()}>
-                {currentDoc.is_favorite ? <HeartFilled /> : <HeartOutlined />}
-              </p> */}
             </div>
           }
           trigger="hover"
@@ -177,13 +169,6 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
                 src={`${document?.thumbnail?.image_path || DefaultDocImage.src}`}
                 alt="doc image."
               />
-              {/* <Image
-                // className="doc-img"
-                src={`${document?.thumbnail?.image_path || DefaultDocImage.src}`}
-                alt="doc_image"
-                width={200}
-                height={130}
-              /> */}
             </div>
 
             <div className="doc_info">
@@ -191,29 +176,6 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
               {isSearch && <p>Cập nhật: {formatDate(document?.modified)}</p>}
               {(document as any)?.author && <div className="author">Tác giả: {(document as any)?.author}</div>}
               {isSearch && document.description}
-              {/* <p className="download">
-                <VerticalAlignBottomOutlined />
-                Số lượt tải: {document.sold}
-              </p>
-              <p className="download">
-                <EyeFilled />
-                Số lượt xem: {document.views}
-              </p>
-              <p className="download">
-                <LikeFilled />
-                <span className="rate-score">{Number(document?.rating).toFixed(1)}</span>
-                <span>
-                  <Rating
-                    name="size-large"
-                    defaultValue={Number(Number(document.rating).toFixed(1))}
-                    size="small"
-                    readOnly
-                    style={{ padding: '0 5px' }}
-                  />
-                </span>
-
-                {`(${document.num_of_rates})`}
-              </p> */}
             </div>
           </Link>
         </Popover>
@@ -222,8 +184,6 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
       <div>
         <div className="contact-us">
           <Link href={globalVariable.GMAIL_URL} target="_blank">
-            {/* <WalletOutlined />
-              {formatCurrency(currentCourse.price || 0)} */}
             Liên hệ
           </Link>
 

@@ -23,7 +23,7 @@ interface TabPaneProps {
 const TabPaneSection = React.memo((props: PropsWithChildren<TabPaneProps>) => {
   const { children, className, tabData, title, activeKey, onChangeSwitchTabs } = props;
 
-  const { switchSubTabs, setSwitchSubTabs } = React.useContext(SettingContext);
+  const { _, setSwitchSubTabs } = React.useContext(SettingContext);
 
   if (!tabData) return null;
   return (
@@ -56,14 +56,11 @@ const TabPaneSection = React.memo((props: PropsWithChildren<TabPaneProps>) => {
         }
         .ant-tabs {
           font-size: 16px;
-          &.ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab + .ant-tabs-tab {
-            /* margin-left: 4px !important; */
-          }
+
           .ant-tabs-nav {
             border-bottom: 1px solid #051d29;
             width: 100%;
             .ant-tabs-nav {
-              /* border-bottom: 1px solid #00aaff; */
               .ant-tabs-nav-list {
                 min-width: 200px;
                 .ant-tabs-tab {

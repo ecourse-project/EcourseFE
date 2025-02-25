@@ -1,11 +1,10 @@
-import { Button, Card, Col, Collapse, List, Row, Select, Skeleton } from 'antd';
+import { Button, Card, Col, Collapse, List, Row, Skeleton } from 'antd';
 import moment from 'moment';
 import React from 'react';
 import { OutputOrder } from 'src/lib/types/backend_modal';
 import RoutePaths from 'src/lib/utils/routes';
 
 import { css } from '@emotion/react';
-// import InfoIcon from '@mui/icons-material/Info';
 
 import { InfoOutlined } from '@ant-design/icons';
 import { PaymentInfo as PaymentInfomation } from 'src/lib/types/backend_modal';
@@ -31,9 +30,7 @@ interface BaseType {
 const OrderItem: React.FC<OrderItemPropType> = (props) => {
   const { orderItem, cancelOrder, paymentInfo } = props;
 
-  const onChange = (key: string | string[]) => {
-    //console.log(key);
-  };
+  const onChange = (key: string | string[]) => {};
 
   const genExtra = () => <InfoOutlined />;
   const showModal = () => {
@@ -44,19 +41,6 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
 
   return (
     <div className="modal-over" id="modal-over">
-      {/* <BaseModal
-        getContainer={() => document.getElementById('btn-cancel') || document.body}
-        visible={open}
-        title="Xác nhận huỷ đơn hàng"
-        onOK={handleOk}
-        onCancel={handleCancel}
-        okText="Xác nhận"
-        cancelText="Huỷ"
-        style={{ marginTop: '20%' }}
-        confirmLoading={confirmLoading}
-      >
-        Xác nhận huỷ đơn hàng <strong>#{orderItem.code.split('-')[0].slice(3, 10)}</strong>
-      </BaseModal> */}
       <div className="container" id="order-detail">
         <Collapse
           onChange={onChange}
@@ -147,7 +131,6 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
                             description={item.description}
                             style={{ marginRight: '20px' }}
                           />
-                          {/* <div>{formatCurrency(item.price)}</div> */}
                         </Skeleton>
                       </List.Item>
                     )}
@@ -171,7 +154,6 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
                             description={item.description}
                             style={{ marginRight: '20px' }}
                           />
-                          {/* <div>{formatCurrency(item.price || 0)}</div> */}
                         </Skeleton>
                       </List.Item>
                     )}
@@ -185,14 +167,6 @@ const OrderItem: React.FC<OrderItemPropType> = (props) => {
               ) : (
                 ''
               )}
-              {/* <Row className="total">
-                <Statistic
-                  className="total2"
-                  title="Tổng tiền"
-                  value={formatCurrencySymbol(orderItem.total_price, 'VND', true)}
-                  precision={0}
-                />
-              </Row> */}
             </Card>
           </Panel>
         </Collapse>

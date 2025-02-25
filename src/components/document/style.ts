@@ -7,11 +7,9 @@ export const ItemDocCourseWrapper = styled.div`
   flex-direction: column;
   justify-content: space-between;
   min-height: 100%;
-  /* max-width: 210px; */
   min-width: 200px;
   min-height: 300px;
   &:hover {
-    /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
     transition: all 1s ease;
   }
 
@@ -180,9 +178,7 @@ export const DocCourseWrapper = styled.div`
   text-align: left;
   gap: 25px;
   justify-content: flex-start;
-  /* .ant-col {
-    padding: 0 5px 30px 5px;
-  } */
+
   .item:hover {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     transition: all 1s ease;
@@ -221,9 +217,7 @@ export const PostWrapper = styled.div`
   text-align: left;
   gap: 25px;
   justify-content: flex-start;
-  /* .ant-col {
-    padding: 0 5px 30px 5px;
-  } */
+
   .item:hover {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     transition: all 1s ease;

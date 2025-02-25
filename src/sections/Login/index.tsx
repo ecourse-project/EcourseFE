@@ -5,7 +5,6 @@ import LoginForm from 'src/components/forms/LoginForm';
 import RoutePaths from 'src/lib/utils/routes';
 
 import { css } from '@emotion/react';
-import { HomeOutlined } from '@ant-design/icons';
 
 const LoginUI: React.FC = () => {
   return (
@@ -66,7 +65,6 @@ const LoginUI: React.FC = () => {
               margin-top: 20px;
               border-radius: 5px;
               color: #000;
-              /* text-align: center; */
               margin-bottom: 10px;
               font-size: 34px;
               line-height: 36px;
@@ -136,24 +134,6 @@ const LoginUI: React.FC = () => {
         }
       `}
     >
-      {/* <button
-        className="back-home"
-        css={css`
-          position: absolute;
-          top: 0;
-          left: 0;
-          background-color: transparent;
-          border: none;
-          font-weight: 700;
-          letter-spacing: 1px;
-          cursor: pointer;
-          .anticon-home {
-            font-size: 20px !important;
-          }
-        `}
-      >
-        <HomeOutlined /> Trang chủ
-      </button> */}
       <div className="section-login">
         <div className="wrapper-login">
           <h2 className="login-header">Đăng nhập</h2>

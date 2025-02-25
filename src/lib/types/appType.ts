@@ -80,12 +80,6 @@ export interface NeighbourhoodModels {
 import { ReactElement, ReactNode } from 'react';
 import { Quiz, QuizLocationEnum, QuizResult } from './backend_modal';
 
-// export interface PaginationParams {
-// 	_limit: number;
-// 	_page: number;
-// 	_total: number;
-// }
-
 export interface ListResponse<T> {
   data: T[];
 }

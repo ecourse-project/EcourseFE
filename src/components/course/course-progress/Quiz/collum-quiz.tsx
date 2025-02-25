@@ -1,11 +1,11 @@
+import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 import { Button, Tag, Typography } from 'antd';
-import React, { useEffect, useMemo, useState } from 'react';
-import { MatchQuestion, MatchQuestionAnswer, Question, QuestionTypeEnum, Quiz } from 'src/lib/types/backend_modal';
-import { GrConnect } from 'react-icons/gr';
 import { isEmpty } from 'lodash';
-import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
-const { Text, Link } = Typography;
+import React, { useEffect, useMemo, useState } from 'react';
+import { GrConnect } from 'react-icons/gr';
+import { MatchQuestion, MatchQuestionAnswer, Question, QuestionTypeEnum } from 'src/lib/types/backend_modal';
+const { Text } = Typography;
 const Column = ({ data, onRowClick, selectedRow, matchedPair, isResult = false }) => {
   const disableList = matchedPair.map((v) => [v.first, v.second].flat(Infinity)).flat(Infinity);
   return (
@@ -38,14 +38,13 @@ const Column = ({ data, onRowClick, selectedRow, matchedPair, isResult = false }
         }
       `}
     >
-      {data.map((row, index) => (
+      {data.map((row) => (
         <div
           className={`row ${disableList.includes(row.id) || isResult ? '' : ''} ${
             [selectedRow.first, selectedRow.second].includes(row.id) ? 'selecting' : ''
           }`}
           key={row.id}
           onClick={() => {
-            // if (disableList.includes(row.id)) return;
             onRowClick(row.id);
           }}
         >
@@ -72,9 +71,7 @@ const ColumnQuiz: React.FC<ColumnQuiz> = ({ quiz, onChange, result, isDone }) =>
   const firstColId = useMemo(() => {
     return quizData?.first_column.map((v) => v.id);
   }, [quizData?.first_column]);
-  const secondColId = useMemo(() => {
-    return quizData?.second_column.map((v) => v.id);
-  }, [quizData?.second_column]);
+
   const [selectPair, setSelectPair] = useState<{ first: string; second: string }>({ first: '', second: '' });
   const [matchPair, setMatchPair] = useState<Array<{ first: string; second: string }>>([]);
 
@@ -254,7 +251,6 @@ const ColumnQuiz: React.FC<ColumnQuiz> = ({ quiz, onChange, result, isDone }) =>
       <div className="matched-pair-tag">
         {result ? (
           <>
-            {/* <div>{renderUserAns(result.user_answer, quizData)}</div> */}
             <div className="ans">
               <p>Câu trả lời của bạn: </p>
               <div className="user-ans">
