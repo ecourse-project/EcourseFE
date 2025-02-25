@@ -6,7 +6,6 @@ import { convertDataToUpdateParams } from 'src/components/course/course-progress
 import { RootState } from '../model';
 import { progressAction } from './progressSlice';
 
-// function* watchUpdateProgress(action: PayloadAction<Course>) {
 function* watchUpdateProgress() {
   const state = yield select((state: RootState) => state.progress);
 
@@ -24,16 +23,6 @@ function* watchUpdateProgress() {
     }),
   );
   yield put(progressAction.setCourse(results));
-  // yield debounce(function* () {
-  //   try {
-  //     //console.log('ab');
-  //     const results: Course = yield CourseService.updateClassProgress(state.updateParams);
-  //     const updateParams = convertDataToUpdateParams(results.lessons || []);
-  //     yield put(progressAction.setUpdateParams(updateParams));
-  //   } catch (error) {
-  //     //console.log('error', error);
-  //   }
-  // }, 500)();
 }
 
 function* progressSaga(): Generator<ForkEffect<never>, void, unknown> {

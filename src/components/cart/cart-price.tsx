@@ -132,16 +132,8 @@ const PricingCard: React.FC<ChildProps> = ({ docNum, checkoutList, cartData }) =
         }
       `}
     >
-      {/* <Image src={Img} /> */}
-      {/* <div className="total-price">Tổng đơn:</div> */}
       <Divider />
-      <div className="current-price">
-        {/* {formatCurrencySymbol(checkoutList.total_price, 'VND', true)} */}
-        {/* {'/'}
-				{formatCurrencySymbol(totalPrice, 'VND', true)} */}
-        {/* {totalPrice} */}
-      </div>
-      {/* <Statistic title="Tổng" value={formatCurrency(totalPrice)} /> */}
+      <div className="current-price"></div>
       <AppButton
         btnTextColor={'black'}
         btnStyle={'outline'}
@@ -217,9 +209,6 @@ const PricingCard: React.FC<ChildProps> = ({ docNum, checkoutList, cartData }) =
       >
         <CartOrderBill checkList={checkoutList} cartData={cartData} totalPrice={checkoutList.total_price} />
       </Modal>
-      {/* <Link to="/">
-								<div className="btn btn-outline-primary">Continue Shopping</div>
-							</Link> */}
     </div>
   );
 };

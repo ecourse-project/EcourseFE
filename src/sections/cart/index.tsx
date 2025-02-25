@@ -1,7 +1,6 @@
 /* eslint-disable react/no-children-prop */
 import { Breadcrumb, Checkbox, Col, Divider, Empty, Row, Spin } from 'antd';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import PricingCard from 'src/components/cart/cart-price';
 import CourseService from 'src/lib/api/course';
 import useDebouncedCallback from 'src/lib/hooks/useDebouncedCallback';
@@ -28,7 +27,6 @@ const CartUI: React.FC = () => {
   const [cartData, setCartData] = useState<OCart>();
   const [docCart, setDocCart] = useState<Document[]>([]);
   const [courseCart, setCourseCart] = useState<Course[]>([]);
-  const [isModalVisible, setIsModalVisible] = useState(true);
   const [loading, setLoading] = useState<boolean>(false);
   const [checkedListDoc, setCheckedListDoc] = useState<string[]>([]);
   const [checkedListCourse, setCheckedListCourse] = useState<string[]>([]);
@@ -40,7 +38,6 @@ const CartUI: React.FC = () => {
 
   const [checkedList, setCheckedList] = useState<CalculatePriceArgs>({} as CalculatePriceArgs);
   const [totalPrice, setTotalPrice] = useState<number>(0);
-  const dispatch = useDispatch();
   const getCart = async () => {
     try {
       setLoading(true);
@@ -59,62 +56,36 @@ const CartUI: React.FC = () => {
   }, []);
 
   const onChangeDoc = (list) => {
-    // setCheckedListDoc(list?.map((v) => v.id));
     setCheckedListDoc(list);
     setIndeterminateDoc(!!list.length && list.length < docCart.length);
     setCheckAllDoc(list.length === docCart.length);
   };
 
   const onCheckAllChangeDoc = (e: CheckboxChangeEvent) => {
-    setCheckedListDoc(
-      // e.target.checked ? Array.from(Array(docCart?.length).keys()) : []
-      e.target.checked ? docCart?.map((v) => v.id) : [],
-    );
+    setCheckedListDoc(e.target.checked ? docCart?.map((v) => v.id) : []);
     setIndeterminateDoc(false);
     setCheckAllDoc(e.target.checked);
   };
 
   const onChangeCourse = (list) => {
-    // setCheckedListDoc(list?.map((v) => v.id));
-
     setCheckedListCourse(list);
     setIndeterminateCourse(!!list.length && list.length < courseCart.length);
     setCheckAllCourse(list.length === courseCart.length);
   };
 
   const onCheckAllChangeCourse = (e: CheckboxChangeEvent) => {
-    setCheckedListCourse(
-      // e.target.checked ? Array.from(Array(courseCart?.length).keys()) : []
-      e.target.checked ? courseCart?.map((v) => v.id) : [],
-    );
+    setCheckedListCourse(e.target.checked ? courseCart?.map((v) => v.id) : []);
     setIndeterminateCourse(false);
     setCheckAllCourse(e.target.checked);
   };
 
   useEffect(() => {
-    // //console.log('call debounce');
-    // debounceSetCheckList(checkedListDoc, checkedListCourse);
-    // setCheckAllCourse(Boolean(checkedListCourse.length));
-    // setCheckAllDoc(Boolean(checkedListDoc.length));
     setCheckedList({
       documents: checkedListDoc?.map((v) => v.toString()),
       courses: checkedListCourse?.map((v) => v.toString()),
     });
   }, [checkedListDoc, checkedListCourse]);
 
-  // const debounceSetCheckList = useCallback(
-  // 	(checkedListDoc, checkedListCourse) => {
-  // 		//console.log('before call debounce');
-  // 		debounce((checkedListDoc, checkedListCourse) => {
-  // 			//console.log('set again');
-  // 			// setCheckedList({
-  // 			// 	documents: checkedListDoc?.map((v) => v.toString()),
-  // 			// 	courses: checkedListCourse?.map((v) => v.id),
-  // 			// });
-  // 		}, 1000);
-  // 		setAgain();
-  // 	}
-  // );
   const debouncePrice = useDebouncedCallback(async (checkedList: CalculatePriceArgs) => {
     try {
       if (checkedList.courses?.length || checkedList.documents?.length) {
@@ -137,23 +108,12 @@ const CartUI: React.FC = () => {
       let newCourse = courseCart.slice();
       if (type === NavTypeEnum.COURSE) {
         const removeDoc = await CourseService.moveCourse(id, MoveEnum.CART, MoveEnum.LIST);
-        // const idx = newCourse.findIndex((v) => v.id === removeDoc.id);
-
-        // if (idx >= 0) {
-        //   newCourse.splice(idx, 1);
-        //   setCourseCart(newCourse);
-        // }
         newCourse = newCourse.filter((v) => v.id !== removeDoc.id);
         const newListCourseChecked = checkedListCourse.filter((v) => v !== removeDoc.id);
         setCheckedListCourse(newListCourseChecked);
         setCourseCart(newCourse);
       } else if (type === NavTypeEnum.DOCUMENT) {
         const removeDoc = await CourseService.moveDoc(id, MoveEnum.CART, MoveEnum.LIST);
-        // const idx = newDoc.findIndex((v) => v.id === removeDoc.id);
-        // if (idx >= 0) {
-        //   newDoc.splice(idx, 1);
-        //   setDocCart(newDoc);
-        // }
         newDoc = newDoc.filter((v) => v.id !== removeDoc.id);
         setDocCart(newDoc);
         const newListDocChecked = checkedListDoc.filter((v) => v !== removeDoc.id);
@@ -182,9 +142,6 @@ const CartUI: React.FC = () => {
             width: 19px;
             height: 19px;
             &:after {
-              /* width: 6.714286px;
-              height: 15.142857px; */
-
               border: 3px solid #fff;
               border-top: 0;
               border-left: 0;
@@ -328,10 +285,6 @@ const CartUI: React.FC = () => {
             {!docCart?.length && !courseCart?.length && (
               <Empty className="empty-data" image={Empty.PRESENTED_IMAGE_SIMPLE} />
             )}
-            {/* {cartData?.documents?.length === 0 &&
-						cartData?.courses?.length === 0 && (
-							<Image src={EmptyImg} preview={false} className="empty-img" />
-						)} */}
           </Col>
           <Col span={6}>
             <div className="">

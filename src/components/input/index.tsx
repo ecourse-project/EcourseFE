@@ -1,11 +1,10 @@
 import { Input, InputNumber } from 'antd';
 import { InputProps } from 'antd/lib/input';
-import React, { ChangeEvent, useState } from 'react';
+import React, { useState } from 'react';
 import theme from 'src/styles/theme';
 
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons/lib/icons';
 import { css } from '@emotion/react';
-import styled from '@emotion/styled';
 
 const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean) => {
   let isLabelAffected = isFocusing;
@@ -54,7 +53,6 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean) =>
         border-color: ${theme.text.blackColor};
       }
       &:focus {
-        // border: 1px solid ${theme.text.blueColor};
         box-shadow: none;
       }
     }
@@ -101,9 +99,7 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean) =>
         margin: 0 0 0 10px;
         color: #000;
       }
-      /* text-align: center; */
       border-bottom: 4px solid transparent;
-      /* border-image: linear-gradient(0.25turn, rgba(255, 249, 34), rgba(255, 0, 128), rgba(56, 2, 155, 0)); */
       border-image: linear-gradient(
         207deg,
         rgba(66, 103, 212, 1) 20%,
@@ -128,9 +124,7 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean) =>
         margin: 0 0 0 10px;
       }
       width: 100%;
-      /* text-align: center; */
       border-bottom: 4px solid transparent;
-      /* border-image: linear-gradient(0.25turn, rgba(255, 249, 34), rgba(255, 0, 128), rgba(56, 2, 155, 0)); */
       border-image: linear-gradient(
         207deg,
         rgba(66, 103, 212, 1) 20%,
@@ -289,7 +283,6 @@ const AppInput: React.FC<AppInputProps> = (props) => {
     ...rest
   } = props;
 
-  // const inputRef = React.useRef(null);
   const [isFocusing, setIsFocusing] = useState(!!value);
   const [isEmpty, setIsEmpty] = useState(!value);
   const [typeLocal, setTypeLocal] = useState(type);
@@ -313,13 +306,8 @@ const AppInput: React.FC<AppInputProps> = (props) => {
     }
   };
 
-  // const onInputRefFocus = () => {
-  // 	inputRef.current?.focus();
-  // };
-
   return (
     <div className={className} css={[baseStyle(isForceFocus || isFocusing, isEmpty, hasError)]}>
-      {/* onClick={onInputRefFocus} */}
       {label && <label className="s-label">{`${label}${requiredMark ? `*` : ''}`}</label>}
       {type !== 'number' ? (
         <Input
@@ -330,7 +318,6 @@ const AppInput: React.FC<AppInputProps> = (props) => {
           onBlur={onBlur}
           onFocus={onFocus}
           onChange={onChange}
-          // ref={inputRef}
           onInput={onInput}
         />
       ) : (
@@ -345,7 +332,6 @@ const AppInput: React.FC<AppInputProps> = (props) => {
             onFocus={onFocus}
             onChange={handleChangeNumber}
             min={0}
-            // ref={inputRef}
             css={css`
               &.ant-input-number-group-wrapper {
                 width: 100%;

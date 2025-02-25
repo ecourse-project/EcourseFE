@@ -24,7 +24,7 @@ const PostPage: React.FC = () => {
   const header: NavType[] = useSelector((state: RootState) => state.app.header);
   const [listPost, setlistPost] = useState<Pagination<Post>>();
   const params: DocumentParams = useQueryParam();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [_, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
   const [pagination, setPagination] = useState<PaginationParams>({
@@ -96,7 +96,6 @@ const PostPage: React.FC = () => {
                   display: none !important;
                 }
                 .ant-card {
-                  /* flex: 0 0 calc(25% - 20px); */
                   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
                   &:hover {
                     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -124,15 +123,6 @@ const PostPage: React.FC = () => {
               text-align: center;
             `}
           >
-            {/* <Pagination
-              defaultCurrent={1}
-              current={params.page || pagination.page}
-              pageSize={pagination.limit}
-              total={listDoc?.count || 10}
-              showSizeChanger={false}
-              onChange={onChangePage}
-              hideOnSinglePage
-            /> */}
             <AntPagination
               current={params.page || pagination.page}
               pageSize={pagination.limit}

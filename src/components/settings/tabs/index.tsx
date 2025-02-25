@@ -35,7 +35,7 @@ export const SettingContext = React.createContext<AppContextOptions>({} as AppCo
 
 const SettingTabs: React.FC<{ className?: string }> = React.memo(
   // eslint-disable-next-line react/prop-types
-  ({ className }) => {
+  () => {
     const tabDataSetting: TypeTabPanel[] = [
       {
         id: uuidv4(),
@@ -83,11 +83,9 @@ const SettingTabs: React.FC<{ className?: string }> = React.memo(
     }, []);
     return (
       <div className="">
-        {/* <Card className={className ?? ''}> */}
         <SettingContext.Provider value={appContextValue}>
           <TabPaneSettingsSection tabData={tabDataSetting} activeKey={switchTabs || TabSettingKey.MY_LEARNING} />
         </SettingContext.Provider>
-        {/* </Card> */}
       </div>
     );
   },

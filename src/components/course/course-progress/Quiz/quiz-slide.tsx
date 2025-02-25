@@ -59,50 +59,7 @@ const QuizSlide: React.FC<QuizSwiperProps> = ({ listQuiz, onChangeQuiz, quizResu
             padding: 60px 0;
           }
         `}
-      >
-        {/* {listQuiz?.map((quiz, i) => {
-          if (quiz.question_type === QuestionTypeEnum.CHOICES) {
-            //trac ngiem
-            return (
-              <div className="quiz-item" key={quiz.id}>
-                <SwiperSlide>
-                  <ChoiceQuiz
-                    quiz={quiz}
-                    onChange={(quiz_id, question_type, answer) => onChangeQuiz({ quiz_id, question_type, answer })}
-                    result={quizResult?.choices_quiz.result?.find((v) => v.quiz_id === quiz.id)}
-                  />
-                </SwiperSlide>
-              </div>
-            );
-          } else if (quiz.question_type === QuestionTypeEnum.MATCH) {
-            //column
-            return (
-              <div className="quiz-item" key={quiz.id}>
-                <SwiperSlide>
-                  <ColumnQuiz
-                    quiz={quiz}
-                    onChange={(quiz_id, question_type, answer) => onChangeQuiz({ quiz_id, question_type, answer })}
-                    result={quizResult?.match_quiz?.find((v) => v.quiz_id === quiz.id)}
-                  />
-                </SwiperSlide>
-              </div>
-            );
-          } else if (quiz.question_type === QuestionTypeEnum.FILL) {
-            //fill
-            return (
-              <div className="quiz-item" key={quiz.id}>
-                <SwiperSlide>
-                  <FillQuiz
-                    quiz={quiz}
-                    onChange={(quiz_id, question_type, answer) => onChangeQuiz({ quiz_id, question_type, answer })}
-                    result={quizResult?.fill_quiz?.find((v) => v.quiz_id === quiz.id)}
-                  />
-                </SwiperSlide>
-              </div>
-            );
-          }
-        })} */}
-      </Swiper>
+      ></Swiper>
     </div>
   );
 };

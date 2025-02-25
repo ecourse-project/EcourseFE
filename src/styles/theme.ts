@@ -1,4 +1,3 @@
-// Based on your final design
 const layout = {
   minHeight: 940,
   maxWidth: 1440,

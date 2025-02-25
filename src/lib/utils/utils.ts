@@ -1,11 +1,11 @@
+import { message } from 'antd';
+import { RcFile } from 'antd/es/upload';
+import { UploadFile } from 'antd/lib';
 import _ from 'lodash';
 import moment from 'moment';
 import { forceLogout } from './auth';
-import { StorageKeys, TagState } from './enum';
-import { RcFile } from 'antd/es/upload';
-import { message } from 'antd';
-import { UploadFile } from 'antd/lib';
 import { PUNCTUATION_MARK } from './constant';
+import { StorageKeys } from './enum';
 
 export interface DurationTime {
   days: number;
@@ -36,10 +36,6 @@ export const getFormatDate = (dateInput) => {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
-    // hour: '2-digit',
-    // minute: '2-digit',
-    // second: '2-digit',
-    // timeZone: 'UTC',
   };
 
   const formattedDate = date.toLocaleString('en-US', options as any);
@@ -56,10 +52,6 @@ export const beforeUpload = (file: RcFile) => {
   if (!isJpgOrPng) {
     message.error('You can only upload JPG/PNG file!');
   }
-  // const isLt2M = file.size / 1024 / 1024 < 2;
-  // if (!isLt2M) {
-  //   message.error('Image must smaller than 2MB!');
-  // }
   return isJpgOrPng;
 };
 export const onPreview = async (file: UploadFile) => {
@@ -127,8 +119,6 @@ export function isIframeOrUrl(str) {
   // Regex pattern to match an iframe tag
   const iframeRegex = /<iframe.*>.*<\/iframe>/i;
 
-  // Regex pattern to validate a URL
-  const urlRegex = /^(https?:\/\/)?([\w.-]+)\.([a-z]{2,})(\/.*)?$/i;
 
   if (iframeRegex.test(str)) {
     return true;

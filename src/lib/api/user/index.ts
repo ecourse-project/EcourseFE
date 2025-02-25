@@ -4,18 +4,6 @@ import { OIsExist, OPasswordChange, OPasswordRest, ORegistration, User } from 's
 import { apiURL } from '../course';
 
 class UserService {
-  // static getMyProfile(): Promise<any> {
-  // 	return apiClient.get(apiURL.me());
-  // }
-  // static register(params: IRegistration): Promise<ORegistration> {
-  // 	return apiClient.post(apiURL.register(), {
-  // 		...params,
-  // 	});
-  // }
-  // static existsEmail(email: string): Promise<OIsExist> {
-  // 	return apiClient.get(apiURL.existEmail(email));
-  // }
-
   static myInfo(): Promise<User> {
     return apiClient.get(apiURL.me());
   }

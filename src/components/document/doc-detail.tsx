@@ -188,27 +188,9 @@ const DocDetail: React.FC = () => {
         setLoading(false);
       }, 1000);
     }
-    // if (doc.sale_status !== SaleStatusEnum.BOUGHT) {
-    //   setLoading(true);
-    //   dispatch(docActions.updateCart(doc));
-    //   setTimeout(() => {
-    //     if (doc.sale_status === SaleStatusEnum.AVAILABLE) {
-    //       doc.sale_status = SaleStatusEnum.IN_CART;
-    //     } else if (doc.sale_status === SaleStatusEnum.IN_CART) {
-    //       doc.sale_status = SaleStatusEnum.AVAILABLE;
-    //     }
-    //     setLoading(false);
-    //   }, 1000);
-    // }
   };
 
-  const items = [
-    // {
-    //   label: 'Nhận xét',
-    //   key: 'feedback',
-    //   children: <FeedbackSection rateList={doc?.rating_detail || []} />,
-    // },
-  ];
+  const items = [];
 
   return (
     <div
@@ -263,9 +245,6 @@ const DocDetail: React.FC = () => {
             padding: 20px 5px;
           }
         }
-        /* a.ant-btn {
-          padding-top: 8px !important;
-        } */
         .add-btn {
           display: flex;
           align-items: center;
@@ -302,28 +281,9 @@ const DocDetail: React.FC = () => {
       <PageHeader
         title={doc?.topic}
         className="site-page-header"
-        // subTitle="This is a subtitle"
-        // tags={
-        //   <>
-        //     {tags(TagState.SUCCESS, `${doc.sold} lượt mua`)}
-        //     {tags(TagState.WAITING, 'Cập nhật gần đây')}
-
-        //     {doc.sale_status === SaleStatusEnum.PENDING && tags(TagState.PROCESSING, 'Chờ thanh toán')}
-        //     {doc.sale_status === SaleStatusEnum.BOUGHT && tags(TagState.SUCCESS, 'Đã mua')}
-        //     {(doc.sale_status === SaleStatusEnum.AVAILABLE || doc.sale_status === SaleStatusEnum.IN_CART) &&
-        //       tags(TagState.ERROR, `Bán chạy của chủ đề ${doc.title}`)}
-        //   </>
-        // }
         avatar={{
           src: 'https://avatars1.githubusercontent.com/u/8186664?s=460&v=4',
         }}
-        // extra={
-        //   doc.sale_status === SaleStatusEnum.BOUGHT && (
-        //     <Button className="rating-btn" onClick={() => setOpenRatingModal(true)}>
-        //       Đánh giá <StarFilled />
-        //     </Button>
-        //   )
-        // }
       >
         <Content
           extraContent={
@@ -332,14 +292,7 @@ const DocDetail: React.FC = () => {
         >
           {content}
         </Content>
-        {/* <Statistic
-          // title="GIÁ"
-          value={formatCurrency(doc?.price || 0)}
-          style={{
-            marginLeft: '10px',
-            fontWeight: 'bold',
-          }}
-        /> */}
+
         {doc.sale_status !== SaleStatusEnum.PENDING ? (
           <Button
             key="1"
@@ -383,16 +336,6 @@ const DocDetail: React.FC = () => {
         )}
       </PageHeader>
       <Tabs items={items} className="tab-section" />
-      {/* <div className="rating-modal-1">
-        <RatingModal
-          visible={openRatingModal}
-          countStar={(value) => setStar(value)}
-          onChangeFeedback={(value) => setFeedback(value)}
-          onClose={() => setOpenRatingModal(false)}
-          onSave={handleSaveRating}
-          rated={isEmpty(myRate) ? doc.my_rating : myRate || undefined}
-        />
-      </div> */}
     </div>
   );
 };

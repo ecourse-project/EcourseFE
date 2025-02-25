@@ -27,7 +27,6 @@ const Game = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Check user answers
     const currentSentence = gameData[sentenceIndex];
     const isCorrect = currentSentence.answers.every(
       (answer, index) => answer.toLowerCase() === userInputs[index].toLowerCase(),
@@ -39,7 +38,6 @@ const Game = () => {
     if (sentenceIndex < gameData.length - 1) {
       setSentenceIndex(sentenceIndex + 1);
     } else {
-      // Game completion logic
       alert('Congratulations! You completed the game!');
     }
   };

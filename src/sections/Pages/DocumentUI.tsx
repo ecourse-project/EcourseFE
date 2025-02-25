@@ -48,7 +48,6 @@ const DocumentUI: React.FC = () => {
     try {
       setLoading(true);
       const newPagination = { ...pagination };
-      // if (!params.page) pagination.page = 1;
       if (!token) {
         const homeDoc = await CourseService.getHomeDocs(
           newPagination,
@@ -86,7 +85,6 @@ const DocumentUI: React.FC = () => {
               `}
             />
           </Breadcrumb.Item>
-          {/* <Breadcrumb.Item href={`${RoutePaths.DOCUMENT}?document=ALL&page=${1}&header=${params.header}`}> */}
           <Breadcrumb.Item>{params?.header}</Breadcrumb.Item>
           <Breadcrumb.Item>{topicLabel}</Breadcrumb.Item>
         </Breadcrumb>
@@ -117,15 +115,6 @@ const DocumentUI: React.FC = () => {
               text-align: center;
             `}
           >
-            {/* <Pagination
-              defaultCurrent={1}
-              current={params.page || pagination.page}
-              pageSize={pagination.limit}
-              total={listDoc?.count || 10}
-              showSizeChanger={false}
-              onChange={onChangePage}
-              hideOnSinglePage
-            /> */}
             <AntPagination
               current={params.page || pagination.page}
               pageSize={pagination.limit}

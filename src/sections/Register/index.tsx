@@ -3,7 +3,6 @@ import RegisterForm from 'src/components/forms/RegisterForm';
 
 import { css } from '@emotion/react';
 import Link from 'next/link';
-import { RollbackOutlined } from '@ant-design/icons';
 
 const RegisterSection: React.FC = () => {
   return (
@@ -36,7 +35,6 @@ const RegisterSection: React.FC = () => {
             margin-right: auto;
             margin-left: auto;
             .user-avatar {
-              /* margin-top: -80px; */
               .user-wrapper {
                 display: flex;
                 width: 80px;
@@ -96,14 +94,7 @@ const RegisterSection: React.FC = () => {
     >
       <div className="section-register">
         <div className="wrapper-register">
-          <div className="user-avatar">
-            {/* <div className="user-wrapper">
-              <h2>
-                <FaRegUser />
-              </h2>
-            </div> */}
-          </div>
-          {/* <h2 className="register-header">Create Account</h2> */}
+          <div className="user-avatar"></div>
           <RegisterForm />
           <Link className="back-home" href={'/'}>
             Về trang chủ

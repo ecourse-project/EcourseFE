@@ -44,7 +44,6 @@ const ChangePasswordForm: React.FC = () => {
           await CourseService.changePwd(currentPassword, changePassword, confirmPassword);
           AlertTextSuccess('Lưu Thành Công ', 'Mật khẩu đã được đổi');
         });
-        // AlertTextSuccess('Save Changes Succeeded', 'Password was changed successfully');
 
         formik.resetForm();
       } catch (error: any) {
@@ -93,9 +92,7 @@ const ChangePasswordForm: React.FC = () => {
             margin-bottom: 10px;
             position: relative;
             height: 100%;
-            /* .form-item-error {
-                position: absolute;
-              } */
+
             @media (max-width: ${theme.media.tablets}px) {
               grid-column-start: span 2;
               grid-column-end: span 2;
@@ -109,9 +106,6 @@ const ChangePasswordForm: React.FC = () => {
             margin-bottom: 10px;
             position: relative;
             height: 100%;
-            /* .form-item-error {
-                position: absolute;
-              } */
           }
           .form-item-button {
             grid-row-start: span 1;

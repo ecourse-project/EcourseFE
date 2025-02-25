@@ -15,13 +15,12 @@ interface TabPaneProps {
   className?: string;
   title?: string;
   activeKey?: string;
-  btnAddDripCampaign?: () => void;
   tabData: Array<TypeTabPanel>;
   onChangeSwitchTabs?: (v) => void;
 }
 
 export const TabPaneSettingsSection: React.FC<TabPaneProps> = React.memo((props: PropsWithChildren<TabPaneProps>) => {
-  const { children, className, tabData, title, activeKey, btnAddDripCampaign, onChangeSwitchTabs } = props;
+  const { children, className, tabData, title, activeKey, onChangeSwitchTabs } = props;
 
   const { setSwitchTabs } = React.useContext(SettingContext);
 
@@ -118,16 +117,7 @@ export const TabPaneSettingsSection: React.FC<TabPaneProps> = React.memo((props:
       >
         {tabData?.map((v) => {
           return (
-            <TabPane
-              // tab={
-              //   <span className="user-icon">
-              //     {v.label}
-              //     <span>{v.icon}</span>
-              //   </span>
-              // }
-              tab={v.label}
-              key={v.key}
-            >
+            <TabPane tab={v.label} key={v.key}>
               {v.content}
             </TabPane>
           );

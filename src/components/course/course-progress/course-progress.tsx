@@ -400,8 +400,6 @@ const CourseProgress = () => {
                       light={false}
                       stopOnUnmount={false}
                     />
-
-                    {/* <VideoJS options={videoJsOptions} onReady={handlePlayerReady} /> */}
                   </div>
                 </>
               ) : state.selectedVideo?.use_embedded_url ? (
@@ -507,24 +505,11 @@ const CourseProgress = () => {
                   isShowLessonDetail={true}
                   listQuiz={listQuiz || []}
                   isEditing={isEditing}
-
-                  // courseDetail={course || ({} as Course)}
-                  // onUpdate={(data) => onUpdate(data, JSON.parse(JSON.stringify(checkedItems)))}
                 />
               )}
             />
           </Col>
         </Row>
-        {/* <div className="rating-modal-1">
-          <RatingModal
-            visible={openRatingModal}
-            countStar={(value) => setStar(value)}
-            onChangeFeedback={(value) => setFeedback(value)}
-            onClose={() => setOpenRatingModal(false)}
-            onSave={handleSaveRating}
-            rated={isEmpty(myRate) ? course?.my_rating : myRate}
-          />
-        </div> */}
       </div>
     </CourseProgressWrapper>
   );

@@ -11,8 +11,9 @@
     "typescript": "tsc --project tsconfig.json --noEmit",
     "buildPro": "npm run clean && npm install && next build",
     "start": "next start",
-    "lint": "next lint",
-    "pretty": "prettier --write \"./**/*.{js,jsx,ts,tsx,json}\""
+    "pretty": "prettier --write \"./**/*.{js,jsx,ts,tsx,json}\"",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix"
   },
   "dependencies": {
     "@ant-design/compatible": "^5.1.2",
@@ -82,6 +83,7 @@
     "dotenv-webpack": "^8.0.1",
     "eslint": "^8.49.0",
     "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-unused-imports": "^4.1.4",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.5",
     "postcss-lit": "^1.1.0",

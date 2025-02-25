@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
-import React, { useEffect, useState } from 'react';
 import { cloneDeep } from 'lodash';
-import { FillQuestionAnswer, Question, QuestionTypeEnum, Quiz } from 'src/lib/types/backend_modal';
+import React, { useEffect, useState } from 'react';
+import { FillQuestionAnswer, Question, QuestionTypeEnum } from 'src/lib/types/backend_modal';
 interface FillQuizProps {
   quiz: Question;
   onChange: (
@@ -10,13 +10,11 @@ interface FillQuizProps {
     answer: string | Array<string> | Array<Array<string>>,
   ) => void;
   result: FillQuestionAnswer | undefined;
-  isDone: boolean;
 }
-const defaultIndex = 0;
-const FillQuiz: React.FC<FillQuizProps> = ({ quiz, onChange, result, isDone }) => {
+const FillQuiz: React.FC<FillQuizProps> = ({ quiz, onChange, result }) => {
   const [userInputs, setUserInputs] = useState<string[]>([]);
   const fillQuiz = (quiz.fill_blank_question?.content || '')?.replaceAll('{{}}', '{{}} ');
-  const [numberInput, setNumberInput] = useState<number>(0);
+  const [_, setNumberInput] = useState<number>(0);
   const correctAnswer = cloneDeep(result?.correct_answer);
   const userAnswer = cloneDeep(result?.user_answer);
   useEffect(() => {

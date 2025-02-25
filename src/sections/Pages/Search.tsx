@@ -2,42 +2,18 @@
 
 import { UnorderedListOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
-import { Card, Col, Empty, Row, Spin } from 'antd';
-import { StaticImageData } from 'next/image';
+import { Card, Col, Empty, Row } from 'antd';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import CourseItem from 'src/components/course/course-item';
 import DocItem from 'src/components/document/doc-item';
 import { DocCourseWrapper } from 'src/components/document/style';
-import HomeData from 'src/components/home';
 import HomeSide from 'src/components/home/homeSide';
 import HomeTopicCard from 'src/components/home/homeTopicCard';
 import CourseService from 'src/lib/api/course';
-import { Course, Document, Home, Homepage, NavTypeEnum, SearchItem } from 'src/lib/types/backend_modal';
+import { NavTypeEnum, SearchItem } from 'src/lib/types/backend_modal';
 import RoutePaths from 'src/lib/utils/routes';
-
-interface InitialState {
-  listDoc: Document[];
-  listCourse: Course[];
-}
-
-enum HomeActionKind {
-  LIST_DOC = 'LIST_DOC',
-  LIST_COURSE = 'LIST_COURSE',
-  UPDATE_DOC = 'UPDATE_DOC',
-  UPDATE_COURSE = 'UPDATE_COURSE',
-}
-export interface ActionBase {
-  type: string;
-  payload?: any;
-}
-
-export interface ICategory {
-  name: string;
-  img: StaticImageData;
-  url: string;
-}
 
 const SearchPageUI = () => {
   const router = useRouter();
@@ -84,7 +60,6 @@ const SearchPageUI = () => {
               }
             `}
           >
-            {/* <AppstoreAddOutlined /> */}
             <Card
               title={`Kết quả tìm kiếm của "${searchTerm || ''}"`}
               extra={

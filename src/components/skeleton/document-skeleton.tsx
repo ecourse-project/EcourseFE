@@ -3,7 +3,7 @@ import Skeleton from 'react-loading-skeleton';
 
 import { css } from '@emotion/react';
 
-function DocCourseItemSkeleton(props) {
+function DocCourseItemSkeleton() {
   return (
     <div
       css={css`

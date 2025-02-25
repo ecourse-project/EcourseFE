@@ -1,24 +1,19 @@
 /* eslint-disable prettier/prettier */
 
-import { Card, FloatButton, Input } from 'antd';
-import { debounce } from 'lodash';
-import { useState } from 'react';
-import CourseService from 'src/lib/api/course';
-import { ChatGPTMessage } from 'src/lib/types/backend_modal';
-// import { ProChat } from '@ant-design/pro-chat';
-import { useTheme } from 'antd-style';
-import { ChatMessage, ProChat } from 'src/components/prochat/pro-chat';
-import useCourseHook from 'src/lib/api/course/query-hooks/useCourseHook';
-import Loading from 'src/components/prochat/pro-chat/es/ChatItem/components/Loading';
-import useChatHistory from 'src/lib/api/course/query-hooks/useChatHistory';
-import { ArrowLeftOutlined, RollbackOutlined } from '@ant-design/icons';
-import { useRouter } from 'next/router';
-import { GiEntryDoor } from 'react-icons/gi';
-const { Search } = Input;
-import { TbDoorEnter } from 'react-icons/tb';
 import styled from '@emotion/styled';
+import { FloatButton } from 'antd';
+import { useTheme } from 'antd-style';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { TbDoorEnter } from 'react-icons/tb';
+import { ChatMessage, ProChat } from 'src/components/prochat/pro-chat';
+import Loading from 'src/components/prochat/pro-chat/es/ChatItem/components/Loading';
+import CourseService from 'src/lib/api/course';
+import useChatHistory from 'src/lib/api/course/query-hooks/useChatHistory';
+import { ChatGPTMessage } from 'src/lib/types/backend_modal';
+
 const GPTPageUI = () => {
-  const [loading, setLoading] = useState<boolean>(false);
+  const [_, setLoading] = useState<boolean>(false);
   const theme = useTheme();
   const route = useRouter();
   const getSearchData = async (searchTerm: string) => {

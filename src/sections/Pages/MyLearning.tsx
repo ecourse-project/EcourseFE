@@ -1,28 +1,20 @@
-import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import MyCourseUI from 'src/components/course/my-course';
 import WishListUI from 'src/components/course/my-course/wish-list';
 import { SettingContext } from 'src/components/settings/tabs';
 import TabPaneSection from 'src/components/tab-pane-learning';
 import CourseService from 'src/lib/api/course';
-import { useQueryParam } from 'src/lib/hooks/useQueryParam';
-import { Course, Document, FavoriteList } from 'src/lib/types/backend_modal';
 import { TypeTabPanel } from 'src/lib/types/appType';
+import { Course, Document, FavoriteList } from 'src/lib/types/backend_modal';
 import { v4 as uuidv4 } from 'uuid';
 
 import { css } from '@emotion/react';
 
-interface MyLearnParams {
-  tab?: string;
-  subtab?: string;
-}
 export enum LearningTabsKey {
   MY_COURSES = 'MY_COURSES',
   WISH_LIST = 'WISH_LIST',
 }
 const MyLearning: React.FC = () => {
-  const router = useRouter();
-  const params: MyLearnParams = useQueryParam();
   const { switchSubTabs, setSwitchSubTabs } = React.useContext(SettingContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [myCourses, setMyCourses] = useState<Course[]>();
@@ -48,9 +40,6 @@ const MyLearning: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
-  const onChange = (key: string) => {
-    //console.log(key);
   };
 
   const tabDataLearning: TypeTabPanel[] = [

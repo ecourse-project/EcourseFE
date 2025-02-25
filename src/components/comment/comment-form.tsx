@@ -24,9 +24,6 @@ const CommentForm: React.FC<CommentFormProps> = ({ onAddComment }) => {
     validateOnChange: true,
     validateOnBlur: true,
     onSubmit: (values) => {
-      // if (!values.content.length) {
-      // 	return;
-      // }
       setSubmitting(true);
       setTimeout(() => {
         formik.setFieldValue('content', '');
@@ -94,18 +91,6 @@ const CommentForm: React.FC<CommentFormProps> = ({ onAddComment }) => {
       onSubmit={formik.handleSubmit}
     >
       <div className="form-item">
-        {/* <AppInput
-					className="field password-field"
-					label=""
-					name="content"
-					type="content"
-					disabled={isLoading}
-					placeholder="content"
-					handleChange={formik.handleChange}
-					handleBlur={formik.handleBlur}
-					value={formik.values.content}
-					hasError={hasError('content')}
-				/> */}
         <TextArea
           className="comment_box"
           name="content"
@@ -120,15 +105,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ onAddComment }) => {
             inputRef.current = el;
           }}
           onFocus={() => setFocus(true)}
-          // onBlur={() => setFocus(false)}
-          // onPressEnter={(e) => {
-          // 	e.preventDefault();
-          // 	formik.handleSubmit();
-          // }}
         />
-        {/* {hasError('content') ? (
-					<ErrorMessage>{formik.errors?.content}</ErrorMessage>
-				) : null} */}
       </div>
       {focus ? (
         <div className="form-item btn_group">

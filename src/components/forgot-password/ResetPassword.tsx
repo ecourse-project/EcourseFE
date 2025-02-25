@@ -95,7 +95,6 @@ const ResetPassword: React.FC = () => {
     >
       <div className="wrapper">
         <div className="left-out" onClick={() => router.push(RoutePaths.HOME)}>
-          {/* <Image src={<LuTimerReset />} preview={false} /> */}
           <TiArrowBack />
         </div>
 
@@ -121,7 +120,6 @@ const ResetPassword: React.FC = () => {
                     className="btn-login"
                     type="primary"
                     htmlType="submit"
-                    // disabled={formik.isSubmitting}
                     onClick={() => router.push(RoutePaths.LOGIN)}
                   >
                     Done

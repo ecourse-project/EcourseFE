@@ -22,8 +22,6 @@ const ShowCounter = ({ hours, minutes, seconds }) => {
   return (
     <div className="show-counter">
       <a href="https://tapasadhikary.com" target="_blank" rel="noopener noreferrer" className="countdown-link">
-        {/* <DateTimeDisplay value={days} type={'Days'} isDanger={days <= 3} />
-        <p>:</p> */}
         <DateTimeDisplay value={hours} type={'Hours'} isDanger={hours > 0} />
         <p>:</p>
         <DateTimeDisplay value={minutes} type={'Mins'} isDanger={minutes > 0 && hours <= 0} />
@@ -46,7 +44,6 @@ const CountdownTimer = ({ targetDate, expired }) => {
   } else {
     return (
       <CountDownStyled>
-        {/* <ShowCounter days={days} hours={hours} minutes={minutes} seconds={seconds} />; */}
         <ShowCounter hours={hours} minutes={minutes} seconds={seconds} />
       </CountDownStyled>
     );
