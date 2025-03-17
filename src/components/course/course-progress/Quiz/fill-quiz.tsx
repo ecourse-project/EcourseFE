@@ -10,6 +10,7 @@ interface FillQuizProps {
     answer: string | Array<string> | Array<Array<string>>,
   ) => void;
   result: FillQuestionAnswer | undefined;
+  isDone: boolean;
 }
 const FillQuiz: React.FC<FillQuizProps> = ({ quiz, onChange, result }) => {
   const [userInputs, setUserInputs] = useState<string[]>([]);

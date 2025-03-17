@@ -23,7 +23,7 @@ interface TabPaneProps {
 const TabPaneSection = React.memo((props: PropsWithChildren<TabPaneProps>) => {
   const { children, className, tabData, title, activeKey, onChangeSwitchTabs } = props;
 
-  const { _, setSwitchSubTabs } = React.useContext(SettingContext);
+  const { setSwitchSubTabs } = React.useContext(SettingContext);
 
   if (!tabData) return null;
   return (
