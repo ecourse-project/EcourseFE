@@ -119,7 +119,6 @@ export function isIframeOrUrl(str) {
   // Regex pattern to match an iframe tag
   const iframeRegex = /<iframe.*>.*<\/iframe>/i;
 
-
   if (iframeRegex.test(str)) {
     return true;
   }
