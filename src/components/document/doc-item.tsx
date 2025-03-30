@@ -20,6 +20,7 @@ import DefaultDocImage from 'src/assets/images/docDefault.jpg';
 import globalVariable from 'src/lib/config/env';
 import AppButton from '../button';
 import { ItemDocCourseWrapper } from './style';
+import Image from 'next/image';
 
 interface ChildProps {
   document: Document; // try not to use any.
@@ -123,6 +124,16 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
           font-size: 18px;
           color: ${btnString === BtnString.AVAILABLE ? Color.AVAILABLE : Color.IN_CART};
         }
+        .detail {
+          display: block;
+          height: 100%;
+        }
+        .doc--image {
+          position: relative;
+          img {
+            position: relative !important;
+          }
+        }
       `}
       className={className}
     >
@@ -164,10 +175,12 @@ const DocItem: React.FC<ChildProps> = memo((props) => {
         >
           <Link href={`${RoutePaths.DOCUMENT}/${document.id}`} className="detail">
             <div className="doc--image">
-              <img
+              <Image
                 className="doc-img"
                 src={`${document?.thumbnail?.image_path || DefaultDocImage.src}`}
                 alt="doc image."
+                width={200}
+                height={130}
               />
             </div>
 

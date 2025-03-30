@@ -1,13 +1,11 @@
 import { Popover } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import DefaultCourseImage from 'src/assets/images/online-course.png';
 import CourseService from 'src/lib/api/course';
 import { useQueryParam } from 'src/lib/hooks/useQueryParam';
-import { courseAction } from 'src/lib/reducers/course/courseSlice';
 import { Course, MoveEnum, RequestStatus } from 'src/lib/types/backend_modal';
 import { BtnString, Color, SaleStatusEnum } from 'src/lib/utils/enum';
 import { formatDate } from 'src/lib/utils/format';
@@ -17,6 +15,7 @@ import { CourseClassParams } from 'src/sections/Pages/CourseUI';
 
 import { css } from '@emotion/react';
 
+import Image from 'next/image';
 import IconChecked from 'src/assets/icons/IconChecked';
 import globalVariable from 'src/lib/config/env';
 import AppButton from '../button';
@@ -124,6 +123,16 @@ const CourseItem: React.FC<ChildProps> = (props) => {
           font-size: 18px;
           color: ${btnString === BtnString.AVAILABLE ? Color.AVAILABLE : Color.IN_CART};
         }
+        .detail {
+          display: block;
+          height: 100%;
+        }
+        .doc--image {
+          position: relative;
+          img {
+            position: relative !important;
+          }
+        }
       `}
       className={className}
     >
@@ -162,10 +171,12 @@ const CourseItem: React.FC<ChildProps> = (props) => {
       >
         <Link href={`${params.isClass ? RoutePaths.CLASS : RoutePaths.COURSE}/${currentCourse.id}`} className="detail">
           <div className="doc--image">
-            <img
+            <Image
               className="doc-img"
               src={`${currentCourse?.thumbnail?.image_path || DefaultCourseImage.src}`}
               alt="course_image"
+              width={200}
+              height={130}
             />
           </div>
           <div className="doc_info">
