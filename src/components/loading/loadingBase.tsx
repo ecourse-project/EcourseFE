@@ -4,7 +4,6 @@ import React, { ReactNode } from 'react';
 import { LoadingOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import Loading from 'src/assets/icons/loading.gif';
 export interface ILoadingPageProps {
   isLoading: boolean;
   cssName?: string;
