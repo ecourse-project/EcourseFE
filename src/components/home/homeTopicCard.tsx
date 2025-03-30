@@ -1,10 +1,9 @@
-import { Image } from 'antd';
-
 import styled from '@emotion/styled';
 import { Post } from 'src/lib/types/backend_modal';
 import Link from 'next/link';
 import RoutePaths from 'src/lib/utils/routes';
 import { getFormatDate } from 'src/lib/utils/utils';
+import Image from 'next/image';
 
 export interface IHomeTopicCardProps {
   post: Post;
@@ -53,12 +52,14 @@ const HomeTopicCardWrapper = styled.div`
   .postItem {
     .post-detail {
       display: ${(props: { isSearch: boolean }) => (props.isSearch ? 'flex' : 'grid')};
+      position: relative;
     }
     width: 100%;
     img {
       width: 200px;
       height: 130px;
       aspect-ratio: auto 240/135;
+      position: relative !important;
     }
   }
   .post-content {
@@ -66,12 +67,12 @@ const HomeTopicCardWrapper = styled.div`
   }
 `;
 export default function HomeTopicCard(props: IHomeTopicCardProps) {
-  const { post, isSideBar, isSearch } = props;
+  const { post, isSearch } = props;
   return (
     <HomeTopicCardWrapper isSearch={!!isSearch}>
       <div className="postItem">
         <Link href={`${RoutePaths.POST}/${post.id}`} className="post-detail">
-          <Image src={post?.thumbnail?.image_path} preview={false} />
+          <Image src={post?.thumbnail?.image_path} alt="img" width={200} height={130} />
           <div className="post-content">
             <p className="post-name">{post?.name}</p>
             {(post as any)?.author && <div className="author">Tác giả: {(post as any)?.author}</div>}

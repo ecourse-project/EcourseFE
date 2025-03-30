@@ -1,10 +1,10 @@
 import { Spin } from 'antd';
-/* eslint-disable @next/next/no-img-element */
 import React, { useState } from 'react';
 import { Course, Document, NavTypeEnum } from 'src/lib/types/backend_modal';
 
 import { DeleteOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
+import Image from 'next/image';
 
 interface ChildProps {
   document?: Document;
@@ -89,15 +89,13 @@ const CartItemRow: React.FC<ChildProps> = ({ document, course, isDeleteBtn = tru
       {document && !course && (
         <div className="document-item">
           <div className="document-content">
-            <img
+            <Image
               className="thumb"
               src={`${document?.thumbnail?.image_path}`}
-              // src="https://localhost:4000/media/2022/08/14/gdcd.png"
-
               width={80}
               height={80}
               alt="Product image."
-              style={{ objectFit: 'cover' }}
+              objectFit="cover"
             />
             <div className="description">
               <p className="doc-name">{document?.name}</p>
@@ -127,15 +125,13 @@ const CartItemRow: React.FC<ChildProps> = ({ document, course, isDeleteBtn = tru
       {!document && course && (
         <div className="document-item">
           <div className="document-content">
-            <img
+            <Image
               className="thumb"
               src={`${course?.thumbnail?.image_path}`}
-              // src="https://localhost:4000/media/2022/08/14/gdcd.png"
-
               width={80}
               height={80}
               alt="Product image."
-              style={{ objectFit: 'cover' }}
+              objectFit="cover"
             />
             <div className="description">
               <p className="doc-name">{course.name}</p>

@@ -1,7 +1,6 @@
 import { ExclamationCircleFilled, FileTextOutlined, PlayCircleFilled } from '@ant-design/icons';
 import { css } from '@emotion/react';
 import { Card, Checkbox, Collapse, List, Modal } from 'antd';
-import { debounce } from 'lodash';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -10,12 +9,11 @@ import ExamImg from 'src/assets/images/exam.png';
 import AppSelect from 'src/components/select';
 import { RootState } from 'src/lib/reducers/model';
 import { progressAction } from 'src/lib/reducers/progress/progressSlice';
-import { Lesson, Quiz, QuizLocationEnum, UpdateLessonArgs } from 'src/lib/types/backend_modal';
+import { QuizItemSetting } from 'src/lib/types/appType';
+import { Lesson, Quiz, UpdateLessonArgs } from 'src/lib/types/backend_modal';
+import { QuizAssignEnum } from 'src/lib/utils/enum';
 import RoutePaths from 'src/lib/utils/routes';
 import { DurationTime, formatDurationTime, uniqueArr, updateURLParams } from 'src/lib/utils/utils';
-import { cloneDeep } from 'lodash';
-import { QuizItemSetting } from 'src/lib/types/appType';
-import { QuizAssignEnum } from 'src/lib/utils/enum';
 const { Panel } = Collapse;
 const { confirm } = Modal;
 
