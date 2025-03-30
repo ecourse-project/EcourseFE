@@ -108,7 +108,7 @@ const ResetPassword: React.FC = () => {
           ) : (
             <>
               <p>
-                A link to reset your password was sent to <span>{emailSent}</span>
+                Mật khẩu mới đã được gửi đến email <span>{emailSent}</span>
               </p>
               <form className="form-wrapper">
                 <div className="form-item">
@@ -122,7 +122,7 @@ const ResetPassword: React.FC = () => {
                     htmlType="submit"
                     onClick={() => router.push(RoutePaths.LOGIN)}
                   >
-                    Done
+                    Hoàn tất
                   </AppButton>
                 </div>
               </form>

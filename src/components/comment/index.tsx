@@ -75,10 +75,8 @@ const CommentSection: React.FC = () => {
         .ant-tooltip-content {
           min-width: 280px;
         }
-        .ant-avatar {
-          img {
-            border-radius: 0px !important;
-          }
+        img {
+          border-radius: 0px !important;
         }
       `}
     >

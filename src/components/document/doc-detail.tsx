@@ -19,6 +19,7 @@ import {
 import { PageHeader } from '@ant-design/pro-layout/es/components/PageHeader';
 import { css } from '@emotion/react';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 
 const { Paragraph, Title } = Typography;
 const menu = (
@@ -65,14 +66,6 @@ const DropdownMenu = () => (
       }
     />
   </Dropdown>
-);
-
-const separator = <SwapOutlined />;
-const IconLink = ({ src, text }) => (
-  <a className="example-link">
-    <img className="example-link-icon" src={src} alt={text} />
-    {text}
-  </a>
 );
 
 const Content = ({ children, extraContent }) => (
@@ -287,7 +280,13 @@ const DocDetail: React.FC = () => {
       >
         <Content
           extraContent={
-            <img src={doc?.thumbnail?.image_path || ''} alt="content" width="200" style={{ marginLeft: 40 }} />
+            <Image
+              src={doc?.thumbnail?.image_path || ''}
+              alt="content"
+              width={200}
+              height={130}
+              style={{ marginLeft: 40 }}
+            />
           }
         >
           {content}

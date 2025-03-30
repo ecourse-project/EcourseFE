@@ -13,6 +13,11 @@ module.exports = {
         hostname: 'teachingchem.edu.vn',
         pathname: '/media/**',
       },
+      {
+        protocol: 'http',
+        hostname: 'be.teachingchem.edu.vn',
+        pathname: '/media/**',
+      },
     ],
   },
   // next.config.js

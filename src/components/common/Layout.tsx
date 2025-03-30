@@ -1,5 +1,5 @@
-import Banner from '../navbar/banner';
-import Navbar from '../navbar/nav-bar';
+import Banner from 'src/components/navbar/banner';
+import Navbar from 'src/components/navbar/nav-bar';
 
 const Layout = ({ children, isNoneHeader = false }) => (
   <>

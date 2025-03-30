@@ -28,7 +28,7 @@ const PostPage: React.FC = () => {
   const router = useRouter();
 
   const [pagination, setPagination] = useState<PaginationParams>({
-    page: params?.page || 1,
+    page: Number(params?.page || 1),
     limit: DEFAULT_POST_PAGE_SIZE,
   });
 
@@ -66,7 +66,6 @@ const PostPage: React.FC = () => {
     setPagination({ ...pagination, page });
     router.push(`${RoutePaths.POST}?topic=${params.topic}&header=${params.header}&page=${page}`);
   };
-
   return (
     <div>
       <Divider orientation="left">
@@ -85,38 +84,36 @@ const PostPage: React.FC = () => {
       <Row gutter={16}>
         <Col span={18}>
           <div
-            className=""
+            className="cuong"
             css={css`
+              display: grid;
+              grid-template-columns: repeat(3, 1fr);
+              gap: 10px;
+              padding: 20px;
+              box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+              border-radius: 10px;
               .ant-card-body {
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                gap: 10px;
-                padding: 12px;
                 &::before {
                   display: none !important;
                 }
-                .ant-card {
-                  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-                  &:hover {
-                    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-                  }
-                  transition: all 1s ease;
+                box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+                &:hover {
+                  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
                 }
+                transition: all 1s ease;
               }
               .ant-empty {
                 grid-column: 1 / -1;
               }
             `}
           >
-            <Card>
-              {!!listPost?.results?.length &&
-                listPost?.results?.map((v) => (
-                  <Card key={v.id}>
-                    <HomeTopicCard post={v} />
-                  </Card>
-                ))}
-              {!listPost?.results?.length && <Empty />}
-            </Card>
+            {!!listPost?.results?.length &&
+              listPost?.results?.map((v) => (
+                <Card key={v.id}>
+                  <HomeTopicCard post={v} />
+                </Card>
+              ))}
+            {!listPost?.results?.length && <Empty />}
           </div>
           <div
             css={css`
