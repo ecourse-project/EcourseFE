@@ -11,6 +11,8 @@ import CourseItem from '../course/course-item';
 import DocItem from '../document/doc-item';
 import { DocCourseWrapper } from '../document/style';
 import HomeTopicCard from './homeTopicCard';
+import useMinimumLoading from 'src/lib/hooks/useMinimumLoading';
+import DocCourseItemSkeleton from 'src/components/skeleton/document-skeleton';
 
 export interface IHomeData {
   homeData: Homepage;
@@ -19,52 +21,15 @@ const antIcon = <Loading3QuartersOutlined style={{ fontSize: 40 }} spin />;
 
 export default function HomeData(props: IHomeData) {
   const { homeData } = props;
-  const [loading, setLoading] = React.useState<boolean>(false);
   const [listDoc, setListDoc] = React.useState<Pagination<Document>>();
   const [listCourse, setListCourse] = React.useState<Pagination<Course>>();
   const [listClass, setListClass] = React.useState<Pagination<Course>>();
   const [listPost, setListPost] = React.useState<Pagination<Post>>();
-
-  const getDocumentList = async (idList: string[]) => {
-    const token = localStorage.getItem(StorageKeys.SESSION_KEY);
-    try {
-      setLoading(true);
-      if (!token) {
-        const docs = await CourseService.getHomeDocs({ page: 1, limit: 100 }, '', idList);
-        setListDoc(docs);
-      } else {
-        const docs = await CourseService.getAllDocs({ page: 1, limit: 100 }, '', idList);
-        setListDoc(docs);
-      }
-    } catch (error) {
-      console.log('error', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-  const getCourseList = async (idList: string[]) => {
-    const token = localStorage.getItem(StorageKeys.SESSION_KEY);
-    try {
-      setLoading(true);
-      if (!token) {
-        const docs = await CourseService.getHomeCourses({ page: 1, limit: 100 }, '', idList);
-        setListCourse(docs);
-      } else {
-        const docs = await CourseService.getAllCourses({ page: 1, limit: 100 }, '', idList);
-        setListCourse(docs);
-      }
-    } catch (error) {
-      console.log('error', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  const { isLoading, completeLoading, startLoading } = useMinimumLoading();
   const getHomeData = async (listId, type: 'doc' | 'course' | 'class' | 'post') => {
     const token = localStorage.getItem(StorageKeys.SESSION_KEY);
     try {
-      setLoading(true);
-
+      startLoading();
       switch (type) {
         case 'doc':
           if (!token) {
@@ -103,7 +68,7 @@ export default function HomeData(props: IHomeData) {
     } catch (error) {
       console.log('error', error);
     } finally {
-      setLoading(false);
+      completeLoading();
     }
   };
 
@@ -137,10 +102,8 @@ export default function HomeData(props: IHomeData) {
           </a>
         }
       >
-        {loading ? (
-          <div style={{ height: '72px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Spin indicator={antIcon} />
-          </div>
+        {isLoading ? (
+          <DocCourseItemSkeleton />
         ) : (
           <>
             <DocCourseWrapper>
