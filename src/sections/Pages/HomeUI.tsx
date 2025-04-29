@@ -7,6 +7,7 @@ import useCourseHook from 'src/lib/api/course/query-hooks/useCourseHook';
 
 const HomeUI = () => {
   const { homeData } = useCourseHook();
+  console.log('🚀 ~ HomeUI ~ homeData:', homeData);
   return (
     <div className="page-container">
       <Row gutter={16} style={{ maxWidth: '100%' }}>

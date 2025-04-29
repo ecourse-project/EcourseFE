@@ -253,6 +253,7 @@ font-face {
 }
 
 html {
+  view-transition-name: root;
   scroll-behavior: smooth;
 }
 body {
@@ -263,7 +264,15 @@ body {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+
+  transition: opacity 0.3s ease;
 }
+
+body.ready {
+  visibility: visible;
+  opacity: 1;
+}
+
 legend {
   font-family: Montserrat, Roboto, sans-serif;
 }
@@ -397,4 +406,10 @@ input {
 
 a {
   text-decoration: none !important;
+}
+
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 1.3s;
 }

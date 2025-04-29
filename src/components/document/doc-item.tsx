@@ -42,6 +42,7 @@ enum Color {
 
 const DocItem: React.FC<ChildProps> = memo((props) => {
   const { document, isMyLearn, className, isSearch } = props;
+  console.log('🚀 ~ constDocItem:React.FC<ChildProps>=memo ~ document:', document);
   const [btnString, setBtnString] = useState<string>(BtnString.AVAILABLE);
   const [loading, setLoading] = useState<boolean>(false);
   const [currentDoc, setCurrentDoc] = useState<Document>(document);
