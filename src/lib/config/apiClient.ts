@@ -29,9 +29,6 @@ const config = {
   useRememberMe: true,
   rememberKey: StorageKeys.REMEMBER_ME_KEY,
 };
-
-const baseUrl = globalVariable.API_URL;
-
 const refreshToken = async (refresh: string) => {
   try {
     const newToken = await AuthService.refreshToken(refresh);
@@ -41,6 +38,8 @@ const refreshToken = async (refresh: string) => {
     throw error;
   }
 };
+
+const baseUrl = globalVariable.API_URL;
 
 export const apiClient = axios.create({
   baseURL: baseUrl,

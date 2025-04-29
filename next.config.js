@@ -20,11 +20,11 @@ module.exports = {
   async headers() {
     return [
       {
-        source: '/(.*)',
+        source: '/(.*)', // Apply to all routes
         headers: [
           {
-            key: 'X-Frame-Options',
-            value: 'http://localhost:4000/', // or 'allow-from: https://example.com' for a specific domain
+            key: 'Content-Security-Policy',
+            value: 'frame-ancestors *;', // Allow embedding from all domains
           },
         ],
       },
