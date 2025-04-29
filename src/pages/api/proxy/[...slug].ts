@@ -14,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const axiosResponse = await axios.request({
       method: req.method,
       url: targetUrl,
-      timeout: 30000, // 30 seconds
+      timeout: 60000, // 30, // 30 seconds
       headers: {
         ...req.headers,
         host: undefined, // prevent host mismatch

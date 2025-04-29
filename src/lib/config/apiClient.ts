@@ -43,6 +43,7 @@ const baseUrl = globalVariable.API_URL;
 
 export const apiClient = axios.create({
   baseURL: '/api/proxy',
+  timeout: 60000, // 30 seconds
   headers: {
     'Content-Type': 'application/json',
   },
