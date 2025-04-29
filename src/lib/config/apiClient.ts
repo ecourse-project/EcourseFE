@@ -42,7 +42,7 @@ const refreshToken = async (refresh: string) => {
 const baseUrl = globalVariable.API_URL;
 
 export const apiClient = axios.create({
-  baseURL: baseUrl,
+  baseURL: '/api/proxy',
   headers: {
     'Content-Type': 'application/json',
   },

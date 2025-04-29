@@ -9,6 +9,7 @@ const useCourseHook = () => {
     cacheTime: ONE_DAY_CACHE_TIME,
     refetchOnWindowFocus: false,
   });
+  console.log('🚀 ~ useCourseHook ~ homeData:', homeData);
 
   return { homeData, homeError };
 };

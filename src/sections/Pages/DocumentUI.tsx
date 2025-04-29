@@ -33,6 +33,7 @@ const DocumentUI: React.FC = () => {
   const { isLoading, completeLoading, startLoading } = useMinimumLoading();
 
   const [listDoc, setListDoc] = useState<PaginationType<Document>>();
+  console.log('🚀 ~ listDocxxxxxxxxx:', listDoc);
   const router = useRouter();
   const params: DocumentParams = useQueryParam();
   const [pagination, setPagination] = useState<PaginationParams>({
