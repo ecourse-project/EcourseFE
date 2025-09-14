@@ -10,7 +10,7 @@
     "tsc": "tsc",
     "typescript": "tsc --project tsconfig.json --noEmit",
     "buildPro": "npm run clean && npm install && next build",
-    "start": "next start",
+    "start": "NEXT_PRIVATE_WORKER_COUNT=1 NODE_OPTIONS='--max-old-space-size=512' next start",
     "pretty": "prettier --write \"./**/*.{js,jsx,ts,tsx,json}\"",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
