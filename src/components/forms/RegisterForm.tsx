@@ -199,12 +199,6 @@ const RegisterForm: React.FC = () => {
         onSubmit={formik.handleSubmit}
       >
         <div className="upload-avatar">
-          {/* <div className="avatar">
-                <AvatarUpload
-                    getImageFile={getImageFile}
-                    errorUploadImg={errorUploadImg}
-                />
-            </div> */}
           {!hasError('avatar') && errorUploadImg && (
             <ErrorMessage className="avatar-error error">Cannot upload file. Please, choose another file.</ErrorMessage>
           )}
@@ -276,18 +270,6 @@ const RegisterForm: React.FC = () => {
           />
           {hasError('password2') ? <ErrorMessage className="error">{formik.errors.password2}</ErrorMessage> : null}
         </div>
-        {/* <div className="form-item">
-              <Checkbox onChange={onChange}>I agree to all statements in</Checkbox>
-              <span
-                  onClick={() => {
-                      const url =
-                          window.location.origin + RoutePaths.TERMS_AND_CONDITIONS;
-                      window.open(url, '_blank');
-                  }}
-              >
-                  Terms of Service
-              </span>
-          </div> */}
         {generalError && generalError.length > 0 && <ErrorMessage>{generalError}</ErrorMessage>}
         <div className="form-submit">
           <div className="form-item half">
@@ -300,7 +282,6 @@ const RegisterForm: React.FC = () => {
               borderRadius="5px"
               type="primary"
               htmlType="submit"
-              // disabled={!isTickAgree || formik.isSubmitting}
               onClick={() => {
                 setTimeout(() => {
                   const errElement = document.querySelector('.error');

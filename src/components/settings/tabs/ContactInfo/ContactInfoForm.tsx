@@ -22,7 +22,6 @@ interface ContactSettingsFormProps {
   myProfile?: any;
   avatar?: string;
 }
-const dateFormat = 'DD/MM/YYYY';
 const ContactSettingForm: React.FC<ContactSettingsFormProps> = () => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
@@ -30,9 +29,6 @@ const ContactSettingForm: React.FC<ContactSettingsFormProps> = () => {
 
   const validationSchema = React.useRef(
     Yup.object().shape({
-      // full_name: Yup.string().required(validation.firstName.required).matches(regex.alphabet, {
-      //   message: 'First name cannot accept numeric and special characters.',
-      // }),
       full_name: Yup.string().required(validation.firstName.required),
       email: Yup.string().required(validation.email.required),
       phone: Yup.string().notRequired().matches(regex.phoneNumberVN, {
@@ -50,12 +46,7 @@ const ContactSettingForm: React.FC<ContactSettingsFormProps> = () => {
     validateOnBlur: true,
     onSubmit: async (values) => {
       const { full_name, email, phone, avatar } = values;
-      const obj = {
-        full_name: full_name,
-        email: email,
-        phone: phone,
-        avatar: avatar,
-      };
+
       AskForSave('Lưu Thay Đổi', '', 'Lưu', 'Huỷ', '', async (result) => {
         if (result.isConfirmed) {
           try {
@@ -157,10 +148,6 @@ const ContactSettingForm: React.FC<ContactSettingsFormProps> = () => {
             <ErrorMessage className="form-item-error">{formik.errors.full_name}</ErrorMessage>
           ) : null}
         </div>
-
-        {/* <div className="form-item-half">
-          <AppInputDate label="Ngày sinh" placeholder="Nhập ngày sinh của bạn" dateFormat={dateFormat} isPast />
-        </div> */}
         <div className="form-item-half">
           <AppInput
             className="field name-field"
@@ -188,7 +175,6 @@ const ContactSettingForm: React.FC<ContactSettingsFormProps> = () => {
             htmlType="submit"
             nonBordered
             bgColor=""
-            // disabled={formik.isSubmitting}
           >
             Lưu thay đổi
           </AppButton>

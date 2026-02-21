@@ -37,14 +37,6 @@ const HomeTopicCardWrapper = styled.div`
     font-style: italic;
     font-weight: 500;
     min-height: 80px;
-    /* text-align: left;
-    display: -webkit-box;
-    -webkit-line-clamp: 6;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: gray;
-    white-space: normal; */
   }
   .author {
     font-family: 'Montserrat';

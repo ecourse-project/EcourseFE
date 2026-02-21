@@ -41,31 +41,6 @@ const CartOrderBill: React.FC<OrderBillProps> = ({ checkList, cartData }) => {
           ) : (
             <div></div>
           )}
-          {/* {cartData?.courses?.length ? (
-            <>
-              <Checkbox
-                className="check-all"
-                indeterminate={indeterminateCourse}
-                onChange={onCheckAllChangeCourse}
-                checked={checkAllCourse}
-              >
-                <p className="choose-all course">Chọn tất cả khoá học</p>
-              </Checkbox>
-              <Divider />
-              <CheckboxGroup
-                onChange={onChangeCourse}
-                className="checkbox-group"
-                value={checkedListCourse}
-                options={cartData?.courses?.map((v) => ({
-                  label: <CartItemRow course={v} />,
-                  value: v.id,
-                  Properties: null,
-                }))}
-              />
-            </>
-          ) : (
-            <></>
-          )} */}
         </Col>
       </Row>
     </div>

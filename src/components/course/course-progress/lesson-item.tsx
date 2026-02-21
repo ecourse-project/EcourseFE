@@ -446,29 +446,6 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                     })}
                   </Panel>
                 </Collapse>
-
-                {/* <Card
-                  className="quiz_header"
-                  css={css`
-                    .ant-card-body {
-                      padding: 11px;
-                    }
-                  `}
-                >
-                  <div
-                    className={`quiz-name ${lesson.list_quiz?.length ? '' : 'disabled'}`}
-                    onClick={() => {
-                      if (!lesson.list_quiz.length) return;
-                      updateURLParams(router, { doc: '', video: '', lesson: lesson.id, quiz: lesson.id });
-                    }}
-                  >
-                    <Image src={ExamImg} alt="quiz-img" width={30} height={30} />
-                    <span>
-                      {`Bài tập - `}
-                      <strong>{lesson?.name}</strong>
-                    </span>
-                  </div>
-                </Card> */}
               </>
             ) : (
               <div></div>

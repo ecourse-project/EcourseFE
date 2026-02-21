@@ -10,3 +10,4 @@ main-app.js
 jest.config.js
 dummy.ts
 /dummy.ts
+/src/components/prochat/*

@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { Radio, Typography } from 'antd';
 import React from 'react';
-import { ChoicesQuestionAnswer, Question, QuestionTypeEnum, Quiz } from 'src/lib/types/backend_modal';
+import { Question, QuestionTypeEnum } from 'src/lib/types/backend_modal';
 
 interface ChoiceQuizProps {
   quiz: Question;
@@ -64,7 +64,6 @@ const ChoiceQuiz: React.FC<ChoiceQuizProps> = ({ quiz, onChange, result, isDone 
       <Text className="question">
         {quiz?.order}. {quizChoice?.content}
       </Text>
-      {/* <Radio.Group onChange={(e) => onChange(e, quiz.id)} disabled={isDone || isSubmit}> */}
       <Radio.Group
         onChange={(e) => onChange(quiz.id, quiz.question_type, e.target.value)}
         defaultValue={result?.user_answer}
@@ -74,17 +73,6 @@ const ChoiceQuiz: React.FC<ChoiceQuizProps> = ({ quiz, onChange, result, isDone 
           return (
             <Radio
               key={index}
-              // className={`answer ${
-              //   customResult
-              //     ? customResult[quiz.id]?.correct === AnswerChoiceEnum.A
-              //       ? customResult[quiz.id]?.choice === customResult[quiz.id]?.correct
-              //         ? 'correct'
-              //         : 'error'
-              //       : customResult[quiz.id]?.choice === AnswerChoiceEnum.A
-              //       ? 'user_choice'
-              //       : ''
-              //     : ''
-              // } `}
               value={ans.choice}
               className={`choice-radio ${
                 ans.choice === result?.correct_answer

@@ -1,10 +1,9 @@
-import { Empty, Pagination as BasicPagination, Spin, Typography } from 'antd';
+import { Pagination as BasicPagination, Empty, Spin, Typography } from 'antd';
 /* eslint-disable react/no-children-prop */
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import OrderItem from 'src/components/order/order-item';
 import CourseService from 'src/lib/api/course';
-import { OutputCancel, OutputOrder, Pagination, PaginationParams, PaymentInfo } from 'src/lib/types/backend_modal';
+import { OutputOrder, Pagination, PaginationParams, PaymentInfo } from 'src/lib/types/backend_modal';
 import Swal from 'sweetalert2';
 
 import { Loading3QuartersOutlined } from '@ant-design/icons';
@@ -54,7 +53,7 @@ const OrderUI = () => {
 
   const cancelOrder = async (item: OutputOrder) => {
     try {
-      const cancel: OutputCancel = await CourseService.cancelOrder(item.id);
+      await CourseService.cancelOrder(item.id);
       Swal.fire('Huỷ đơn hàng thành công!', '', 'success');
       await getAllOrder();
     } catch (error) {

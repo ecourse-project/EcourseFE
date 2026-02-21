@@ -6,7 +6,6 @@ import theme from 'src/styles/theme';
 import { EditFilled, EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons/lib/icons';
 import { css } from '@emotion/react';
 
-// import { AiFillEdit } from 'react-icons/ai';
 const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean) => {
   let isLabelAffected = isFocusing;
   if (!isEmpty) {
@@ -49,7 +48,6 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean) =>
         border-color: ${theme.text.blackColor};
       }
       &:focus {
-        // border: 1px solid ${theme.text.blueColor};
         box-shadow: none;
       }
     }
@@ -88,9 +86,7 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean) =>
         margin: 0 0 0 10px;
         color: #000;
       }
-      /* text-align: center; */
       border-bottom: 4px solid transparent;
-      /* border-image: linear-gradient(0.25turn, rgba(255, 249, 34), rgba(255, 0, 128), rgba(56, 2, 155, 0)); */
       border-image: linear-gradient(
         207deg,
         rgba(66, 103, 212, 1) 20%,
@@ -115,9 +111,7 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean) =>
         margin: 0 0 0 10px;
       }
       width: 100%;
-      /* text-align: center; */
       border-bottom: 4px solid transparent;
-      /* border-image: linear-gradient(0.25turn, rgba(255, 249, 34), rgba(255, 0, 128), rgba(56, 2, 155, 0)); */
       border-image: linear-gradient(
         207deg,
         rgba(66, 103, 212, 1) 20%,
@@ -290,7 +284,6 @@ const AppInputEdit: React.FC<AppInputProps> = (props) => {
     ...rest
   } = props;
 
-  // const inputRef = React.useRef(null);
   const [isFocusing, setIsFocusing] = useState(!!value);
   const [isEmpty, setIsEmpty] = useState(!value);
   const [typeLocal, setTypeLocal] = useState(type);
@@ -314,25 +307,9 @@ const AppInputEdit: React.FC<AppInputProps> = (props) => {
     }
   };
 
-  // const onInputRefFocus = () => {
-  // 	inputRef.current?.focus();
-  // };
-
   return (
     <div className={className} css={[baseStyle(isForceFocus || isFocusing, isEmpty, hasError)]}>
-      {/* onClick={onInputRefFocus} */}
       <label className="s-label">{`${label}${requiredMark ? `*` : ''}`}</label>
-      {/* <CustomInput
-        {...rest}
-        type={typeLocal}
-        placeholder={placeholder}
-        value={value}
-        onBlur={onBlur}
-        onFocus={onFocus}
-        onChange={onChange}
-        // ref={inputRef}
-        onInput={onInput}
-      /> */}
       <Input.Group compact>
         <Input
           style={{ width: '95%', minHeight: '58px', backgroundColor: '#fff' }}

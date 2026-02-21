@@ -19,6 +19,7 @@ import { DEFAULT_PAGE_SIZE } from 'src/lib/utils/constant';
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/lib/reducers/model';
 import { Nav as NavType } from 'src/lib/types/backend_modal';
+import useMinimumLoading from 'src/lib/hooks/useMinimumLoading';
 
 export interface DocumentParams {
   page?: number;
@@ -29,8 +30,9 @@ export interface DocumentParams {
 
 const DocumentUI: React.FC = () => {
   const header: NavType[] = useSelector((state: RootState) => state.app.header);
+  const { isLoading, completeLoading, startLoading } = useMinimumLoading();
+
   const [listDoc, setListDoc] = useState<PaginationType<Document>>();
-  const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
   const params: DocumentParams = useQueryParam();
   const [pagination, setPagination] = useState<PaginationParams>({
@@ -46,9 +48,8 @@ const DocumentUI: React.FC = () => {
   const fetchDocument = async (pagination) => {
     const token = localStorage.getItem(StorageKeys.SESSION_KEY);
     try {
-      setLoading(true);
+      startLoading();
       const newPagination = { ...pagination };
-      // if (!params.page) pagination.page = 1;
       if (!token) {
         const homeDoc = await CourseService.getHomeDocs(
           newPagination,
@@ -60,10 +61,9 @@ const DocumentUI: React.FC = () => {
         setListDoc(homeDoc);
       }
     } catch (error) {
-      setLoading(false);
       console.log('Fetch Doc Fail :>> ', error);
     } finally {
-      setLoading(false);
+      completeLoading();
     }
   };
 
@@ -86,7 +86,6 @@ const DocumentUI: React.FC = () => {
               `}
             />
           </Breadcrumb.Item>
-          {/* <Breadcrumb.Item href={`${RoutePaths.DOCUMENT}?document=ALL&page=${1}&header=${params.header}`}> */}
           <Breadcrumb.Item>{params?.header}</Breadcrumb.Item>
           <Breadcrumb.Item>{topicLabel}</Breadcrumb.Item>
         </Breadcrumb>
@@ -94,7 +93,7 @@ const DocumentUI: React.FC = () => {
       <Row gutter={16}>
         <Col span={18}>
           <Card>
-            {loading ? (
+            {isLoading ? (
               <DocCourseItemSkeleton />
             ) : (
               <DocCourseWrapper>
@@ -117,15 +116,6 @@ const DocumentUI: React.FC = () => {
               text-align: center;
             `}
           >
-            {/* <Pagination
-              defaultCurrent={1}
-              current={params.page || pagination.page}
-              pageSize={pagination.limit}
-              total={listDoc?.count || 10}
-              showSizeChanger={false}
-              onChange={onChangePage}
-              hideOnSinglePage
-            /> */}
             <AntPagination
               current={params.page || pagination.page}
               pageSize={pagination.limit}

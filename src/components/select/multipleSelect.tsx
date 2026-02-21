@@ -4,8 +4,7 @@ import styled from '@emotion/styled';
 import { Empty, Select, Spin } from 'antd';
 import { SpinProps } from 'antd/lib';
 import { BaseOptionType, DefaultOptionType } from 'antd/lib/select';
-import React, { CSSProperties, useEffect, useState } from 'react';
-import theme from 'src/styles/theme';
+import React, { CSSProperties, useState } from 'react';
 export const InnerLoading = ({ iconStyle, ...props }: SpinProps & { iconStyle?: CSSProperties }) => {
   const antIcon = <LoadingOutlined style={{ fontSize: 29, ...iconStyle }} spin />;
   return <Spin {...props} indicator={antIcon} />;

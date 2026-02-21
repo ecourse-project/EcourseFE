@@ -48,7 +48,6 @@ const CourseItem: React.FC<ChildProps> = (props) => {
     } else if (currentCourse.request_status === RequestStatus.ACCEPTED) {
       setBtnString(BtnString.BOUGHT);
     }
-    // } else {
     if (currentCourse.sale_status === SaleStatusEnum.AVAILABLE) {
       setBtnString(BtnString.AVAILABLE);
     } else if (currentCourse.sale_status === SaleStatusEnum.IN_CART) {
@@ -58,7 +57,6 @@ const CourseItem: React.FC<ChildProps> = (props) => {
     } else if (currentCourse.sale_status === SaleStatusEnum.BOUGHT) {
       setBtnString(BtnString.BOUGHT);
     }
-    // }
   }, [currentCourse]);
 
   useEffect(() => {
@@ -96,25 +94,7 @@ const CourseItem: React.FC<ChildProps> = (props) => {
       }, 300);
     }
   };
-  const handleAddFav = async (id) => {
-    setLoading(true);
-    setTimeout(async () => {
-      try {
-        if (currentCourse.is_favorite) {
-          const removeFromFav: Course = await CourseService.moveCourse(id, MoveEnum.FAVORITE, MoveEnum.LIST);
-          dispatch(courseAction.setIsFavourite(removeFromFav));
-          setCurrentCourse(removeFromFav);
-        } else {
-          const addToFav: Course = await CourseService.moveCourse(id, MoveEnum.LIST, MoveEnum.FAVORITE);
-          dispatch(courseAction.setIsFavourite(addToFav));
-          setCurrentCourse(addToFav);
-        }
-      } catch (error) {
-        console.log('error :>> ', error);
-        setLoading(false);
-      }
-    }, 300);
-  };
+
   return (
     <ItemDocCourseWrapper
       css={css`
@@ -172,18 +152,10 @@ const CourseItem: React.FC<ChildProps> = (props) => {
           >
             <p className="title-popup">{currentCourse.name}</p>
 
-            {/* <Tag color="geekblue">Best Seller</Tag> */}
             <p>Cập nhật: {formatDate(currentCourse?.modified)}</p>
             <p>Số bài học: {currentCourse?.lessons?.length}</p>
-            {/* <p>
-							Dung lượng: {(Number(currentCourse.) / 1024000).toFixed(1)}{' '}
-						MB
-						</p> */}
 
             <p>{currentCourse.description}</p>
-            {/* <p className="heart" onClick={() => handleAddFav(currentCourse.id)}>
-              {currentCourse.is_favorite ? <HeartFilled /> : <HeartOutlined />}
-            </p> */}
           </div>
         }
         trigger="hover"
@@ -195,14 +167,6 @@ const CourseItem: React.FC<ChildProps> = (props) => {
               src={`${currentCourse?.thumbnail?.image_path || DefaultCourseImage.src}`}
               alt="course_image"
             />
-
-            {/* <Image
-              // className="doc-img"
-              src={`${currentCourse?.thumbnail?.image_path || DefaultCourseImage.src}`}
-              alt="course_image."
-              width={200}
-              height={130}
-            /> */}
           </div>
           <div className="doc_info">
             <div>
@@ -211,34 +175,12 @@ const CourseItem: React.FC<ChildProps> = (props) => {
             </div>
             {(currentCourse as any)?.author && <div className="author">Tác giả: {(currentCourse as any)?.author}</div>}
             {isSearch && currentCourse.description}
-            {/* <p className="download">
-              <VerticalAlignBottomOutlined />
-              Số lượt tải: {currentCourse.sold}
-            </p>
-            <p className="download">
-              <EyeOutlined />
-              Số lượt xem: {currentCourse.views}
-            </p>
-            <p className="download">
-              <LikeOutlined />
-              <span className="rate-score">{Number(currentCourse?.rating).toFixed(1)}</span>
-              <Rating
-                name="size-large"
-                defaultValue={Number(Number(currentCourse.rating).toFixed(1))}
-                size="small"
-                readOnly
-                style={{ padding: '0 5px' }}
-              />
-              {`(${currentCourse.num_of_rates})`}
-            </p> */}
           </div>
         </Link>
       </Popover>
       <div>
         <div className="contact-us">
           <Link href={globalVariable.GMAIL_URL} target="_blank">
-            {/* <WalletOutlined />
-              {formatCurrency(currentCourse.price || 0)} */}
             Liên hệ
           </Link>
 

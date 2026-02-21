@@ -1,5 +1,3 @@
-// import { apiIns } from 'src/config/apiClient';
-// import apiURL from 'src/apis';
 import { apiClient } from 'src/lib/config/apiClient';
 import {
   AssignQuizArgs,
@@ -12,7 +10,6 @@ import {
   Document,
   FavoriteList,
   Home,
-  Homepage,
   MoveEnum,
   Nav,
   OCart,
@@ -248,10 +245,6 @@ class CourseService {
   static getDocDetail(id: string): Promise<Document> {
     return apiClient.get(apiURL.getDocDetail(id));
   }
-
-  // static updateDoc(id: string): Promise<Document> {
-  // 	return apiClient.patch(apiURL.getDocDetail(id));
-  // }
 
   static deleteDoc(id: string): Promise<any> {
     return apiClient.delete(apiURL.getDocDetail(id));

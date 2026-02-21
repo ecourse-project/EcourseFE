@@ -135,9 +135,7 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean) => {
         margin: 0 0 0 10px;
         color: #000;
       }
-      /* text-align: center; */
       border-bottom: 4px solid transparent;
-      /* border-image: linear-gradient(0.25turn, rgba(255, 249, 34), rgba(255, 0, 128), rgba(56, 2, 155, 0)); */
       border-image: linear-gradient(
         207deg,
         rgba(66, 103, 212, 1) 20%,
@@ -162,9 +160,7 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean) => {
         margin: 0 0 0 10px;
       }
       width: 100%;
-      /* text-align: center; */
       border-bottom: 4px solid transparent;
-      /* border-image: linear-gradient(0.25turn, rgba(255, 249, 34), rgba(255, 0, 128), rgba(56, 2, 155, 0)); */
       border-image: linear-gradient(
         207deg,
         rgba(66, 103, 212, 1) 20%,

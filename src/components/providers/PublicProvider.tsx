@@ -1,6 +1,6 @@
 import { isEmpty } from 'lodash';
 import { useRouter } from 'next/router';
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoadingPage } from 'src/components/loading/loadingBase';
 import CourseService from 'src/lib/api/course';
@@ -48,20 +48,6 @@ const PublicProvider: React.FC<{ children?: ReactNode }> = ({ children }) => {
     getUserProfile();
     setTimeout(() => setIsLoading(false), 1000);
   }, []);
-  // React.useEffect(() => {
-  //   const handleStart = () => setIsLoading(true);
-  //   const handleComplete = () => setIsLoading(false);
-
-  //   router.events.on('routeChangeStart', handleStart);
-  //   router.events.on('routeChangeComplete', handleComplete);
-  //   router.events.on('routeChangeError', handleComplete);
-
-  //   return () => {
-  //     router.events.off('routeChangeStart', handleStart);
-  //     router.events.off('routeChangeComplete', handleComplete);
-  //     router.events.off('routeChangeError', handleComplete);
-  //   };
-  // }, []);
 
   return <React.Fragment>{!isLoading ? children : <LoadingPage isLoading={true} />}</React.Fragment>;
 };

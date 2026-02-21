@@ -69,7 +69,6 @@ const UploadImage: React.FC<UploadImageProps> = ({ setAvatar, avatar }) => {
           const url = await getBase64(file);
           setPreviewImage(url);
           setFileList([file]);
-          // return false;
           onChange(file);
         }}
         onModalCancel={() => setFileList([])}

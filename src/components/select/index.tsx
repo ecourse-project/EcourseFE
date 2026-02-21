@@ -2,16 +2,14 @@
 
 import { Select } from 'antd';
 import React, { ReactNode, useState } from 'react';
-import { QuizAssignEnum, typeSelect } from 'src/lib/utils/enum';
+import { QuizAssignEnum } from 'src/lib/utils/enum';
 import theme from 'src/styles/theme';
 
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import Link from 'next/link';
-import RoutePaths from 'src/lib/utils/routes';
 
 const { Option } = Select;
-const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean, suffixIcon?: ReactNode) => {
+const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean) => {
   let isLabelAffected = isFocusing;
   if (!isEmpty) {
     isLabelAffected = true;
@@ -198,7 +196,6 @@ const AppSelect = (props) => {
     handleFocus,
     value,
     itemSelect,
-    isSelect,
     placeholder,
     isGetContainer,
     suffixIcon,

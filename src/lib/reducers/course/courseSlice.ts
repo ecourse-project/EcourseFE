@@ -24,9 +24,7 @@ export const courseSlice = createSlice({
     fetchMostCourse: (state, action: PayloadAction<Course[]>) => {
       state.mostDownCourse = action.payload;
     },
-    updateCart: (state, action: PayloadAction<Course>) => {
-      // //console.log('curernte', current(state));
-    },
+    updateCart: (state, action: PayloadAction<Course>) => {},
     updateStatusAddCourse: (state, action: PayloadAction<Course>) => {
       const idx = state.listCourse.results?.findIndex((v) => v.id === action.payload.id);
       if (idx >= 0) {

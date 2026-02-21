@@ -1,8 +1,6 @@
 import { css } from '@emotion/react';
 import { Pagination } from 'antd';
-import React, { FC, useEffect } from 'react';
-import IconNext from 'src/assets/icons/IconNext';
-import IconPrevious from 'src/assets/icons/IconPrevious';
+import { FC } from 'react';
 
 interface CustomPaginationProps {
   current?: number;
@@ -22,12 +20,6 @@ const CustomPagination: FC<CustomPaginationProps> = ({
   onChange,
   ...rest
 }) => {
-  const itemRender = (_, type, originalElement) => {
-    if (type === 'prev') return <IconPrevious />;
-    if (type === 'next') return <IconNext />;
-    return originalElement;
-  };
-
   return (
     <div
       css={css`

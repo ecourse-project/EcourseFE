@@ -1,7 +1,6 @@
 import { Spin } from 'antd';
 /* eslint-disable @next/next/no-img-element */
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { Course, Document, NavTypeEnum } from 'src/lib/types/backend_modal';
 
 import { DeleteOutlined } from '@ant-design/icons';
@@ -106,10 +105,7 @@ const CartItemRow: React.FC<ChildProps> = ({ document, course, isDeleteBtn = tru
             </div>
           </div>
           <div className="price-group">
-            <p className="price">
-              {/* <TagOutlined /> */}
-              {/* {formatCurrency(document?.price, true)} */}
-            </p>
+            <p className="price"></p>
 
             {deleteLoading ? (
               <Spin size="default" />
@@ -147,10 +143,7 @@ const CartItemRow: React.FC<ChildProps> = ({ document, course, isDeleteBtn = tru
             </div>
           </div>
           <div className="price-group">
-            <p className="price">
-              {/* <TagOutlined /> */}
-              {/* {formatCurrency(course.price || '', true)} */}
-            </p>
+            <p className="price"></p>
             {deleteLoading ? (
               <Spin size="default" />
             ) : (

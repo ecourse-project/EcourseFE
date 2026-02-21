@@ -94,7 +94,6 @@ export const CourseProgressWrapper = styled.div`
   }
   .course_content {
     .anticon {
-      /* padding: 0 10px; */
       font-size: 19px;
       cursor: pointer;
     }
@@ -214,7 +213,6 @@ export const CourseProgressWrapper = styled.div`
     width: 100%;
   }
   @media (min-width: 1500px) {
-    /* max-width: 90%; */
     .video_wrapper {
       width: 100%;
       height: 16.7%;
@@ -231,7 +229,6 @@ export const CourseProgressWrapper = styled.div`
       padding: 16px;
     }
   }
-  /* } */
   .tab-section {
     padding: 50px;
   }

@@ -26,14 +26,6 @@ import LessonItem from './course-progress/lesson-item';
 
 const { Paragraph } = Typography;
 
-// const separator = <SwapOutlined />;
-// const IconLink = ({ src, text }) => (
-//   <a className="example-link">
-//     <img className="example-link-icon" src={src} alt={text} />
-//     {text}
-//   </a>
-// );
-
 const Content = ({ children, extraContent }) => (
   <Row>
     <div
@@ -46,56 +38,6 @@ const Content = ({ children, extraContent }) => (
     <div className="image">{extraContent}</div>
   </Row>
 );
-
-// const tags = (tagState: TagState, text: string) => {
-//   switch (tagState) {
-//     case TagState.SUCCESS:
-//       return (
-//         <Tag icon={<CheckCircleOutlined />} color="success">
-//           {text}
-//         </Tag>
-//       );
-//       break;
-//     case TagState.PROCESSING:
-//       return (
-//         <Tag icon={<SyncOutlined spin />} color="processing">
-//           {text}
-//         </Tag>
-//       );
-//       break;
-//     case TagState.ERROR:
-//       return (
-//         <Tag icon={<CloseCircleOutlined />} color="error">
-//           {text}
-//         </Tag>
-//       );
-//       break;
-//     case TagState.WARNING:
-//       return (
-//         <Tag icon={<ExclamationCircleOutlined />} color="warning">
-//           {text}
-//         </Tag>
-//       );
-//       break;
-//     case TagState.WAITING:
-//       return (
-//         <Tag icon={<ClockCircleOutlined />} color="default">
-//           {text}
-//         </Tag>
-//       );
-//       break;
-//     case TagState.STOP:
-//       return (
-//         <Tag icon={<MinusCircleOutlined />} color="default">
-//           {text}
-//         </Tag>
-//       );
-//       break;
-
-//     default:
-//       break;
-//   }
-// };
 
 const CourseDetail: React.FC = () => {
   const [course, setCourse] = useState<Course>({} as Course);
@@ -165,47 +107,6 @@ const CourseDetail: React.FC = () => {
     }
   };
 
-  // const onAddComment = async (value) => {
-  //   if (!value) return;
-  //   try {
-  //     const cmt = await CourseService.createComment('', course.id, userProfile.id, value);
-  //     cmt && fetchComment(courseId);
-  //   } catch (error) {
-  //     console.log('error :>> ', error);
-  //   }
-  // };
-  // const handleReply = async (content: string, item: CourseComment) => {
-  //   try {
-  //     const reply = await CourseService.createComment(item.id, course.id, userProfile.id, content);
-  //     reply && fetchComment(courseId);
-  //   } catch (error) {
-  //     console.log('error :>> ', error);
-  //   }
-  // };
-
-  // const rateCourse = async (course_id: string, rating: number, comment: string) => {
-  //   try {
-  //     if (rating === 1) rating = RatingEnum.ONE;
-  //     if (rating === 2) rating = RatingEnum.TWO;
-  //     if (rating === 3) rating = RatingEnum.THREE;
-  //     if (rating === 4) rating = RatingEnum.FOUR;
-  //     if (rating === 5) rating = RatingEnum.FIVE;
-
-  //     const rate = await CourseService.rateCourse({
-  //       course_id,
-  //       rating,
-  //       comment,
-  //     } as RateCourseArgs);
-  //     setMyRate(rate);
-  //     course.rating_detail?.push(rate);
-  //   } catch (error) {
-  //     //console.log('error', error);
-  //   }
-  // };
-  // const handleSaveRating = () => {
-  //   rateCourse(params.id, star, feedback);
-  //   setOpenRatingModal(false);
-  // };
   useEffect(() => {
     if (isClass) {
       if (course.request_status === RequestStatus.REQUESTED) {
@@ -232,12 +133,7 @@ const CourseDetail: React.FC = () => {
       label: 'Bình luận',
       key: 'comment',
       children: <CommentSection />,
-    }, // remember to pass the key prop
-    // {
-    //   label: 'Nhận xét',
-    //   key: 'feedback',
-    //   children: <FeedbackSection rateList={course?.rating_detail || []} />,
-    // },
+    },
   ];
   return (
     <div
@@ -276,17 +172,6 @@ const CourseDetail: React.FC = () => {
           border-radius: 4px;
           &:hover {
             letter-spacing: ${isClass ? '1px' : '6px'};
-            /* background-color: ${course.sale_status === SaleStatusEnum.AVAILABLE ||
-            course.request_status === RequestStatus.AVAILABLE
-              ? '#17a2b8'
-              : ''};
-            background-color: ${course.sale_status === SaleStatusEnum.IN_CART ||
-            course.request_status === RequestStatus.REQUESTED
-              ? '#ed5e68'
-              : ''};
-            background-color: ${course.sale_status === SaleStatusEnum.PENDING && '#6c757d'};
-            background-color: ${course.sale_status === SaleStatusEnum.BOUGHT ||
-            (course.request_status === RequestStatus.ACCEPTED && '#28a745')}; */
           }
 
           .anticon-loading {
@@ -339,10 +224,7 @@ const CourseDetail: React.FC = () => {
             display: none;
           }
         }
-        // .comment-list {
-        // 	max-height: 40vh;
-        // 	overflow: auto;
-        // }
+
         .ant-tooltip-content {
           min-width: 280px;
         }
@@ -393,45 +275,10 @@ const CourseDetail: React.FC = () => {
               ''
             )}
           </AppButton>,
-          // <Button
-          //   key="1"
-          //   type="primary"
-          //   className="add-btn"
-          //   loading={loading}
-          //   onClick={handleUpdateBtn}
-          //   target="_self"
-          //   disabled={loading}
-          // >
-          //   {btnString}
-          //   {course.sale_status === SaleStatusEnum.AVAILABLE ? (
-          //     <PlusCircleOutlined />
-          //   ) : course.sale_status === SaleStatusEnum.IN_CART ? (
-          //     <MinusCircleOutlined />
-          //   ) : course.sale_status === SaleStatusEnum.BOUGHT ? (
-          //     <VerticalLeftOutlined />
-          //   ) : (
-          //     ''
-          //   )}
-          // </Button>,
-          // course.sale_status === SaleStatusEnum.BOUGHT && (
-          //   <Button
-          //     key={2}
-          //     type="primary"
-          //     // className="rating-btn"
-          //     className="add-btn"
-          //     onClick={() => setOpenRatingModal(true)}
-          //     style={{ backgroundColor: '#fff', color: '#000' }}
-          //   >
-          //     Đánh giá <StarFilled />
-          //   </Button>
-          // ),
         ]}
       >
         <Content extraContent={undefined}>{content}</Content>
         <Row className="course_info">
-          {/* <Col lg={12} md={0} className="thumbnail_wrapper">
-            <Image className="thumbnail" src={course?.thumbnail?.image_pat  h} preview={false} />
-          </Col> */}
           <Col lg={24} md={24} className="lessons">
             <p className="list_lesson_header">Các bài học trong khoá</p>
             <List
@@ -444,82 +291,17 @@ const CourseDetail: React.FC = () => {
                   isCourseDetail={true}
                   index={index}
                   isShowLessonDetail={course.sale_status === SaleStatusEnum.BOUGHT || !!course.request_status}
-                  // onUpdate={(data) => //console.log('')}
                 />
               )}
             />
           </Col>
         </Row>
-        {/* <Statistic
-          // title="GIÁ"
-          value={formatCurrencySymbol(course?.price || 0, 'VND', true)}
-          style={{
-            marginLeft: '10px',
-            fontWeight: 'bold',
-          }}
-        /> */}
       </PageHeader>
       {(course.request_status === RequestStatus.ACCEPTED || course.sale_status === SaleStatusEnum.BOUGHT) && (
         <Tabs items={items} className="tab-section" />
       )}
-
-      {/* {course.sale_status === SaleStatusEnum.BOUGHT && (
-				<div>
-					{comment?.length ? (
-						<List
-							className="comment-list"
-							header={`${comment.length} replies`}
-							itemLayout="horizontal"
-							dataSource={comment}
-							renderItem={(item) => (
-								<li>
-									<CommentItem
-										item={item}
-										onAddReply={(value) => handleReply(value, item)}
-									/>
-								</li>
-							)}
-						/>
-					) : (
-						<div></div>
-					)}
-					<Comment
-						avatar={
-							<Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />
-						}
-						content={<CommentForm onAddComment={onAddComment} />}
-					/>
-				</div>
-			)} */}
-      {/* <div className="rating-modal-1">
-        <RatingModal
-          visible={openRatingModal}
-          countStar={(value) => setStar(value)}
-          onChangeFeedback={(value) => setFeedback(value)}
-          onClose={() => setOpenRatingModal(false)}
-          onSave={handleSaveRating}
-          rated={isEmpty(myRate) ? course?.my_rating : myRate}
-        />
-      </div> */}
     </div>
   );
 };
 
 export default CourseDetail;
-// {
-// 	actions: [<span key="comment-list-reply-to-0">Reply to</span>],
-// 	author: 'Han Solo',
-// 	avatar: 'https://joeschmoe.io/api/v1/random',
-// 	content: (
-// 		<p>
-// 			We supply a series of design principles, practical patterns and high
-// 			quality design resources (Sketch and Axure), to help people create their
-// 			product prototypes beautifully and efficiently.
-// 		</p>
-// 	),
-// 	datetime: (
-// 		<Tooltip title="2016-11-22 11:22:33">
-// 			<span>8 hours ago</span>
-// 		</Tooltip>
-// 	),
-// },

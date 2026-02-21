@@ -19,7 +19,6 @@ function* fetchCourse(action: PayloadAction<PaginationParams>) {
 
 function* watchUpdateCart(action: PayloadAction<Course>) {
   try {
-    // yield put(courseAction.updateLoading(LoadingEnum.INCREMENT));
     if (action.payload.sale_status === SaleStatusEnum.AVAILABLE) {
       const addTo: Course = yield CourseService.moveCourse(action.payload.id, MoveEnum.LIST, MoveEnum.CART);
       yield put(courseAction.updateStatusAddCourse(addTo));
@@ -31,8 +30,6 @@ function* watchUpdateCart(action: PayloadAction<Course>) {
     }
   } catch (error) {
     console.log('error update cart', error);
-  } finally {
-    // yield put(courseAction.updateLoading(LoadingEnum.DESCREMENT));
   }
 }
 

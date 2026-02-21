@@ -7,12 +7,6 @@ export const useScrollNav = () => {
     document.getElementById('id-active')?.scrollIntoView({ behavior: 'auto', block: 'end', inline: 'center' });
   }, [hashUrl]);
 
-  // useEffect(() => {
-  //   if (!location?.pathname) return;
-
-  //   setHashUrl(location.pathname);
-  // }, [location.pathname]);
-
   const getIdActive = (path) => {
     let pathName = hashUrl;
     if (!pathName) return;

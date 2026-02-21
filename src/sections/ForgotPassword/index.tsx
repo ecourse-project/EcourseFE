@@ -12,7 +12,6 @@ interface ForgotPasswordParams {
 const ForgotPasswordSection: React.FC = () => {
   const { uid, token } = useQueryParam<ForgotPasswordParams>();
 
-  // return <CreateNewPassword />;
   return <>{uid && token ? <CreateNewPassword /> : <ResetPassword />}</>;
 };
 

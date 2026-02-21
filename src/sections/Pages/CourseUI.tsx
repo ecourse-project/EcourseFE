@@ -19,6 +19,7 @@ import { DEFAULT_PAGE_SIZE } from 'src/lib/utils/constant';
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/lib/reducers/model';
 import { Nav as NavType } from 'src/lib/types/backend_modal';
+import useMinimumLoading from 'src/lib/hooks/useMinimumLoading';
 
 export interface CourseClassParams {
   page?: number;
@@ -30,7 +31,7 @@ export interface CourseClassParams {
 const CourseUI: React.FC = () => {
   const header: NavType[] = useSelector((state: RootState) => state.app.header);
   const [listCourse, setListCourse] = useState<Pagination<Course>>();
-  const [loading, setLoading] = useState<boolean>(false);
+  const { isLoading, completeLoading, startLoading } = useMinimumLoading();
   const router = useRouter();
   const params: CourseClassParams = useQueryParam();
   const [pagination, setPagination] = useState<PaginationParams>({
@@ -44,7 +45,7 @@ const CourseUI: React.FC = () => {
   }, [params.topic, header]);
   const fetCourseClass = async (pagination: PaginationParams) => {
     const token = localStorage.getItem(StorageKeys.SESSION_KEY);
-    setLoading(true);
+    startLoading();
     try {
       if (!token) {
         if (!params.isClass) {
@@ -78,10 +79,9 @@ const CourseUI: React.FC = () => {
         }
       }
     } catch (error) {
-      setLoading(false);
       console.log('Fetch Course Failed :>> ', error);
     } finally {
-      setLoading(false);
+      completeLoading();
     }
   };
 
@@ -115,7 +115,7 @@ const CourseUI: React.FC = () => {
       <Row gutter={16}>
         <Col span={18}>
           <Card>
-            {loading ? (
+            {isLoading ? (
               <DocCourseItemSkeleton />
             ) : (
               <DocCourseWrapper>

@@ -1,11 +1,11 @@
-import Router, { useRouter } from 'next/router';
+import Router from 'next/router';
 import RoutePaths from './routes';
 export interface User {
   name: string;
   psw: string;
   id: string;
 }
-export const forceLogout = (redirectUrl?: string): void => {
+export const forceLogout = (): void => {
   localStorage.clear();
   if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
     Router.push(`${RoutePaths.LOGIN}/?redirect_url=${window.location.pathname}${window.location.search}`);

@@ -105,15 +105,8 @@ const RatingModal: React.FC<RatingModalProps> = (props) => {
         <div className="card-wrapper">
           <Card>
             <Meta
-              // avatar={<Avatar src={rated?.user?.avatar || 'https://joeschmoe.io/api/v1/random'} />}
-              // avatar={<Avatar src={'https://joeschmoe.io/api/v1/random'} />}
               avatar={<Avatar src={<UserOutlined />} alt="avata" shape="square" />}
-              title={
-                <>
-                  {rated?.user?.full_name}
-                  {/* <Rate disabled defaultValue={rated?.rating} /> */}
-                </>
-              }
+              title={<>{rated?.user?.full_name}</>}
               description={rated?.comment}
             />
           </Card>

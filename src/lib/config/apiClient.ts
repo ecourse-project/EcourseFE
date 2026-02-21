@@ -7,9 +7,6 @@ import { OToken } from '../types/backend_modal';
 import { forceLogout } from '../utils/auth';
 import globalVariable from './env';
 
-// let apiClient: ApiClient;
-// let apiIns: Api;
-
 class SessionStorage {
   public async set(key: string, value: string): Promise<void> {
     localStorage.setItem(key, value);
@@ -27,7 +24,6 @@ class SessionStorage {
 
 const sessionStorage = new SessionStorage();
 const config = {
-  // baseUrl: globalVariable.API_URL,
   authSessionKey: StorageKeys.SESSION_KEY,
   session: sessionStorage,
   useRememberMe: true,
@@ -50,7 +46,6 @@ export const apiClient = axios.create({
   baseURL: baseUrl,
   headers: {
     'Content-Type': 'application/json',
-    // Authorization: `Bearer ${localStorage.getItem(StorageKeys.SESSION_KEY)}`,
   },
   withCredentials: true,
 });
@@ -109,4 +104,3 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   },
 );
-// export { apiClient, apiIns };

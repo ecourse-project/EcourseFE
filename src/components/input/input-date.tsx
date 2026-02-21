@@ -13,7 +13,6 @@ const baseStyle = (isFocusing: boolean, isEmpty: boolean, hasError?: boolean) =>
   }
   return css`
     position: relative;
-    /* z-index: 1; */
 
     .s-label {
       top: ${isLabelAffected ? '7px' : '-30px'};
@@ -107,13 +106,8 @@ const AppInputDate: React.FC<AppInputDateProps> = (props) => {
     }
   };
 
-  // const onInputRefFocus = () => {
-  // 	inputRef.current?.focus();
-  // };
-
   return (
     <div className={className} css={[baseStyle(isForceFocus || isFocusing, isEmpty, hasError)]}>
-      {/* onClick={onInputRefFocus} */}
       <label className="s-label">{`${label}${requiredMark ? `*` : ''}`}</label>
       <DatePicker
         defaultValue={undefined}
