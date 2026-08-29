@@ -93,13 +93,70 @@ export const CourseProgressWrapper = styled.div`
     }
   }
   .course_content {
+    .viewer_container {
+      position: relative;
+      width: 100%;
+      background: #000;
+      border-radius: 12px;
+      overflow: hidden;
+      min-height: 500px;
+
+      .fullscreen_toggle {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        z-index: 10;
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.65);
+        color: #fff;
+        border-color: transparent;
+
+        &:hover,
+        &:focus {
+          background: rgba(0, 0, 0, 0.8);
+          color: #fff;
+          border-color: transparent;
+        }
+      }
+
+      .player_wrapper {
+        width: 100%;
+        min-height: 500px;
+      }
+
+      &.is_fullscreen {
+        width: 100vw;
+        height: 100vh;
+        border-radius: 0;
+        padding-top: 60px;
+
+        .player_wrapper,
+        .video_wrapper,
+        .pdf_wrapper,
+        iframe {
+          height: calc(100vh - 60px) !important;
+          max-height: unset !important;
+        }
+
+        .react-player,
+        .react-player > div {
+          width: 100% !important;
+          height: calc(100vh - 60px) !important;
+        }
+      }
+    }
+
     .anticon {
       font-size: 19px;
       cursor: pointer;
     }
     .video_wrapper {
-      height: 30%;
+      min-height: 500px;
       width: 100%;
+      iframe {
+        width: 100%;
+        min-height: 500px;
+      }
       video {
         border-radius: 5px;
       }
@@ -211,6 +268,7 @@ export const CourseProgressWrapper = styled.div`
   }
   .pdf_wrapper {
     width: 100%;
+    min-height: 500px;
   }
   @media (min-width: 1500px) {
     .video_wrapper {

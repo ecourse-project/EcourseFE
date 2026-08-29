@@ -3,7 +3,7 @@ import _, { cloneDeep, isEmpty } from 'lodash';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { useDispatch, useSelector } from 'react-redux';
 import NotFile from 'src/assets/images/notfoundfile.png';
@@ -28,7 +28,14 @@ import {
 } from 'src/lib/types/backend_modal';
 import RoutePaths from 'src/lib/utils/routes';
 
-import { DownOutlined, HomeOutlined, PlayCircleOutlined, SwapOutlined } from '@ant-design/icons';
+import {
+  DownOutlined,
+  FullscreenExitOutlined,
+  FullscreenOutlined,
+  HomeOutlined,
+  PlayCircleOutlined,
+  SwapOutlined,
+} from '@ant-design/icons';
 import { css } from '@emotion/react';
 import PdfViewer from 'src/components/pdf';
 import QuizSection from './Quiz';
@@ -79,6 +86,37 @@ export interface QuizSetting {
 const CourseProgress = () => {
   const [course, setCourse] = useState<Course>();
   const params: CourseParams = useQueryParam();
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isVideoFullscreen, setIsVideoFullscreen] = useState(false);
+
+  const embeddedContentRef = useRef<HTMLDivElement>(null);
+  const videoViewerRef = useRef<HTMLDivElement>(null);
+
+  const handleFullscreen = async () => {
+    try {
+      if (!document.fullscreenElement) {
+        await embeddedContentRef.current?.requestFullscreen();
+      } else {
+        await document.exitFullscreen();
+      }
+    } catch (error) {
+      console.error('Fullscreen error:', error);
+    }
+  };
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(document.fullscreenElement === embeddedContentRef.current);
+      setIsVideoFullscreen(document.fullscreenElement === videoViewerRef.current);
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    };
+  }, []);
+
   const [sumVid, setSumVid] = useState<number>(0);
   const [sumDoc, setSumDoc] = useState<number>(0);
   const myProfile = useSelector((state: RootState) => state.app.user);
@@ -305,9 +343,26 @@ const CourseProgress = () => {
   }
   const { html } = extractAndRemoveBodyStyles(state.selectedDoc?.file?.file_embedded_url || '');
 
+  const toggleVideoFullscreen = async () => {
+    if (!videoViewerRef.current) return;
+
+    try {
+      if (document.fullscreenElement === videoViewerRef.current) {
+        await document.exitFullscreen();
+      } else {
+        await videoViewerRef.current.requestFullscreen();
+      }
+    } catch (error) {
+      console.log('fullscreen error', error);
+    }
+  };
+
   return (
     <CourseProgressWrapper
       css={css`
+        .viewer_container {
+          width: 100%;
+        }
         .video_wrapper {
           iframe {
             max-width: 100%;
@@ -322,6 +377,63 @@ const CourseProgress = () => {
             max-height: 1000px;
           }
         }
+        
+        .embedded_content_wrapper {
+          position: relative;
+          width: 100%;
+          height: 750px;
+          background: #000;
+          overflow: hidden;
+          box-sizing: border-box;
+        }
+
+        .embedded_content {
+          display: block;
+          width: 100%;
+          height: 100%;
+          border: 0;
+        }
+
+        .fullscreen_button {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          z-index: 100;
+          padding: 8px 12px;
+          border: none;
+          border-radius: 4px;
+          background: rgba(0, 0, 0, 0.7);
+          color: #fff;
+          cursor: pointer;
+          font-size: 14px;
+        }
+
+        .embedded_content_wrapper:fullscreen {
+          width: 100vw;
+          height: 100vh;
+          background: #000;
+        }
+
+        .embedded_content_wrapper.is_fullscreen {
+          width: 100vw;
+          height: 100vh;
+          padding: 56px 24px 24px;
+        }
+
+        .embedded_content_wrapper:fullscreen .embedded_content {
+          width: 100%;
+          height: 100%;
+        }
+
+        .embedded_content_wrapper.is_fullscreen .embedded_content {
+          width: 100%;
+          height: 100%;
+        }
+
+        .embedded_content_wrapper.is_fullscreen.document_content {
+          padding: 0;
+        }
+
       `}
     >
       <Row className="course_header_wrapper">
@@ -372,16 +484,21 @@ const CourseProgress = () => {
               (!_.isEmpty(state.selectedVideo) &&
                 state.selectedVideo?.use_embedded_url &&
                 !state.selectedVideo?.file_embedded_url) ? (
-                <>
-                  <div>
+                <div ref={videoViewerRef} className={`viewer_container ${isVideoFullscreen ? 'is_fullscreen' : ''}`}>
+                  <Button
+                    className="fullscreen_toggle"
+                    type="default"
+                    onClick={toggleVideoFullscreen}
+                    icon={isVideoFullscreen ? <FullscreenExitOutlined /> : <FullscreenOutlined />}
+                  >
+                    {isVideoFullscreen ? 'Thu nhỏ' : 'Mở rộng'}
+                  </Button>
+                  <div className="player_wrapper">
                     <ReactPlayer
                       url={state.selectedVideo?.file_path}
                       width="100%"
                       height="100%"
                       controls={true}
-                      // onReady={() => {
-                      //   setVideoLoading(false);
-                      // }}
                       config={{
                         file: {
                           attributes: {
@@ -401,22 +518,46 @@ const CourseProgress = () => {
                       stopOnUnmount={false}
                     />
                   </div>
-                </>
+                </div>
               ) : state.selectedVideo?.use_embedded_url ? (
                 isIframeOrUrl(state.selectedVideo?.file_embedded_url) ||
                 !isURL(state.selectedVideo?.file_embedded_url) ? (
-                  <div
-                    className="video_wrapper"
-                    dangerouslySetInnerHTML={{ __html: state.selectedVideo?.file_embedded_url || '' }}
-                  ></div>
+                  <div ref={videoViewerRef} className={`viewer_container ${isVideoFullscreen ? 'is_fullscreen' : ''}`}>
+                    <Button
+                      className="fullscreen_toggle"
+                      type="default"
+                      onClick={toggleVideoFullscreen}
+                      icon={isVideoFullscreen ? <FullscreenExitOutlined /> : <FullscreenOutlined />}
+                    >
+                      {isVideoFullscreen ? 'Thu nhỏ' : 'Mở rộng'}
+                    </Button>
+                    <div
+                      className="video_wrapper"
+                      dangerouslySetInnerHTML={{
+                        __html: state.selectedVideo?.file_embedded_url || '',
+                      }}
+                    />
+                  </div>
                 ) : (
-                  <iframe
-                    src={state.selectedVideo?.file_embedded_url || ''}
-                    title={state.selectedVideo.file_name}
-                    width="100%"
-                    height="500px"
-                    sandbox="allow-scripts allow-same-origin"
-                  />
+                  <div ref={videoViewerRef} className={`viewer_container ${isVideoFullscreen ? 'is_fullscreen' : ''}`}>
+                    <Button
+                      className="fullscreen_toggle"
+                      type="default"
+                      onClick={toggleVideoFullscreen}
+                      icon={isVideoFullscreen ? <FullscreenExitOutlined /> : <FullscreenOutlined />}
+                    >
+                      {isVideoFullscreen ? 'Thu nhỏ' : 'Mở rộng'}
+                    </Button>
+
+                    <iframe
+                      src={state.selectedVideo?.file_embedded_url || ''}
+                      title={state.selectedVideo.file_name}
+                      className="embedded_content"
+                      sandbox="allow-scripts allow-same-origin"
+                      allow="fullscreen"
+                      allowFullScreen
+                    />
+                  </div>
                 )
               ) : (!_.isEmpty(state.selectedDoc) &&
                   !state.selectedDoc?.file?.use_embedded_url &&
@@ -432,19 +573,24 @@ const CourseProgress = () => {
               ) : state.selectedDoc?.file?.file_embedded_url || state.selectedDoc?.file?.file_path ? (
                 isIframeOrUrl(state.selectedDoc?.file?.file_embedded_url) ||
                 !isURL(state.selectedDoc?.file?.file_embedded_url) ? (
-                  <div className="pdf_wrapper">
+                  <div
+                    ref={embeddedContentRef}
+                    className={`embedded_content_wrapper document_content ${isFullscreen ? 'is_fullscreen' : ''}`}
+                  >
+                    <button
+                      type="button"
+                      className="fullscreen_button"
+                      onClick={handleFullscreen}
+                    >
+                      {isFullscreen ? 'Thu nhỏ' : '⛶ Mở rộng'}
+                    </button>
+
                     <iframe
                       title={state.selectedDoc?.name}
-                      width="100%"
+                      className="embedded_content"
                       sandbox="allow-scripts allow-same-origin"
                       srcDoc={html}
-                    >
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html: html,
-                        }}
-                      />
-                    </iframe>
+                    />
                   </div>
                 ) : (
                   <iframe
