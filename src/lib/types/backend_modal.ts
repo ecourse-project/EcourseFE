@@ -112,6 +112,8 @@ export interface OFileUpload {
   duration: number;
   file_embedded_url?: string;
   use_embedded_url?: boolean;
+  new_tab?: boolean;
+  new_tab_url?: string;
 }
 
 export interface IImageUpload {
