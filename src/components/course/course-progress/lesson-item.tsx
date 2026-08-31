@@ -71,6 +71,14 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
 
   const dispatch = useDispatch();
   const router = useRouter();
+
+  const openNewTabIfNeeded = (newTab?: boolean, newTabUrl?: string) => {
+    if (!newTab || !newTabUrl) return false;
+
+    window.open(newTabUrl, '_blank', 'noopener,noreferrer');
+    return true;
+  };
+
   const handleCheckedDoc = (e) => {
     if (checkedDoc.includes(e.target.value)) {
       const newChecked = checkedDoc.filter((v) => v !== e.target.value);
@@ -253,6 +261,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                             key={i}
                             className={`course_video_item video_${v.id}`}
                             onClick={() => {
+                              if (openNewTabIfNeeded(v.new_tab, v.new_tab_url)) return;
                               updateURLParams(router, { lesson: lesson.id, doc: '', video: v.id, quiz: '' });
                             }}
                           >
@@ -365,6 +374,7 @@ const LessonItem: React.FC<LessonItemProps> = (props) => {
                             key={i}
                             className={`course_video_item video_${v.id}`}
                             onClick={() => {
+                              if (openNewTabIfNeeded(v.file?.new_tab, v.file?.new_tab_url)) return;
                               updateURLParams(router, { doc: v.id, video: '', quiz: '', lesson: lesson.id });
                             }}
                           >
